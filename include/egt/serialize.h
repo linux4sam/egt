@@ -38,7 +38,8 @@ public:
     using Attributes = std::vector<std::pair<std::string, std::string>>;
 
     /// Add a widget to the serializer.
-    virtual bool add(Widget* widget, int level) = 0;
+    virtual bool add(const Widget* widget, int level = 0) = 0;
+
     /// Add a property.
     virtual void add_property(const std::string& name, const std::string& value,
                               const Attributes& attrs = {}) = 0;
@@ -59,6 +60,20 @@ public:
                               const Attributes& attrs = {});
     /// Add a property.
     virtual void add_property(const std::string& name, const Pattern& value);
+
+    /// Add a property.
+    virtual void add_property(const std::string& name, bool value);
+
+    /// Get the current level
+    int level() const { return m_level; }
+
+    /// Write to the specified ostream.
+    virtual void write(std::ostream& out) = 0;
+
+protected:
+
+    /// Current serialize tree level
+    int m_level{0};
 };
 
 /**
@@ -66,9 +81,8 @@ public:
  *
  * @code{.cpp}
  * // already have a Window variable named win
- * OstreamWidgetSerializer s;
- * win.walk(std::bind(&OstreamWidgetSerializer::add, std::ref(s),
- *                    std::placeholders::_1, std::placeholders::_2));
+ * OstreamWidgetSerializer out(std::cout);
+ * out.add(&win);
  * @endcode
  *
  * @see Widget::walk()
@@ -76,24 +90,26 @@ public:
 class EGT_API OstreamWidgetSerializer : public Serializer
 {
 public:
-    /**
-     * @param o Output stream reference.
-     */
-    explicit OstreamWidgetSerializer(std::ostream& o);
+    OstreamWidgetSerializer();
+    EGT_OPS_NOCOPY_MOVE(OstreamWidgetSerializer);
+    ~OstreamWidgetSerializer() noexcept;
 
-    bool add(Widget* widget, int level) override;
+    /// Clear or reset, the serializer for re-use.
+    void reset();
+
+    bool add(const Widget* widget, int level = 0) override;
 
     using Serializer::add_property;
 
     void add_property(const std::string& name, const std::string& value,
                       const Attributes& attrs = {}) override;
 
-protected:
-    /// Output stream reference
-    std::ostream& m_out;
+    void write(std::ostream& out) override;
 
-    /// Current serialize tree level
-    int m_level{0};
+private:
+
+    struct OstreamSerializerImpl;
+    std::unique_ptr<OstreamSerializerImpl> m_impl;
 };
 
 /**
@@ -102,8 +118,7 @@ protected:
  * @code{.cpp}
  * // already have a Window variable named win
  * XmlWidgetSerializer xml;
- * win.walk(std::bind(&XmlWidgetSerializer::add, std::ref(xml),
- *                    std::placeholders::_1, std::placeholders::_2));
+ * xml.add(&win);
  * // write the result
  * xml.write("output.xml");
  * // or
@@ -122,7 +137,7 @@ public:
     /// Clear or reset, the serializer for re-use.
     void reset();
 
-    bool add(Widget* widget, int level) override;
+    bool add(const Widget* widget, int level = 0) override;
 
     using Serializer::add_property;
 
@@ -134,13 +149,11 @@ public:
     void write(const std::string& filename);
 
     /// Write to the specified ostream.
-    void write(std::ostream& out);
+    void write(std::ostream& out) override;
 
-protected:
+private:
 
     struct XmlSerializerImpl;
-
-    /// @private
     std::unique_ptr<XmlSerializerImpl> m_impl;
 };
 

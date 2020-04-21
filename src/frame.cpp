@@ -573,6 +573,22 @@ void Frame::layout()
     }
 }
 
+void Frame::serialize(Serializer& serializer) const
+{
+    Widget::serialize(serializer);
+
+    int level = serializer.level() + 1;
+
+    for (auto& child : m_children)
+        serializer.add(child.get(), level);
+}
+
+void Frame::deserialize(const std::string& name, const std::string& value,
+                        const Serializer::Attributes& attrs)
+{
+    Widget::deserialize(name, value, attrs);
+}
+
 Frame::~Frame() noexcept
 {
     remove_all_basic();

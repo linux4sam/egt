@@ -56,17 +56,69 @@ void Serializer::add_property(const std::string& name, const Pattern& value)
     add_property(name, color.pixel32());
 }
 
-OstreamWidgetSerializer::OstreamWidgetSerializer(std::ostream& o)
-    : m_out(o)
-{}
+void Serializer::add_property(const std::string& name, bool value)
+{
+    add_property(name, detail::to_string(value));
+}
 
-bool OstreamWidgetSerializer::add(Widget* widget, int level)
+template<class T>
+struct Node
+{
+    void clear()
+    {
+        value.clear();
+        attrs.clear();
+        children.clear();
+    }
+
+    T value;
+    std::vector<std::string> attrs;
+    std::vector<Node<T>> children;
+};
+
+using StringNode = Node<std::string>;
+
+struct OstreamWidgetSerializer::OstreamSerializerImpl
+{
+    StringNode doc;
+    std::vector<StringNode*> stack;
+    StringNode* current{nullptr};
+};
+
+OstreamWidgetSerializer::OstreamWidgetSerializer()
+    : m_impl(std::make_unique<OstreamSerializerImpl>())
+{
+    reset();
+}
+
+void OstreamWidgetSerializer::reset()
+{
+    m_level = 0;
+    m_impl->current = &m_impl->doc;
+    m_impl->doc.clear();
+    m_impl->stack.clear();
+    m_impl->stack.push_back(m_impl->current);
+}
+
+bool OstreamWidgetSerializer::add(const Widget* widget, int level)
 {
     m_level = level;
 
-    m_out << std::endl;
-    m_out << std::string(m_level, '+') << widget->name() << std::endl <<
-          std::string(m_level + 1, ' ') << "type=" << widget->type();
+    const auto advance = level > static_cast<int>(m_impl->stack.size()) - 1;
+    if (advance)
+    {
+        m_impl->stack.push_back(m_impl->current);
+    }
+    else
+    {
+        while (static_cast<int>(m_impl->stack.size()) - 1 > level)
+            m_impl->stack.pop_back();
+    }
+
+    m_impl->stack.back()->children.emplace_back();
+    m_impl->current = &m_impl->stack.back()->children.back();
+    m_impl->current->value = widget->name();
+    m_impl->current->attrs.push_back("type=" + widget->type());
 
     widget->serialize(*this);
 
@@ -77,43 +129,83 @@ void OstreamWidgetSerializer::add_property(const std::string& name,
         const std::string& value,
         const Attributes& attrs)
 {
-    m_out << std::endl << std::string(m_level + 1, ' ') << name << "=" << value;
+    std::ostringstream out;
+    out << name  << "=" << value;
 
     if (!attrs.empty())
     {
-        m_out << " [";
-        bool first = true;
-        for (auto& a : attrs)
+        out << " [";
+        for (auto i = attrs.begin(); i != attrs.end(); ++i)
         {
-            if (first)
-                first = false;
-            else
-                m_out << " ";
-            m_out << a.first << "=" << a.second;
+            if (i != attrs.begin())
+                out << " ";
+            out << i->first << "=" << i->second;
         }
-        m_out << "]";
+        out << "]";
     }
 
-    m_out << " ";
+    m_impl->current->attrs.push_back(out.str());
 }
+
+static void print_node(std::string prefix, std::ostream& out,
+                       const StringNode& node, bool last = true)
+{
+    out << prefix;
+    if (last)
+        out << "┕";
+    else
+        out << "┝";
+    out << node.value << std::endl;
+
+    if (last)
+        prefix += " ";
+    else
+        prefix += "│";
+
+    for (auto i = node.attrs.begin(); i != node.attrs.end(); ++i)
+    {
+        out << prefix;
+
+        if (!node.children.empty())
+            out << "│";
+
+        out << " " << *i << std::endl;
+    }
+
+    for (auto i = node.children.begin(); i != node.children.end(); ++i)
+    {
+        const bool last = (i + 1) == node.children.end();
+        print_node(prefix, out, *i, last);
+    }
+}
+
+void OstreamWidgetSerializer::write(std::ostream& out)
+{
+    if (m_impl->doc.children.empty())
+        return;
+
+    std::string prefix;
+    print_node(prefix, out, m_impl->doc.children.front());
+}
+
+OstreamWidgetSerializer::~OstreamWidgetSerializer() noexcept = default;
 
 struct XmlWidgetSerializer::XmlSerializerImpl
 {
     rapidxml::xml_document<> doc;
     std::vector<rapidxml::xml_node<>*> stack;
     rapidxml::xml_node<>* current{nullptr};
-    int level{0};
 };
 
 XmlWidgetSerializer::XmlWidgetSerializer()
-    : m_impl(new XmlSerializerImpl)
+    : m_impl(std::make_unique<XmlSerializerImpl>())
 {
     reset();
 }
 
 void XmlWidgetSerializer::reset()
 {
-    m_impl->level = 0;
+    m_level = 0;
     m_impl->current = nullptr;
     m_impl->doc.clear();
     m_impl->stack.clear();
@@ -128,8 +220,10 @@ void XmlWidgetSerializer::reset()
     m_impl->stack.push_back(root);
 }
 
-bool XmlWidgetSerializer::add(Widget* widget, int level)
+bool XmlWidgetSerializer::add(const Widget* widget, int level)
 {
+    m_level = level;
+
     const auto advance = level > static_cast<int>(m_impl->stack.size()) - 1;
     if (advance)
     {
@@ -147,9 +241,9 @@ bool XmlWidgetSerializer::add(Widget* widget, int level)
     str = m_impl->doc.allocate_string(widget->type().c_str());
     m_impl->current->append_attribute(m_impl->doc.allocate_attribute("type", str));
 
-    widget->serialize(*this);
-
     m_impl->stack.back()->append_node(m_impl->current);
+
+    widget->serialize(*this);
 
     return true;
 }
