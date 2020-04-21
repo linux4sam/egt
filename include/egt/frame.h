@@ -233,8 +233,6 @@ public:
         assert(0);
     }
 
-    void dump(std::ostream& out, int level = 0) override;
-
     void walk(const WalkCallback& callback, int level = 0) override;
 
     /**

@@ -228,14 +228,6 @@ void Frame::damage(const Rect& rect)
     add_damage(rect);
 }
 
-void Frame::dump(std::ostream& out, int level)
-{
-    Widget::dump(out, level);
-
-    for (auto& child : m_children)
-        child->dump(out, level + 1);
-}
-
 void Frame::walk(const WalkCallback& callback, int level)
 {
     if (!callback(this, level))

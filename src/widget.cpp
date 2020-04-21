@@ -410,20 +410,6 @@ void Widget::paint_to_file(const std::string& filename)
     cairo_surface_write_to_png(surface.get(), name.c_str());
 }
 
-void Widget::dump(std::ostream& out, int level)
-{
-    out << fmt::format("{}{} {} {} box({},{},{}) align({}) zorder({})\n",
-                       std::string(level, ' '),
-                       name(),
-                       box(),
-                       flags(),
-                       margin(),
-                       padding(),
-                       border(),
-                       align(),
-                       zorder());
-}
-
 void Widget::walk(const WalkCallback& callback, int level)
 {
     callback(this, level);

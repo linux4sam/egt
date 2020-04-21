@@ -15,6 +15,7 @@
 #include "egt/input.h"
 #include "egt/painter.h"
 #include "egt/respath.h"
+#include "egt/serialize.h"
 #include "egt/timer.h"
 #include "egt/utils.h"
 #include "egt/version.h"
@@ -405,12 +406,16 @@ void Application::paint_to_file(const std::string& filename)
 // NOLINTNEXTLINE(readability-convert-member-functions-to-static)
 void Application::dump(std::ostream& out) const
 {
-    for (auto& w : windows())
+    OstreamWidgetSerializer s;
+
+    for (const auto& w : windows())
     {
         // draw top level frames and plane frames
         if (w->top_level())
-            w->dump(out);
+            s.add(w);
     }
+
+    s.write(out);
 
     dump_timers(out);
 }

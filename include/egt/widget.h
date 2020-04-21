@@ -920,18 +920,6 @@ public:
     virtual void paint_to_file(const std::string& filename = {});
 
     /**
-     * Dump the Widget state.
-     *
-     * Dump the state of the Widget to the specified ostream.
-     * @param[in,out] out The output stream.
-     * @param[in] level Indentation level.
-     *
-     * @deprecated This will eventually be removed/changed in favor of using
-     * the Serializer classes.
-     */
-    virtual void dump(std::ostream& out, int level = 0);
-
-    /**
      * Callback definition used by walk().
      *
      * In the callback, return true to continue or false to stop.
