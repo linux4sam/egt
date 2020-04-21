@@ -235,8 +235,10 @@ int main(int argc, char** argv)
     {
         if (player.playing())
         {
+            position.on_value_changed.disable();
             position.value((ns2ms<double>(player.position()) /
                             ns2ms<double>(player.duration())) * 100.);
+            position.on_value_changed.enable();
         }
     });
 
