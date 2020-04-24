@@ -582,6 +582,30 @@ if test "x${XXD}" != x"yes"; then
    fi
 fi
 
+AC_DEFUN([LIBINTL_SRC], [
+AC_LANG_PROGRAM([[
+#include <libintl.h>
+]],[[
+char *msg = gettext("test");
+]])])
+
+AC_MSG_CHECKING([if libc contains libintl])
+AC_LINK_IFELSE([LIBINTL_SRC],
+	[AC_MSG_RESULT([yes])
+	LIBC_CONTAINS_LIBINTL=Yes],
+	[AC_MSG_RESULT([no])
+	LIBC_CONTAINS_LIBINTL=])
+AC_SUBST([LIBC_CONTAINS_LIBINTL])
+
+AC_CHECK_HEADER([libintl.h],
+[NO_GETTEXT=],
+[NO_GETTEXT=Yes])
+AC_SUBST([NO_GETTEXT])
+
+if test -z "$NO_GETTEXT"; then
+    test -n "$LIBC_CONTAINS_LIBINTL" || LIBS="$LIBS -lintl"
+fi
+
 AC_CHECK_PROG(MSGFMT, msgfmt, yes)
 if test "x${MSGFMT}" != x"yes"; then
    if test "x${enable_examples}" = xyes; then
