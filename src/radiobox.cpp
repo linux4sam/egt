@@ -119,7 +119,7 @@ Size RadioBox::min_size_hint() const
     }
 
     // NOLINTNEXTLINE(bugprone-parent-virtual-call)
-    return Size(100, 30) + Widget::min_size_hint();
+    return default_size() + Widget::min_size_hint();
 }
 
 }

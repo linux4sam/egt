@@ -75,8 +75,10 @@ public:
      */
     using ValidatorCallback = std::function<bool(const std::string&)>;
 
-    /// Default value used for text alignment.
-    static const AlignFlags DEFAULT_TEXT_ALIGN;
+    /// Change text align.
+    static AlignFlags default_text_align();
+    /// Change default text align.
+    static void default_text_align(const AlignFlags& align);
 
     /**
      * @param[in] text The text to display.
@@ -84,7 +86,7 @@ public:
      * @param[in] flags TextBox flags.
      */
     explicit TextBox(const std::string& text = {},
-                     const AlignFlags& text_align = DEFAULT_TEXT_ALIGN,
+                     const AlignFlags& text_align = default_text_align(),
                      const TextFlags& flags = {}) noexcept;
 
     /**
@@ -95,7 +97,7 @@ public:
      */
     TextBox(const std::string& text,
             const Rect& rect,
-            const AlignFlags& text_align = DEFAULT_TEXT_ALIGN,
+            const AlignFlags& text_align = default_text_align(),
             const TextFlags& flags = {}) noexcept;
 
     /**
@@ -106,7 +108,7 @@ public:
      */
     explicit TextBox(Frame& parent,
                      const std::string& text = {},
-                     const AlignFlags& text_align = DEFAULT_TEXT_ALIGN,
+                     const AlignFlags& text_align = default_text_align(),
                      const TextFlags& flags = {}) noexcept;
 
     /**
@@ -119,7 +121,7 @@ public:
     TextBox(Frame& parent,
             const std::string& text,
             const Rect& rect,
-            const AlignFlags& text_align = DEFAULT_TEXT_ALIGN,
+            const AlignFlags& text_align = default_text_align(),
             const TextFlags& flags = {}) noexcept;
 
     EGT_OPS_NOCOPY_MOVE_EXCEPT(TextBox);

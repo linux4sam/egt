@@ -40,15 +40,17 @@ class EGT_API Label : public TextWidget
 {
 public:
 
-    /// Default value used for text alignment.
-    static const AlignFlags DEFAULT_TEXT_ALIGN;
+    /// Change text align.
+    static AlignFlags default_text_align();
+    /// Change default text align.
+    static void default_text_align(const AlignFlags& align);
 
     /**
      * @param[in] text The text to display.
      * @param[in] text_align Alignment for the text.
      */
     explicit Label(const std::string& text = {},
-                   const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
+                   const AlignFlags& text_align = default_text_align()) noexcept;
 
     /**
      * @param[in] text The text to display.
@@ -57,7 +59,7 @@ public:
      */
     Label(const std::string& text,
           const Rect& rect,
-          const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
+          const AlignFlags& text_align = default_text_align()) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -66,7 +68,7 @@ public:
      */
     explicit Label(Frame& parent,
                    const std::string& text = {},
-                   const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
+                   const AlignFlags& text_align = default_text_align()) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -77,7 +79,7 @@ public:
     Label(Frame& parent,
           const std::string& text,
           const Rect& rect,
-          const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
+          const AlignFlags& text_align = default_text_align()) noexcept;
 
     EGT_OPS_NOCOPY_MOVE(Label);
     ~Label() override = default;
@@ -122,7 +124,7 @@ public:
     * @param[in] text_align Alignment for the text.
     */
     explicit ImageLabel(const std::string& text = {},
-                        const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
+                        const AlignFlags& text_align = default_text_align()) noexcept;
 
     /**
      * @param[in] image The image to display.
@@ -131,7 +133,7 @@ public:
      */
     explicit ImageLabel(const Image& image,
                         const std::string& text = {},
-                        const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
+                        const AlignFlags& text_align = default_text_align()) noexcept;
 
     /**
      * @param[in] image The image to display.
@@ -142,7 +144,7 @@ public:
     ImageLabel(const Image& image,
                const std::string& text,
                const Rect& rect,
-               const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
+               const AlignFlags& text_align = default_text_align()) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -153,7 +155,7 @@ public:
     explicit ImageLabel(Frame& parent,
                         const Image& image = {},
                         const std::string& text = {},
-                        const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
+                        const AlignFlags& text_align = default_text_align()) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -166,7 +168,7 @@ public:
                const Image& image,
                const std::string& text,
                const Rect& rect,
-               const AlignFlags& text_align = DEFAULT_TEXT_ALIGN) noexcept;
+               const AlignFlags& text_align = default_text_align()) noexcept;
 
     EGT_OPS_NOCOPY_MOVE(ImageLabel);
     ~ImageLabel() override = default;

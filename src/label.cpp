@@ -16,7 +16,17 @@ namespace egt
 {
 inline namespace v1
 {
-const AlignFlags Label::DEFAULT_TEXT_ALIGN = AlignFlag::center;
+static AlignFlags default_text_align_value{AlignFlag::center};
+
+AlignFlags Label::default_text_align()
+{
+    return default_text_align_value;
+}
+
+void Label::default_text_align(const AlignFlags& align)
+{
+    default_text_align_value = align;
+}
 
 Label::Label(const std::string& text, const AlignFlags& text_align) noexcept
     : Label(text, {}, text_align)

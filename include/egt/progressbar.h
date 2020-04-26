@@ -109,18 +109,19 @@ public:
         }
     }
 
-
     using ValueRangeWidget<T>::min_size_hint;
 
-    /// Default ProgressBar size
-    static const Size DEFAULT_PROGRESSBAR_SIZE;
+    /// Default ProgressBar size.
+    static Size default_size();
+    /// Change default ProgressBar size.
+    static void default_size(const Size& size);
 
     Size min_size_hint() const override
     {
         if (!this->m_min_size.empty())
             return this->m_min_size;
 
-        return DEFAULT_PROGRESSBAR_SIZE + Widget::min_size_hint();
+        return default_size() + Widget::min_size_hint();
     }
 
     /**
@@ -147,6 +148,10 @@ protected:
      * When true, the label text is shown.
      */
     bool m_show_label{true};
+
+private:
+    /// Default size.
+    static Size m_default_size;
 };
 
 /**
@@ -164,7 +169,19 @@ using ProgressBar = ProgressBarType<int>;
 using ProgressBarF = ProgressBarType<float>;
 
 template <class T>
-const Size ProgressBarType<T>::DEFAULT_PROGRESSBAR_SIZE{200, 30};
+Size ProgressBarType<T>::m_default_size{200, 30};
+
+template <class T>
+Size ProgressBarType<T>::default_size()
+{
+    return ProgressBarType<T>::m_default_size;
+}
+
+template <class T>
+void ProgressBarType<T>::default_size(const Size& size)
+{
+    ProgressBarType<T>::default_progressbar_size_value = size;
+}
 
 /**
  * Displays a spinning progress meter.
@@ -250,17 +267,19 @@ public:
         }
     }
 
-    using ValueRangeWidget<T>::min_size_hint;
+    /// Default SpinProgress size.
+    static Size default_size();
+    /// Change default SpinProgress size.
+    static void default_size(const Size& size);
 
-    /// Default SpinProgress size
-    static const Size DEFAULT_SPINPROGRESS_SIZE;
+    using ValueRangeWidget<T>::min_size_hint;
 
     Size min_size_hint() const override
     {
         if (!this->m_min_size.empty())
             return this->m_min_size;
 
-        return DEFAULT_SPINPROGRESS_SIZE + Widget::min_size_hint();
+        return default_size() + Widget::min_size_hint();
     }
 
     /**
@@ -292,6 +311,10 @@ protected:
      * When true, the label text is shown.
      */
     bool m_show_label{true};
+
+private:
+    /// Default size.
+    static Size m_default_size;
 };
 
 /**
@@ -309,7 +332,19 @@ using SpinProgress = SpinProgressType<int>;
 using SpinProgressF = SpinProgressType<float>;
 
 template <class T>
-const Size SpinProgressType<T>::DEFAULT_SPINPROGRESS_SIZE{100, 100};
+Size SpinProgressType<T>::m_default_size{100, 100};
+
+template <class T>
+Size SpinProgressType<T>::default_size()
+{
+    return SpinProgressType<T>::m_default_size;
+}
+
+template <class T>
+void SpinProgressType<T>::default_size(const Size& size)
+{
+    SpinProgressType<T>::m_default_size = size;
+}
 
 template <class T>
 void SpinProgressType<T>::serialize(Serializer& serializer) const
@@ -425,17 +460,19 @@ public:
      */
     size_t num_bars() const { return m_num_bars; }
 
-    using ValueRangeWidget<T>::min_size_hint;
+    /// Default LevelMeter size.
+    static Size default_size();
+    /// Change default LevelMeter size.
+    static void default_size(const Size& size);
 
-    /// Default LevelMeter size
-    static constexpr Size DEFAULT_LEVELMETER_SIZE = Size(40, 100);
+    using ValueRangeWidget<T>::min_size_hint;
 
     Size min_size_hint() const override
     {
         if (!this->m_min_size.empty())
             return this->m_min_size;
 
-        return DEFAULT_LEVELMETER_SIZE + Widget::min_size_hint();
+        return default_size() + Widget::min_size_hint();
     }
 
     void serialize(Serializer& serializer) const override;
@@ -447,6 +484,10 @@ protected:
 
     /// The number of bars to display.
     size_t m_num_bars{10};
+
+private:
+    /// Default size.
+    static Size m_default_size;
 };
 
 /**
@@ -464,7 +505,19 @@ using LevelMeter = LevelMeterType<int>;
 using LevelMeterF = LevelMeterType<float>;
 
 template <class T>
-constexpr Size LevelMeterType<T>::DEFAULT_LEVELMETER_SIZE;
+Size LevelMeterType<T>::m_default_size{40, 100};
+
+template <class T>
+Size LevelMeterType<T>::default_size()
+{
+    return LevelMeterType<T>::m_default_size;
+}
+
+template <class T>
+void LevelMeterType<T>::default_size(const Size& size)
+{
+    LevelMeterType<T>::m_default_size = size;
+}
 
 template <class T>
 void LevelMeterType<T>::serialize(Serializer& serializer) const
@@ -581,18 +634,25 @@ public:
         painter.fill();
     }
 
-    using ValueRangeWidget<T>::min_size_hint;
+    /// Default ProgressBar size.
+    static Size default_size();
+    /// Change default ProgressBar size.
+    static void default_size(const Size& size);
 
-    /// Default size of AnalogMeter
-    static const Size DEFAULT_ANALOGMETER_SIZE;
+    using ValueRangeWidget<T>::min_size_hint;
 
     Size min_size_hint() const override
     {
         if (!this->m_min_size.empty())
             return this->m_min_size;
 
-        return DEFAULT_ANALOGMETER_SIZE + Widget::min_size_hint();
+        return default_size() + Widget::min_size_hint();
     }
+
+private:
+
+    /// Default size.
+    static Size m_default_size;
 };
 
 /**
@@ -610,7 +670,19 @@ using AnalogMeter = AnalogMeterType<int>;
 using AnalogMeterF = AnalogMeterType<float>;
 
 template <class T>
-const Size AnalogMeterType<T>::DEFAULT_ANALOGMETER_SIZE{200, 100};
+Size AnalogMeterType<T>::m_default_size{200, 100};
+
+template <class T>
+Size AnalogMeterType<T>::default_size()
+{
+    return AnalogMeterType<T>::m_default_size;
+}
+
+template <class T>
+void AnalogMeterType<T>::default_size(const Size& size)
+{
+    AnalogMeterType<T>::default_analogmeter_size_value = size;
+}
 
 }
 }

@@ -18,9 +18,29 @@ namespace egt
 {
 inline namespace v1
 {
-const AlignFlags Button::DEFAULT_TEXT_ALIGN{AlignFlag::center};
+static Size default_button_size_value = Size(100, 30);
 
-static constexpr auto DEFAULT_BUTTON_SIZE = Size(100, 30);
+Size Button::default_size()
+{
+    return default_button_size_value;
+}
+
+void Button::default_size(const Size& size)
+{
+    default_button_size_value = size;
+}
+
+static AlignFlags default_text_align_value{AlignFlag::center};
+
+AlignFlags Button::default_text_align()
+{
+    return default_text_align_value;
+}
+
+void Button::default_text_align(const AlignFlags& align)
+{
+    default_text_align_value = align;
+}
 
 Button::Button(const std::string& text, const AlignFlags& text_align) noexcept
     : Button(text, {}, text_align)
@@ -147,7 +167,7 @@ Size Button::min_size_hint() const
         return s + Widget::min_size_hint();
     }
 
-    return DEFAULT_BUTTON_SIZE + Widget::min_size_hint();
+    return default_size() + Widget::min_size_hint();
 }
 
 Button::~Button()

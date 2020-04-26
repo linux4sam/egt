@@ -17,8 +17,6 @@ namespace egt
 inline namespace v1
 {
 
-static constexpr auto DEFAULT_CHECKBOX_SIZE = Size(100, 30);
-
 CheckBox::CheckBox(const std::string& text,
                    const Rect& rect) noexcept
     : Button(text, rect)
@@ -120,7 +118,7 @@ Size CheckBox::min_size_hint() const
         return m_min_size;
 
     // NOLINTNEXTLINE(bugprone-parent-virtual-call)
-    const auto default_size = DEFAULT_CHECKBOX_SIZE + Widget::min_size_hint();
+    const auto default_size = this->default_size() + Widget::min_size_hint();
 
     if (!m_text.empty())
     {
