@@ -9,11 +9,11 @@ swig_v_GEN_0 = @echo "  SWIG    " $@;
 
 ui.cpp: ui.i
 if AMDEP
-	@$(SWIG_V_GEN)$(SWIG_BIN) $(SWIG_FLAGS) -I$(top_srcdir)/include -MT $@ -MM $< > $(DEPDIR)/ui.i.dep.tmp
+	@$(SWIG_BIN) $(SWIG_FLAGS) -I$(top_srcdir)/include -MT $@ -MM $< > $(DEPDIR)/ui.i.dep.tmp
 	@mv $(DEPDIR)/ui.i.dep.tmp $(DEPDIR)/ui.i.dep
 endif
 	$(SWIG_V_GEN)$(SWIG_BIN) $(SWIG_FLAGS) -I$(top_srcdir)/include -o $@ $<
-	sed -i 's/enum //g' ui.cpp # fix generated swig code
+	@sed -i 's/enum //g' ui.cpp # fix generated swig code
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui.i.dep@am__quote@
 
