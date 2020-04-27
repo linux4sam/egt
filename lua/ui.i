@@ -4,13 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 %include "lua_fnptr.i"
-%include "typemaps.i"
-%include "stl.i"
+%include "shared_ptr.i"
 %include "stdint.i"
+%include "stl.i"
+%include "typemaps.i"
 
 %module egt
 %{
-#include "egt/ui"
+#include <egt/ui>
+#include <iostream>
 using namespace egt;
 
 class LuaFnPtr
@@ -40,22 +42,27 @@ private:
     SWIGLUA_REF fn;
 };
 
-
 %}
 
-#pragma SWIG nowarn=325,503
+%luacode
+{
+  -- print "EGT module loaded ok"
+}
+
+#pragma SWIG nowarn=325,503,509
 %warnfilter(451) Font;
 %warnfilter(509) Image;
 
 // %import for type info, but don't generate bindings
-%import "egt/types.h"
-%import "egt/utils.h"
+%import "egt/detail/meta.h"
 
-%ignore egt::v1::detail::Object::on_event(event_callback_t);
-%ignore egt::v1::detail::Object::on_event(event_callback_t,filter_type);
+%ignore egt::v1::Object::on_event(event_callback_t);
+%ignore egt::v1::Object::on_event(event_callback_t,filter_type);
 %ignore egt::v1::Timer::on_timeout(timer_callback_t);
 
-%include "egt/detail/object.h"
+%include "egt/object.h"
+%include "egt/flagsbase.h"
+%include "egt/flags.h"
 %include "egt/widgetflags.h"
 %include "egt/geometry.h"
 %include "egt/easing.h"
@@ -77,20 +84,37 @@ inline namespace v1
 %include "egt/keycode.h"
 %include "egt/timer.h"
 %include "egt/input.h"
+
+%ignore egt::v1::detail::MouseGesture;
+
 %include "egt/color.h"
+%include "egt/pattern.h"
 %include "egt/palette.h"
 %include "egt/image.h"
 
 %include "egt/widget.h"
-%include "egt/detail/textwidget.h"
+%include "egt/textwidget.h"
 %include "egt/valuewidget.h"
 
 namespace egt
 {
 inline namespace v1
 {
-%template(ValueRangeWidgetI) ValueRangeWidget<int>;
-%template(ValueRangeWidgetF) ValueRangeWidget<float>;
+  %template(ValueRangeWidgetI) ValueRangeWidget<int>;
+  %template(ValueRangeWidgetF) ValueRangeWidget<float>;
+
+  %template(Size) SizeType<DefaultDim>;
+  %template(Point) PointType<DefaultDim>;
+  %template(Rect) RectType<DefaultDim>;
+
+  %template(center) center<Widget>;
+  %template(left) left<Widget>;
+  %template(right) right<Widget>;
+  %template(top) top<Widget>;
+  %template(bottom) bottom<Widget>;
+  %template(expand_horizontal) expand_horizontal<Widget>;
+  %template(expand_vertical) expand_vertical<Widget>;
+  %template(expand) expand<Widget>;
 }
 }
 
@@ -140,24 +164,20 @@ namespace egt
 {
 inline namespace v1
 {
-namespace detail
-{
 
 %extend Object
 {
-    virtual void on_event(SWIGLUA_REF callback)
+    virtual RegisterHandle on_event(SWIGLUA_REF callback)
     {
         LuaEventFnPtr lua_fn_ptr(callback);
-        $self->on_event(lua_fn_ptr);
+        return $self->on_event(lua_fn_ptr);
     }
 
-    virtual void on_event_filtered(SWIGLUA_REF callback, EventId id)
+    virtual RegisterHandle on_event_filtered(SWIGLUA_REF callback, EventId id)
     {
         LuaEventFnPtr lua_fn_ptr(callback);
-        $self->on_event(lua_fn_ptr, {id});
+        return $self->on_event(lua_fn_ptr, {id});
     }
-}
-
 }
 
 %template(find_child) Frame::find_child<Widget>;
@@ -169,24 +189,18 @@ namespace detail
         $self->change_duration(std::chrono::milliseconds(ms));
     }
 
-    void on_timeout(SWIGLUA_REF callback)
+    RegisterHandle on_timeout(SWIGLUA_REF callback)
     {
         LuaFnPtr lua_fn_ptr(callback);
-        $self->on_timeout(lua_fn_ptr);
+        return $self->on_timeout(lua_fn_ptr);
     }
 }
 
-%extend PeriodicTimer
+%extend Application
 {
-    void change_duration_ms(int ms)
+    void dump()
     {
-        $self->change_duration(std::chrono::milliseconds(ms));
-    }
-
-    void on_timeout(SWIGLUA_REF callback)
-    {
-        LuaFnPtr lua_fn_ptr(callback);
-        $self->on_timeout(lua_fn_ptr);
+        $self->dump(std::cout);
     }
 }
 

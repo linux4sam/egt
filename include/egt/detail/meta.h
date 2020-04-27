@@ -272,6 +272,7 @@ constexpr T bit(T n)
 }
 }
 
+#ifndef SWIG
 #define EGT_OPS_COPY(T)					\
     T(const T&) = default;				\
     T& operator=(const T&) = default /* NOLINT */
@@ -315,5 +316,18 @@ constexpr T bit(T n)
 #define EGT_OPS_COPY_NOMOVE(T)			\
     EGT_OPS_COPY(T);				\
     EGT_OPS_NOMOVE(T)
+#else
+#define EGT_OPS_COPY(T)
+#define EGT_OPS_NOCOPY(T)
+#define EGT_OPS_MOVE(T)
+#define EGT_OPS_MOVE_EXCEPT(T)
+#define EGT_OPS_NOMOVE(T)
+#define EGT_OPS_COPY_MOVE(T)
+#define EGT_OPS_NOCOPY_MOVE(T)
+#define EGT_OPS_COPY_MOVE_EXCEPT(T)
+#define EGT_OPS_NOCOPY_MOVE_EXCEPT(T)
+#define EGT_OPS_NOCOPY_NOMOVE(T)
+#define EGT_OPS_COPY_NOMOVE(T)
+#endif
 
 #endif

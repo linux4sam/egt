@@ -1,7 +1,7 @@
 if ENABLE_LUA_BINDINGS
 
 SWIG_SRC = ui.i
-SWIG_FLAGS = -c++ -lua -DEGT_API
+SWIG_FLAGS = -c++ -lua -O -no-old-metatable-bindings
 
 SWIG_V_GEN = $(swig_v_GEN_$(V))
 swig_v_GEN_ = $(swig_v_GEN_$(AM_DEFAULT_VERBOSITY))
