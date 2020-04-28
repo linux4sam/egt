@@ -1211,6 +1211,18 @@ public:
                         SizeType<Dim>(this->radius() * 2, this->radius() * 2));
         return r;
     }
+
+    /**
+     * Return the point on the circumference of the circle at the given angle.
+     *
+     * @param angle The angle in radians.
+     */
+    template <class T>
+    PointType<Dim> point_on_circumference(T angle) const
+    {
+        return PointType<Dim>(this->x() + this->radius() * std::cos(angle),
+                              this->y() + this->radius() * std::sin(angle));
+    }
 };
 
 /// Overloaded std::ostream insertion operator
@@ -1276,13 +1288,16 @@ public:
     }
 
     /**
-     * @param angle The angle in degrees on the ellipse, with the center in the
+     * Return the point on the circumference of the ellipse at the given angle.
+     *
+     * @param angle The angle in radians on the ellipse, with the center in the
      * middle of the ellipse.
      */
-    PointType<Dim> point_on_perimeter(float angle)
+    template <class T>
+    PointType<Dim> point_on_circumference(T angle)
     {
-        const auto x = m_radiusa * std::cos(detail::to_radians(0.f, angle));
-        const auto y = m_radiusb * std::sin(detail::to_radians(0.f, angle));
+        const auto x = m_radiusa * std::cos(angle);
+        const auto y = m_radiusb * std::sin(angle);
         return center() + PointType<Dim>(x, y);
     }
 
