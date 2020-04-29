@@ -369,6 +369,94 @@ void PlPlotImpl::bank(float bank)
         invoke_damage();
 }
 
+void PlPlotImpl::plplot_box(bool xtick_label, bool ytick_label)
+{
+    PLINT val = axis();
+    std::string xopt;
+    std::string yopt;
+
+    if (val == -1)
+    {
+        xopt = "bc";
+        yopt = "bc";
+    }
+    else if (val == 0)
+    {
+        xopt = "bcist";
+        yopt = "bcistv";
+    }
+    else if (val == 1)
+    {
+        xopt = "abcist";
+        yopt = "abcistv";
+    }
+    else if (val == 2)
+    {
+        xopt = "abcgist";
+        yopt = "abcgistv";
+    }
+    else if (val == 3)
+    {
+        xopt = "abcghist";
+        yopt = "abcghistv";
+    }
+
+    if (xtick_label && (val >= 0))
+        xopt += "n";
+
+    if (ytick_label && (val >= 0))
+        yopt += "n";
+
+    m_plstream->box(xopt.c_str(), 0, 0, yopt.c_str(), 0, 0);
+}
+
+
+void PlPlotImpl::plplot_viewport(PLFLT size)
+{
+    PLFLT xmin;
+    PLFLT xmax;
+    PLFLT ymin;
+    PLFLT ymax;
+
+    // get the size of the current subpage in millimeters.
+    m_plstream->gspa(xmin, xmax, ymin, ymax);
+
+    PLFLT def_ht;
+    PLFLT scale_ht;
+
+    // get character default height and current scaled height.
+    m_plstream->gchr(def_ht, scale_ht);
+
+    if (axis() < 0)
+    {
+        // leave a margin space on 4 sides of default character size.
+        m_plstream->svpa(xmin + def_ht, xmax - def_ht, ymin + def_ht, ymax - def_ht);
+    }
+    else
+    {
+        // leave a margin space on 4 sides
+        // for x-axis, y-axis and title, coordinate font size(i.e def_ht * 3) + label font size
+        PLFLT ch_ht = ((size / 96.0) * 25.4);
+        PLFLT x_margin = def_ht * 6;
+        PLFLT ymin_margin = def_ht * 3;
+        PLFLT ymax_margin = def_ht * 3;
+        if (!m_ylabel.empty())
+        {
+            x_margin += ch_ht;
+        }
+        if (!m_xlabel.empty())
+        {
+            ymin_margin += ch_ht;
+        }
+        if (!m_title.empty())
+        {
+            ymax_margin += ch_ht;
+        }
+        // set viewport size in millimeters.
+        m_plstream->svpa(xmin + x_margin, xmax - def_ht, ymin + ymin_margin, ymax - ymax_margin);
+    }
+}
+
 PlPlotImpl::~PlPlotImpl() = default;
 
 PlPlotLineChart::PlPlotLineChart(LineChart& interface)
@@ -387,7 +475,7 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
 
     if (!m_initalize)
     {
-        m_plstream->spage(0, 0, b.width(), b.height(), 0, 0);
+        m_plstream->spage(0, 0, b.width(), b.height(),  b.x(), b.y());
         m_plstream->init();
         plplot_font(m_interface.font());
         m_initalize = true;
@@ -399,17 +487,26 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
 
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
-    painter.set(m_interface.font());
+    m_plstream->adv(0);
 
     plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
 
+    m_plstream->width(m_grid_width);
+
+    m_plstream->lsty(1);
+
+    PLFLT size = static_cast<PLFLT>(m_interface.font().size());
+
+    plplot_viewport(size);
+
+    plplot_font(m_interface.font());
+
+    m_plstream->wind(m_xmin, m_xmax, m_ymin, m_ymax);
+
+    plplot_box(true, true);
+
     if (m_xdata.size() > 1 && m_ydata.size() > 1)
     {
-        m_plstream->width(m_grid_width);
-
-        // set env
-        m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, axis());
-
         //set line style
         m_plstream->lsty(m_pattern <= 0 ? 1 : m_pattern);
 
@@ -420,11 +517,6 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
 
         // plot
         m_plstream->line(m_xdata.size(), m_xdata.data(), m_ydata.data());
-    }
-    else
-    {
-        m_plstream->width(m_grid_width);
-        m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, axis());
     }
 
     // set text color
@@ -452,7 +544,7 @@ void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
 
     if (!m_initalize)
     {
-        m_plstream->spage(0, 0, b.width(), b.height(), 0, 0);
+        m_plstream->spage(0, 0, b.width(), b.height(),  b.x(), b.y());
         m_plstream->init();
         plplot_font(m_interface.font());
         m_initalize = true;
@@ -465,25 +557,26 @@ void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
 
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
-    //set axis color
+    m_plstream->adv(0);
+
     plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
+
+    m_plstream->width(m_grid_width);
+
+    m_plstream->lsty(1);
+
+    plplot_viewport(m_interface.font().size());
+
+    m_plstream->wind(m_xmin, m_xmax, m_ymin, m_ymax);
+
+    plplot_box(true, true);
 
     if (!m_xdata.empty() && !m_ydata.empty())
     {
-        m_plstream->width(m_grid_width);
-
-        // set env
-        m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, axis());
-
         plplot_color(m_interface.color(Palette::ColorId::button_fg).color());
 
         // draw points
         m_plstream->poin(m_xdata.size(), m_xdata.data(), m_ydata.data(), m_pointtype);
-    }
-    else
-    {
-        // set env
-        m_plstream->env(0, 1, 0, 1, 0, axis());
     }
 
     // set label color
@@ -531,7 +624,7 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
 
     if (!m_initalize)
     {
-        m_plstream->spage(0, 0, b.width(), b.height(), 0, 0);
+        m_plstream->spage(0, 0, b.width(), b.height(),  b.x(), b.y());
         m_plstream->init();
         plplot_font(m_interface.font());
         m_initalize = true;
@@ -545,33 +638,31 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
     m_plstream->adv(0);
-    m_plstream->vsta();
 
     //set axis color.
     plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
 
-    // Draw axis
+    m_plstream->width(m_grid_width);
+
+    plplot_viewport(m_interface.font().size());
+
     if ((!m_ydata.empty()) && (!m_sdata.empty()))
     {
         std::size_t xmax = m_sdata.size() * 2;
         m_plstream->wind(0.0, xmax, 0.0, m_ymax);
-        if (axis() == 2)
-            m_plstream->box("bgit", 0, 0, "bginvst", 0, 0);
-        else if (axis() == 0)
-            m_plstream->box("bit", 0, 0, "binvst", 0, 0);
-        else
-            m_plstream->box("bi", 0, 0, "binvs", 0, 0);
+
+        plplot_box(false, true);
     }
     else
     {
-        m_plstream->width(m_grid_width);
-        m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, axis());
+        m_plstream->wind(m_xmin, m_xmax, m_ymin, m_ymax);
+        plplot_box(true, true);
     }
 
     if (!m_ydata.empty())
     {
-        std::size_t n = m_ydata.size() - 1;
-        for (std::size_t i = 0; i <= n; i++)
+        std::size_t n = m_ydata.size();
+        for (std::size_t i = 0; i < n; i++)
         {
             // set Bar color : using default colors from plplot
             m_plstream->col0(i % 16);
@@ -584,7 +675,7 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
                 SPDLOG_TRACE("m_ydata[{}] = {} ", i, m_ydata.at(i));
                 plfbox((i * 2), m_ydata.at(i));
 
-                if (axis() != -1)
+                if (axis() >= 0)
                 {
                     plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
                     auto pos = static_cast<PLFLT>(i) / static_cast<PLFLT>(n);
@@ -645,7 +736,7 @@ void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
 
     if (!m_initalize)
     {
-        m_plstream->spage(0, 0, b.width(), b.height(), 0, 0);
+        m_plstream->spage(0, 0, b.width(), b.height(),  b.x(), b.y());
         m_plstream->init();
         plplot_font(m_interface.font());
         m_initalize = true;
@@ -659,50 +750,53 @@ void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
     m_plstream->adv(0);
-    m_plstream->vsta();
+
+    //set axis color.
+    plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
+
+    m_plstream->width(m_grid_width);
+
+    plplot_viewport(m_interface.font().size());
 
     if ((!m_sdata.empty()) && (!m_ydata.empty()))
     {
-        m_plstream->width(m_grid_width);
-
-        //set axis color.
-        plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
-
         m_plstream->wind(0.0, m_ymax, 0.0, (m_sdata.size() * 2));
-        if (axis() == 2)
-            m_plstream->box("bginvst", 0, 0, "bgit", 0, 0);
-        else if (axis() == 0)
-            m_plstream->box("bit", 0, 0, "bitnvs", 0, 0);
-        else
-            m_plstream->box("bi", 0, 0, "binvs", 0, 0);
+        plplot_box(true, false);
+    }
+    else
+    {
+        m_plstream->wind(m_xmin, m_xmax, m_ymin, m_ymax);
+        plplot_box(true, true);
+    }
 
-        std::size_t n = m_ydata.size();
-        int i = 0;
-        for (auto& data : m_ydata)
+    std::size_t n = m_ydata.size();
+    int i = 0;
+    for (auto& data : m_ydata)
+    {
+        // set HBar color
+        m_plstream->col0(i % 16);
+
+        // Set HBar pattern
+        m_plstream->psty(m_pattern);
+
+        if (!m_sdata.empty())
         {
-            // set HBar color
-            m_plstream->col0(i % 16);
-
-            // Set HBar pattern
-            m_plstream->psty(m_pattern);
-
             // Draw HBar
             plfHbox(data, (i * 2));
 
             //Set Y-axis text
-            if (axis() != -1)
+            if (axis() >= 0)
             {
                 auto pos = static_cast<PLFLT>(i) / static_cast<PLFLT>(n);
                 m_plstream->mtex("lv", 1.0, pos, 1, m_sdata.at(i).c_str());
             }
-            ++i;
         }
-    }
-    else
-    {
-        m_plstream->width(m_grid_width);
-
-        m_plstream->env(m_xmin, m_xmax, m_ymin, m_ymax, 0, axis());
+        else
+        {
+            // Draw HBar
+            plfHbox(m_xdata.at(i), data);
+        }
+        ++i;
     }
 
     // set labels color
@@ -730,7 +824,7 @@ void PlPlotPieChart::draw(Painter& painter, const Rect& rect)
 
     if (!m_initalize)
     {
-        m_plstream->spage(0, 0, b.width(), b.height(), 0, 0);
+        m_plstream->spage(0, 0, b.width(), b.height(),  b.x(), b.y());
         m_plstream->init();
         plplot_font(m_interface.font());
         m_initalize = true;

@@ -105,6 +105,10 @@ protected:
 
     void plplot_verify_viewport();
 
+    void plplot_viewport(PLFLT size);
+
+    void plplot_box(bool xtick_label, bool ytick_label);
+
     float m_bank{0};
 };
 
