@@ -206,10 +206,10 @@ public:
     /// Point styles.
     enum PointType
     {
-        dot = 1,
-        star,
-        cross,
+        star = 3,
         circle,
+        cross,
+        dot = 17,
     };
 
     /**
