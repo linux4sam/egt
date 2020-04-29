@@ -301,50 +301,6 @@ void PlPlotImpl::plplot_verify_viewport()
                  m_xmin, m_xmax, m_ymin, m_ymax);
 }
 
-void PlPlotImpl::plplot_font(const Font& font)
-{
-    const std::string& face = font.face();
-    SPDLOG_TRACE("font face = {}", face);
-    PLINT font_family = 0;
-    if (face.find("Sans") != std::string::npos)
-    {
-        font_family = 0;
-    }
-    else if (face.find("Serif") != std::string::npos)
-    {
-        font_family = 1;
-    }
-    else if (face.find("Mono") != std::string::npos)
-    {
-        font_family = 2;
-    }
-    else if (face.find("Script") != std::string::npos)
-    {
-        font_family = 3;
-    }
-    else if (face.find("Symbol") != std::string::npos)
-    {
-        font_family = 4;
-    }
-
-    auto slant = font.slant();
-    PLINT font_style;
-    if (slant == Font::Slant::normal)
-        font_style = 0;
-    else if (slant == Font::Slant::italic)
-        font_style = 1;
-    else
-        font_style = 2;
-
-    PLINT font_weight;
-    if (font.weight() == Font::Weight::normal)
-        font_weight = 0;
-    else
-        font_weight = 1;
-
-    m_plstream->sfont(font_family, font_style, font_weight);
-}
-
 void PlPlotImpl::plplot_color(const Color& color)
 {
     auto r = static_cast<PLINT>(color.red());
@@ -410,6 +366,65 @@ void PlPlotImpl::plplot_box(bool xtick_label, bool ytick_label)
     m_plstream->box(xopt.c_str(), 0, 0, yopt.c_str(), 0, 0);
 }
 
+void PlPlotImpl::plplot_label(shared_cairo_t cr, Rect b, const Font& font, const Color& color)
+{
+    if (axis() >= 0)
+    {
+        // set font face, slant and weight
+        cairo_font_slant_t slant = static_cast<cairo_font_slant_t>(font.slant());
+        cairo_font_weight_t weight = static_cast<cairo_font_weight_t>(font.weight());
+        cairo_select_font_face(cr.get(), font.face().c_str(), slant, weight);
+
+        // set font size
+        cairo_set_font_size(cr.get(), font.size());
+
+        // set text color
+        cairo_set_source_rgb(cr.get(), color.redf(), color.greenf(), color.bluef());
+
+        // reverse mirroring the font
+        cairo_matrix_t font_reflection_matrix;
+        cairo_get_font_matrix(cr.get(), &font_reflection_matrix);
+        font_reflection_matrix.yy = font_reflection_matrix.yy * -1;
+        cairo_set_font_matrix(cr.get(), &font_reflection_matrix);
+
+        cairo_text_extents_t te;
+        double x;
+        double y;
+        double offset = b.width() * 0.5;
+        if (!m_xlabel.empty())
+        {
+            cairo_text_extents(cr.get(), m_xlabel.c_str(), &te);
+            x = (b.x() + offset) - (te.x_bearing + (te.width * 0.5));
+            y = b.y();
+
+            cairo_move_to(cr.get(), x, y);
+            cairo_rotate(cr.get(), 0);
+            cairo_show_text(cr.get(), m_xlabel.c_str());
+        }
+
+        if (!m_title.empty())
+        {
+            cairo_text_extents(cr.get(), m_title.c_str(), &te);
+            x = (b.x() + offset) - (te.x_bearing + (te.width * 0.5));
+            y =  b.y() + b.height() - font.size();
+
+            cairo_move_to(cr.get(), x, y);
+            cairo_rotate(cr.get(), 0);
+            cairo_show_text(cr.get(), m_title.c_str());
+        }
+
+        if (!m_ylabel.empty())
+        {
+            cairo_text_extents(cr.get(), m_ylabel.c_str(), &te);
+            x = b.x() + font.size();
+            y = (b.y() + (b.height() * 0.5)) - (te.x_bearing + (te.width * 0.5));
+
+            cairo_move_to(cr.get(), x, y);
+            cairo_rotate(cr.get(), detail::pi<float>() * 2.5);
+            cairo_show_text(cr.get(), m_ylabel.c_str());
+        }
+    }
+}
 
 void PlPlotImpl::plplot_viewport(PLFLT size)
 {
@@ -477,7 +492,6 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
     {
         m_plstream->spage(0, 0, b.width(), b.height(),  b.x(), b.y());
         m_plstream->init();
-        plplot_font(m_interface.font());
         m_initalize = true;
     }
     auto cr = painter.context();
@@ -499,8 +513,6 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
 
     plplot_viewport(size);
 
-    plplot_font(m_interface.font());
-
     m_plstream->wind(m_xmin, m_xmax, m_ymin, m_ymax);
 
     plplot_box(true, true);
@@ -519,11 +531,8 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
         m_plstream->line(m_xdata.size(), m_xdata.data(), m_ydata.data());
     }
 
-    // set text color
-    plplot_color(m_interface.color(Palette::ColorId::label_text).color());
+    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).color());
 
-    //set text or label
-    m_plstream->lab(m_xlabel.c_str(), m_ylabel.c_str(), m_title.c_str());
 }
 
 PlPlotLineChart::~PlPlotLineChart() = default;
@@ -546,7 +555,6 @@ void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
     {
         m_plstream->spage(0, 0, b.width(), b.height(),  b.x(), b.y());
         m_plstream->init();
-        plplot_font(m_interface.font());
         m_initalize = true;
     }
 
@@ -579,11 +587,7 @@ void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
         m_plstream->poin(m_xdata.size(), m_xdata.data(), m_ydata.data(), m_pointtype);
     }
 
-    // set label color
-    plplot_color(m_interface.color(Palette::ColorId::label_text).color());
-
-    // set label
-    m_plstream->lab(m_xlabel.c_str(), m_ylabel.c_str(), m_title.c_str());
+    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).color());
 }
 
 PlPlotPointChart::~PlPlotPointChart() = default;
@@ -626,7 +630,6 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
     {
         m_plstream->spage(0, 0, b.width(), b.height(),  b.x(), b.y());
         m_plstream->init();
-        plplot_font(m_interface.font());
         m_initalize = true;
     }
 
@@ -689,11 +692,7 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
         }
     }
 
-    // set labels color
-    plplot_color(m_interface.color(Palette::ColorId::label_text).color());
-
-    // set labels
-    m_plstream->lab(m_xlabel.c_str(), m_ylabel.c_str(), m_title.c_str());
+    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).color());
 }
 
 PlPlotBarChart::~PlPlotBarChart() = default;
@@ -738,7 +737,6 @@ void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
     {
         m_plstream->spage(0, 0, b.width(), b.height(),  b.x(), b.y());
         m_plstream->init();
-        plplot_font(m_interface.font());
         m_initalize = true;
     }
 
@@ -799,11 +797,7 @@ void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
         ++i;
     }
 
-    // set labels color
-    plplot_color(m_interface.color(Palette::ColorId::label_text).color());
-
-    // set labels
-    m_plstream->lab(m_xlabel.c_str(), m_ylabel.c_str(), m_title.c_str());
+    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).color());
 }
 
 PlPlotHBarChart::~PlPlotHBarChart() = default;
@@ -826,7 +820,6 @@ void PlPlotPieChart::draw(Painter& painter, const Rect& rect)
     {
         m_plstream->spage(0, 0, b.width(), b.height(),  b.x(), b.y());
         m_plstream->init();
-        plplot_font(m_interface.font());
         m_initalize = true;
     }
 
@@ -840,14 +833,10 @@ void PlPlotPieChart::draw(Painter& painter, const Rect& rect)
     m_plstream->adv(0);
     // Ensure window has aspect ratio of one so plotted as a circle.
     m_plstream->vasp(1.0);
-
     m_plstream->wind(0.1, 10.0, 0.1, 10.0);
 
     // get labels color & set title color
     plplot_color(m_interface.color(Palette::ColorId::label_text).color());
-
-    // set title
-    m_plstream->lab("", "", m_title.c_str());
 
     if ((!m_ydata.empty()) && (!m_sdata.empty()))
     {
@@ -899,6 +888,9 @@ void PlPlotPieChart::draw(Painter& painter, const Rect& rect)
             theta0 = theta - 1;
         }
     }
+
+    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).color());
+
 }
 
 PlPlotPieChart::~PlPlotPieChart() = default;

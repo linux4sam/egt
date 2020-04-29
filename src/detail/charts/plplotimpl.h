@@ -101,13 +101,13 @@ protected:
 
     void plplot_color(const Color& color);
 
-    void plplot_font(const Font& font);
-
     void plplot_verify_viewport();
 
     void plplot_viewport(PLFLT size);
 
     void plplot_box(bool xtick_label, bool ytick_label);
+
+    void plplot_label(shared_cairo_t cr, Rect b, const Font& font, const Color& color);
 
     float m_bank{0};
 };
