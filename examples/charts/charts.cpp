@@ -52,7 +52,6 @@ static std::shared_ptr<egt::ComboBox> create_grid_combo(const std::shared_ptr<eg
             }
         }
     });
-
     combo->selected(1);
 
     return combo;
@@ -66,7 +65,7 @@ struct PiePage : public egt::NotebookTab
         add(expand(sizer));
 
         auto pie = std::make_shared<egt::PieChart>();
-        pie->title("Pie Chart Example");
+        pie->title("Pie Chart");
 
         egt::PieChart::StringDataArray data;
         std::vector<int> pdata = { 5, 10, 15, 20, 4, 8, 16, 12};
@@ -79,7 +78,7 @@ struct PiePage : public egt::NotebookTab
         sizer->add(egt::expand(pie));
 
         auto csizer = std::make_shared<egt::HorizontalBoxSizer>();
-        sizer->add(csizer);
+        sizer->add(expand_horizontal(csizer));
 
         auto btn1 = std::make_shared<egt::Button>("Add Data");
         csizer->add(btn1);
@@ -88,7 +87,7 @@ struct PiePage : public egt::NotebookTab
             if (btn1->text() == "Add Data")
             {
                 egt::PieChart::StringDataArray data1;
-                static int i = 1;
+                static size_t i = 1;
                 data1.push_back(std::make_pair(random_item(1, 25), "label" + std::to_string(++i)));
                 data1.push_back(std::make_pair(random_item(1, 10), "label" + std::to_string(++i)));
                 pie->add_data(data1);
@@ -105,17 +104,17 @@ struct PiePage : public egt::NotebookTab
 
 struct Points : public egt::NotebookTab
 {
-    explicit Points(const egt::Size& size)
+    explicit Points()
     {
         auto sizer = std::make_shared<egt::VerticalBoxSizer>();
         add(expand(sizer));
 
         auto line = std::make_shared<egt::PointChart>();
-        line->label("x-axis", "y-axis", "Point Chart Example");
+        line->label("x-axis", "y-axis", "Point Chart");
         sizer->add(expand(line));
 
         auto csizer = std::make_shared<egt::HorizontalBoxSizer>();
-        sizer->add(csizer);
+        sizer->add(expand_horizontal(csizer));
 
         egt::PointChart::DataArray data;
         for (int i = 0; i < 101; i++)
@@ -126,32 +125,33 @@ struct Points : public egt::NotebookTab
 
         csizer->add(create_grid_combo(line));
 
-        auto point_type = std::make_shared<egt::Slider>(egt::Size(size.width() * 0.25, size.height() * 0.10), 1, 4, 1);
-        point_type->slider_flags().set(egt::Slider::SliderFlag::round_handle);
-        point_type->name("point type");
-        point_type->margin(5);
-        csizer->add(point_type);
-
-        point_type->on_value_changed([line, point_type]()
+        static const std::pair<std::string, egt::PointChart::PointType> point_items[] =
         {
-            switch (point_type->value())
+            {"PointType: Dot", egt::PointChart::PointType::dot},
+            {"PointType: Star", egt::PointChart::PointType::star },
+            {"PointType: Circle", egt::PointChart::PointType::circle },
+            {"PointType: Cross", egt::PointChart::PointType::cross },
+        };
+
+        auto combo = std::make_shared<egt::ComboBox>();
+        for (auto& i : point_items)
+            combo->add_item(i.first);
+        combo->margin(5);
+        csizer->add(combo);
+
+        combo->on_selected_changed([combo, line]()
+        {
+            auto s = combo->item_at(combo->selected());
+            for (auto& i : point_items)
             {
-            case 1:
-                line->point_type(egt::PointChart::PointType::dot);
-                break;
-            case 2:
-                line->point_type(egt::PointChart::PointType::star);
-                break;
-            case 3:
-                line->point_type(egt::PointChart::PointType::cross);
-                break;
-            default:
-                line->point_type(egt::PointChart::PointType::circle);
-                break;
+                if (s == i.first)
+                {
+                    line->point_type(i.second);
+                    break;
+                }
             }
         });
-
-        point_type->value(1);
+        combo->selected(0);
 
         auto btn2 = std::make_shared<egt::Button>("Add Data");
         csizer->add(btn2);
@@ -178,45 +178,102 @@ struct Points : public egt::NotebookTab
     }
 };
 
+static std::shared_ptr<egt::ComboBox> create_bar_pattern(const std::shared_ptr<egt::BarChart>& chart)
+{
+    static const std::pair<std::string, egt::BarChart::BarPattern> bar_pattern[] =
+    {
+        {"BarPattern: Solid", egt::BarChart::BarPattern::solid},
+        {"BarPattern: Horizontal", egt::BarChart::BarPattern::horizontal_line},
+        {"BarPattern: Vertical", egt::BarChart::BarPattern::vertical_line},
+        {"BarPattern: Boxes", egt::BarChart::BarPattern::boxes},
+    };
+
+    auto combo = std::make_shared<egt::ComboBox>();
+    for (auto& i : bar_pattern)
+        combo->add_item(i.first);
+    combo->margin(5);
+
+    combo->on_selected_changed([combo, chart]()
+    {
+        auto s = combo->item_at(combo->selected());
+        for (auto& i : bar_pattern)
+        {
+            if (s == i.first)
+            {
+                chart->bar_style(i.second);
+                break;
+            }
+        }
+    });
+    combo->selected(0);
+
+    return combo;
+}
+
 struct HorizontalBarPage : public egt::NotebookTab
 {
-    explicit HorizontalBarPage(const egt::Size& size)
+    explicit HorizontalBarPage(bool sdata)
     {
         auto sizer = std::make_shared<egt::VerticalBoxSizer>();
         add(expand(sizer));
 
         auto bar = std::make_shared<egt::HorizontalBarChart>();
-        bar->label("Widget Sales (millions)", "---- Months ---- ", "Horizontal BarChart Example");
         sizer->add(expand(bar));
 
-        const std::string x[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+        const std::vector<std::string> months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
-        egt::HorizontalBarChart::StringDataArray data;
-        for (const auto& i : x)
+        if (sdata)
         {
-            data.push_back(std::make_pair(random_item(1, 50), i));
+            bar->label("Sales", "Months", "Horizontal BarChart-2");
+            egt::HorizontalBarChart::StringDataArray str_data;
+            for (const auto& i : months)
+            {
+                str_data.push_back(std::make_pair(random_item(1, 50), i));
+            }
+            bar->data(str_data);
         }
-        bar->data(data);
+        else
+        {
+            bar->label("Sales", "Years", "Horizontal Bar Chart");
+            egt::HorizontalBarChart::DataArray data;
+            for (int i = 0; i < 10; i++)
+            {
+                data.push_back(std::make_pair(random_item(1, 50), (2010 + i)));
+            }
+            bar->data(data);
+        }
 
         auto csizer = std::make_shared<egt::HorizontalBoxSizer>();
-        sizer->add(csizer);
+        sizer->add(expand_horizontal(csizer));
 
         csizer->add(create_grid_combo(bar));
 
+        csizer->add(create_bar_pattern(bar));
+
         auto btn2 = std::make_shared<egt::Button>("Remove Data");
         csizer->add(btn2);
-        btn2->on_click([btn2, bar, x](egt::Event&)
+        btn2->on_click([btn2, bar, months, sdata](egt::Event&)
         {
-            egt::HorizontalBarChart::StringDataArray data1;
             if (btn2->text() == "Add Data")
             {
-                static int i = 0;
-                data1.push_back(std::make_pair(random_item(1, 150), x[i++]));
-                bar->add_data(data1);
+                if (sdata)
+                {
+                    egt::HorizontalBarChart::StringDataArray data1;
+                    static size_t i = 0;
+                    data1.push_back(std::make_pair(random_item(1, 150), months.at(i++)));
+                    bar->add_data(data1);
 
-                if (i >= 11)
-                    i = 0;
-
+                    if (i >= months.size())
+                        i = 0;
+                }
+                else
+                {
+                    egt::BarChart::DataArray data1;
+                    static int year = 2010;
+                    data1.push_back(std::make_pair(random_item(1, 50), year));
+                    bar->add_data(data1);
+                    year++;
+                }
                 btn2->text("Remove Data");
             }
             else
@@ -224,100 +281,73 @@ struct HorizontalBarPage : public egt::NotebookTab
                 bar->remove_data(1);
                 btn2->text("Add Data");
             }
-
         });
-
-        auto pattern = std::make_shared<egt::Slider>(egt::Size(size.width() * 0.25, size.height() * 0.10), 1, 4, 1);
-        pattern->slider_flags().set(egt::Slider::SliderFlag::round_handle);
-        pattern->margin(5);
-        pattern->name("HorizontalBar pattern");
-        csizer->add(pattern);
-
-        pattern->on_value_changed([bar, pattern]()
-        {
-            switch (pattern->value())
-            {
-            case 1:
-                bar->bar_style(egt::HorizontalBarChart::BarPattern::solid);
-                break;
-            case 2:
-                bar->bar_style(egt::HorizontalBarChart::BarPattern::horizontal_line);
-                break;
-            case 3:
-                bar->bar_style(egt::HorizontalBarChart::BarPattern::vertical_line);
-                break;
-            default:
-                bar->bar_style(egt::HorizontalBarChart::BarPattern::boxes);
-                break;
-            }
-        });
-
-        pattern->value(1);
-
     }
 };
 
 struct VerticalBarPage : public egt::NotebookTab
 {
-    explicit VerticalBarPage(const egt::Size& size)
+    explicit VerticalBarPage(bool sdata)
     {
         auto sizer = std::make_shared<egt::VerticalBoxSizer>();
         add(expand(sizer));
 
         auto bar = std::make_shared<egt::BarChart>();
-        bar->label("---- Year ---- ", "Widget Sales (millions)", "Vertical BarChart Example");
         sizer->add(expand(bar));
 
-        egt::BarChart::DataArray data;
-        for (int i = 0; i < 10; i++)
+        const std::vector<std::string> months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+        if (sdata)
         {
-            data.push_back(std::make_pair((1980 + i), random_item(1, 50)));
+            bar->label("Months", "Sales", "Vertical Bar Chart-2");
+            egt::BarChart::StringDataArray str_data;
+            for (const auto& i : months)
+            {
+                str_data.push_back(std::make_pair(random_item(1, 50), i));
+            }
+            bar->data(str_data);
         }
-        bar->data(data);
+        else
+        {
+            bar->label("Year", "Sales", "Vertical Bar Chart");
+            egt::BarChart::DataArray data;
+            for (int i = 0; i < 10; i++)
+            {
+                data.push_back(std::make_pair((1980 + i), random_item(1, 50)));
+            }
+            bar->data(data);
+        }
 
         auto csizer = std::make_shared<egt::HorizontalBoxSizer>();
-        sizer->add(csizer);
+        sizer->add(expand_horizontal(csizer));
 
         csizer->add(create_grid_combo(bar));
 
-        auto pattern = std::make_shared<egt::Slider>(egt::Size(size.width() * 0.25, size.height() * 0.10), 1, 4, 1);
-        pattern->slider_flags().set(egt::Slider::SliderFlag::round_handle);
-        pattern->margin(5);
-        pattern->name("Bar pattern");
-        csizer->add(pattern);
+        csizer->add(create_bar_pattern(bar));
 
-        pattern->on_value_changed([bar, pattern]()
-        {
-            switch (pattern->value())
-            {
-            case 1:
-                bar->bar_style(egt::BarChart::BarPattern::solid);
-                break;
-            case 2:
-                bar->bar_style(egt::BarChart::BarPattern::horizontal_line);
-                break;
-            case 3:
-                bar->bar_style(egt::BarChart::BarPattern::vertical_line);
-                break;
-            default:
-                bar->bar_style(egt::BarChart::BarPattern::boxes);
-                break;
-            }
-        });
-
-        pattern->value(1);
-
-        auto btn2 = std::make_shared<egt::Button>("Add Data");
+        auto btn2 = std::make_shared<egt::Button>("Remove Data");
         csizer->add(btn2);
-        btn2->on_click([bar, btn2](egt::Event&)
+        btn2->on_click([bar, btn2, sdata, months](egt::Event&)
         {
             if (btn2->text() == "Add Data")
             {
-                egt::BarChart::DataArray data1;
-                static int year = 1990;
-                data1.push_back(std::make_pair(year, random_item(1, 50)));
-                bar->add_data(data1);
-                year++;
+                if (sdata)
+                {
+                    static size_t i = 0;
+                    egt::BarChart::StringDataArray str_data1;
+                    str_data1.push_back(std::make_pair(random_item(1, 50), months.at(i++)));
+                    bar->add_data(str_data1);
+
+                    if (i >= months.size())
+                        i = 0;
+                }
+                else
+                {
+                    egt::BarChart::DataArray data1;
+                    static int year = 1990;
+                    data1.push_back(std::make_pair(year, random_item(1, 50)));
+                    bar->add_data(data1);
+                    year++;
+                }
                 btn2->text("Remove Data");
             }
             else
@@ -325,264 +355,133 @@ struct VerticalBarPage : public egt::NotebookTab
                 bar->remove_data(1);
                 btn2->text("Add Data");
             }
-
         });
     }
-
 };
 
-struct TanPage : public egt::NotebookTab
+static std::shared_ptr<egt::HorizontalBoxSizer> create_line_combo(const std::shared_ptr<egt::LineChart>& chart)
 {
-    explicit TanPage(const egt::Size& size)
+    auto hsizer = std::make_shared<egt::HorizontalBoxSizer>();
+
+    static const std::pair<std::string, egt::LineChart::LinePattern> line_patterns[] =
     {
-        auto sizer = std::make_shared<egt::VerticalBoxSizer>();
-        add(expand(sizer));
+        {"LineStyle: Solid", egt::LineChart::LinePattern::solid},
+        {"LineStyle: Dotted", egt::LineChart::LinePattern::dotted },
+        {"LineStyle: Dashes", egt::LineChart::LinePattern::dashes },
+    };
 
-        auto line = std::make_shared<egt::LineChart>();
-        line->label("x-axis", "y-axis", "Tangent Chart Example");
-        sizer->add(expand(line));
+    auto pattern = std::make_shared<egt::ComboBox>();
+    for (auto& i : line_patterns)
+        pattern->add_item(i.first);
+    pattern->margin(5);
+    hsizer->add(pattern);
 
-        egt::LineChart::DataArray data;
-        for (float i = 0.; i < M_PI * 16; i += 0.2)
+    pattern->on_selected_changed([pattern, chart]()
+    {
+        auto s = pattern->item_at(pattern->selected());
+        for (auto& i : line_patterns)
         {
-            data.push_back(std::make_pair(i, std::atan(i)));
+            if (s == i.first)
+            {
+                chart->line_style(i.second);
+                break;
+            }
         }
-        line->data(data);
+    });
+    pattern->selected(0);
 
-        auto csizer = std::make_shared<egt::HorizontalBoxSizer>();
-        sizer->add(csizer);
-
-        auto line_width = std::make_shared<egt::Slider>(egt::Size(size.width() * 0.15, size.height() * 0.10), 1, 5, 1);
-        line_width->slider_flags().set(egt::Slider::SliderFlag::round_handle);
-        line_width->margin(5);
-        line_width->name("line_width");
-        csizer->add(line_width);
-
-        line_width->on_value_changed([line, line_width]()
-        {
-            line->line_width(line_width->value());
-        });
-
-        line_width->value(2);
-
-        auto line_pattern = std::make_shared<egt::Slider>(egt::Size(size.width() * 0.15, size.height() * 0.10), 1, 3, 1);
-        line_pattern->slider_flags().set(egt::Slider::SliderFlag::round_handle);
-        line_pattern->name("line_pattern");
-        line_pattern->margin(5);
-        csizer->add(line_pattern);
-
-        line_pattern->on_value_changed([line, line_pattern]()
-        {
-            switch (line_pattern->value())
-            {
-            case 1:
-                line->line_style(egt::LineChart::LinePattern::solid);
-                break;
-            case 2:
-                line->line_style(egt::LineChart::LinePattern::dotted);
-                break;
-            case 3:
-                line->line_style(egt::LineChart::LinePattern::dashes);
-                break;
-            }
-        });
-
-        line_pattern->value(1);
-
-        csizer->add(create_grid_combo(line));
-
-        auto btn2 = std::make_shared<egt::Button>("Add Data");
-        csizer->add(btn2);
-        btn2->on_click([btn2, line](egt::Event&)
-        {
-            if (btn2->text() == "Add Data")
-            {
-                egt::LineChart::DataArray data1;
-                static int tsize = 17;
-                for (float i = M_PI * 16; i < M_PI * tsize; i += 0.2)
-                {
-                    data1.push_back(std::make_pair(i, std::atan(i)));
-                }
-                line->add_data(data1);
-                tsize += 5;
-                btn2->text("Remove Data");
-            }
-            else
-            {
-                uint32_t count = (10 * M_PI);
-                line->remove_data(count);
-                btn2->text("Add Data");
-            }
-
-        });
-
+    auto line_width = std::make_shared<egt::ComboBox>();
+    for (int i = 1; i < 10; i++)
+    {
+        line_width->add_item("LineWidth: " + std::to_string(i));
     }
+    line_width->margin(5);
+    hsizer->add(line_width);
+
+    line_width->on_selected_changed([line_width, chart]()
+    {
+        auto s = line_width->item_at(line_width->selected());
+        chart->line_width(std::atoi(s.substr(11, 1).c_str()));
+    });
+    line_width->selected(0);
+
+    return hsizer;
+}
+
+enum LineChartType
+{
+    Sine = 1,
+    Cosine,
+    Tangent,
 };
 
-struct SinePage : public egt::NotebookTab
+struct LineChartPage : public egt::NotebookTab
 {
-    explicit SinePage(const egt::Size& size)
+    explicit LineChartPage(LineChartType type)
     {
         auto sizer = std::make_shared<egt::VerticalBoxSizer>();
         add(expand(sizer));
 
         auto line = std::make_shared<egt::LineChart>();
-        line->label("x-axis", "y-axis", "Sine Chart Example");
-        sizer->add(expand(line));
+        sizer->add(egt::expand(line));
 
         egt::LineChart::DataArray data;
         for (float i = 0.; i < M_PI * 2; i += 0.2)
         {
-            data.push_back(std::make_pair(i, std::sin(i)));
+            if (type == LineChartType::Cosine)
+            {
+                line->label("x-axis", "y-axis", "Cosine Chart");
+                data.push_back(std::make_pair(i, std::cos(i)));
+            }
+            else if (type == LineChartType::Sine)
+            {
+                line->label("x-axis", "y-axis", "Sine Chart");
+                data.push_back(std::make_pair(i, std::sin(i)));
+            }
         }
         line->data(data);
 
-        auto csizer = std::make_shared<egt::HorizontalBoxSizer>();
+        auto csizer = std::make_shared<egt::HorizontalBoxSizer>(egt::Justification::start);
         sizer->add(csizer);
 
-        auto line_width = std::make_shared<egt::Slider>(egt::Size(size.width() * 0.15, size.height() * 0.10), 1, 5, 1);
-        line_width->slider_flags().set(egt::Slider::SliderFlag::round_handle);
-        line_width->name("line_width");
-        line_width->margin(5);
-        csizer->add(line_width);
-
-        line_width->on_value_changed([line, line_width]()
-        {
-            line->line_width(line_width->value());
-        });
-
-        line_width->value(2);
-
-        auto line_pattern = std::make_shared<egt::Slider>(egt::Size(size.width() * 0.15, size.height() * 0.10), 1, 3, 1);
-        line_pattern->slider_flags().set(egt::Slider::SliderFlag::round_handle);
-        line_pattern->name("line_pattern");
-        line_pattern->margin(5);
-        csizer->add(line_pattern);
-
-        line_pattern->on_value_changed([line, line_pattern]()
-        {
-            switch (line_pattern->value())
-            {
-            case 1:
-                line->line_style(egt::LineChart::LinePattern::solid);
-                break;
-            case 2:
-                line->line_style(egt::LineChart::LinePattern::dotted);
-                break;
-            case 3:
-                line->line_style(egt::LineChart::LinePattern::dashes);
-                break;
-            }
-        });
-
-        line_pattern->value(1);
+        csizer->add(create_line_combo(line));
 
         csizer->add(create_grid_combo(line));
 
         auto btn2 = std::make_shared<egt::Button>("Add Data");
         csizer->add(btn2);
-        btn2->on_click([btn2, line](egt::Event&)
+        btn2->on_click([btn2, line, type](egt::Event & event)
         {
             if (btn2->text() == "Add Data")
             {
                 egt::LineChart::DataArray data1;
-                static int ssize = 4;
-                static float i = M_PI * 2;
-                for (; i < M_PI * ssize; i += 0.2)
+                if (type == LineChartType::Cosine)
                 {
-                    data1.push_back(std::make_pair(i, std::sin(i)));
+                    static float ci = M_PI * 2;
+                    static int csize = 4;
+                    for (; ci < M_PI * csize; ci += 0.2)
+                    {
+                        data1.push_back(std::make_pair(ci, std::cos(ci)));
+                    }
+                    line->add_data(data1);
+                    csize ++;
                 }
-                line->add_data(data1);
-                ssize++;
-                btn2->text("Remove Data");
+                else if (type == LineChartType::Sine)
+                {
+                    static float si = M_PI * 2;
+                    static int ssize = 4;
+                    for (; si < M_PI * ssize; si += 0.2)
+                    {
+                        data1.push_back(std::make_pair(si, std::sin(si)));
+                    }
+                    line->add_data(data1);
+                    ssize ++;
+                }
+                btn2->text("RM Data");
             }
             else
             {
-                line->remove_data(2 * M_PI);
-                btn2->text("Add Data");
-            }
-        });
-    }
-};
-
-struct CosinePage : public egt::NotebookTab
-{
-    explicit CosinePage(const egt::Size& size)
-    {
-        auto sizer = std::make_shared<egt::VerticalBoxSizer>();
-        add(expand(sizer));
-
-        auto line = std::make_shared<egt::LineChart>();
-        line->label("x-axis", "y-axis", "Cosine Chart Example");
-        sizer->add(egt::expand(line));
-
-        egt::LineChart::DataArray data;
-        for (float i = 0.; i < M_PI * 4; i += 0.2)
-        {
-            data.push_back(std::make_pair(i, std::cos(i)));
-        }
-        line->data(data);
-
-        auto csizer = std::make_shared<egt::HorizontalBoxSizer>();
-        sizer->add(csizer);
-
-        auto line_width = std::make_shared<egt::Slider>(egt::Size(size.width() * 0.15, size.height() * 0.10), 1, 5, 1);
-        line_width->slider_flags().set(egt::Slider::SliderFlag::round_handle);
-        line_width->name("line_width");
-        line_width->margin(5);
-        csizer->add(line_width);
-
-        line_width->on_value_changed([line, line_width]()
-        {
-            line->line_width(line_width->value());
-        });
-        line_width->value(2);
-
-        auto line_pattern = std::make_shared<egt::Slider>(egt::Size(size.width() * 0.15, size.height() * 0.10), 1, 3, 1);
-        line_pattern->slider_flags().set(egt::Slider::SliderFlag::round_handle);
-        line_pattern->name("line_pattern");
-        line_pattern->margin(5);
-        csizer->add(line_pattern);
-
-        line_pattern->on_value_changed([line, line_pattern]()
-        {
-            switch (line_pattern->value())
-            {
-            case 1:
-                line->line_style(egt::LineChart::LinePattern::solid);
-                break;
-            case 2:
-                line->line_style(egt::LineChart::LinePattern::dotted);
-                break;
-            case 3:
-                line->line_style(egt::LineChart::LinePattern::dashes);
-                break;
-            }
-        });
-        line_pattern->value(1);
-
-        csizer->add(create_grid_combo(line));
-
-        auto btn2 = std::make_shared<egt::Button>("Add Data");
-        csizer->add(btn2);
-        btn2->on_click([btn2, line](egt::Event & event)
-        {
-            if (btn2->text() == "Add Data")
-            {
-                egt::LineChart::DataArray data1;
-                static float i = M_PI * 4;
-                static int csize = 9;
-                for (; i < M_PI * csize; i += 0.2)
-                {
-                    data1.push_back(std::make_pair(i, std::cos(i)));
-                }
-                line->add_data(data1);
-                csize += 3;
-                btn2->text("Remove Data");
-            }
-            else
-            {
-                line->remove_data(M_PI * 5);
+                line->remove_data(M_PI * 2);
                 btn2->text("Add Data");
             }
         });
@@ -592,17 +491,18 @@ struct CosinePage : public egt::NotebookTab
 int main(int argc, char** argv)
 {
     egt::Application app(argc, argv, "charts");
-
     egt::TopWindow win;
 
     egt::VerticalBoxSizer vsizer(win);
     expand(vsizer);
 
-    auto frame = std::make_shared<egt::Frame>(egt::Size(win.width(), win.height() * 0.15));
+    auto frame = std::make_shared<egt::Frame>(egt::Size(win.width(), win.height() * 0.1));
+    frame->color(egt::Palette::ColorId::bg, egt::Palette::transparent);
     vsizer.add(egt::expand_horizontal(frame));
 
     auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_black.png;128"));
-    logo->align(egt::AlignFlag::center);
+    logo->align(egt::AlignFlag::left | egt::AlignFlag::center);
+    logo->margin(5);
     frame->add(logo);
 
     std::vector<std::pair<std::string, std::function<std::unique_ptr<egt::Theme>()>>> combo_items =
@@ -630,42 +530,56 @@ int main(int argc, char** argv)
         {
             if (s == i.first)
             {
-                global_theme(i.second());
+                egt::global_theme(i.second());
+
+                if ((s == "Midnight") || (s == "Lapis"))
+                    logo->image(egt::Image("icon:egt_logo_white.png;128"));
+                else
+                    logo->image(egt::Image("icon:egt_logo_black.png;128"));
+
                 break;
             }
         }
         win.damage();
     });
+    combo->selected(0);
+
+    std::vector<std::pair<std::string, std::function<std::shared_ptr<egt::NotebookTab>()>>> charts_items =
+    {
+        {"Sine Chart", []{ return std::make_shared<LineChartPage>(LineChartType::Sine); }},
+        {"Cosine Chart", []{ return std::make_shared<LineChartPage>(LineChartType::Cosine); }},
+        {"Points", []{ return std::make_shared<Points>(); }},
+        {"Vertical Bar", []{ return std::make_shared<VerticalBarPage>(false); }},
+        {"Vertical Bar-2", []{ return std::make_shared<VerticalBarPage>(true); }},
+        {"Horizontal Bar", []{ return std::make_shared<HorizontalBarPage>(false); }},
+        {"Horizontal Bar-2", []{ return std::make_shared<HorizontalBarPage>(true); }},
+        {"Pie Chart", []{ return std::make_shared<PiePage>(); }}
+    };
+
+    auto chart = std::make_shared<egt::ComboBox>();
+    for (auto& i : charts_items)
+        chart->add_item(i.first);
+    chart->align(egt::AlignFlag::center_vertical | egt::AlignFlag::center);
+    chart->margin(5);
+    frame->add(chart);
 
     egt::BoxSizer hsizer(egt::Orientation::horizontal);
+    hsizer.margin(5);
     vsizer.add(expand(hsizer));
 
-    egt::ListBox list(egt::Size(win.width() * 0.20, 0));
-    list.align(egt::AlignFlag::expand_vertical | egt::AlignFlag::left);
-    list.add_item(std::make_shared<egt::StringItem>("Sine Chart"));
-    list.add_item(std::make_shared<egt::StringItem>("Cosine Chart"));
-    list.add_item(std::make_shared<egt::StringItem>("Tangent Chart"));
-    list.add_item(std::make_shared<egt::StringItem>("Points"));
-    list.add_item(std::make_shared<egt::StringItem>("VerticalBarPage"));
-    list.add_item(std::make_shared<egt::StringItem>("HorizontalBarPage"));
-    list.add_item(std::make_shared<egt::StringItem>("PiePage"));
-    hsizer.add(list);
-
-    egt::Notebook notebook;
-    hsizer.add(expand(notebook));
-    egt::Size size(win.width() * 0.80, win.height() * 0.85);
-    notebook.add(std::make_shared<SinePage>(size));
-    notebook.add(std::make_shared<CosinePage>(size));
-    notebook.add(std::make_shared<TanPage>(size));
-    notebook.add(std::make_shared<Points>(size));
-    notebook.add(std::make_shared<VerticalBarPage>(size));
-    notebook.add(std::make_shared<HorizontalBarPage>(size));
-    notebook.add(std::make_shared<PiePage>());
-
-    list.on_selected_changed([&]()
+    chart->on_selected_changed([&]()
     {
-        notebook.selected(list.selected());
+        hsizer.remove_all();
+        auto s = chart->item_at(chart->selected());
+        for (auto& i : charts_items)
+        {
+            if (s == i.first)
+            {
+                hsizer.add(expand(i.second()));
+            }
+        }
     });
+    chart->selected(1);
 
     win.show();
 
