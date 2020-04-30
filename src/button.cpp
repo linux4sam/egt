@@ -123,7 +123,7 @@ void Button::default_draw(Button& widget, Painter& painter, const Rect& /*rect*/
                       TextBox::TextFlags({TextBox::TextFlag::multiline, TextBox::TextFlag::word_wrap}),
                       widget.text_align(),
                       Justification::middle,
-                      widget.color(Palette::ColorId::button_text).color());
+                      widget.color(Palette::ColorId::button_text));
 }
 
 void Button::checked(bool value)
@@ -286,7 +286,7 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
                               TextBox::TextFlags({TextBox::TextFlag::multiline, TextBox::TextFlag::word_wrap}),
                               widget.text_align(),
                               Justification::middle,
-                              widget.color(Palette::ColorId::button_text).color(),
+                              widget.color(Palette::ColorId::button_text),
                               widget.image_align(),
                               widget.image());
         }
@@ -299,7 +299,7 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
                               TextBox::TextFlags({TextBox::TextFlag::multiline, TextBox::TextFlag::word_wrap}),
                               widget.text_align(),
                               Justification::middle,
-                              widget.color(Palette::ColorId::button_text).color());
+                              widget.color(Palette::ColorId::button_text));
         }
     }
     else if (!widget.image().empty())

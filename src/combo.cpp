@@ -292,7 +292,7 @@ void ComboBox::default_draw(ComboBox& widget, Painter& painter, const Rect& /*re
     const auto text = Rect(b.point(), b.size() - Size(handle.size().width(), 0));
 
     // draw a down arrow
-    painter.set(widget.color(Palette::ColorId::button_fg).color());
+    painter.set(widget.color(Palette::ColorId::button_fg));
     auto cr = painter.context().get();
     cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
     painter.draw(Point(handle.x(), handle.y() + handle.height() / 3.),
@@ -305,7 +305,7 @@ void ComboBox::default_draw(ComboBox& widget, Painter& painter, const Rect& /*re
     if (widget.selected() >= 0 && widget.selected() < static_cast<ssize_t>(widget.item_count()))
     {
         // text
-        painter.set(widget.color(Palette::ColorId::text).color());
+        painter.set(widget.color(Palette::ColorId::text));
         painter.set(widget.font());
         const auto size = painter.text_size(widget.item_at(widget.selected()));
         const auto target = detail::align_algorithm(size,

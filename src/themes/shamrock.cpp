@@ -32,7 +32,7 @@ void ShamrockTheme::init_draw()
         {TextBox::TextFlag::multiline, TextBox::TextFlag::word_wrap},
         widget.text_align(),
         Justification::middle,
-        widget.color(Palette::ColorId::button_text).color());
+        widget.color(Palette::ColorId::button_text));
     });
     /// @[RoundButtons]
 }

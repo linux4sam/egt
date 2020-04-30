@@ -85,7 +85,7 @@ void RadioBox::default_draw(RadioBox& widget, Painter& painter, const Rect& rect
 
     painter.draw(Circle(handle.center(),
                         (std::min(handle.width(), handle.height()) - widget.theme().default_border() * 2) / 2.));
-    painter.set(widget.color(Palette::ColorId::button_fg).color());
+    painter.set(widget.color(Palette::ColorId::button_fg));
     painter.line_width(widget.theme().default_border());
     painter.stroke();
 
@@ -97,7 +97,7 @@ void RadioBox::default_draw(RadioBox& widget, Painter& painter, const Rect& rect
     }
 
     // text
-    painter.set(widget.color(Palette::ColorId::label_text).color());
+    painter.set(widget.color(Palette::ColorId::label_text));
     Rect target = detail::align_algorithm(text_size,
                                           text,
                                           widget.text_align());

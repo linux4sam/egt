@@ -52,7 +52,7 @@ void SkyTheme::init_draw()
         }
 
         // text
-        painter.set(widget.color(Palette::ColorId::text).color());
+        painter.set(widget.color(Palette::ColorId::text));
         painter.set(widget.font());
         auto size = painter.text_size(widget.text());
         Rect target = detail::align_algorithm(size,

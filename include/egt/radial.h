@@ -253,7 +253,7 @@ public:
                               {},
                               AlignFlag::center,
                               Justification::middle,
-                              widget.color(Palette::ColorId::label_text).color());
+                              widget.color(Palette::ColorId::label_text));
         }
     }
 

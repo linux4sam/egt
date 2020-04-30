@@ -93,7 +93,7 @@ void CheckBox::default_draw(CheckBox& widget, Painter& painter, const Rect& /*re
         // draw an "X"
         auto cr = painter.context().get();
         cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
-        painter.set(widget.color(Palette::ColorId::button_fg).color());
+        painter.set(widget.color(Palette::ColorId::button_fg));
         painter.draw(handle.top_left() + Point(border, border),
                      handle.bottom_right() - Point(border, border));
         painter.draw(handle.top_right() + Point(-border, border),
@@ -103,7 +103,7 @@ void CheckBox::default_draw(CheckBox& widget, Painter& painter, const Rect& /*re
     }
 
     // text
-    painter.set(widget.color(Palette::ColorId::label_text).color());
+    painter.set(widget.color(Palette::ColorId::label_text));
     auto size = painter.text_size(widget.text());
     Rect target = detail::align_algorithm(size,
                                           text,
@@ -216,9 +216,9 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
         rect.x(rect.x() + rect.width());
 
         if (widget.checked())
-            painter.set(widget.color(Palette::ColorId::button_text).color());
+            painter.set(widget.color(Palette::ColorId::button_text));
         else
-            painter.set(widget.color(Palette::ColorId::button_text, Palette::GroupId::disabled).color());
+            painter.set(widget.color(Palette::ColorId::button_text, Palette::GroupId::disabled));
         painter.set(widget.font());
         auto size = painter.text_size(widget.on_text());
         Rect target = detail::align_algorithm(size,
@@ -233,7 +233,7 @@ void ToggleBox::default_draw(ToggleBox& widget, Painter& painter, const Rect& re
         Rect rect = b;
         rect.width(rect.width() / 2);
 
-        painter.set(widget.color(Palette::ColorId::button_text, Palette::GroupId::disabled).color());
+        painter.set(widget.color(Palette::ColorId::button_text, Palette::GroupId::disabled));
         painter.set(widget.font());
         auto size = painter.text_size(widget.off_text());
         Rect target = detail::align_algorithm(size,

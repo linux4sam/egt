@@ -101,7 +101,7 @@ void StaticGrid::draw(Painter& painter, const Rect& rect)
     {
         const auto b = content_area();
 
-        painter.set(color(Palette::ColorId::border).color());
+        painter.set(color(Palette::ColorId::border));
         painter.line_width(border());
 
         const auto columns = m_cells.size();
@@ -390,7 +390,7 @@ void SelectableGrid::draw(Painter& painter, const Rect& rect)
 {
     if (border() > 0)
     {
-        painter.set(color(Palette::ColorId::border).color());
+        painter.set(color(Palette::ColorId::border));
         auto line_width = border() / 2;
         if (line_width <= 0)
             line_width = border();

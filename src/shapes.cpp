@@ -48,7 +48,7 @@ void LineWidget::draw(Painter& painter, const Rect&)
     if (width <= 0)
         width = 1;
 
-    painter.set(color(Palette::ColorId::border).color());
+    painter.set(color(Palette::ColorId::border));
     painter.line_width(width);
 
     if (m_horizontal)

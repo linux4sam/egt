@@ -68,7 +68,7 @@ void Label::default_draw(Label& widget, Painter& painter, const Rect&)
                       TextBox::TextFlags({TextBox::TextFlag::multiline, TextBox::TextFlag::word_wrap}),
                       widget.text_align(),
                       Justification::middle,
-                      widget.color(Palette::ColorId::label_text).color());
+                      widget.color(Palette::ColorId::label_text));
 }
 
 void Label::set_parent(Frame* parent)
@@ -163,7 +163,7 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
                               TextBox::TextFlags({TextBox::TextFlag::multiline, TextBox::TextFlag::word_wrap}),
                               widget.text_align(),
                               Justification::middle,
-                              widget.color(Palette::ColorId::label_text).color(),
+                              widget.color(Palette::ColorId::label_text),
                               widget.image_align(),
                               widget.image());
         }
@@ -176,7 +176,7 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
                               TextBox::TextFlags({TextBox::TextFlag::multiline, TextBox::TextFlag::word_wrap}),
                               widget.text_align(),
                               Justification::middle,
-                              widget.color(Palette::ColorId::label_text).color());
+                              widget.color(Palette::ColorId::label_text));
         }
     }
     else if (!widget.image().empty())

@@ -26,7 +26,7 @@ void SliderType<float>::draw_label(Painter& painter, float value)
     const auto text = detail::format(value, 2);
     const auto f = TextWidget::scale_font(handle.size(), text, this->font());
 
-    painter.set(this->color(Palette::ColorId::label_text).color());
+    painter.set(this->color(Palette::ColorId::label_text));
     painter.set(f);
 
     const auto text_size = painter.text_size(text);
@@ -52,7 +52,7 @@ void SliderType<double>::draw_label(Painter& painter, double value)
     const auto text = detail::format(value, 2);
     const auto f = TextWidget::scale_font(handle.size(), text, this->font());
 
-    painter.set(this->color(Palette::ColorId::label_text).color());
+    painter.set(this->color(Palette::ColorId::label_text));
     painter.set(f);
 
     const auto text_size = painter.text_size(text);

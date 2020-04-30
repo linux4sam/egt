@@ -316,7 +316,7 @@ protected:
         const auto text = std::to_string(value);
         const auto f = TextWidget::scale_font(handle.size(), text, this->font());
 
-        painter.set(this->color(Palette::ColorId::label_text).color());
+        painter.set(this->color(Palette::ColorId::label_text));
         painter.set(f);
 
         const auto text_size = painter.text_size(text);
@@ -610,17 +610,17 @@ void SliderType<T>::draw_line(Painter& painter, float xp, float yp)
     if (slider_flags().is_set(SliderFlag::consistent_line))
     {
         painter.set(this->color(Palette::ColorId::button_fg,
-                                Palette::GroupId::disabled).color());
+                                Palette::GroupId::disabled));
         painter.draw(a1, b2);
         painter.stroke();
     }
     else
     {
-        painter.set(this->color(Palette::ColorId::button_fg).color());
+        painter.set(this->color(Palette::ColorId::button_fg));
         painter.draw(a1, a2);
         painter.stroke();
         painter.set(this->color(Palette::ColorId::button_fg,
-                                Palette::GroupId::disabled).color());
+                                Palette::GroupId::disabled));
         painter.draw(b1, b2);
         painter.stroke();
     }

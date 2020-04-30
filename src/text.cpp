@@ -214,7 +214,7 @@ void TextBox::draw(Painter& painter, const Rect&)
     {
         if (focus() && m_cursor_state)
         {
-            painter.set(color(Palette::ColorId::cursor).color());
+            painter.set(color(Palette::ColorId::cursor));
             painter.line_width(2);
 
             painter.draw(offset + Point(0, -CURSOR_Y_OFFSET),
@@ -230,10 +230,10 @@ void TextBox::draw(Painter& painter, const Rect&)
                       text_flags(),
                       text_align(),
                       Justification::start,
-                      color(Palette::ColorId::text).color(),
+                      color(Palette::ColorId::text),
                       draw_cursor,
                       m_cursor_pos,
-                      color(Palette::ColorId::text_highlight).color(),
+                      color(Palette::ColorId::text_highlight),
                       m_select_start,
                       m_select_len);
 }
