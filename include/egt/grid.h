@@ -53,6 +53,9 @@ public:
     /// Rows and columns size of the grid.
     using GridSize = SizeType<size_t, detail::Compatible::grid>;
 
+    /// Rows and column of the grid.
+    using GridPoint = PointType<size_t, detail::Compatible::grid>;
+
     /**
      * @param[in] size Rows and columns.
      * @param[in] border Border width. @see Widget::border().
@@ -115,7 +118,7 @@ public:
      * @param column The column index.
      * @param row The row index.
      */
-    virtual void add(const std::shared_ptr<Widget>& widget, int column, int row);
+    virtual void add(const std::shared_ptr<Widget>& widget, size_t column, size_t row);
 
     /**
      * Add a widget to the grid into a specific cell.
@@ -124,7 +127,7 @@ public:
      * @param column The column index.
      * @param row The row index.
      */
-    virtual void add(Widget& widget, int column, int row)
+    virtual void add(Widget& widget, size_t column, size_t row)
     {
         // Nasty, but it gets the job done.  If a widget is passed in as a
         // reference, we don't own it, so create a "pointless" shared_ptr that
@@ -139,7 +142,7 @@ public:
      *
      * @param point The row and column to get.
      */
-    Widget* get(const Point& point);
+    Widget* get(const GridPoint& point);
 
     void remove(Widget* widget) override;
 
@@ -245,7 +248,7 @@ public:
     void draw(Painter& painter, const Rect& rect) override;
 
     /// Get the selected cell.
-    Point selected() const
+    GridPoint selected() const
     {
         return {m_selected_column, m_selected_row};
     }
@@ -258,7 +261,7 @@ public:
      * @param[in] column The column to select.
      * @param[in] row The row to select.
      */
-    void selected(int column, int row);
+    void selected(size_t column, size_t row);
 
     void serialize(Serializer& serializer) const override;
 
@@ -267,9 +270,9 @@ public:
 
 protected:
     /// Currently selected column.
-    int m_selected_column{0};
+    size_t m_selected_column{0};
     /// Currently selected row.
-    int m_selected_row{0};
+    size_t m_selected_row{0};
 };
 
 }

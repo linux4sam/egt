@@ -188,14 +188,14 @@ void StaticGrid::add(std::shared_ptr<Widget> widget)
     }
 }
 
-void StaticGrid::add(const std::shared_ptr<Widget>& widget, int column, int row)
+void StaticGrid::add(const std::shared_ptr<Widget>& widget, size_t column, size_t row)
 {
     Frame::add(widget);
 
-    if (column >= static_cast<int>(m_cells.size()))
+    if (column >= m_cells.size())
         m_cells.resize(column + 1);
 
-    if (row >= static_cast<int>(m_cells[column].size()))
+    if (row >= m_cells[column].size())
     {
         for (auto& c : m_cells)
             c.resize(row + 1, {});
@@ -209,10 +209,10 @@ void StaticGrid::add(const std::shared_ptr<Widget>& widget, int column, int row)
     reposition();
 }
 
-Widget* StaticGrid::get(const Point& point)
+Widget* StaticGrid::get(const GridPoint& point)
 {
-    if (point.x() >= 0 && point.x() < static_cast<Point::DimType>(m_cells.size()) &&
-        point.y() >= 0 && point.y() < static_cast<Point::DimType>(m_cells[point.x()].size()))
+    if (point.x() < m_cells.size() &&
+        point.y() < m_cells[point.x()].size())
     {
         auto widget = m_cells[point.x()][point.y()].lock();
         if (widget)
@@ -414,13 +414,13 @@ void SelectableGrid::draw(Painter& painter, const Rect& rect)
     Frame::draw(painter, rect);
 }
 
-void SelectableGrid::selected(int column, int row)
+void SelectableGrid::selected(size_t column, size_t row)
 {
     const auto columns = m_cells.size();
-    if (column >= static_cast<ssize_t>(columns))
+    if (column >= columns)
         return;
 
-    if (!columns || row >= static_cast<ssize_t>(m_cells[column].size()))
+    if (!columns || row >= m_cells[column].size())
         return;
 
     auto c = detail::change_if_diff<>(m_selected_column, column);
@@ -436,8 +436,8 @@ void SelectableGrid::serialize(Serializer& serializer) const
 {
     StaticGrid::serialize(serializer);
 
-    serializer.add_property("selected_column", m_selected_column);
-    serializer.add_property("selected_row", m_selected_row);
+    serializer.add_property("selected_column", static_cast<int>(m_selected_column));
+    serializer.add_property("selected_row", static_cast<int>(m_selected_row));
 }
 
 void SelectableGrid::deserialize(const std::string& name, const std::string& value,
