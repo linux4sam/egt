@@ -69,7 +69,7 @@ void RadioBox::default_draw(RadioBox& widget, Painter& painter, const Rect& rect
 
     std::vector<detail::LayoutRect> rects;
 
-    const auto circle_diameter = std::min(b.width() - text_size.width(), b.height());
+    const auto circle_diameter = std::min<DefaultDim>(b.width() - text_size.width(), b.height());
 
     rects.emplace_back(0,
                        Rect(0, 0, circle_diameter, circle_diameter),

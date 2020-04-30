@@ -596,7 +596,7 @@ public:
         auto cr = painter.context().get();
         cairo_translate(cr, b.center().x(), b.y() + b.height() - text_size.height());
 
-        const auto dim = std::min(b.width() / 2, b.height());
+        const auto dim = std::min<DefaultDim>(b.width() / 2, b.height());
         const float hw = dim - (text_size.width() * 2.0);
 
         // ticks and labels

@@ -451,16 +451,16 @@ int SliderType<T>::handle_width() const
         slider_flags().is_set(SliderFlag::round_handle))
     {
         if (m_orient == Orientation::horizontal)
-            return std::min(width / 6, height);
+            return std::min<DefaultDim>(width / 6, height);
         else
-            return std::min(height / 6, width);
+            return std::min<DefaultDim>(height / 6, width);
     }
     else
     {
         if (m_orient == Orientation::horizontal)
-            return std::min(width / 6, height) * 2;
+            return std::min<DefaultDim>(width / 6, height) * 2;
         else
-            return std::min(height / 6, width);
+            return std::min<DefaultDim>(height / 6, width);
     }
 }
 
@@ -484,16 +484,16 @@ int SliderType<T>::handle_height() const
         slider_flags().is_set(SliderFlag::round_handle))
     {
         if (m_orient == Orientation::horizontal)
-            return std::min(width / 6, height);
+            return std::min<DefaultDim>(width / 6, height);
         else
-            return std::min(height / 6, width);
+            return std::min<DefaultDim>(height / 6, width);
     }
     else
     {
         if (m_orient == Orientation::horizontal)
-            return std::min(width / 6, height);
+            return std::min<DefaultDim>(width / 6, height);
         else
-            return std::min(height / 6, width) * 2;
+            return std::min<DefaultDim>(height / 6, width) * 2;
     }
 }
 
