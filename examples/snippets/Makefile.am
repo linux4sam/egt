@@ -41,10 +41,12 @@ snippet4_SOURCES = snippet4.cpp
 snippet5_SOURCES = snippet5.cpp
 snippet5_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 snippet5_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
+snippet5_LDFLAGS = -Wl,--no-as-needed $(AM_LDFLAGS)
 
 snippet6_SOURCES = snippet6.cpp
 snippet6_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 snippet6_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
+snippet6_LDFLAGS = -Wl,--no-as-needed $(AM_LDFLAGS)
 
 snippet7_SOURCES = snippet7.cpp
 snippet8_SOURCES = snippet8.cpp
