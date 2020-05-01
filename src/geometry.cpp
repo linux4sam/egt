@@ -12,14 +12,14 @@ inline namespace v1
 {
 
 template<class Dim>
-bool ArcType<Dim>::empty() const
+bool ArcType<Dim>::empty() const noexcept
 {
     return this->radius() < 0.0f ||
            detail::float_equal(this->radius(), 0.0f);
 }
 
-template bool ArcType<float>::empty() const;
-template bool ArcType<int>::empty() const;
+template bool ArcType<float>::empty() const noexcept;
+template bool ArcType<int>::empty() const noexcept;
 
 }
 }

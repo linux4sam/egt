@@ -80,7 +80,7 @@ public:
     {}
 
     /// PointType operator
-    constexpr PointType& operator+=(const PointType& rhs)
+    constexpr PointType& operator+=(const PointType& rhs) noexcept
     {
         m_x += rhs.m_x;
         m_y += rhs.m_y;
@@ -88,7 +88,7 @@ public:
     }
 
     /// PointType operator
-    constexpr PointType& operator-=(const PointType& rhs)
+    constexpr PointType& operator-=(const PointType& rhs) noexcept
     {
         m_x -= rhs.m_x;
         m_y -= rhs.m_y;
@@ -96,7 +96,7 @@ public:
     }
 
     /// PointType operator
-    constexpr PointType& operator*=(const PointType& rhs)
+    constexpr PointType& operator*=(const PointType& rhs) noexcept
     {
         m_x *= rhs.m_x;
         m_y *= rhs.m_y;
@@ -104,7 +104,7 @@ public:
     }
 
     /// PointType operator
-    constexpr PointType& operator/=(const PointType& rhs)
+    constexpr PointType& operator/=(const PointType& rhs) noexcept
     {
         m_x /= rhs.m_x;
         m_y /= rhs.m_y;
@@ -113,7 +113,7 @@ public:
 
     /// PointType operator
     template <class T>
-    constexpr PointType& operator+=(const T& rhs)
+    constexpr PointType& operator+=(const T& rhs) noexcept
     {
         m_x += rhs;
         m_y += rhs;
@@ -122,7 +122,7 @@ public:
 
     /// PointType operator
     template <class T>
-    constexpr PointType& operator-=(const T& rhs)
+    constexpr PointType& operator-=(const T& rhs) noexcept
     {
         m_x -= rhs;
         m_y -= rhs;
@@ -131,7 +131,7 @@ public:
 
     /// PointType operator
     template <class T>
-    constexpr PointType& operator*=(const T& rhs)
+    constexpr PointType& operator*=(const T& rhs) noexcept
     {
         m_x *= rhs;
         m_y *= rhs;
@@ -140,7 +140,7 @@ public:
 
     /// PointType operator
     template <class T>
-    constexpr PointType& operator/=(const T& rhs)
+    constexpr PointType& operator/=(const T& rhs) noexcept
     {
         m_x /= rhs;
         m_y /= rhs;
@@ -155,7 +155,7 @@ public:
      * @param angle The angle in radians.
      */
     template <class T>
-    PointType point_on_circumference(T radius, T angle) const
+    PointType point_on_circumference(T radius, T angle) const noexcept
     {
         return PointType(m_x + radius * std::cos(angle),
                          m_y + radius * std::sin(angle));
@@ -167,7 +167,7 @@ public:
      * @param point The other point.
      */
     template <class T>
-    T angle_to(const PointType& point) const
+    T angle_to(const PointType& point) const noexcept
     {
         return std::atan2(point.m_x - m_x, m_y - point.m_y);
     }
@@ -177,20 +177,20 @@ public:
      *
      * @param point The other point.
      */
-    Dim distance_to(const PointType& point) const
+    Dim distance_to(const PointType& point) const noexcept
     {
         return std::hypot(point.m_x - m_x, point.m_y - m_y);
     }
 
     /// Get the x value.
-    constexpr Dim x() const { return m_x; }
+    constexpr Dim x() const noexcept { return m_x; }
     /// Get the y value.
-    constexpr Dim y() const { return m_y; }
+    constexpr Dim y() const noexcept { return m_y; }
 
     /// Set the x value.
-    constexpr void x(Dim x) { m_x = x; }
+    constexpr void x(Dim x) noexcept { m_x = x; }
     /// Set the y value.
-    constexpr void y(Dim y) { m_y = y; }
+    constexpr void y(Dim y) noexcept { m_y = y; }
 
 protected:
     /// X value
@@ -201,7 +201,7 @@ protected:
 
 /// PointType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr bool operator==(const PointType<Dim, DimCompat>& lhs, const PointType<Dim, DimCompat>& rhs)
+constexpr bool operator==(const PointType<Dim, DimCompat>& lhs, const PointType<Dim, DimCompat>& rhs) noexcept
 {
     return lhs.x() == rhs.x() && lhs.y() == rhs.y();
 }
@@ -216,14 +216,14 @@ constexpr bool operator==(const PointType<float, DimCompat>& lhs, const PointTyp
 
 /// PointType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr bool operator!=(const PointType<Dim, DimCompat>& lhs, const PointType<Dim, DimCompat>& rhs)
+constexpr bool operator!=(const PointType<Dim, DimCompat>& lhs, const PointType<Dim, DimCompat>& rhs) noexcept
 {
     return !(lhs == rhs);
 }
 
 /// PointType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr PointType<Dim, DimCompat> operator-(PointType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs)
+constexpr PointType<Dim, DimCompat> operator-(PointType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs) noexcept
 {
     lhs -= rhs;
     return lhs;
@@ -231,7 +231,7 @@ constexpr PointType<Dim, DimCompat> operator-(PointType<Dim, DimCompat> lhs, con
 
 /// PointType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr PointType<Dim, DimCompat> operator+(PointType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs)
+constexpr PointType<Dim, DimCompat> operator+(PointType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs) noexcept
 {
     lhs += rhs;
     return lhs;
@@ -239,7 +239,7 @@ constexpr PointType<Dim, DimCompat> operator+(PointType<Dim, DimCompat> lhs, con
 
 /// PointType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr PointType<Dim, DimCompat> operator/(PointType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs)
+constexpr PointType<Dim, DimCompat> operator/(PointType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs) noexcept
 {
     lhs /= rhs;
     return lhs;
@@ -247,7 +247,7 @@ constexpr PointType<Dim, DimCompat> operator/(PointType<Dim, DimCompat> lhs, con
 
 /// PointType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr PointType<Dim, DimCompat> operator*(PointType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs)
+constexpr PointType<Dim, DimCompat> operator*(PointType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs) noexcept
 {
     lhs *= rhs;
     return lhs;
@@ -255,7 +255,7 @@ constexpr PointType<Dim, DimCompat> operator*(PointType<Dim, DimCompat> lhs, con
 
 /// PointType operator
 template<class Dim, detail::Compatible DimCompat, class T>
-constexpr PointType<Dim, DimCompat> operator-(PointType<Dim, DimCompat> lhs, const T& rhs)
+constexpr PointType<Dim, DimCompat> operator-(PointType<Dim, DimCompat> lhs, const T& rhs) noexcept
 {
     lhs -= rhs;
     return lhs;
@@ -263,7 +263,7 @@ constexpr PointType<Dim, DimCompat> operator-(PointType<Dim, DimCompat> lhs, con
 
 /// PointType operator
 template<class Dim, detail::Compatible DimCompat, class T>
-constexpr PointType<Dim, DimCompat> operator+(PointType<Dim, DimCompat> lhs, const T& rhs)
+constexpr PointType<Dim, DimCompat> operator+(PointType<Dim, DimCompat> lhs, const T& rhs) noexcept
 {
     lhs += rhs;
     return lhs;
@@ -271,7 +271,7 @@ constexpr PointType<Dim, DimCompat> operator+(PointType<Dim, DimCompat> lhs, con
 
 /// PointType operator
 template<class Dim, detail::Compatible DimCompat, class T>
-constexpr PointType<Dim, DimCompat> operator/(PointType<Dim, DimCompat> lhs, const T& rhs)
+constexpr PointType<Dim, DimCompat> operator/(PointType<Dim, DimCompat> lhs, const T& rhs) noexcept
 {
     lhs /= rhs;
     return lhs;
@@ -279,7 +279,7 @@ constexpr PointType<Dim, DimCompat> operator/(PointType<Dim, DimCompat> lhs, con
 
 /// PointType operator
 template<class Dim, detail::Compatible DimCompat, class T>
-constexpr PointType<Dim, DimCompat> operator*(PointType<Dim, DimCompat> lhs, const T& rhs)
+constexpr PointType<Dim, DimCompat> operator*(PointType<Dim, DimCompat> lhs, const T& rhs) noexcept
 {
     lhs *= rhs;
     return lhs;
@@ -350,7 +350,7 @@ public:
      * This is a special case, and is the default state of a SizeType. This can
      * be used to determine if a size has not been set in many cases.
      */
-    constexpr bool empty() const
+    constexpr bool empty() const noexcept
     {
         return m_width <= 0 || m_height <= 0;
     }
@@ -360,13 +360,13 @@ public:
      *
      * This means to set the width and height to zero.
      */
-    constexpr void clear()
+    constexpr void clear() noexcept
     {
         m_height = m_width = 0;
     }
 
     /// SizeType operator
-    constexpr SizeType& operator+=(const SizeType& rhs)
+    constexpr SizeType& operator+=(const SizeType& rhs) noexcept
     {
         m_width += rhs.m_width;
         m_height += rhs.m_height;
@@ -374,7 +374,7 @@ public:
     }
 
     /// SizeType operator
-    constexpr SizeType& operator-=(const SizeType& rhs)
+    constexpr SizeType& operator-=(const SizeType& rhs) noexcept
     {
         m_width -= rhs.m_width;
         m_height -= rhs.m_height;
@@ -382,7 +382,7 @@ public:
     }
 
     /// SizeType operator
-    constexpr SizeType& operator*=(const SizeType& rhs)
+    constexpr SizeType& operator*=(const SizeType& rhs) noexcept
     {
         m_width *= rhs.m_width;
         m_height *= rhs.m_height;
@@ -390,7 +390,7 @@ public:
     }
 
     /// SizeType operator
-    constexpr SizeType& operator/=(const SizeType& rhs)
+    constexpr SizeType& operator/=(const SizeType& rhs) noexcept
     {
         m_width /= rhs.m_width;
         m_height /= rhs.m_height;
@@ -399,7 +399,7 @@ public:
 
     /// SizeType operator
     template<class T>
-    constexpr SizeType& operator+=(const T& rhs)
+    constexpr SizeType& operator+=(const T& rhs) noexcept
     {
         m_width += rhs;
         m_height += rhs;
@@ -408,7 +408,7 @@ public:
 
     /// SizeType operator
     template<class T>
-    constexpr SizeType& operator-=(const T& rhs)
+    constexpr SizeType& operator-=(const T& rhs) noexcept
     {
         m_width -= rhs;
         m_height -= rhs;
@@ -417,7 +417,7 @@ public:
 
     /// SizeType operator
     template<class T>
-    constexpr SizeType& operator*=(const T& rhs)
+    constexpr SizeType& operator*=(const T& rhs) noexcept
     {
         m_width *= rhs;
         m_height *= rhs;
@@ -426,7 +426,7 @@ public:
 
     /// SizeType operator
     template<class T>
-    constexpr SizeType& operator/=(const T& rhs)
+    constexpr SizeType& operator/=(const T& rhs) noexcept
     {
         m_width /= rhs;
         m_height /= rhs;
@@ -434,14 +434,14 @@ public:
     }
 
     /// Get the width value.
-    constexpr Dim width() const { return m_width; }
+    constexpr Dim width() const  noexcept { return m_width; }
     /// Get the height value.
-    constexpr Dim height() const { return m_height; }
+    constexpr Dim height() const  noexcept { return m_height; }
 
     /// Set the width value.
-    constexpr void width(Dim width) { m_width = width; }
+    constexpr void width(Dim width)  noexcept { m_width = width; }
     /// Set the height value.
-    constexpr void height(Dim height) { m_height = height; }
+    constexpr void height(Dim height)  noexcept { m_height = height; }
 
 protected:
     /// Height
@@ -453,7 +453,7 @@ protected:
 
 /// SizeType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr bool operator==(const SizeType<Dim, DimCompat>& lhs, const SizeType<Dim, DimCompat>& rhs)
+constexpr bool operator==(const SizeType<Dim, DimCompat>& lhs, const SizeType<Dim, DimCompat>& rhs) noexcept
 {
     return lhs.width() == rhs.width() && lhs.height() == rhs.height();
 }
@@ -468,14 +468,14 @@ constexpr bool operator==(const SizeType<float, DimCompat>& lhs, const SizeType<
 
 /// SizeType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr bool operator!=(const SizeType<Dim, DimCompat>& lhs, const SizeType<Dim, DimCompat>& rhs)
+constexpr bool operator!=(const SizeType<Dim, DimCompat>& lhs, const SizeType<Dim, DimCompat>& rhs) noexcept
 {
     return !(lhs == rhs);
 }
 
 /// SizeType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr SizeType<Dim, DimCompat> operator-(SizeType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs)
+constexpr SizeType<Dim, DimCompat> operator-(SizeType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs) noexcept
 {
     lhs -= rhs;
     return lhs;
@@ -483,7 +483,7 @@ constexpr SizeType<Dim, DimCompat> operator-(SizeType<Dim, DimCompat> lhs, const
 
 /// SizeType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr SizeType<Dim, DimCompat> operator+(SizeType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs)
+constexpr SizeType<Dim, DimCompat> operator+(SizeType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs) noexcept
 {
     lhs += rhs;
     return lhs;
@@ -491,7 +491,7 @@ constexpr SizeType<Dim, DimCompat> operator+(SizeType<Dim, DimCompat> lhs, const
 
 /// SizeType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr SizeType<Dim, DimCompat> operator*(SizeType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs)
+constexpr SizeType<Dim, DimCompat> operator*(SizeType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs) noexcept
 {
     lhs *= rhs;
     return lhs;
@@ -499,7 +499,7 @@ constexpr SizeType<Dim, DimCompat> operator*(SizeType<Dim, DimCompat> lhs, const
 
 /// SizeType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr SizeType<Dim, DimCompat> operator/(SizeType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs)
+constexpr SizeType<Dim, DimCompat> operator/(SizeType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs) noexcept
 {
     lhs /= rhs;
     return lhs;
@@ -507,7 +507,7 @@ constexpr SizeType<Dim, DimCompat> operator/(SizeType<Dim, DimCompat> lhs, const
 
 /// SizeType operator
 template<class Dim, detail::Compatible DimCompat, class T>
-constexpr SizeType<Dim, DimCompat> operator-(SizeType<Dim, DimCompat> lhs, const T& rhs)
+constexpr SizeType<Dim, DimCompat> operator-(SizeType<Dim, DimCompat> lhs, const T& rhs) noexcept
 {
     lhs -= rhs;
     return lhs;
@@ -515,7 +515,7 @@ constexpr SizeType<Dim, DimCompat> operator-(SizeType<Dim, DimCompat> lhs, const
 
 /// SizeType operator
 template<class Dim, detail::Compatible DimCompat, class T>
-constexpr SizeType<Dim, DimCompat> operator+(SizeType<Dim, DimCompat> lhs, const T& rhs)
+constexpr SizeType<Dim, DimCompat> operator+(SizeType<Dim, DimCompat> lhs, const T& rhs) noexcept
 {
     lhs += rhs;
     return lhs;
@@ -523,7 +523,7 @@ constexpr SizeType<Dim, DimCompat> operator+(SizeType<Dim, DimCompat> lhs, const
 
 /// SizeType operator
 template<class Dim, detail::Compatible DimCompat, class T>
-constexpr SizeType<Dim, DimCompat> operator*(SizeType<Dim, DimCompat> lhs, const T& rhs)
+constexpr SizeType<Dim, DimCompat> operator*(SizeType<Dim, DimCompat> lhs, const T& rhs) noexcept
 {
     lhs *= rhs;
     return lhs;
@@ -531,7 +531,7 @@ constexpr SizeType<Dim, DimCompat> operator*(SizeType<Dim, DimCompat> lhs, const
 
 /// SizeType operator
 template<class Dim, detail::Compatible DimCompat, class T>
-constexpr SizeType<Dim, DimCompat> operator/(SizeType<Dim, DimCompat> lhs, const T& rhs)
+constexpr SizeType<Dim, DimCompat> operator/(SizeType<Dim, DimCompat> lhs, const T& rhs) noexcept
 {
     lhs /= rhs;
     return lhs;
@@ -614,28 +614,28 @@ public:
     {}
 
     /// RectType operator
-    constexpr RectType& operator+=(const SizeType<Dim, DimCompat>& rhs)
+    constexpr RectType& operator+=(const SizeType<Dim, DimCompat>& rhs) noexcept
     {
         m_size += rhs;
         return *this;
     }
 
     /// RectType operator
-    constexpr RectType& operator-=(const SizeType<Dim, DimCompat>& rhs)
+    constexpr RectType& operator-=(const SizeType<Dim, DimCompat>& rhs) noexcept
     {
         m_size -= rhs;
         return *this;
     }
 
     /// RectType operator
-    constexpr RectType& operator+=(const PointType<Dim, DimCompat>& rhs)
+    constexpr RectType& operator+=(const PointType<Dim, DimCompat>& rhs) noexcept
     {
         m_origin += rhs;
         return *this;
     }
 
     /// RectType operator
-    constexpr RectType& operator-=(const PointType<Dim, DimCompat>& rhs)
+    constexpr RectType& operator-=(const PointType<Dim, DimCompat>& rhs) noexcept
     {
         m_origin -= rhs;
         return *this;
@@ -644,7 +644,7 @@ public:
     /**
      * Calculate the area of the rectangle.
      */
-    constexpr Dim area() const
+    constexpr Dim area() const noexcept
     {
         return width() * height();
     }
@@ -652,7 +652,7 @@ public:
     /**
      * Return the center point of the rectangle.
      */
-    constexpr PointType<Dim, DimCompat> center() const
+    constexpr PointType<Dim, DimCompat> center() const noexcept
     {
         return PointType<Dim, DimCompat>(x() + (width() / 2.), y() + (height() / 2.));
     }
@@ -660,7 +660,7 @@ public:
     /**
      * Move the rectangle's center to the specified point.
      */
-    constexpr void move_to_center(const PointType<Dim, DimCompat>& center)
+    constexpr void move_to_center(const PointType<Dim, DimCompat>& center) noexcept
     {
         const PointType<Dim, DimCompat> pos(center.x() - width() / 2.,
                                             center.y() - height() / 2.);
@@ -673,7 +673,7 @@ public:
      *
      * @param radius Relative radius to change by.
      */
-    constexpr void grow_around_center(Dim radius)
+    constexpr void grow_around_center(Dim radius) noexcept
     {
         m_origin -= (radius / 2);
         m_size += radius;
@@ -684,7 +684,7 @@ public:
      *
      * @param radius Relative radius to change by.
      */
-    constexpr void shrink_around_center(Dim radius)
+    constexpr void shrink_around_center(Dim radius) noexcept
     {
         m_origin += (radius / 2);
         m_size -= radius;
@@ -693,7 +693,7 @@ public:
     /**
      * Get the PointType of the rectangle.
      */
-    constexpr const PointType<Dim, DimCompat>& point() const
+    constexpr const PointType<Dim, DimCompat>& point() const noexcept
     {
         return m_origin;
     }
@@ -701,7 +701,7 @@ public:
     /**
      * Set the rectangle's origin to the specified point.
      */
-    constexpr void point(const PointType<Dim, DimCompat>& p)
+    constexpr void point(const PointType<Dim, DimCompat>& p) noexcept
     {
         m_origin = p;
     }
@@ -709,7 +709,7 @@ public:
     /**
      * Get the SizeType of the rectangle.
      */
-    constexpr const SizeType<Dim, DimCompat>& size() const
+    constexpr const SizeType<Dim, DimCompat>& size() const noexcept
     {
         return m_size;
     }
@@ -717,7 +717,7 @@ public:
     /**
      * Set the SizeType of the rectangle.
      */
-    constexpr void size(const SizeType<Dim, DimCompat>& size)
+    constexpr void size(const SizeType<Dim, DimCompat>& size) noexcept
     {
         m_size = size;
     }
@@ -725,7 +725,7 @@ public:
     /**
      * Get the top side of the rectangle.
      */
-    constexpr Dim top() const
+    constexpr Dim top() const noexcept
     {
         return m_origin.y();
     }
@@ -733,7 +733,7 @@ public:
     /**
      * Get the left side the rectangle.
      */
-    constexpr Dim left() const
+    constexpr Dim left() const noexcept
     {
         return m_origin.x();
     }
@@ -741,7 +741,7 @@ public:
     /**
      * Get the bottom side the rectangle.
      */
-    constexpr Dim bottom() const
+    constexpr Dim bottom() const noexcept
     {
         return top() + height();
     }
@@ -749,7 +749,7 @@ public:
     /**
      * Get the right side the rectangle.
      */
-    constexpr Dim right() const
+    constexpr Dim right() const noexcept
     {
         return left() + width();
     }
@@ -759,7 +759,7 @@ public:
      *
      * @note This is usually the origin/point of the rectangle.
      */
-    constexpr PointType<Dim, DimCompat> top_left() const
+    constexpr PointType<Dim, DimCompat> top_left() const noexcept
     {
         return PointType<Dim, DimCompat>(left(), top());
     }
@@ -767,7 +767,7 @@ public:
     /**
      * Get the top right point of the rectangle.
      */
-    constexpr PointType<Dim, DimCompat> top_right() const
+    constexpr PointType<Dim, DimCompat> top_right() const noexcept
     {
         return PointType<Dim, DimCompat>(right(), top());
     }
@@ -775,7 +775,7 @@ public:
     /**
      * Get the bottom left point of the rectangle.
      */
-    constexpr PointType<Dim, DimCompat> bottom_left() const
+    constexpr PointType<Dim, DimCompat> bottom_left() const noexcept
     {
         return PointType<Dim, DimCompat>(left(), bottom());
     }
@@ -783,7 +783,7 @@ public:
     /**
      * Get the bottom right point of the rectangle.
      */
-    constexpr PointType<Dim, DimCompat> bottom_right() const
+    constexpr PointType<Dim, DimCompat> bottom_right() const noexcept
     {
         return PointType<Dim, DimCompat>(right(), bottom());
     }
@@ -791,7 +791,7 @@ public:
     /**
      * Clear the rectangle by giving it no width or height.
      */
-    constexpr void clear()
+    constexpr void clear() noexcept
     {
         m_origin = {};
         m_size = {};
@@ -800,7 +800,7 @@ public:
     /**
      * Returns true if the rectangle has no width or height.
      */
-    constexpr bool empty() const
+    constexpr bool empty() const noexcept
     {
         return width() <= 0 || height() <= 0;
     }
@@ -809,7 +809,7 @@ public:
      * Returns true if the specified point is inside the rectangle.
      * @param point The point to test.
      */
-    constexpr bool intersect(const PointType<Dim, DimCompat>& point) const
+    constexpr bool intersect(const PointType<Dim, DimCompat>& point) const noexcept
     {
         return (point.x() <= right() && point.x() >= left() &&
                 point.y() <= bottom() && point.y() >= top());
@@ -819,7 +819,7 @@ public:
      * Determine if two rectangles intersect, or, overlap.
      * @param rect The rect to test.
      */
-    constexpr bool intersect(const RectType& rect) const
+    constexpr bool intersect(const RectType& rect) const noexcept
     {
         return (x() < rect.x() + rect.width() && x() + width() > rect.x() &&
                 y() < rect.y() + rect.height() && y() + height() > rect.y());
@@ -865,7 +865,7 @@ public:
      * This is different than intersect().  The specified rectangle must be
      * completely inside this one.
      */
-    constexpr bool contains(const RectType& rhs) const
+    constexpr bool contains(const RectType& rhs) const noexcept
     {
         return rhs.right() < right() &&
                rhs.bottom() < bottom() &&
@@ -874,24 +874,24 @@ public:
     }
 
     /// Get the x value.
-    constexpr Dim x() const { return m_origin.x(); }
+    constexpr Dim x() const noexcept { return m_origin.x(); }
     /// Get the y value.
-    constexpr Dim y() const { return m_origin.y(); }
+    constexpr Dim y() const noexcept { return m_origin.y(); }
 
     /// Set the x value.
-    constexpr void x(Dim x) { m_origin.x(x); }
+    constexpr void x(Dim x) noexcept { m_origin.x(x); }
     /// Set the y value.
-    constexpr void y(Dim y) { m_origin.y(y); }
+    constexpr void y(Dim y) noexcept { m_origin.y(y); }
 
     /// Get the width value.
-    constexpr Dim width() const { return m_size.width(); }
+    constexpr Dim width() const noexcept { return m_size.width(); }
     /// Get the height value.
-    constexpr Dim height() const { return m_size.height(); }
+    constexpr Dim height() const noexcept { return m_size.height(); }
 
     /// Set the width value.
-    constexpr void width(Dim width) { m_size.width(width); }
+    constexpr void width(Dim width) noexcept { m_size.width(width); }
     /// Set the height value.
-    constexpr void height(Dim height) { m_size.height(height); }
+    constexpr void height(Dim height) noexcept { m_size.height(height); }
 
 protected:
 
@@ -912,7 +912,7 @@ std::ostream& operator<<(std::ostream& os, const RectType<Dim, DimCompat>& rect)
 
 /// RectType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr RectType<Dim, DimCompat> operator-(RectType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs)
+constexpr RectType<Dim, DimCompat> operator-(RectType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs) noexcept
 {
     lhs.size(lhs.size() - rhs);
     return lhs;
@@ -920,7 +920,7 @@ constexpr RectType<Dim, DimCompat> operator-(RectType<Dim, DimCompat> lhs, const
 
 /// RectType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr RectType<Dim, DimCompat> operator+(RectType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs)
+constexpr RectType<Dim, DimCompat> operator+(RectType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs) noexcept
 {
     lhs.size(lhs.size() + rhs);
     return lhs;
@@ -928,7 +928,7 @@ constexpr RectType<Dim, DimCompat> operator+(RectType<Dim, DimCompat> lhs, const
 
 /// RectType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr RectType<Dim, DimCompat> operator*(RectType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs)
+constexpr RectType<Dim, DimCompat> operator*(RectType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs) noexcept
 {
     lhs.size(lhs.size() * rhs);
     return lhs;
@@ -936,7 +936,7 @@ constexpr RectType<Dim, DimCompat> operator*(RectType<Dim, DimCompat> lhs, const
 
 /// RectType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr RectType<Dim, DimCompat> operator/(RectType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs)
+constexpr RectType<Dim, DimCompat> operator/(RectType<Dim, DimCompat> lhs, const SizeType<Dim, DimCompat>& rhs) noexcept
 {
     lhs.size(lhs.size() / rhs);
     return lhs;
@@ -944,7 +944,7 @@ constexpr RectType<Dim, DimCompat> operator/(RectType<Dim, DimCompat> lhs, const
 
 /// RectType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr RectType<Dim, DimCompat> operator+(RectType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs)
+constexpr RectType<Dim, DimCompat> operator+(RectType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs) noexcept
 {
     lhs.point(lhs.point() + rhs);
     return lhs;
@@ -952,7 +952,7 @@ constexpr RectType<Dim, DimCompat> operator+(RectType<Dim, DimCompat> lhs, const
 
 /// RectType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr RectType<Dim, DimCompat> operator-(RectType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs)
+constexpr RectType<Dim, DimCompat> operator-(RectType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs) noexcept
 {
     lhs.point(lhs.point() - rhs);
     return lhs;
@@ -960,7 +960,7 @@ constexpr RectType<Dim, DimCompat> operator-(RectType<Dim, DimCompat> lhs, const
 
 /// RectType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr RectType<Dim, DimCompat> operator*(RectType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs)
+constexpr RectType<Dim, DimCompat> operator*(RectType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs) noexcept
 {
     lhs.point(lhs.point() * rhs);
     return lhs;
@@ -968,7 +968,7 @@ constexpr RectType<Dim, DimCompat> operator*(RectType<Dim, DimCompat> lhs, const
 
 /// RectType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr RectType<Dim, DimCompat> operator/(RectType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs)
+constexpr RectType<Dim, DimCompat> operator/(RectType<Dim, DimCompat> lhs, const PointType<Dim, DimCompat>& rhs) noexcept
 {
     lhs.point(lhs.point() / rhs);
     return lhs;
@@ -976,7 +976,7 @@ constexpr RectType<Dim, DimCompat> operator/(RectType<Dim, DimCompat> lhs, const
 
 /// RectType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr bool operator==(const RectType<Dim, DimCompat>& lhs, const RectType<Dim, DimCompat>& rhs)
+constexpr bool operator==(const RectType<Dim, DimCompat>& lhs, const RectType<Dim, DimCompat>& rhs) noexcept
 {
     return lhs.point() == rhs.point() &&
            lhs.size() == rhs.size();
@@ -984,7 +984,7 @@ constexpr bool operator==(const RectType<Dim, DimCompat>& lhs, const RectType<Di
 
 /// RectType operator
 template<class Dim, detail::Compatible DimCompat>
-constexpr bool operator!=(const RectType<Dim, DimCompat>& lhs, const RectType<Dim, DimCompat>& rhs)
+constexpr bool operator!=(const RectType<Dim, DimCompat>& lhs, const RectType<Dim, DimCompat>& rhs) noexcept
 {
     return !(lhs == rhs);
 }
@@ -1032,19 +1032,19 @@ public:
     {}
 
     /// Get the start point of the line.
-    constexpr PointType<Dim> start() const { return m_start; }
+    constexpr PointType<Dim> start() const noexcept { return m_start; }
     /// Get the end point of the line.
-    constexpr PointType<Dim> end() const { return m_end; }
+    constexpr PointType<Dim> end() const noexcept { return m_end; }
 
     /// Set the start point of the line.
-    constexpr void start(const PointType<Dim>& start) { m_start = start; }
+    constexpr void start(const PointType<Dim>& start) noexcept { m_start = start; }
     /// Set the end point of the line.
-    constexpr void end(const PointType<Dim>& end) { m_end = end; }
+    constexpr void end(const PointType<Dim>& end) noexcept { m_end = end; }
 
     /**
      * Returns a rectangle containing the line.
      */
-    constexpr RectType<Dim> rect() const
+    constexpr RectType<Dim> rect() const noexcept
     {
         const auto x = std::min(m_start.x(), m_end.x());
         const auto y = std::min(m_start.y(), m_end.y());
@@ -1122,46 +1122,38 @@ public:
     /**
      * Returns true if the arc has no radius.
      */
-    EGT_API bool empty() const;
+    EGT_API bool empty() const noexcept;
 
     /** Set the radius. */
-    constexpr void radius(Dim radius) { m_radius = radius; }
+    constexpr void radius(Dim radius) noexcept { m_radius = radius; }
     /** Set the angle1. */
-    constexpr void angle1(float angle) { m_angle1 = angle; }
+    constexpr void angle1(float angle) noexcept { m_angle1 = angle; }
     /** Set the angle2. */
-    constexpr void angle2(float angle) { m_angle2 = angle; }
+    constexpr void angle2(float angle) noexcept { m_angle2 = angle; }
     /** Set the center point. */
-    constexpr void center(const PointType<Dim>& center) { m_center = center; }
+    constexpr void center(const PointType<Dim>& center) noexcept { m_center = center; }
 
     /** Get the radius. */
-    constexpr Dim radius() const { return m_radius; }
+    constexpr Dim radius() const noexcept { return m_radius; }
     /** Get the angle1. */
-    constexpr float angle1() const { return m_angle1; }
+    constexpr float angle1() const noexcept { return m_angle1; }
     /** Get the angle2. */
-    constexpr float angle2() const { return m_angle2; }
+    constexpr float angle2() const noexcept { return m_angle2; }
     /** Get the center point. */
-    constexpr PointType<Dim> center() const { return m_center; }
+    constexpr PointType<Dim> center() const noexcept { return m_center; }
 
 protected:
 
-    /**
-     * Center point of the arc.
-     */
+    /// Center point of the arc.
     PointType<Dim> m_center;
 
-    /**
-     * Radius of the arc.
-     */
+    /// Radius of the arc.
     Dim m_radius{0};
 
-    /**
-     * Angle of the arc in radians.
-     */
+    /// Angle of the arc in radians.
     float m_angle1{};
 
-    /**
-     * Angle of the arc in radians.
-     */
+    /// Angle of the arc in radians.
     float m_angle2{};
 };
 
@@ -1205,7 +1197,7 @@ public:
     /**
      * Get a Rect that covers the circle.
      */
-    constexpr RectType<Dim> rect() const
+    constexpr RectType<Dim> rect() const noexcept
     {
         RectType<Dim> r(this->center() - Point(this->radius(), this->radius()),
                         SizeType<Dim>(this->radius() * 2, this->radius() * 2));
@@ -1218,7 +1210,7 @@ public:
      * @param angle The angle in radians.
      */
     template <class T>
-    PointType<Dim> point_on_circumference(T angle) const
+    PointType<Dim> point_on_circumference(T angle) const noexcept
     {
         return PointType<Dim>(this->x() + this->radius() * std::cos(angle),
                               this->y() + this->radius() * std::sin(angle));
@@ -1281,7 +1273,7 @@ public:
      *
      * This is technically just an approximation.
      */
-    constexpr Dim perimeter() const
+    constexpr Dim perimeter() const noexcept
     {
         return 2.f * detail::pi<float>() * std::sqrt((m_radiusa * m_radiusa +
                 m_radiusb * m_radiusb) / 2.f);
@@ -1294,7 +1286,7 @@ public:
      * middle of the ellipse.
      */
     template <class T>
-    PointType<Dim> point_on_circumference(T angle)
+    PointType<Dim> point_on_circumference(T angle) noexcept
     {
         const auto x = m_radiusa * std::cos(angle);
         const auto y = m_radiusb * std::sin(angle);
@@ -1302,34 +1294,28 @@ public:
     }
 
     /// Set the first radius of the ellipse.
-    constexpr void radiusa(const Dim radiusa) { m_radiusa = radiusa; }
+    constexpr void radiusa(const Dim radiusa) noexcept { m_radiusa = radiusa; }
     /// Set the second radius of the ellipse.
-    constexpr void radiusb(const Dim radiusb) { m_radiusb = radiusb; }
+    constexpr void radiusb(const Dim radiusb) noexcept { m_radiusb = radiusb; }
     /// Set the center of the ellipse.
-    constexpr void center(const PointType<Dim>& center) { m_center = center; }
+    constexpr void center(const PointType<Dim>& center) noexcept { m_center = center; }
 
     /// Get the first radius of the ellipse.
-    constexpr Dim radiusa() const { return m_radiusa; }
+    constexpr Dim radiusa() const noexcept { return m_radiusa; }
     /// Get the second radius of the ellipse.
-    constexpr Dim radiusb() const { return m_radiusb; }
+    constexpr Dim radiusb() const noexcept { return m_radiusb; }
     /// Get the center of the ellipse.
-    constexpr PointType<Dim> center() const { return m_center; }
+    constexpr PointType<Dim> center() const noexcept { return m_center; }
 
 protected:
 
-    /**
-     * Center point of the arc.
-     */
+    /// Center point of the arc.
     PointType<Dim> m_center;
 
-    /**
-     * A radius.
-     */
+    /// A radius.
     Dim m_radiusa{0};
 
-    /**
-     * B radius.
-     */
+    /// B radius.
     Dim m_radiusb{0};
 };
 
