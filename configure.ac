@@ -419,9 +419,9 @@ AC_ARG_WITH([plplot],
     [with_plplot=$withval],
     [with_plplot=auto])
 AS_IF([test "x$with_plplot" != "xno"],[
-   AX_PKG_CHECK_MODULES2(plplot, [plplot-c++], [], [have_plplot=yes], [have_plplot=no])
+   AX_PKG_CHECK_MODULES2(plplot, [], [plplot-c++], [have_plplot=yes], [have_plplot=no])
    if test "x${have_plplot}" = xno; then
-      AX_PKG_CHECK_MODULES2(plplot, [plplotd-c++], [], [have_plplot=yes], [have_plplot=no])
+      AX_PKG_CHECK_MODULES2(plplot, [], [plplotd-c++], [have_plplot=yes], [have_plplot=no])
    fi
 
    if test "x${have_plplot}" = xyes; then
