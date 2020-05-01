@@ -200,7 +200,7 @@ void ScrolledView::layout()
 
     if (!m_canvas || m_canvas->size() != s)
     {
-        m_canvas = std::make_shared<Canvas>(s);
+        m_canvas = std::make_unique<Canvas>(s);
         damage();
     }
 }

@@ -211,7 +211,7 @@ protected:
     Policy m_vertical_policy{Policy::as_needed};
 
     /// @private
-    std::shared_ptr<Canvas> m_canvas;
+    std::unique_ptr<Canvas> m_canvas;
 
     /// Width/height of the slider when shown.
     DefaultDim m_slider_dim{8};
