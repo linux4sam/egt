@@ -33,8 +33,8 @@ install-data-local: install-i18n-catalogs
 
 install-i18n-catalogs:
 	$(MRESG_V_GEN)for i in $(LINGUAS) ; do \
-	    $(mkinstalldirs) $(DESTDIR)$(localedir)/$$i.utf8/LC_MESSAGES ; \
-	    $(INSTALL_DATA) $$i.utf8/LC_MESSAGES/i18n.mo $(DESTDIR)$(localedir)/$$i.utf8/LC_MESSAGES/i18n.mo ; \
+	    $(mkinstalldirs) $(DESTDIR)$(localedir)/$$i.utf8/LC_MESSAGES || exit $$?; \
+	    $(INSTALL_DATA) $$i.utf8/LC_MESSAGES/i18n.mo $(DESTDIR)$(localedir)/$$i.utf8/LC_MESSAGES/i18n.mo || exit $$?; \
 	done
 
 clean-local:
@@ -60,19 +60,23 @@ CLEANFILES = build-mo.stamp i18n.pot
 
 build-mo.stamp:
 	$(MRESG_V_GEN)for i in $(LINGUAS); do \
-	    $(MKDIR) $$i.utf8/LC_MESSAGES; \
-	    $(MSGFMT) --output-file $$i.utf8/LC_MESSAGES/i18n.mo $(top_srcdir)/examples/i18n/$$i.po; \
+	    $(MKDIR) $$i.utf8/LC_MESSAGES || exit $$? ; \
+	    $(MSGFMT) --output-file=$$i.utf8/LC_MESSAGES/i18n.mo $(top_srcdir)/examples/i18n/$$i.po || exit $$? ; \
 	done
 	@echo Timestamp > $@
 
 build-merge-po: build-pot
 	$(MRESG_V_GEN)for i in $(LINGUAS); do \
-	    if [ -f $(top_srcdir)/examples/i18n/$$i.po ]; then $(MSGMERGE) $(top_srcdir)/examples/i18n/$$i.po i18n.pot > $$i.new && mv $$i.new $(top_srcdir)/examples/i18n/$$i.po; else cp i18n.pot $(top_srcdir)/examples/i18n/$$i.po; fi \
+	    if [ -f $(top_srcdir)/examples/i18n/$$i.po ]; then \
+	        $(MSGMERGE) $(top_srcdir)/examples/i18n/$$i.po i18n.pot > $$i.new && mv $$i.new $(top_srcdir)/examples/i18n/$$i.po; \
+	    else \
+	        cp i18n.pot $(top_srcdir)/examples/i18n/$$i.po; \
+	    fi \
 	done
 
 build-po: build-pot
 	$(MRESG_V_GEN)for i in $(LINGUAS); do \
-	    $(MSGINIT) --locale $$i --output-file $(top_srcdir)/examples/i18n/$$i.po --input i18n.pot; \
+	    $(MSGINIT) --locale=$$i --output-file=$(top_srcdir)/examples/i18n/$$i.po --input=i18n.pot; \
 	done
 	rm -f build-mo.stamp
 
