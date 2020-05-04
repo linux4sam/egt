@@ -526,7 +526,7 @@ AS_IF([test "x$with_zlib" != "xno"],[
 ])
 AM_CONDITIONAL([HAVE_ZLIB], [test "x${have_zlib}" = xyes])
 
-AC_SEARCH_LIBS([magic_open], [magic], [MAGIC_LIB=-lmagic have_libmagic=yes], [have_libmagic=no], [-lz -lbz2])
+AC_SEARCH_LIBS([magic_open], [magic], [MAGIC_LIB=-lmagic have_libmagic=yes], [have_libmagic=no])
 AC_CHECK_HEADER([magic.h],
   [],
   [have_libmagic=no
