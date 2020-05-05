@@ -231,12 +231,12 @@ int main(int argc, char** argv)
         player.play();
     });
 
-    player.on_position_changed([&player, &position]()
+    player.on_position_changed([&player, &position](int64_t pos)
     {
         if (player.playing())
         {
             position.on_value_changed.disable();
-            position.value((ns2ms<double>(player.position()) /
+            position.value((ns2ms<double>(pos) /
                             ns2ms<double>(player.duration())) * 100.);
             position.on_value_changed.enable();
         }

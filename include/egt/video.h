@@ -51,7 +51,7 @@ public:
      * @{
      */
     /// Invoked when the position of the player changes.
-    Signal<> on_position_changed;
+    Signal<int64_t> on_position_changed;
 
     /// Invoked when an error occurs.
     Signal<const std::string&> on_error;

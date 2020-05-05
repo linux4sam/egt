@@ -300,7 +300,7 @@ gboolean GstAppSinkImpl::post_position(gpointer data)
     {
         asio::post(Application::instance().event().io(), [impl]()
         {
-            impl->m_interface.on_position_changed.invoke();
+            impl->m_interface.on_position_changed.invoke(impl->m_position);
         });
     }
 
