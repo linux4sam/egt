@@ -23,11 +23,11 @@ TEST_P(SliderTest, CreateSlider)
 
     Slider.reset(new egt::Slider());
 
-    Slider->start(25);
-    EXPECT_EQ(Slider->start(), 25);
+    Slider->starting(25);
+    EXPECT_EQ(Slider->starting(), 25);
 
-    Slider->end(1000);
-    EXPECT_EQ(Slider->end(), 1000);
+    Slider->ending(1000);
+    EXPECT_EQ(Slider->ending(), 1000);
 
     Slider->slider_flags().set({sflags});
     EXPECT_TRUE(Slider->slider_flags().is_set(sflags));

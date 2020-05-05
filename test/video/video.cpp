@@ -96,12 +96,12 @@ TEST_P(VideoWidgetTest, VideoWidget)
                 EXPECT_NO_THROW(app.quit());
             });
 
-            m_player->on_position_changed([&m_player]()
+            m_player->on_position_changed([&m_player](int64_t pos)
             {
                 auto d = static_cast<int>(m_player->duration() / 1000000000UL);
                 EXPECT_EQ(d, 119);
 
-                auto p = static_cast<int>(m_player->position() / 1000000000UL);
+                auto p = static_cast<int>(pos / 1000000000UL);
                 EXPECT_LE(p, d);
             });
 

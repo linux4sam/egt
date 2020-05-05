@@ -31,7 +31,7 @@ TEST_P(StaticGridTest, TestWidget)
     auto rows = ::testing::get<0>(GetParam());
     auto columns = ::testing::get<1>(GetParam());
 
-    widget.reset(new egt::StaticGrid(std::make_tuple(columns, rows), 5));
+    widget.reset(new egt::StaticGrid(egt::StaticGrid::GridSize(columns, rows), 5));
     win.add(egt::expand(widget));
 
     EXPECT_TRUE(widget->last_add_column() == -1);
@@ -40,14 +40,14 @@ TEST_P(StaticGridTest, TestWidget)
     egt::PeriodicTimer cputimer(std::chrono::milliseconds(1));
     if ((rows == 0) || (columns == 0))
     {
-        ASSERT_EXIT((widget->get(egt::Point(0, 0)), exit(0)), ::testing::KilledBySignal(SIGSEGV), ".*");
+        ASSERT_EXIT((widget->get(egt::StaticGrid::GridPoint(0, 0)), exit(0)), ::testing::KilledBySignal(SIGSEGV), ".*");
 
         auto text1 = std::make_shared<egt::TextBox>("text 1", egt::Rect(0, 0, 200, 100));
         ASSERT_EXIT((widget->add(egt::expand(text1)), exit(0)), ::testing::KilledBySignal(SIGSEGV), ".*");
     }
     else
     {
-        EXPECT_TRUE(widget->get(egt::Point(0, 0)) == nullptr);
+        EXPECT_TRUE(widget->get(egt::StaticGrid::GridPoint(0, 0)) == nullptr);
 
         for (int i = 0; i <  rows;  i++)
         {
@@ -65,7 +65,7 @@ TEST_P(StaticGridTest, TestWidget)
         {
             int r = widget->last_add_row();
             int c = widget->last_add_column();
-            auto rm = widget->get(egt::Point(c, r));
+            auto rm = widget->get(egt::StaticGrid::GridPoint(c, r));
             if (rm != nullptr)
             {
                 widget->remove(rm);
@@ -97,7 +97,7 @@ TEST_P(SelectableGridTest, TestWidget)
     auto rows = ::testing::get<0>(GetParam());
     auto columns = ::testing::get<1>(GetParam());
 
-    widget.reset(new egt::SelectableGrid(std::make_tuple(columns, rows), 5));
+    widget.reset(new egt::SelectableGrid(egt::StaticGrid::GridSize(columns, rows), 5));
     win.add(egt::expand(widget));
 
     EXPECT_TRUE(widget->last_add_column() == -1);
@@ -106,14 +106,14 @@ TEST_P(SelectableGridTest, TestWidget)
     egt::PeriodicTimer cputimer(std::chrono::milliseconds(1));
     if ((rows == 0) || (columns == 0))
     {
-        ASSERT_EXIT((widget->get(egt::Point(0, 0)), exit(0)), ::testing::KilledBySignal(SIGSEGV), ".*");
+        ASSERT_EXIT((widget->get(egt::StaticGrid::GridPoint(0, 0)), exit(0)), ::testing::KilledBySignal(SIGSEGV), ".*");
 
         auto text1 = std::make_shared<egt::TextBox>("text 1", egt::Rect(0, 0, 200, 100));
         ASSERT_EXIT((widget->add(egt::expand(text1)), exit(0)), ::testing::KilledBySignal(SIGSEGV), ".*");
     }
     else
     {
-        EXPECT_TRUE(widget->get(egt::Point(0, 0)) == nullptr);
+        EXPECT_TRUE(widget->get(egt::StaticGrid::GridPoint(0, 0)) == nullptr);
 
         for (int i = 0; i <  rows;  i++)
         {

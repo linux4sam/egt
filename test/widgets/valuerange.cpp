@@ -25,11 +25,11 @@ TYPED_TEST(ValueRangeWidgets, TestValueRange)
 {
     auto widget = std::make_shared<TypeParam>();
 
-    widget->start(1);
-    EXPECT_EQ(widget->start(), 1);
+    widget->starting(1);
+    EXPECT_EQ(widget->starting(), 1);
 
-    widget->end(100);
-    EXPECT_EQ(widget->end(), 100);
+    widget->ending(100);
+    EXPECT_EQ(widget->ending(), 100);
 
     widget->value(10);
     EXPECT_EQ(widget->value(), 10);
@@ -69,11 +69,11 @@ TYPED_TEST(FloatWidgets, TestValueRangeF)
 {
     auto widget = std::make_shared<TypeParam>();
 
-    widget->start(0.0);
-    EXPECT_FLOAT_EQ(widget->start(), 0.0);
+    widget->starting(0.0);
+    EXPECT_FLOAT_EQ(widget->starting(), 0.0);
 
-    widget->end(1.0);
-    EXPECT_FLOAT_EQ(widget->end(), 1.0);
+    widget->ending(1.0);
+    EXPECT_FLOAT_EQ(widget->ending(), 1.0);
 
     widget->value(0.4);
     EXPECT_FLOAT_EQ(widget->value(), 0.4);
