@@ -37,6 +37,7 @@ colors/colors \
 drag/drag \
 floating/floating \
 frames/frames \
+keys/keys \
 imagestack/imagestack \
 press/press \
 sizers/sizers \
@@ -305,6 +306,12 @@ monitor_monitordir = $(prefix)/share/egt/examples/monitor
 monitor_monitor_DATA = $(wildcard $(top_srcdir)/examples/monitor/*.png) \
 	$(top_srcdir)/examples/monitor/monitor.xml
 monitor_monitor_LDFLAGS = $(AM_LDFLAGS)
+
+keys_keys_SOURCES = keys/keys.cpp
+keys_keys_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+keys_keys_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
+keys_keysdir = $(prefix)/share/egt/examples/keys
+keys_keys_LDFLAGS = $(AM_LDFLAGS)
 
 TIDY_OPTIONS = $(AM_CPPFLAGS) $(CUSTOM_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
 
