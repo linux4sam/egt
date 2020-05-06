@@ -60,8 +60,22 @@ public:
         this->from_string(str);
     }
 
+    /**
+     * @param[in] str String representation of flags.
+     */
+    explicit Flags(const char* str)
+    {
+        this->from_string(str);
+    }
+
+    /// Set a single flag.
+    constexpr Flags(T flag) noexcept
+        : FlagsBase<T>(flag)
+    {
+    }
+
     /// Copy constructor.
-    constexpr Flags(const Flags& rhs)
+    constexpr Flags(const Flags& rhs) noexcept
         : FlagsBase<T>(rhs)
     {
         // signals are not copied!
@@ -85,7 +99,7 @@ public:
     }
 
     /// Set a single flag.
-    bool set(const T flag) noexcept
+    bool set(T flag) noexcept
     {
         const auto res = FlagsBase<T>::set(flag);
         if (res)
@@ -103,7 +117,7 @@ public:
     }
 
     /// Clear a single flag.
-    bool clear(const T flag) noexcept
+    bool clear(T flag) noexcept
     {
         const auto res = FlagsBase<T>::clear(flag);
         if (res)

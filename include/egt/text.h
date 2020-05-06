@@ -91,6 +91,15 @@ public:
 
     /**
      * @param[in] text The text to display.
+     * @param[in] text_align Alignment for the text.
+     * @param[in] flags TextBox flags.
+     */
+    explicit TextBox(const std::string& text,
+                     const TextFlags& flags,
+                     const AlignFlags& text_align = default_text_align()) noexcept;
+
+    /**
+     * @param[in] text The text to display.
      * @param[in] rect Rectangle for the widget.
      * @param[in] text_align Alignment for the text.
      * @param[in] flags TextBox flags.
@@ -157,11 +166,6 @@ public:
      * Get a const ref of the flags.
      */
     const TextFlags& text_flags() const { return m_text_flags; }
-
-    /**
-     * Get a modifiable ref of the flags.
-     */
-    TextFlags& text_flags() { return m_text_flags; }
 
     /**
      * Move the cursor to the end and insert.

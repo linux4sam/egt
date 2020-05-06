@@ -32,8 +32,7 @@ int main(int argc, char** argv)
     elogo.margin(10);
     vsizer.add(elogo);
 
-    egt::TextBox text("");
-    text.text_flags().set(egt::TextBox::TextFlag::multiline);
+    egt::TextBox text("", egt::TextBox::TextFlag::multiline);
     text.text_align(egt::AlignFlag::center | egt::AlignFlag::right);
     text.font(egt::Font(25));
     text.color(egt::Palette::ColorId::bg, egt::Color(0x272727ff));

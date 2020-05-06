@@ -221,9 +221,9 @@ struct TextPage : public egt::NotebookTab
                          " toolkit for Microchip AT91/SAMA5 microprocessors.  It is used to develop"
                          " graphical applications for Linux.  EGT provides modern and complete GUI"
                          " functionality, look-and-feel, and performance.\n\nThis multi-line TextBox fully"
-                         " supports UTF-8 encoding.  See: \u2190\u2191\u2192\u2193");
+                         " supports UTF-8 encoding.  See: \u2190\u2191\u2192\u2193",
+                         egt::TextBox::TextFlags({egt::TextBox::TextFlag::multiline, egt::TextBox::TextFlag::word_wrap}));
         text7->selection(4, 25);
-        text7->text_flags().set({egt::TextBox::TextFlag::multiline, egt::TextBox::TextFlag::word_wrap});
         grid1->add(egt::expand(text7));
     }
 };

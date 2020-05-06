@@ -183,8 +183,7 @@ struct TextPage : public egt::NotebookTab
         auto grid0 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(1, 10), 5);
         grid1->add(egt::expand(grid0));
 
-        auto text1 = std::make_shared<egt::TextBox>("text 1");
-        text1->text_flags().set({egt::TextBox::TextFlag::fit_to_width});
+        auto text1 = std::make_shared<egt::TextBox>("text 1", egt::TextBox::TextFlag::fit_to_width);
         grid0->add(egt::expand(text1));
 
         auto text2 = std::make_shared<egt::TextBox>("text 2 disabled");
@@ -221,9 +220,9 @@ struct TextPage : public egt::NotebookTab
                          " toolkit for Microchip AT91/SAMA5 microprocessors.  It is used to develop"
                          " graphical applications for Linux.  EGT provides modern and complete GUI"
                          " functionality, look-and-feel, and performance.\n\nThis multi-line TextBox fully"
-                         " supports UTF-8 encoding.  See: \u2190\u2191\u2192\u2193");
+                         " supports UTF-8 encoding.  See: \u2190\u2191\u2192\u2193",
+                         egt::TextBox::TextFlags({egt::TextBox::TextFlag::multiline, egt::TextBox::TextFlag::word_wrap}));
         text7->selection(4, 25);
-        text7->text_flags().set({egt::TextBox::TextFlag::multiline, egt::TextBox::TextFlag::word_wrap});
         grid1->add(egt::expand(text7));
     }
 };

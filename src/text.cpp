@@ -47,13 +47,19 @@ TextBox::TextBox(const std::string& text,
 {}
 
 TextBox::TextBox(const std::string& text,
+                 const TextFlags& flags,
+                 const AlignFlags& text_align) noexcept
+    : TextBox(text, {}, text_align, flags)
+{}
+
+TextBox::TextBox(const std::string& text,
                  const Rect& rect,
                  const AlignFlags& text_align,
                  // NOLINTNEXTLINE(modernize-pass-by-value)
                  const TextFlags& flags) noexcept
-    : TextWidget(text, rect, text_align),
-      m_timer(std::chrono::seconds(1)),
-      m_text_flags(flags)
+    : TextWidget( {}, rect, text_align),
+m_timer(std::chrono::seconds(1)),
+m_text_flags(flags)
 {
     name("TextBox" + std::to_string(m_widgetid));
 
@@ -64,7 +70,7 @@ TextBox::TextBox(const std::string& text,
 
     m_timer.on_timeout([this]() { cursor_timeout(); });
 
-    cursor_end();
+    insert(text);
 
     m_gain_focus_reg = on_gain_focus([this]()
     {
@@ -319,7 +325,8 @@ size_t TextBox::insert(const std::string& str)
     }
 
     if (!text_flags().is_set(TextFlag::multiline) &&
-        text_flags().is_set(TextFlag::fit_to_width))
+        text_flags().is_set(TextFlag::fit_to_width) &&
+        !content_area().empty())
     {
         /*
          * Have to go through the motions and build the expected string at this

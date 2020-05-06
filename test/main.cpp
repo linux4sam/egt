@@ -120,8 +120,7 @@ TEST(TextBoxFixed, Basic)
     std::string str1 = "hello world\nthis is EGT";
     std::string str2 = "howdy";
 
-    egt::TextBox text1(str1);
-    text1.text_flags().set({egt::TextBox::TextFlag::fit_to_width});
+    egt::TextBox text1(str1, egt::Size(1000, 1000), {}, egt::TextBox::TextFlag::fit_to_width);
     ASSERT_EQ(str1, text1.text());
     text1.text(str2);
     ASSERT_EQ(str2, text1.text());
