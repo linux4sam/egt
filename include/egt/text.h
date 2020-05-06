@@ -287,29 +287,22 @@ protected:
     /// Type array used for validator callbacks.
     using ValidatorCallbackArray = std::vector<ValidatorCallback>;
 
-    /**
-     * Show/enable the visibility of the cursor.
-     */
+    /// Show/enable the visibility of the cursor.
     void show_cursor();
 
-    /**
-     * Hide/disable the visibility of the cursor.
-     */
+    /// If the cursor is shown, keep is shown some more.
+    void continue_show_cursor();
+
+    /// Hide/disable the visibility of the cursor.
     void hide_cursor();
 
-    /**
-     * Process key events.
-     */
+    /// Process key events.
     void handle_key(const Key& key);
 
-    /**
-     * Validate the input against the validator pattern.
-     */
+    /// Validate the input against the validator pattern.
     bool validate_input(const std::string& str);
 
-    /**
-     * Timer for blinking the cursor.
-     */
+    /// Timer for blinking the cursor.
     PeriodicTimer m_timer;
 
     /**
@@ -324,19 +317,13 @@ protected:
      */
     size_t m_select_start{0};
 
-    /**
-     * Selection length.
-     */
+    /// Selection length.
     size_t m_select_len{0};
 
-    /**
-     * Validation of the input.
-     */
+    /// Validation of the input.
     bool m_validate_input{false};
 
-    /**
-     * Callbacks invoked to validate the input.
-     */
+    /// Callbacks invoked to validate the input.
     ValidatorCallbackArray m_validator_callbacks;
 
     /**

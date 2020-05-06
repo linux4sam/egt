@@ -360,6 +360,7 @@ size_t TextBox::insert(const std::string& str)
         m_text.insert(i, str.begin(), end);
         cursor_forward(len);
         selection_clear();
+        continue_show_cursor();
 
         on_text_changed.invoke();
         damage();
@@ -512,6 +513,15 @@ void TextBox::show_cursor()
     m_cursor_state = true;
     m_timer.start();
     damage();
+}
+
+void TextBox::continue_show_cursor()
+{
+    if (m_cursor_state)
+    {
+        m_timer.start();
+        damage();
+    }
 }
 
 void TextBox::hide_cursor()
