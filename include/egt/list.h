@@ -218,21 +218,25 @@ public:
      */
     void clear();
 
+    /**
+     * Scroll all the way to the top of the list.
+     */
+    void scroll_top();
+
+    /**
+     * Scroll all the way to the bottom of the list.
+     */
+    void scroll_bottom();
+
 protected:
 
-    /**
-     * Currently selected index.
-     */
+    /// Currently selected index.
     ssize_t m_selected{-1};
 
-    /**
-     * View used to contain the possible large sizer.
-     */
+    /// View used to contain the possible large sizer.
     ScrolledView m_view;
 
-    /**
-     * Internal sizer used to layout items.
-     */
+    /// Internal sizer used to layout items.
     BoxSizer m_sizer;
 
 private:

@@ -161,5 +161,15 @@ void ListBox::clear()
     }
 }
 
+void ListBox::scroll_top()
+{
+    m_view.offset(Point(m_view.offset().x(), 0));
+}
+
+void ListBox::scroll_bottom()
+{
+    m_view.offset(Point(m_view.offset().x(), m_view.offset_max().y()));
+}
+
 }
 }
