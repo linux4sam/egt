@@ -251,7 +251,7 @@ Point Frame::to_panel(const Point& p)
 void Frame::zorder_down(const Widget* widget)
 {
     auto i = std::find_if(m_children.begin(), m_children.end(),
-                          [widget](const std::shared_ptr<Widget>& ptr)
+                          [widget](const auto & ptr)
     {
         return ptr.get() == widget;
     });
@@ -267,7 +267,7 @@ void Frame::zorder_down(const Widget* widget)
 void Frame::zorder_up(const Widget* widget)
 {
     auto i = std::find_if(m_children.begin(), m_children.end(),
-                          [widget](const std::shared_ptr<Widget>& ptr)
+                          [widget](const auto & ptr)
     {
         return ptr.get() == widget;
     });
@@ -279,33 +279,42 @@ void Frame::zorder_up(const Widget* widget)
             (*i)->damage();
             (*to)->damage();
             std::iter_swap(i, to);
+            layout();
         }
     }
 }
 
 void Frame::zorder_bottom(const Widget* widget)
 {
+    if (m_children.size() <= 1)
+        return;
+
     auto i = std::find_if(m_children.begin(), m_children.end(),
-                          [widget](const std::shared_ptr<Widget>& ptr)
+                          [widget](const auto & ptr)
     {
         return ptr.get() == widget;
     });
-    if (i != m_children.end())
+    if (i != m_children.end() && i != m_children.begin())
     {
         std::rotate(m_children.begin(), i, i + 1);
+        layout();
     }
 }
 
 void Frame::zorder_top(const Widget* widget)
 {
+    if (m_children.size() <= 1)
+        return;
+
     auto i = std::find_if(m_children.begin(), m_children.end(),
-                          [widget](const std::shared_ptr<Widget>& ptr)
+                          [widget](const auto & ptr)
     {
         return ptr.get() == widget;
     });
     if (i != m_children.end())
     {
         std::rotate(i, i + 1, m_children.end());
+        layout();
     }
 }
 
