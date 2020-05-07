@@ -113,11 +113,22 @@ public:
 
     /**
      * Set the position.
+     *
+     * @note The offset moves in the negative direction from zero.
      */
-    virtual void offset(Point offset);
+    void offset(Point offset);
 
     /**
-     * Get the horizontal offset.
+     * Get the maximum offset currently possible.
+     *
+     * @note The offset moves in the negative direction from zero.
+     */
+    Point offset_max() const;
+
+    /**
+     * Set the horizontal offset.
+     *
+     * @note The offset moves in the negative direction from zero.
      */
     void hoffset(int offset)
     {
@@ -125,7 +136,9 @@ public:
     }
 
     /**
-     * Get the vertical offset.
+     * Set the vertical offset.
+     *
+     * @note The offset moves in the negative direction from zero.
      */
     void voffset(int offset)
     {

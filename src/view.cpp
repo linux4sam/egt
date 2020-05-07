@@ -238,22 +238,27 @@ Rect ScrolledView::super_rect() const
     return result;
 }
 
+Point ScrolledView::offset_max() const
+{
+    const auto super = super_rect();
+    return Point(super.width() - content_area().width(),
+                 super.height() - content_area().height()) * -1;
+}
+
 void ScrolledView::offset(Point offset)
 {
     if (hscrollable() || vscrollable())
     {
-        auto super = super_rect();
-        auto offmax = Point(super.width() - content_area().width(),
-                            super.height() - content_area().height());
+        auto offmax = offset_max();
         if (offset.x() > 0)
             offset.x(0);
-        else if (-offset.x() > offmax.x())
-            offset.x(-offmax.x());
+        else if (offset.x() < offmax.x())
+            offset.x(offmax.x());
 
         if (offset.y() > 0)
             offset.y(0);
-        else if (-offset.y() > offmax.y())
-            offset.y(-offmax.y());
+        else if (offset.y() < offmax.y())
+            offset.y(offmax.y());
 
         if (detail::change_if_diff<>(m_offset, offset))
         {
@@ -265,22 +270,20 @@ void ScrolledView::offset(Point offset)
 
 void ScrolledView::update_sliders()
 {
-    const auto super = super_rect();
-    const auto offmax = Point(super.width() - content_area().width(),
-                              super.height() - content_area().height());
+    const auto offmax = offset_max();
 
-    if (offmax.x() > 0)
+    if (offmax.x() < 0)
     {
         const auto hslider_value =
-            egt::detail::normalize<float>(std::abs(m_offset.x()), 0, offmax.x(), 0, 100);
+            egt::detail::normalize<float>(std::abs(m_offset.x()), 0, -offmax.x(), 0, 100);
         if (!detail::float_equal(m_hslider.value(hslider_value), hslider_value))
             damage();
     }
 
-    if (offmax.y() > 0)
+    if (offmax.y() < 0)
     {
         const auto vslider_value =
-            egt::detail::normalize<float>(std::abs(m_offset.y()), 0, offmax.y(), 0, 100);
+            egt::detail::normalize<float>(std::abs(m_offset.y()), 0, -offmax.y(), 0, 100);
         if (!detail::float_equal(m_vslider.value(vslider_value), vslider_value))
             damage();
     }
