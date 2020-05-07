@@ -215,9 +215,6 @@ protected:
 
     /// Width/height of the slider when shown.
     DefaultDim m_slider_dim{8};
-
-    /// Internal update flag.
-    bool m_update{false};
 };
 
 }
