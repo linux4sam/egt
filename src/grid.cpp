@@ -291,7 +291,7 @@ void StaticGrid::reposition()
                 // re-position/resize widget
                 widget->box(target);
 
-                if (widget->flags().is_set(Widget::Flag::frame))
+                if (widget->frame())
                 {
                     auto frame = dynamic_cast<Frame*>(widget.get());
                     frame->layout();

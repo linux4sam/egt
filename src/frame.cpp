@@ -162,7 +162,7 @@ Widget* Frame::hit_test(const DisplayPoint& point)
     {
         if (child->box().intersect(pos))
         {
-            if (child->flags().is_set(Widget::Flag::frame))
+            if (child->frame())
             {
                 auto frame = dynamic_cast<Frame*>(child.get());
                 if (frame)
@@ -513,7 +513,7 @@ void Frame::paint_children_to_file()
 {
     for (auto& child : m_children)
     {
-        if (child->flags().is_set(Widget::Flag::frame))
+        if (child->frame())
         {
             auto frame = std::dynamic_pointer_cast<Frame>(child);
             frame->paint_children_to_file();

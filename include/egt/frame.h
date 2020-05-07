@@ -178,7 +178,7 @@ public:
         i = std::find_if(m_children.begin(), m_children.end(),
                          [](const std::shared_ptr<Widget>& obj)
         {
-            return obj->flags().is_set(Widget::Flag::frame);
+            return obj->frame();
         });
 
         for (; i != m_children.end(); ++i)

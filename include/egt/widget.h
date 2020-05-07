@@ -482,6 +482,11 @@ public:
     bool plane_window() const;
 
     /**
+     * Return the frame state of the widget.
+     */
+    bool frame() const;
+
+    /**
      * Get the alpha property.
      *
      * @return Alpha property in the range 0.0 to 1.0.
