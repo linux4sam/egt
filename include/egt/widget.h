@@ -719,20 +719,6 @@ public:
     virtual Screen* screen() const;
 
     /**
-     * Get a const ref of the flags.
-     */
-    const Widget::Flags& flags() const { return m_widget_flags; }
-
-    /**
-     * Get a modifiable ref of the flags.
-     *
-     * @warning Directly modifying flags may result in inconsistent state of the
-     * widget. Always use the appropriate member functions (i.e. readonly(),
-     * checked()).
-     */
-    Widget::Flags& flags() { return m_widget_flags; }
-
-    /**
      * Align the widget.
      *
      * This will align the widget relative to the box of its parent frame.
@@ -1284,6 +1270,20 @@ public:
                              const Serializer::Attributes& attrs);
 
 protected:
+
+    /**
+     * Get a const ref of the flags.
+     */
+    const Widget::Flags& flags() const { return m_widget_flags; }
+
+    /**
+     * Get a modifiable ref of the flags.
+     *
+     * @warning Directly modifying flags may result in inconsistent state of the
+     * widget. Always use the appropriate member functions (i.e. readonly(),
+     * checked()).
+     */
+    Widget::Flags& flags() { return m_widget_flags; }
 
     /**
      * Is this widget a top level widget?
