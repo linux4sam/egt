@@ -372,7 +372,7 @@ SliderType<T>::SliderType(const Rect& rect, T start, T end, T value,
 {
     this->name("Slider" + std::to_string(this->m_widgetid));
     this->fill_flags(Theme::FillFlag::blend);
-    this->flags().set(Widget::Flag::grab_mouse);
+    this->grab_mouse(true);
     this->slider_flags().set(SliderFlag::rectangle_handle);
     this->border_radius(4.0);
 }

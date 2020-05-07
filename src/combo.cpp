@@ -165,7 +165,7 @@ ComboBox::ComboBox(ItemArray items,
     padding(5);
     border(theme().default_border());
 
-    flags().set(Widget::Flag::grab_mouse);
+    grab_mouse(true);
 
     // automatically select the first item
     if (!m_items.empty())

@@ -296,6 +296,22 @@ bool Widget::no_layout() const
     return flags().is_set(Widget::Flag::no_layout);
 }
 
+void Widget::grab_mouse(bool value)
+{
+    if (flags().is_set(Widget::Flag::grab_mouse) != value)
+    {
+        if (value)
+            flags().set(Widget::Flag::grab_mouse);
+        else
+            flags().clear(Widget::Flag::grab_mouse);
+    }
+}
+
+bool Widget::grab_mouse() const
+{
+    return flags().is_set(Widget::Flag::grab_mouse);
+}
+
 void Widget::alpha(float alpha)
 {
     alpha = detail::clamp<>(alpha, 0.f, 1.f);

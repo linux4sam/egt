@@ -17,7 +17,7 @@ public:
           m_grip(egt::Image("file:grip.png")),
           m_arrows(egt::Image("file:arrows.png"))
     {
-        flags().set(egt::Widget::Flag::grab_mouse);
+        grab_mouse(true);
 
         color(egt::Palette::ColorId::bg, egt::Color(0x526d7480));
 

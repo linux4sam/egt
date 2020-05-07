@@ -56,7 +56,7 @@ Button::Button(const std::string& text,
     fill_flags(Theme::FillFlag::blend);
     border_radius(4.0);
 
-    flags().set(Widget::Flag::grab_mouse);
+    grab_mouse(true);
 }
 
 Button::Button(Frame& parent,

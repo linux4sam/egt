@@ -477,6 +477,20 @@ public:
     }
 
     /**
+     * Set the grab_mouse state.
+     *
+     * @param[in] value When true, grab mouse events.
+     *
+     * By default, this state is false.
+     */
+    void grab_mouse(bool value);
+
+    /**
+     * Return the grab_mouse state of the widget.
+     */
+    bool grab_mouse() const;
+
+    /**
      * Return the plane_window state of the widget.
      */
     bool plane_window() const;

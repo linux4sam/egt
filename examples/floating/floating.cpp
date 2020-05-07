@@ -20,7 +20,7 @@ public:
           m_mx(mx),
           m_my(my)
     {
-        m_widget->flags().set(egt::Widget::Flag::grab_mouse);
+        m_widget->grab_mouse(true);
         m_widget->no_layout(true);
         m_widget->on_event([this](egt::Event & event)
         {

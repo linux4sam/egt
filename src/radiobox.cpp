@@ -25,7 +25,7 @@ RadioBox::RadioBox(const std::string& text,
     padding(5);
     text_align(AlignFlag::left | AlignFlag::center);
 
-    flags().set(Widget::Flag::grab_mouse);
+    grab_mouse(true);
 }
 
 RadioBox::RadioBox(Frame& parent,

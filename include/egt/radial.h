@@ -86,7 +86,7 @@ public:
         : Widget(rect)
     {
         this->name("Radial" + std::to_string(m_widgetid));
-        this->flags().set(Widget::Flag::grab_mouse);
+        this->grab_mouse(true);
     }
 
     /**
