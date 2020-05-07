@@ -248,16 +248,6 @@ Point Frame::to_panel(const Point& p)
     return p;
 }
 
-void Frame::zorder_down()
-{
-    Widget::zorder_down();
-}
-
-void Frame::zorder_up()
-{
-    Widget::zorder_up();
-}
-
 void Frame::zorder_down(const Widget* widget)
 {
     auto i = std::find_if(m_children.begin(), m_children.end(),
@@ -291,16 +281,6 @@ void Frame::zorder_up(const Widget* widget)
             std::iter_swap(i, to);
         }
     }
-}
-
-void Frame::zorder_bottom()
-{
-    Widget::zorder_bottom();
-}
-
-void Frame::zorder_top()
-{
-    Widget::zorder_top();
 }
 
 void Frame::zorder_bottom(const Widget* widget)
@@ -342,11 +322,6 @@ size_t Frame::zorder(const Widget* widget) const
     }
 
     return 0;
-}
-
-size_t Frame::zorder() const
-{
-    return Widget::zorder();
 }
 
 static inline bool time_child_draw_enabled()

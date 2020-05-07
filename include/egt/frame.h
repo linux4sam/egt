@@ -294,9 +294,8 @@ public:
      */
     virtual Point to_panel(const Point& p);
 
-    void zorder_down() override;
-
-    void zorder_up() override;
+    using Widget::zorder_down;
+    using Widget::zorder_up;
 
     /**
      * Move the specified widget zorder down relative to other widgets with the
@@ -304,7 +303,7 @@ public:
      *
      * @param widget The widget.
      */
-    virtual void zorder_down(const Widget* widget);
+    void zorder_down(const Widget* widget);
 
     /**
      * Move the specified widget zorder up relative to other widgets with the
@@ -314,9 +313,8 @@ public:
      */
     void zorder_up(const Widget* widget);
 
-    void zorder_bottom() override;
-
-    void zorder_top() override;
+    using Widget::zorder_bottom;
+    using Widget::zorder_top;
 
     /**
      * Move the specified widget zorder to the bottom of the current list of widgets
@@ -341,7 +339,7 @@ public:
      */
     size_t zorder(const Widget* widget) const;
 
-    size_t zorder() const override;
+    using Widget::zorder;
 
     /**
      * Get the widget under the given DisplayPoint.
