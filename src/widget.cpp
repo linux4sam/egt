@@ -280,6 +280,22 @@ bool Widget::clip() const
     return !flags().is_set(Widget::Flag::no_clip);
 }
 
+void Widget::no_layout(bool value)
+{
+    if (flags().is_set(Widget::Flag::no_layout) != value)
+    {
+        if (value)
+            flags().set(Widget::Flag::no_layout);
+        else
+            flags().clear(Widget::Flag::no_layout);
+    }
+}
+
+bool Widget::no_layout() const
+{
+    return flags().is_set(Widget::Flag::no_layout);
+}
+
 void Widget::alpha(float alpha)
 {
     alpha = detail::clamp<>(alpha, 0.f, 1.f);

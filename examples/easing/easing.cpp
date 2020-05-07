@@ -89,7 +89,7 @@ public:
 
         m_box.fill_flags().clear();
         m_box.move(egt::Point(width() / 2 - m_box.width() / 2, -110));
-        m_box.flags().set(egt::Widget::Flag::no_layout);
+        m_box.no_layout(true);
         m_box.show();
         add(m_box);
 
@@ -139,7 +139,7 @@ int main(int argc, char** argv)
     label1.color(egt::Palette::ColorId::label_text, egt::Palette::white);
     label1.color(egt::Palette::ColorId::label_bg, egt::Palette::transparent);
     label1.x(egt::SideBoard::HANDLE_WIDTH + 10);
-    label1.flags().set(egt::Label::Flag::no_layout);
+    label1.no_layout(true);
     window.add(bottom(label1));
     label1.zorder_down();
 

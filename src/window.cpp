@@ -336,7 +336,7 @@ struct CursorWindow : public Window
         fill_flags(Theme::FillFlag::blend);
         m_label->fill_flags().clear();
         add(m_label);
-        flags().set(Widget::Flag::no_layout);
+        no_layout(true);
         readonly(true);
     }
 

@@ -43,7 +43,7 @@ int main(int argc, char** argv)
     egt::Application app(argc, argv, "frames");
 
     egt::TopWindow win0;
-    win0.flags().set(egt::Widget::Flag::no_layout);
+    win0.no_layout(true);
     win0.show();
 
     const std::vector<std::pair<egt::Color, std::string>> items =

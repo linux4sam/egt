@@ -506,6 +506,20 @@ public:
     bool clip() const;
 
     /**
+     * Set the no_layout state.
+     *
+     * @param[in] value When true, parent won't perform layout for the widget.
+     *
+     * By default, this state is false.
+     */
+    void no_layout(bool value);
+
+    /**
+     * Return the no_layout state of the widget.
+     */
+    bool no_layout() const;
+
+    /**
      * Get the alpha property.
      *
      * @return Alpha property in the range 0.0 to 1.0.

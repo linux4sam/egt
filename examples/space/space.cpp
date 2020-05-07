@@ -23,8 +23,8 @@ public:
           m_xspeed(xspeed),
           m_yspeed(yspeed)
     {
-        flags().set(egt::Widget::Flag::no_layout);
         autoresize(false);
+        no_layout(true);
     }
 
     // returns false when it's no longer visible

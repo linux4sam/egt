@@ -19,7 +19,7 @@ public:
             : m_background(image)
         {
             fill_flags().clear();
-            flags().set(egt::Widget::Flag::no_layout);
+            no_layout(true);
 
             m_background.align(egt::AlignFlag::expand);
             m_background.image_align(egt::AlignFlag::expand);
