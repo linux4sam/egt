@@ -275,6 +275,11 @@ bool Widget::autoresize() const
     return !flags().is_set(Widget::Flag::no_autoresize);
 }
 
+bool Widget::clip() const
+{
+    return !flags().is_set(Widget::Flag::no_clip);
+}
+
 void Widget::alpha(float alpha)
 {
     alpha = detail::clamp<>(alpha, 0.f, 1.f);

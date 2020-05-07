@@ -501,6 +501,11 @@ public:
     bool frame() const;
 
     /**
+     * Return the clip state of the widget.
+     */
+    bool clip() const;
+
+    /**
      * Get the alpha property.
      *
      * @return Alpha property in the range 0.0 to 1.0.

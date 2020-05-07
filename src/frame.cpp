@@ -393,7 +393,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
         crect -= origin;
     }
 
-    if (!flags().is_set(Widget::Flag::no_clip))
+    if (clip())
     {
         // clip the damage rectangle, otherwise we will draw this whole frame
         // and then only draw the children inside the actual damage rect, which
@@ -459,7 +459,7 @@ void Frame::draw_child(Painter& painter, const Rect& crect, Widget* child)
 
             // no matter what the child draws, clip the output to only the
             // rectangle we care about updating
-            if (!child->flags().is_set(Widget::Flag::no_clip))
+            if (clip())
             {
                 painter.draw(r);
                 painter.clip();
@@ -477,7 +477,7 @@ void Frame::draw_child(Painter& painter, const Rect& crect, Widget* child)
 
                 // no matter what the child draws, clip the output to only the
                 // rectangle we care about updating
-                if (!child->flags().is_set(Widget::Flag::no_clip))
+                if (clip())
                 {
                     painter.draw(r);
                     painter.clip();

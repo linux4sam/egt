@@ -109,7 +109,7 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
                     // no matter what the child draws, clip the output to only the
                     // rectangle we care about updating
                     Painter::AutoSaveRestore sr2(cpainter);
-                    if (!child->flags().is_set(Widget::Flag::no_clip))
+                    if (clip())
                     {
                         cpainter.draw(r);
                         cpainter.clip();
