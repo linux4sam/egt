@@ -67,8 +67,7 @@ void ListBox::add_item_private(const std::shared_ptr<Widget>& widget)
     // automatically select the first item
     if (m_sizer.count_children() == 1)
     {
-        m_selected = 0;
-        m_sizer.child_at(m_selected)->checked(true);
+        m_sizer.child_at(0)->checked(true);
     }
 
     on_items_changed.invoke();
@@ -83,17 +82,17 @@ void ListBox::remove_item(Widget* widget)
 {
     if (m_sizer.is_child(widget))
     {
+        const auto checked = widget->checked();
+
         m_sizer.remove(widget);
 
-        if (m_selected >= static_cast<ssize_t>(m_sizer.count_children()))
+        on_items_changed.invoke();
+
+        if (checked)
         {
             if (m_sizer.count_children())
                 selected(m_sizer.count_children() - 1);
-            else
-                m_selected = -1;
         }
-
-        on_items_changed.invoke();
     }
 }
 
@@ -134,15 +133,20 @@ void ListBox::selected(size_t index)
 {
     if (index < m_sizer.count_children())
     {
-        if (m_selected != static_cast<ssize_t>(index))
+        bool changed = false;
+        for (size_t i = 0; i < m_sizer.count_children(); i++)
         {
-            if (static_cast<ssize_t>(m_sizer.count_children()) > m_selected
-                && m_selected > -1)
-                m_sizer.child_at(m_selected)->checked(false);
-            m_selected = index;
-            if (static_cast<ssize_t>(m_sizer.count_children()) > m_selected)
-                m_sizer.child_at(m_selected)->checked(true);
+            if (m_sizer.child_at(i)->checked() && i != index)
+            {
+                m_sizer.child_at(i)->checked(false);
+                changed = true;
+            }
+        }
 
+        m_sizer.child_at(index)->checked(true);
+
+        if (changed)
+        {
             damage();
             on_selected_changed.invoke();
         }
@@ -151,12 +155,22 @@ void ListBox::selected(size_t index)
     }
 }
 
+ssize_t ListBox::selected() const
+{
+    for (size_t i = 0; i < m_sizer.count_children(); i++)
+    {
+        if (m_sizer.child_at(i)->checked())
+            return i;
+    }
+
+    return -1;
+}
+
 void ListBox::clear()
 {
     if (m_sizer.count_children())
     {
         m_sizer.remove_all();
-        m_selected = -1;
         on_items_changed.invoke();
     }
 }

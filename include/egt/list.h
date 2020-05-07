@@ -190,8 +190,10 @@ public:
 
     /**
      * Get the currently selected index.
+     *
+     * @return The selected index, or -1 if there is no selection.
      */
-    ssize_t selected() const { return m_selected; }
+    ssize_t selected() const;
 
     /**
      * Return the number of items in the list.
@@ -229,9 +231,6 @@ public:
     void scroll_bottom();
 
 protected:
-
-    /// Currently selected index.
-    ssize_t m_selected{-1};
 
     /// View used to contain the possible large sizer.
     ScrolledView m_view;
