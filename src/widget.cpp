@@ -249,6 +249,11 @@ void Widget::enable()
     flags().clear(Widget::Flag::disabled);
 }
 
+bool Widget::plane_window() const
+{
+    return flags().is_set(Widget::Flag::plane_window);
+}
+
 void Widget::alpha(float alpha)
 {
     alpha = detail::clamp<>(alpha, 0.f, 1.f);

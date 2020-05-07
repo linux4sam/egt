@@ -134,7 +134,7 @@ GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
     if (sample)
     {
 #ifdef HAVE_LIBPLANES
-        if (impl->m_interface.flags().is_set(Widget::Flag::plane_window))
+        if (impl->m_interface.plane_window())
         {
             GstBuffer* buffer = gst_sample_get_buffer(sample);
             if (buffer)
@@ -177,7 +177,7 @@ std::string GstAppSinkImpl::create_pipeline(const std::string& uri, bool m_audio
 {
     std::string vc = " ! videoconvert ! video/x-raw,format=";
 #ifdef HAVE_LIBPLANES
-    if (m_interface.flags().is_set(Widget::Flag::plane_window))
+    if (m_interface.plane_window())
     {
         auto s = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
         assert(s);

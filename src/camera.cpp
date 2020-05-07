@@ -44,7 +44,7 @@ void CameraWindow::scale(float hscale, float vscale)
 
     if (xs || ys)
     {
-        if (!flags().is_set(Widget::Flag::plane_window))
+        if (!plane_window())
         {
             m_camera_impl->scale(m_hscale, m_vscale);
         }

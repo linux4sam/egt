@@ -21,7 +21,7 @@ public:
 
         color(egt::Palette::ColorId::bg, egt::Color(0x526d7480));
 
-        if (flags().is_set(egt::Widget::Flag::plane_window))
+        if (plane_window())
         {
             color(egt::Palette::ColorId::bg, egt::Color(0x9370db80), egt::Palette::GroupId::active);
         }

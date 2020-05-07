@@ -285,7 +285,7 @@ void Sprite::create_impl(const Image& image, const Size& frame_size,
         throw std::runtime_error("sprite image cannot be empty");
 
 #ifdef HAVE_LIBPLANES
-    if (flags().is_set(Widget::Flag::plane_window))
+    if (plane_window())
     {
         m_simpl = std::make_unique<detail::HardwareSprite>(*this, image, frame_size, frame_count, frame_point);
     }

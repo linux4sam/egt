@@ -477,6 +477,11 @@ public:
     }
 
     /**
+     * Return the plane_window state of the widget.
+     */
+    bool plane_window() const;
+
+    /**
      * Get the alpha property.
      *
      * @return Alpha property in the range 0.0 to 1.0.

@@ -111,7 +111,7 @@ int main(int argc, char** argv)
     egt::Window ctrlwindow(egt::Size(win.width(), 72), egt::PixelFormat::argb8888);
     ctrlwindow.align(egt::AlignFlag::bottom | egt::AlignFlag::center);
     ctrlwindow.color(egt::Palette::ColorId::bg, egt::Palette::transparent);
-    if (!ctrlwindow.flags().is_set(egt::Window::Flag::plane_window))
+    if (!ctrlwindow.plane_window())
         ctrlwindow.fill_flags(egt::Theme::FillFlag::blend);
     win.add(ctrlwindow);
 

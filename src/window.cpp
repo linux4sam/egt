@@ -263,7 +263,7 @@ void Window::create_impl(const Rect& rect,
     assert(m_impl);
 
     /// NOLINTNEXTLINE(bugprone-branch-clone)
-    if (flags().is_set(Widget::Flag::plane_window))
+    if (plane_window())
     {
         SPDLOG_DEBUG("{} backend is PlaneWindow", name());
     }

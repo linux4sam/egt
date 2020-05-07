@@ -95,7 +95,7 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
 
             // don't draw plane frame as child - this is
             // specifically handled by event loop
-            if (child->flags().is_set(Widget::Flag::plane_window))
+            if (child->plane_window())
                 continue;
 
             if (child->box().intersect(crect))

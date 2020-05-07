@@ -78,7 +78,7 @@ GstKmsSinkImpl::GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool de
 std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audiodevice)
 {
     std::string vc = "BGRx";
-    if (m_interface.flags().is_set(Widget::Flag::plane_window))
+    if (m_interface.plane_window())
     {
         auto s = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
         assert(s);

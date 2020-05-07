@@ -258,7 +258,7 @@ GstFlowReturn CameraImpl::on_new_buffer(GstElement* elt, gpointer data)
     {
 #ifdef HAVE_LIBPLANES
         // TODO: this is not thread safe accessing impl here
-        if (impl->m_interface.flags().is_set(Widget::Flag::plane_window))
+        if (impl->m_interface.plane_window())
         {
             GstBuffer* buffer = gst_sample_get_buffer(sample);
             if (buffer)
@@ -311,7 +311,7 @@ bool CameraImpl::start()
     get_camera_device_caps();
 
 #ifdef HAVE_LIBPLANES
-    if (m_interface.flags().is_set(Widget::Flag::plane_window) && m_usekmssink)
+    if (m_interface.plane_window() && m_usekmssink)
     {
         auto s = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
         assert(s);

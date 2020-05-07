@@ -96,7 +96,7 @@ VideoWindow::VideoWindow(const Rect& rect, const std::string& uri,
 
 void VideoWindow::create_impl(const Size& size)
 {
-    if (flags().is_set(Widget::Flag::plane_window) && detail::is_target_sama5d4())
+    if (plane_window() && detail::is_target_sama5d4())
     {
         SPDLOG_DEBUG("VideoWindow: Using KMS sink");
 #ifdef HAVE_LIBPLANES
@@ -186,7 +186,7 @@ void VideoWindow::scale(float hscale, float vscale)
 
     if (xs || ys)
     {
-        if (!flags().is_set(Widget::Flag::plane_window))
+        if (!plane_window())
         {
             m_video_impl->scale(m_hscale, m_vscale);
         }
