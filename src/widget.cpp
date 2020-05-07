@@ -259,6 +259,22 @@ bool Widget::frame() const
     return flags().is_set(Widget::Flag::frame);
 }
 
+void Widget::autoresize(bool value)
+{
+    if (flags().is_set(Widget::Flag::no_autoresize) == value)
+    {
+        if (value)
+            flags().clear(Widget::Flag::no_autoresize);
+        else
+            flags().set(Widget::Flag::no_autoresize);
+    }
+}
+
+bool Widget::autoresize() const
+{
+    return !flags().is_set(Widget::Flag::no_autoresize);
+}
+
 void Widget::alpha(float alpha)
 {
     alpha = detail::clamp<>(alpha, 0.f, 1.f);

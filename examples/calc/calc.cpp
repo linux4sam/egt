@@ -99,7 +99,7 @@ int main(int argc, char** argv)
                 continue;
 
             auto b = std::make_shared<egt::Button>(label, egt::Rect(egt::Size(60, 60)));
-            b->flags().set(egt::Widget::Flag::no_autoresize);
+            b->autoresize(false);
             b->border(1);
             b->font(egt::Font(25, egt::Font::Weight::bold));
             b->color(colors[r][c].first, colors[r][c].second);

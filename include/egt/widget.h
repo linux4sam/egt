@@ -482,6 +482,20 @@ public:
     bool plane_window() const;
 
     /**
+     * Set the autoresize state.
+     *
+     * @param[in] value When true, the widget can be automatically resized.
+     *
+     * By default, this state is true;
+     */
+    void autoresize(bool value);
+
+    /**
+     * Return the autoresize state of the widget.
+     */
+    bool autoresize() const;
+
+    /**
      * Return the frame state of the widget.
      */
     bool frame() const;
