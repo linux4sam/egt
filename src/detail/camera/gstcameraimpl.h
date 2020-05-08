@@ -43,6 +43,9 @@ protected:
     Rect m_rect;
     GMainLoop* m_gmain_loop{nullptr};
     std::thread m_gmain_thread;
+    std::string m_caps_name;
+    std::string m_caps_format;
+    std::vector<std::tuple<int, int>> m_resolutions;
 
     void get_camera_device_caps();
 
@@ -53,7 +56,8 @@ protected:
 
 using BusCallback = gboolean(*)(GstBus* bus, GstMessage* message, gpointer data);
 
-std::string get_camera_device_caps(BusCallback bus_callback, void* instance);
+std::tuple<std::string, std::string, std::string, std::vector<std::tuple<int, int>>>
+get_camera_device_caps(const std::string& dev_name, BusCallback bus_callback, void* instance);
 
 } //End of detail
 

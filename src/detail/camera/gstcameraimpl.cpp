@@ -300,7 +300,13 @@ GstFlowReturn CameraImpl::on_new_buffer(GstElement* elt, gpointer data)
 
 void CameraImpl::get_camera_device_caps()
 {
-    m_devnode = detail::get_camera_device_caps(&bus_callback, this);
+    std::tuple<std::string, std::string, std::string,
+        std::vector<std::tuple<int, int>>> caps = detail::get_camera_device_caps(m_devnode, &bus_callback, this);
+
+    m_devnode = std::get<0>(caps);
+    m_caps_name = std::get<1>(caps);
+    m_caps_format = std::get<2>(caps);
+    m_resolutions = std::get<3>(caps);
 }
 
 bool CameraImpl::start()
@@ -309,13 +315,58 @@ bool CameraImpl::start()
 
     get_camera_device_caps();
 
+    auto box = m_interface.content_area();
+    SPDLOG_DEBUG("box = {}", box);
+
+    /*
+     * if user constructs a default constructor, then size of
+     * the camerawindow is zero for BasicWindow and 32x32 for
+     * plane window. due to which pipeline initialization fails
+     * incase of BasicWindow. as a fix resize the camerawindow
+     * to 32x32.
+     */
+    if ((box.width() < 32) && (box.height() < 32))
+    {
+        m_interface.resize(Size(32, 32));
+        m_rect.size(Size(32, 32));
+        box = m_interface.content_area();
+    }
+
+    /*
+     * Here we try to match camera resolution with camerawindow size
+     * and add scaling to pipeline if size does not match.
+     * note: adding scaling to may effects performance and this way
+     * now users can set any size for camera window.
+     */
+    auto w = box.width();
+    auto h = box.height();
+    if (!m_resolutions.empty())
+    {
+        auto index = std::distance(m_resolutions.begin(),
+                                   std::lower_bound(m_resolutions.begin(), m_resolutions.end(),
+                                           std::make_tuple(box.width(), box.height())));
+
+        w = std::get<0>(m_resolutions.at(index));
+        h = std::get<1>(m_resolutions.at(index));
+
+        SPDLOG_DEBUG("closest match of camerawindow : {} is {} ", box.size(), Size(w, h));
+    }
+
+    std::string vscale;
+    if ((w != box.width()) || (h != box.height()))
+    {
+        vscale = fmt::format(" videoscale ! video/x-raw,width={},height={} !", box.width(), box.height());
+        SPDLOG_DEBUG("scaling video: {} to {} ", Size(w, h), box.size());
+    }
+
+    const auto format = detail::gstreamer_format(m_interface.format());
+    SPDLOG_DEBUG("format: {}  ", format);
+
     static constexpr auto appsink_pipe =
-        "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={} ! " \
+        "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={} ! {} " \
         "appsink name=appsink async=false enable-last-sample=false sync=true";
 
-    const auto box = m_interface.content_area();
-    const auto format = detail::gstreamer_format(m_interface.format());
-    pipe = fmt::format(appsink_pipe, m_devnode, box.width(), box.height(), format);
+    pipe = fmt::format(appsink_pipe, m_devnode, w, h, format, vscale);
 
     SPDLOG_DEBUG(pipe);
 
@@ -394,7 +445,8 @@ CameraImpl::~CameraImpl()
     }
 }
 
-std::string get_camera_device_caps(BusCallback bus_callback, void* instance)
+std::tuple<std::string, std::string, std::string, std::vector<std::tuple<int, int>>>
+get_camera_device_caps(const std::string& dev_name, BusCallback bus_callback, void* instance)
 {
     std::string devnode;
 
@@ -408,6 +460,9 @@ std::string get_camera_device_caps(BusCallback bus_callback, void* instance)
     gst_device_monitor_add_filter(monitor, "Video/Source", caps);
     gst_caps_unref(caps);
 
+    std::string caps_name;
+    std::string caps_format;
+    std::vector<std::tuple<int, int>> resolutions;
     if (gst_device_monitor_start(monitor))
     {
         GList* devlist = gst_device_monitor_get_devices(monitor);
@@ -419,25 +474,66 @@ std::string get_camera_device_caps(BusCallback bus_callback, void* instance)
 
             // Probe all device properties and store them internally:
             GstStringHandle display_name{gst_device_get_display_name(device)};
-            SPDLOG_DEBUG("display_name = {}", display_name.get());
+            SPDLOG_DEBUG("name : {}", display_name.get());
 
             GstStringHandle dev_string{gst_device_get_device_class(device)};
-            SPDLOG_DEBUG("dev_string = {}", dev_string.get());
+            SPDLOG_DEBUG("class : {}", dev_string.get());
+
+            GstCaps* caps = gst_device_get_caps(device);
+            if (caps)
+            {
+                resolutions.clear();
+                int size = gst_caps_get_size(caps);
+                SPDLOG_DEBUG("caps : ");
+                for (int j = 0; j < size; ++j)
+                {
+                    GstStructure* s = gst_caps_get_structure(caps, j);
+                    std::string name = std::string(gst_structure_get_name(s));
+                    if (name == "video/x-raw")
+                    {
+                        int width = 0;
+                        int height = 0;
+                        caps_name = name;
+                        gst_structure_get_int(s, "width", &width);
+                        gst_structure_get_int(s, "height", &height);
+                        caps_format = std::string(gst_structure_get_string(s, "format"));
+                        resolutions.push_back(std::make_tuple(width, height));
+                        SPDLOG_DEBUG("{}, format=(string){}, width=(int){}, "
+                                     "height=(int){}", caps_name, caps_format, width, height);
+                    }
+                }
+
+                if (!resolutions.empty())
+                {
+                    // sort by camera width
+                    std::sort(resolutions.begin(), resolutions.end(), [](
+                                  std::tuple<int, int>& t1,
+                                  std::tuple<int, int>& t2)
+                    {
+                        return std::get<0>(t1) < std::get<0>(t2);
+                    });
+                }
+                gst_caps_unref(caps);
+            }
 
             GstStructure* props = gst_device_get_properties(device);
             if (props)
             {
                 SPDLOG_DEBUG("device properties: {}", gst_structure_to_string(props));
 
-                devnode = gst_structure_get_string(props, "device.path");
-                SPDLOG_DEBUG("using default camera device = {}", devnode);
+                devnode = std::string(gst_structure_get_string(props, "device.path"));
                 gst_structure_free(props);
+
+                if (devnode == dev_name)
+                    break;
             }
         }
         g_list_free(devlist);
     }
 
-    return devnode;
+    SPDLOG_DEBUG("camera device node : {}", devnode);
+
+    return std::make_tuple(devnode, caps_name, caps_format, resolutions);
 }
 
 }
