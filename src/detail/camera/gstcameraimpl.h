@@ -22,7 +22,7 @@ class CameraImpl
 {
 public:
     CameraImpl(CameraWindow& interface, const Rect& rect,
-               const std::string& device, bool useKmssink);
+               const std::string& device);
 
     virtual void draw(Painter& painter, const Rect& rect);
 
@@ -41,7 +41,6 @@ protected:
     GstElement* m_appsink{nullptr};
     GstSample* m_camerasample{nullptr};
     Rect m_rect;
-    bool m_usekmssink{};
     GMainLoop* m_gmain_loop{nullptr};
     std::thread m_gmain_thread;
 

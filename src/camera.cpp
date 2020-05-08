@@ -23,7 +23,7 @@ CameraWindow::CameraWindow(const Rect& rect,
                            PixelFormat format_hint,
                            WindowHint hint)
     : Window(rect, format_hint, hint),
-      m_camera_impl(std::make_unique<detail::CameraImpl>(*this, rect, device, detail::is_target_sama5d4()))
+      m_camera_impl(std::make_unique<detail::CameraImpl>(*this, rect, device))
 {}
 
 void CameraWindow::draw(Painter& painter, const Rect& rect)

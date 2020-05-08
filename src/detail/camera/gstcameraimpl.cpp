@@ -30,11 +30,10 @@ namespace detail
 
 CameraImpl::CameraImpl(CameraWindow& interface, const Rect& rect,
                        // NOLINTNEXTLINE(modernize-pass-by-value)
-                       const std::string& device, bool useKmssink)
+                       const std::string& device)
     : m_interface(interface),
       m_devnode(device),
-      m_rect(rect),
-      m_usekmssink(useKmssink)
+      m_rect(rect)
 {
     GError* err = nullptr;
     if (!gst_init_check(nullptr, nullptr, &err))
@@ -310,35 +309,13 @@ bool CameraImpl::start()
 
     get_camera_device_caps();
 
-#ifdef HAVE_LIBPLANES
-    if (m_interface.plane_window() && m_usekmssink)
-    {
-        auto s = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
-        assert(s);
-        if (s)
-        {
-            static constexpr auto kmssink_pipe =
-                "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={} ! " \
-                "g1kmssink gem-name={}";
+    static constexpr auto appsink_pipe =
+        "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={} ! " \
+        "appsink name=appsink async=false enable-last-sample=false sync=true";
 
-
-            const auto gem_name = s->gem();
-            const auto format = detail::gstreamer_format(m_interface.format());
-            const auto box = m_interface.content_area();
-            pipe = fmt::format(kmssink_pipe, m_devnode, box.width(), box.height(), format, gem_name);
-        }
-    }
-    else
-#endif
-    {
-        static constexpr auto appsink_pipe =
-            "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={} ! " \
-            "appsink name=appsink async=false enable-last-sample=false sync=true";
-
-        const auto box = m_interface.content_area();
-        const auto format = detail::gstreamer_format(m_interface.format());
-        pipe = fmt::format(appsink_pipe, m_devnode, box.width(), box.height(), format);
-    }
+    const auto box = m_interface.content_area();
+    const auto format = detail::gstreamer_format(m_interface.format());
+    pipe = fmt::format(appsink_pipe, m_devnode, box.width(), box.height(), format);
 
     SPDLOG_DEBUG(pipe);
 
@@ -353,21 +330,18 @@ bool CameraImpl::start()
         return false;
     }
 
-    if (!m_usekmssink)
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
+    m_appsink = gst_bin_get_by_name(GST_BIN(m_pipeline), "appsink");
+    if (!m_appsink)
     {
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
-        m_appsink = gst_bin_get_by_name(GST_BIN(m_pipeline), "appsink");
-        if (!m_appsink)
-        {
-            m_interface.on_error.invoke("failed to get app sink element");
-            return false;
-        }
-
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
-        g_object_set(G_OBJECT(m_appsink), "emit-signals", TRUE, "sync", TRUE, nullptr);
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
-        g_signal_connect(m_appsink, "new-sample", G_CALLBACK(on_new_buffer), this);
+        m_interface.on_error.invoke("failed to get app sink element");
+        return false;
     }
+
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
+    g_object_set(G_OBJECT(m_appsink), "emit-signals", TRUE, "sync", TRUE, nullptr);
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
+    g_signal_connect(m_appsink, "new-sample", G_CALLBACK(on_new_buffer), this);
 
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
     GstBus* bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));
