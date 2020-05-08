@@ -43,7 +43,7 @@ int main(int argc, char** argv)
     cxxopts::Options options(argv[0], "display camera video stream");
     options.add_options()
     ("h,help", "Show help")
-    ("d,device", "V4L2 device", cxxopts::value<std::string>()->default_value("/dev/video"))
+    ("d,device", "V4L2 device", cxxopts::value<std::string>()->default_value("/dev/video0"))
     ("width", "Width of the stream", cxxopts::value<int>()->default_value("320"))
     ("height", "Height of the stream", cxxopts::value<int>()->default_value("240"))
     ("f,format", "Pixel format", cxxopts::value<std::string>()->default_value("yuyv"), "[egt::PixelFormat]");
@@ -85,6 +85,21 @@ int main(int argc, char** argv)
     player.on_error([&errlabel](const std::string & err)
     {
         errlabel.text(line_break(err));
+    });
+
+    player.on_connect([&player, &errlabel, dev](const std::string & devnode)
+    {
+        if (!errlabel.text().empty())
+        {
+            errlabel.text("");
+            player.start();
+        }
+    });
+
+    player.on_disconnect([&player, &errlabel, dev](const std::string & devnode)
+    {
+        errlabel.text(line_break("Device removed: " + devnode));
+        player.stop();
     });
 
     player.on_event([&player](egt::Event & event)

@@ -52,6 +52,16 @@ public:
      * Invoked when an error occurs.
      */
     Signal<const std::string&> on_error;
+
+    /**
+     * Generated when an USB camera connected.
+     */
+    Signal<const std::string&> on_connect;
+
+    /**
+     * Generated when an USB camera disconnected.
+     */
+    Signal<const std::string&> on_disconnect;
     /** @} */
 
     /**

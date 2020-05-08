@@ -24,10 +24,11 @@ int main(int argc, char** argv)
 
     egt::Application app(argc, argv);
 
+    auto dev(args["device"].as<std::string>());
     egt::experimental::CameraCapture capture(args["file"].as<std::string>(),
             egt::experimental::CameraCapture::ContainerType::avi,
             egt::PixelFormat::yuyv,
-            args["device"].as<std::string>());
+            dev);
 
     capture.on_error([&app](const std::string & err)
     {
@@ -48,6 +49,14 @@ int main(int argc, char** argv)
         std::cout << "capturing for 10 seconds..." << std::flush;
         stop_timer.start();
     }
+
+    capture.on_disconnect([&capture, dev, &stop_timer, &app](const std::string & devnode)
+    {
+        std::cout << "Device removed: " << devnode << std::endl;
+        stop_timer.stop();
+        capture.stop();
+        app.quit();
+    });
 
     return app.run();
 }

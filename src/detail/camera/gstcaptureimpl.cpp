@@ -167,18 +167,21 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
     {
         GstDevice* device;
         gst_message_parse_device_added(message, &device);
-        GstStringHandle name{gst_device_get_display_name(device)};
-        SPDLOG_DEBUG("device added: {}", name.get());
-        gst_object_unref(device);
+
+        std::string devnode;
+        GstStructure* props = gst_device_get_properties(device);
+        if (props)
+        {
+            SPDLOG_DEBUG("device properties: {}", gst_structure_to_string(props));
+            devnode = gst_structure_get_string(props, "device.path");
+            gst_structure_free(props);
+        }
 
         if (Application::check_instance())
         {
-            asio::post(Application::instance().event().io(), [impl]()
+            asio::post(Application::instance().event().io(), [impl, devnode]()
             {
-                if (impl->start())
-                {
-                    impl->m_interface.on_error.invoke({});
-                }
+                impl->m_interface.on_connect.invoke(devnode);
             });
         }
 
@@ -188,19 +191,23 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
     {
         GstDevice* device;
         gst_message_parse_device_removed(message, &device);
-        GstStringHandle name{gst_device_get_display_name(device)};
-        SPDLOG_DEBUG("device removed: {}", name.get());
-        gst_object_unref(device);
+
+        std::string devnode;
+        GstStructure* props = gst_device_get_properties(device);
+        if (props)
+        {
+            SPDLOG_DEBUG("device properties: {}", gst_structure_to_string(props));
+            devnode = gst_structure_get_string(props, "device.path");
+            gst_structure_free(props);
+        }
 
         impl->m_condition.notify_one();
 
-        impl->stop();
-
         if (Application::check_instance())
         {
-            asio::post(Application::instance().event().io(), [impl, name = std::move(name)]()
+            asio::post(Application::instance().event().io(), [impl, devnode]()
             {
-                impl->m_interface.on_error.invoke(fmt::format("device removed: " + std::string(name.get())));
+                impl->m_interface.on_disconnect.invoke(devnode);
             });
         }
         break;
