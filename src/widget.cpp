@@ -618,8 +618,12 @@ void Widget::serialize(Serializer& serializer) const
         serializer.add_property("align", align());
     if (!border_flags().empty())
         serializer.add_property("borderflags", border_flags().to_string());
-    if (!flags().empty())
-        serializer.add_property("flags", flags().to_string());
+    if (!autoresize())
+        serializer.add_property("autoresize", autoresize());
+    if (grab_mouse())
+        serializer.add_property("grab_mouse", grab_mouse());
+    if (no_layout())
+        serializer.add_property("no_layout", no_layout());
     if (padding())
         serializer.add_property("padding", padding());
     if (margin())
@@ -665,11 +669,14 @@ void Widget::deserialize(const std::string& name, const std::string& value,
     case detail::hash("borderflags"):
         border_flags(Theme::BorderFlags(value));
         break;
-    case detail::hash("flags"):
-        /// @todo Widget flags set explicitly from deserialization are not safe
-        /// for things like frame/plane_window flags which should only come from
-        /// widget construction
-        m_widget_flags.from_string(value);
+    case detail::hash("autoresize"):
+        autoresize(egt::detail::from_string(value));
+        break;
+    case detail::hash("grab_mouse"):
+        grab_mouse(egt::detail::from_string(value));
+        break;
+    case detail::hash("no_layout"):
+        no_layout(egt::detail::from_string(value));
         break;
     case detail::hash("alpha"):
         alpha(std::stoi(value));
