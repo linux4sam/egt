@@ -72,7 +72,7 @@ int main(int argc, char** argv)
     win.add(player);
 
     egt::Label errlabel;
-    errlabel.align(egt::AlignFlag::expand);
+    errlabel.align(egt::AlignFlag::expand_horizontal);
     errlabel.text_align(egt::AlignFlag::center | egt::AlignFlag::top);
     win.add(errlabel);
 
@@ -102,7 +102,10 @@ int main(int argc, char** argv)
         player.stop();
     });
 
-    player.on_event([&player](egt::Event & event)
+    const auto wscale = static_cast<float>(egt::Application::instance().screen()->size().width()) / size.width();
+    const auto hscale = static_cast<float>(egt::Application::instance().screen()->size().height()) / size.height();
+
+    player.on_event([&player, &win, &size, wscale](egt::Event & event)
     {
         static egt::Point drag_start_point;
         switch (event.id())
@@ -114,9 +117,22 @@ int main(int argc, char** argv)
         }
         case egt::EventId::pointer_drag:
         {
-            auto diff = event.pointer().drag_start - event.pointer().point;
-            player.move(drag_start_point - egt::Point(diff.x(), diff.y()));
-            break;
+            if (!(egt::detail::float_equal(player.hscale(), wscale)))
+            {
+                auto diff = event.pointer().drag_start - event.pointer().point;
+                auto p = drag_start_point - egt::Point(diff.x(), diff.y());
+                auto max_x = win.width() - size.width();
+                auto max_y = win.height() - size.height();
+                if (p.x() >= max_x)
+                    p.x(max_x);
+                if (p.x() < 0)
+                    p.x(0);
+                if (p.y() >= max_y)
+                    p.y(max_y);
+                if (p.y() < 0)
+                    p.y(0);
+                player.move(p);
+            }
         }
         default:
             break;
@@ -141,9 +157,6 @@ int main(int argc, char** argv)
     egt::ImageButton fullscreen(egt::Image("res:fullscreen_png"));
     fullscreen.fill_flags().clear();
     hpos.add(fullscreen);
-
-    const auto wscale = static_cast<float>(egt::Application::instance().screen()->size().width()) / size.width();
-    const auto hscale = static_cast<float>(egt::Application::instance().screen()->size().height()) / size.height();
 
     fullscreen.on_event([&fullscreen, &player, wscale, hscale](egt::Event&)
     {
