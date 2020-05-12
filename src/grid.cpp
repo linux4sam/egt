@@ -332,10 +332,10 @@ const std::pair<StaticGrid::GridFlag, char const*> detail::EnumStrings<StaticGri
 
 void StaticGrid::serialize(Serializer& serializer) const
 {
-    Frame::serialize(serializer);
-
     serializer.add_property("grid_flags", m_grid_flags.to_string());
     serializer.add_property("column_priority", m_column_priority);
+
+    Frame::serialize(serializer);
 }
 
 void StaticGrid::deserialize(const std::string& name, const std::string& value,

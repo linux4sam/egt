@@ -106,10 +106,10 @@ void BoxSizer::layout()
 
 void BoxSizer::serialize(Serializer& serializer) const
 {
-    Frame::serialize(serializer);
-
     serializer.add_property("orient", std::string(detail::enum_to_string(m_orient)));
     serializer.add_property("justify", std::string(detail::enum_to_string(m_justify)));
+
+    Frame::serialize(serializer);
 }
 
 void BoxSizer::deserialize(const std::string& name, const std::string& value,
