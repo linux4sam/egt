@@ -277,7 +277,7 @@ void Window::main_window()
 {
     the_main_window = this;
 
-    if (Application::instance().screen())
+    if (Application::check_instance() && Application::instance().screen())
         m_box = Application::instance().screen()->box();
 
     damage();
