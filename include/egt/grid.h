@@ -188,6 +188,19 @@ public:
      */
     GridFlags& grid_flags() { return m_grid_flags; }
 
+    /**
+     * Get the column priority status.
+     */
+    bool column_priority() const { return m_column_priority; }
+
+    /**
+     * Set the column priority status.
+     *
+     * @note Set column priority when expanding the grid automatically. By
+     * default, value is false.
+     */
+    void column_priority(bool value) { m_column_priority = value; }
+
     void serialize(Serializer& serializer) const override;
 
     void deserialize(const std::string& name, const std::string& value,
