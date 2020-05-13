@@ -74,5 +74,27 @@ void RectangleWidget::draw(Painter& painter, const Rect&)
                      margin());
 
 }
+
+void LineWidget::serialize(Serializer& serializer) const
+{
+    Widget::serialize(serializer);
+
+    if (!horizontal())
+        serializer.add_property("horizontal", horizontal());
+}
+
+void LineWidget::deserialize(const std::string& name, const std::string& value,
+                             const Serializer::Attributes& attr)
+{
+    switch (detail::hash(name))
+    {
+    case detail::hash("horizontal"):
+        horizontal(detail::from_string(value));
+        break;
+    default:
+        Widget::deserialize(name, value, attr);
+        break;
+    }
+}
 }
 }

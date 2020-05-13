@@ -13,6 +13,7 @@
 
 #include <egt/detail/meta.h>
 #include <egt/frame.h>
+#include <egt/serialize.h>
 #include <egt/widget.h>
 #include <memory>
 
@@ -106,6 +107,17 @@ public:
         if (detail::change_if_diff<>(m_horizontal, horizontal))
             damage();
     }
+
+    /**
+     * Serialize the widget to the specified serializer.
+     */
+    void serialize(Serializer& serializer) const override;
+
+    /**
+     * Deserialize widget properties.
+     */
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs) override;
 
 protected:
     /// Horizontal state
