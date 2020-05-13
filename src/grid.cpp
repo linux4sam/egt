@@ -344,7 +344,7 @@ void StaticGrid::deserialize(const std::string& name, const std::string& value,
     if (name == "grid_flags")
         m_grid_flags.from_string(value);
     else if (name == "column_priority")
-        m_column_priority = std::stoi(value);
+        m_column_priority = detail::from_string(value);
     else
         Frame::deserialize(name, value, attrs);
 }
