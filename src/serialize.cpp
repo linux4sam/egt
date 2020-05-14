@@ -126,7 +126,7 @@ bool OstreamWidgetSerializer::add(const Widget* widget, int level)
 }
 
 void OstreamWidgetSerializer::add_property(const std::string& name,
-        const std::string& value,
+        const char* value,
         const Attributes& attrs)
 {
     std::ostringstream out;
@@ -249,11 +249,11 @@ bool XmlWidgetSerializer::add(const Widget* widget, int level)
 }
 
 void XmlWidgetSerializer::add_property(const std::string& name,
-                                       const std::string& value,
+                                       const char* value,
                                        const Attributes& attrs)
 {
     auto node = m_impl->doc.allocate_node(rapidxml::node_element, "property");
-    node->value(m_impl->doc.allocate_string(value.c_str()));
+    node->value(m_impl->doc.allocate_string(value));
     node->append_attribute(m_impl->doc.allocate_attribute("name",
                            m_impl->doc.allocate_string(name.c_str())));
 

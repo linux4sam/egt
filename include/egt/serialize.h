@@ -41,7 +41,14 @@ public:
     virtual bool add(const Widget* widget, int level = 0) = 0;
 
     /// Add a property.
-    virtual void add_property(const std::string& name, const std::string& value,
+    void add_property(const std::string& name, const std::string& value,
+                      const Attributes& attrs = {})
+    {
+        add_property(name, value.c_str(), attrs);
+    }
+
+    /// Add a property.
+    virtual void add_property(const std::string& name, const char* value,
                               const Attributes& attrs = {}) = 0;
     /// Add a property.
     virtual void add_property(const std::string& name, int value,
@@ -101,7 +108,7 @@ public:
 
     using Serializer::add_property;
 
-    void add_property(const std::string& name, const std::string& value,
+    void add_property(const std::string& name, const char* value,
                       const Attributes& attrs = {}) override;
 
     void write(std::ostream& out) override;
@@ -141,7 +148,7 @@ public:
 
     using Serializer::add_property;
 
-    void add_property(const std::string& name, const std::string& value,
+    void add_property(const std::string& name, const char* value,
                       const Attributes& attrs = {}) override;
 
 
