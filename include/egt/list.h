@@ -38,6 +38,7 @@ struct EGT_API StringItem : public ImageLabel
      * @param[in] rect Initial rectangle of the widget.
      * @param[in] text_align Alignment for the text.
      */
+    // NOLINTNEXTLINE(hicpp-explicit-conversions)
     StringItem(const std::string& text = {},
                const Image& image = {},
                const Rect& rect = {},

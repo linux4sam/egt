@@ -366,13 +366,13 @@ void PlPlotImpl::plplot_box(bool xtick_label, bool ytick_label)
     m_plstream->box(xopt.c_str(), 0, 0, yopt.c_str(), 0, 0);
 }
 
-void PlPlotImpl::plplot_label(shared_cairo_t cr, Rect b, const Font& font, const Color& color)
+void PlPlotImpl::plplot_label(const shared_cairo_t& cr, Rect b, const Font& font, const Color& color)
 {
     if (axis() >= 0)
     {
         // set font face, slant and weight
-        cairo_font_slant_t slant = static_cast<cairo_font_slant_t>(font.slant());
-        cairo_font_weight_t weight = static_cast<cairo_font_weight_t>(font.weight());
+        auto slant = static_cast<cairo_font_slant_t>(font.slant());
+        auto weight = static_cast<cairo_font_weight_t>(font.weight());
         cairo_select_font_face(cr.get(), font.face().c_str(), slant, weight);
 
         // set font size
@@ -509,7 +509,7 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
 
     m_plstream->lsty(1);
 
-    PLFLT size = static_cast<PLFLT>(m_interface.font().size());
+    auto size = static_cast<PLFLT>(m_interface.font().size());
 
     plplot_viewport(size);
 

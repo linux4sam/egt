@@ -87,7 +87,7 @@ int main(int argc, char** argv)
         errlabel.text(line_break(err));
     });
 
-    player.on_connect([&player, &errlabel, dev](const std::string & devnode)
+    player.on_connect([&player, &errlabel, dev](const std::string&)
     {
         if (!errlabel.text().empty())
         {

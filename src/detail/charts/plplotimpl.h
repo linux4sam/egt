@@ -107,7 +107,7 @@ protected:
 
     void plplot_box(bool xtick_label, bool ytick_label);
 
-    void plplot_label(shared_cairo_t cr, Rect b, const Font& font, const Color& color);
+    void plplot_label(const shared_cairo_t& cr, Rect b, const Font& font, const Color& color);
 
     float m_bank{0};
 };

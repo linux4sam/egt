@@ -69,6 +69,7 @@ public:
     }
 
     /// Set a single flag.
+    // NOLINTNEXTLINE(hicpp-explicit-conversions)
     constexpr Flags(T flag) noexcept
         : FlagsBase<T>(flag)
     {

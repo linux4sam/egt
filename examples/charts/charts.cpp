@@ -450,7 +450,7 @@ struct LineChartPage : public egt::NotebookTab
 
         auto btn2 = std::make_shared<egt::Button>("Add Data");
         csizer->add(btn2);
-        btn2->on_click([btn2, line, type](egt::Event & event)
+        btn2->on_click([btn2, line, type](egt::Event&)
         {
             if (btn2->text() == "Add Data")
             {

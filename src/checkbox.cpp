@@ -118,7 +118,7 @@ Size CheckBox::min_size_hint() const
         return m_min_size;
 
     // NOLINTNEXTLINE(bugprone-parent-virtual-call)
-    const auto default_size = this->default_size() + Widget::min_size_hint();
+    const auto min_size = default_size() + Widget::min_size_hint();
 
     if (!m_text.empty())
     {
@@ -126,14 +126,14 @@ Size CheckBox::min_size_hint() const
         s += Size(s.width() / 2 + 5, 0);
         // NOLINTNEXTLINE(bugprone-parent-virtual-call)
         s += Widget::min_size_hint();
-        if (s.width() < default_size.width())
-            s.width(default_size.width());
-        if (s.height() < default_size.height())
-            s.height(default_size.height());
+        if (s.width() < min_size.width())
+            s.width(min_size.width());
+        if (s.height() < min_size.height())
+            s.height(min_size.height());
         return s;
     }
 
-    return default_size;
+    return min_size;
 }
 
 ToggleBox::ToggleBox(const Rect& rect) noexcept
