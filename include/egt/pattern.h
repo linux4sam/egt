@@ -91,12 +91,12 @@ public:
     Type type() const { return m_type; }
 
     /**
-     * Create a linear gradient from @ref start to @ref end.
+     * Create a linear gradient from start to end.
      */
     void linear(const Point& start, const Point& end);
 
     /**
-     * Create a radial gradient from @ref start to @ref end.
+     * Create a radial gradient from start to end.
      */
     void radial(const Point& start, float start_radius,
                 const Point& end, float end_radius);
