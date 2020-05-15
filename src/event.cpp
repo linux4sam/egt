@@ -61,10 +61,11 @@ std::ostream& operator<<(std::ostream& os, const Pointer::Button& btn)
 
 std::ostream& operator<<(std::ostream& os, const Pointer& pointer)
 {
-    return os << fmt::format("point({}) drag_point({}) btn({})",
+    return os << fmt::format("point({}) drag_point({}) btn({}) slot({})",
                              pointer.point,
                              pointer.drag_start,
-                             pointer.btn);
+                             pointer.btn,
+                             pointer.slot);
 }
 
 std::ostream& operator<<(std::ostream& os, const Key& key)
