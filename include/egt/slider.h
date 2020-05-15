@@ -659,8 +659,8 @@ void SliderType<T>::serialize(Serializer& serializer) const
 
     serializer.add_property("sliderflags", m_slider_flags.to_string());
     serializer.add_property("orient", detail::enum_to_string(orient()));
-    serializer.add_property("starting", this->starting());
     serializer.add_property("ending", this->ending());
+    serializer.add_property("starting", this->starting());
     serializer.add_property("value", this->value());
 }
 
