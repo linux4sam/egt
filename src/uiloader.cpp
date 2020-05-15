@@ -34,21 +34,27 @@ static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
         instance->name(name->value());
     }
 
-    for (auto prop = node->first_node("property"); prop; prop = prop->next_sibling())
+    for (auto prop = node->first_node("property"); prop; prop = prop->next_sibling("property"))
     {
-        Serializer::Attributes attrs;
-        std::string pname;
+        auto name = prop->first_attribute("name");
+        if (!name)
+        {
+            spdlog::warn("property with no name {}", prop->value());
+            continue;
+        }
 
+        std::string pname = name->value();
+        const std::string pvalue = prop->value();
+
+        Serializer::Attributes attrs;
         for (const rapidxml::xml_attribute<>* attr = prop->first_attribute(); attr;
              attr = attr->next_attribute())
         {
             if (attr->name() == std::string("name"))
-                pname = attr->value();
-            else
-                attrs.emplace_back(attr->name(), attr->value());
-        }
+                continue;
 
-        const std::string pvalue = prop->value();
+            attrs.emplace_back(attr->name(), attr->value());
+        }
 
         instance->deserialize(pname, pvalue, attrs);
     }
@@ -173,7 +179,7 @@ static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node,
         }
     }
 
-    for (auto child = node->first_node("widget"); child; child = child->next_sibling())
+    for (auto child = node->first_node("widget"); child; child = child->next_sibling("widget"))
     {
         parse_widget(child, std::dynamic_pointer_cast<Frame>(result));
     }
@@ -196,7 +202,7 @@ std::shared_ptr<Widget> UiLoader::load(const std::string& uri)
 
         auto widgets = doc.first_node("widgets");
         for (auto widget = widgets->first_node("widget");
-             widget; widget = widget->next_sibling())
+             widget; widget = widget->next_sibling("widget"))
         {
             // TODO: multiple root widgets not supported
             return parse_widget(widget);
@@ -215,7 +221,7 @@ std::shared_ptr<Widget> UiLoader::load(const std::string& uri)
 
             auto widgets = doc.first_node("widgets");
             for (auto widget = widgets->first_node("widget");
-                 widget; widget = widget->next_sibling())
+                 widget; widget = widget->next_sibling("widget"))
             {
                 // TODO: multiple root widgets not supported
                 return parse_widget(widget);
