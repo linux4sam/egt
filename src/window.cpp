@@ -78,6 +78,15 @@ Window::Window(const Rect& rect,
     windows().push_back(this);
 }
 
+Window::Window(Frame& parent,
+               const Rect& rect,
+               PixelFormat format_hint,
+               WindowHint hint)
+    : Window(rect, format_hint, hint)
+{
+    parent.add(*this);
+}
+
 void Window::damage(const Rect& rect)
 {
     if (m_impl)

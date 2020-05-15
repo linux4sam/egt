@@ -26,6 +26,12 @@ Frame::Frame(const Rect& rect, const Widget::Flags& flags) noexcept
     name("Frame" + std::to_string(m_widgetid));
 }
 
+Frame::Frame(Frame& parent, const Rect& rect, const Widget::Flags& flags) noexcept
+    : Frame(rect, flags)
+{
+    parent.add(*this);
+}
+
 void Frame::add(std::shared_ptr<Widget> widget)
 {
     if (!widget)

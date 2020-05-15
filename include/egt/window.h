@@ -85,6 +85,24 @@ public:
                     PixelFormat format_hint = DEFAULT_FORMAT,
                     WindowHint hint = WindowHint::automatic);
 
+    /**
+     * Construct a window.
+     *
+     * @param[in] parent Parent Frame of the Widget.
+     * @param[in] rect Initial rectangle of the Window.
+     * @param[in] format_hint Requested format of the Window. This only applies
+     *            if this Window will be responsible for creating a backing
+     *            screen. Otherwise, the Window will use whatever format the
+     *            existing screen has. This is only a hint.
+     * @param[in] hint Requested Window type. This only applies if this Window
+     *            will be responsible for creating a backing screen.  This is
+     *            only a hint.
+     */
+    explicit Window(Frame& parent,
+                    const Rect& rect,
+                    PixelFormat format_hint = DEFAULT_FORMAT,
+                    WindowHint hint = WindowHint::automatic);
+
     EGT_OPS_NOCOPY_MOVE(Window);
     ~Window() noexcept override;
 

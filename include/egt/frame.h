@@ -52,6 +52,14 @@ public:
     explicit Frame(const Rect& rect = {},
                    const Flags& flags = {}) noexcept;
 
+    /**
+     * @param[in] parent Parent Frame of the Widget.
+     * @param[in] rect Initial rectangle of the widget.
+     * @param[in] flags Widget flags.
+     */
+    explicit Frame(Frame& parent, const Rect& rect,
+                   const Flags& flags = {}) noexcept;
+
     EGT_OPS_NOCOPY_MOVE(Frame);
 
     ~Frame() noexcept override;
