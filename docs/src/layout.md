@@ -73,8 +73,8 @@ relation to the widget's parent.
 
 ## Layout Widgets
 
-EGT provides several widgets like egt::BoxSizer and egt::StaticGrid to help with
-automatic layout.  See @ref sizers for a complete list.
+EGT provides several widgets like egt::v1::BoxSizer and egt::v1::StaticGrid to
+help with automatic layout.  See @ref sizers for a complete list.
 
 The layout algorithm used by sizers is based upon the idea of individual widgets
 reporting their minimal required size and their ability to get stretched if the
