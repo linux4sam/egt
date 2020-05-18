@@ -25,26 +25,22 @@ static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
 {
     auto instance = std::make_shared<T>();
     if (parent)
-    {
         parent->add(instance);
-    }
 
     auto name = node->first_attribute("name");
     if (name)
-    {
         instance->name(name->value());
-    }
 
     for (auto prop = node->first_node("property"); prop; prop = prop->next_sibling("property"))
     {
         auto name = prop->first_attribute("name");
         if (!name)
         {
-            spdlog::warn("property with no name {}", prop->value());
+            spdlog::warn("property with no name");
             continue;
         }
 
-        std::string pname = name->value();
+        const std::string pname = name->value();
         const std::string pvalue = prop->value();
 
         Serializer::Attributes attrs;
@@ -142,8 +138,11 @@ static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node,
 
     auto type = node->first_attribute("type");
     if (type)
-    {
         ttype = type->value();
+    else
+    {
+        spdlog::warn("widget with no type");
+        return nullptr;
     }
 
     bool found = false;
