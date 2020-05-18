@@ -156,7 +156,7 @@ static void print_node(std::string prefix, std::ostream& out,
         out << "┕";
     else
         out << "┝";
-    out << node.value << std::endl;
+    out << node.value << "\n";
 
     if (last)
         prefix += " ";
@@ -170,7 +170,7 @@ static void print_node(std::string prefix, std::ostream& out,
         if (!node.children.empty())
             out << "│";
 
-        out << " " << *i << std::endl;
+        out << " " << *i << "\n";
     }
 
     for (auto i = node.children.begin(); i != node.children.end(); ++i)
