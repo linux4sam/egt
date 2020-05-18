@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/base64.h"
 #include "egt/ui"
 #include "egt/uiloader.h"
 #include <rapidxml.hpp>
@@ -187,6 +188,48 @@ static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node,
     return result;
 }
 
+static void parse_resource(rapidxml::xml_node<>* node)
+{
+    std::string name;
+
+    auto n = node->first_attribute("name");
+    if (n)
+        name = n->value();
+    else
+    {
+        spdlog::warn("resource with no name");
+        return;
+    }
+
+    std::string buffer(node->value(), node->value_size());
+    detail::strip(buffer);
+    buffer = detail::base64_decode(buffer.data(), buffer.size());
+
+    ResourceManager::instance().add(name.c_str(),
+                                    std::vector<unsigned char>(buffer.begin(), buffer.end()));
+}
+
+template<class T>
+static std::shared_ptr<Widget> load_document(T& doc)
+{
+    auto resources = doc.first_node("resources");
+    for (auto resource = resources->first_node("resource");
+         resource; resource = resource->next_sibling("resource"))
+    {
+        parse_resource(resource);
+    }
+
+    auto widgets = doc.first_node("widgets");
+    for (auto widget = widgets->first_node("widget");
+         widget; widget = widget->next_sibling("widget"))
+    {
+        // TODO: multiple root widgets not supported
+        return parse_widget(widget);
+    }
+
+    return nullptr;
+}
+
 std::shared_ptr<Widget> UiLoader::load(const std::string& uri)
 {
     std::string path;
@@ -199,16 +242,7 @@ std::shared_ptr<Widget> UiLoader::load(const std::string& uri)
         rapidxml::file<> xml_file(path.c_str());
         rapidxml::xml_document<> doc;
         doc.parse < rapidxml::parse_declaration_node | rapidxml::parse_no_data_nodes > (xml_file.data());
-
-        auto widgets = doc.first_node("widgets");
-        for (auto widget = widgets->first_node("widget");
-             widget; widget = widget->next_sibling("widget"))
-        {
-            // TODO: multiple root widgets not supported
-            return parse_widget(widget);
-        }
-
-        break;
+        return load_document(doc);
     }
 #ifdef EGT_HAS_HTTP
     case detail::SchemeType::network:
@@ -218,14 +252,7 @@ std::shared_ptr<Widget> UiLoader::load(const std::string& uri)
         {
             rapidxml::xml_document<> doc;
             doc.parse < rapidxml::parse_declaration_node | rapidxml::parse_no_data_nodes > (buffer.data());
-
-            auto widgets = doc.first_node("widgets");
-            for (auto widget = widgets->first_node("widget");
-                 widget; widget = widget->next_sibling("widget"))
-            {
-                // TODO: multiple root widgets not supported
-                return parse_widget(widget);
-            }
+            return load_document(doc);
         }
 
         break;

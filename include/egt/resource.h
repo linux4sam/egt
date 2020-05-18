@@ -58,6 +58,11 @@ public:
     void add(const char* name, const unsigned char* data, size_t len);
 
     /**
+     * Register a resource as raw data.
+     */
+    void add(const char* name, const std::vector<unsigned char>& data);
+
+    /**
      * Unregister a resource.
      */
     void remove(const char* name);

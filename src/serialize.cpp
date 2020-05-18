@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <egt/color.h>
+#include <egt/detail/string.h>
 #include <egt/font.h>
 #include <egt/image.h>
 #include <egt/serialize.h>

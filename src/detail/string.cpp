@@ -24,6 +24,17 @@ std::string replace_all(std::string str, const std::string& from, const std::str
     return str;
 }
 
+void strip(std::string& str, const std::string& t)
+{
+    size_t count = 0;
+
+    for (size_t i = 0; i < str.size(); i++)
+        if (t.find(str[i]) == std::string::npos)
+            str[count++] = str[i];
+
+    str.resize(count);
+}
+
 std::string truncate(const std::string& str, size_t width, bool ellipsis)
 {
     if (str.length() > width)

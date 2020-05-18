@@ -33,6 +33,29 @@ struct ResourceManager::ResourceItem
           m_len(len)
     {}
 
+    ResourceItem(const std::vector<unsigned char>& data)
+        : m_data_copy(data),
+          m_data(m_data_copy.data()),
+          m_len(m_data_copy.size())
+    {}
+
+    ResourceItem(const ResourceItem& rhs)
+        : m_data_copy(rhs.m_data_copy)
+    {
+        if (!m_data_copy.empty())
+        {
+            m_data = m_data_copy.data();
+            m_len = m_data_copy.size();
+        }
+        else
+        {
+            m_data = rhs.m_data;
+            m_len = rhs.m_len;
+        }
+    }
+
+    ResourceItem& operator=(const ResourceItem&) = delete;
+
     inline const unsigned char* data()
     {
         do_inflate();
@@ -100,9 +123,11 @@ private:
 
         m_data = m_buf.data();
         m_len = m_buf.size();
+        m_data_copy.clear();
 #endif
     }
 
+    std::vector<unsigned char> m_data_copy;
     const unsigned char* m_data{nullptr};
     size_t m_len{0};
     std::vector<unsigned char> m_buf;
@@ -217,6 +242,15 @@ void ResourceManager::add(const char* name, const unsigned char* data, size_t le
         spdlog::warn("resource added with duplicate name: {}", name);
 
     ResourceItem r(data, len);
+    m_resources.insert(std::make_pair(name, r));
+}
+
+void ResourceManager::add(const char* name, const std::vector<unsigned char>& data)
+{
+    if (exists(name))
+        spdlog::warn("resource added with duplicate name: {}", name);
+
+    ResourceItem r(data);
     m_resources.insert(std::make_pair(name, r));
 }
 

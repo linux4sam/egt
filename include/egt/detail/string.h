@@ -33,6 +33,11 @@ EGT_API std::string replace_all(std::string str, const std::string& from,
                                 const std::string& to);
 
 /**
+ * Strip the specified characters from the string.
+ */
+EGT_API void strip(std::string& str, const std::string& t = " \t\n\r");
+
+/**
  * Truncate a string if applicable and optionally add ellipse to end.
  */
 EGT_API std::string truncate(const std::string& str, size_t width,

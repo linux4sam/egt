@@ -43,6 +43,8 @@ checkbox.cpp \
 color.cpp \
 combo.cpp \
 detail/alignment.cpp \
+detail/base64.cpp \
+detail/base64.h \
 detail/collision.cpp \
 detail/dump.h \
 detail/filesystem.cpp \
