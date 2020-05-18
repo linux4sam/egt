@@ -7,6 +7,7 @@
 #include "egt/detail/alignment.h"
 #include "egt/detail/enum.h"
 #include "egt/detail/math.h"
+#include "egt/detail/string.h"
 #include "egt/frame.h"
 #include "egt/geometry.h"
 #include "egt/input.h"
@@ -601,7 +602,9 @@ void Widget::checked(bool value)
 
 std::string Widget::type() const
 {
-    return detail::demangle(typeid(*this).name());
+    auto t = detail::demangle(typeid(*this).name());
+    // for now, remove egt/v1 namespace only.
+    return detail::replace_all(t, "egt::v1::", {});
 }
 
 void Widget::serialize(Serializer& serializer) const

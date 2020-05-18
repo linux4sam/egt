@@ -237,10 +237,11 @@ bool XmlWidgetSerializer::add(const Widget* widget, int level)
     }
 
     m_impl->current = m_impl->doc.allocate_node(rapidxml::node_element, "widget");
-    auto str = m_impl->doc.allocate_string(widget->name().c_str());
-    m_impl->current->append_attribute(m_impl->doc.allocate_attribute("name", str));
-    str = m_impl->doc.allocate_string(widget->type().c_str());
-    m_impl->current->append_attribute(m_impl->doc.allocate_attribute("type", str));
+
+    m_impl->current->append_attribute(m_impl->doc.allocate_attribute("name",
+                                      m_impl->doc.allocate_string(widget->name().c_str())));
+    m_impl->current->append_attribute(m_impl->doc.allocate_attribute("type",
+                                      m_impl->doc.allocate_string(widget->type().c_str())));
 
     m_impl->stack.back()->append_node(m_impl->current);
 
