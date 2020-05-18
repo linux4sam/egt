@@ -975,6 +975,12 @@ public:
      * @param callback Function to call for each widget.
      * @param level The current level of the widget hierarchy starting with the
      *              level originally passed in.
+     *
+     * @code{.cpp}
+     * widget->walk([](Widget* widget, int level) {
+     *     // do something
+     * });
+     * @endcode
      */
     virtual void walk(const WalkCallback& callback, int level = 0);
 
