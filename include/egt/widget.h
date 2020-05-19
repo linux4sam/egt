@@ -1245,7 +1245,7 @@ public:
      *
      * Should this need to be changed, override this function.
      */
-    std::string type() const;
+    virtual std::string type() const;
 
     /**
      * Type used to identify a unique Widget ID.
