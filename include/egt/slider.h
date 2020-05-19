@@ -351,18 +351,36 @@ protected:
 };
 
 /**
- * Helper type alias.
- * @copybrief SliderType
+ * This is a slider that can be used to select integer value from a range.
+ *
  * @ingroup controls
  */
-using Slider = SliderType<int>;
+class EGT_API Slider : public SliderType<int>
+{
+public:
+    using SliderType<int>::SliderType;
+
+    std::string type() const override
+    {
+        return "Slider";
+    }
+};
 
 /**
- * Helper type alias.
- * @copybrief SliderType
+ * This is a slider that can be used to select floating value from a range.
+ *
  * @ingroup controls
  */
-using SliderF = SliderType<float>;
+class EGT_API SliderF : public SliderType<float>
+{
+public:
+    using SliderType<float>::SliderType;
+
+    std::string type() const override
+    {
+        return "SliderF";
+    }
+};
 
 template <class T>
 SliderType<T>::SliderType(const Rect& rect, T start, T end, T value,
