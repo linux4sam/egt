@@ -31,11 +31,43 @@ void StaticGrid::reallocate(const GridSize& size)
     if (!size.width() || !size.height())
         throw std::invalid_argument("a static grid needs at least one cell i.e. one row and one col");
 
+    /// If columns or rows are removed, remove widgets in these cells
+    auto current_columns = m_cells.size();
+    const auto new_columns = size.width();
+    if (new_columns < current_columns)
+    {
+        for (size_t x = new_columns; x < current_columns; x++)
+        {
+            for (size_t y = 0; y < m_cells[0].size(); y++)
+            {
+                auto w = get(GridPoint(x, y));
+                if (w)
+                    w->detach();
+            }
+        }
+    }
+    m_cells.resize(size.width());
+    current_columns = m_cells.size();
+
+    const auto current_rows = m_cells[0].size();
+    const auto new_rows = size.height();
+    if (new_rows < current_rows)
+    {
+        for (size_t x = 0; x < current_columns; x++)
+        {
+            for (size_t y = new_rows; y < current_rows; y++)
+            {
+                auto w = get(GridPoint(x, y));
+                if (w)
+                    w->detach();
+            }
+        }
+    }
+
     /*
      * The grid size is set here.  Every column should be the same size.  Don't
      * delete from the column vectors.  Only set empty cells to nullptr.
      */
-    m_cells.resize(size.width());
     for (auto& x : m_cells)
         x.resize(size.height(), {});
 }
