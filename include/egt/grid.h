@@ -101,7 +101,7 @@ public:
     /**
      * Add a widget to the next empty cell.
      *
-     * This will not automatically resize the grid to fit the widget as
+     * This will not automatically extend the grid to fit the widget as
      * necessary.
      *
      * @param widget The widget to add, or nullptr.
@@ -111,7 +111,7 @@ public:
     /**
      * Add a widget to the grid into a specific cell.
      *
-     * This will automatically resize the grid to fit the widget as
+     * This will automatically extend the grid to fit the widget as
      * necessary.
      *
      * @param widget The widget to add, or nullptr.
