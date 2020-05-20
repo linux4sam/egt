@@ -136,6 +136,34 @@ public:
     }
 
     /**
+     * Add a widget to the grid into a specific cell.
+     *
+     * This will automatically extend the grid to fit the widget as
+     * necessary.
+     *
+     * @param widget The widget to add, or nullptr.
+     * @param point The row and column to add the widget.
+     */
+    virtual void add(const std::shared_ptr<Widget>& widget, const GridPoint& point)
+    {
+        add(widget, point.x(), point.y());
+    }
+
+    /**
+     * Add a widget to the grid into a specific cell.
+     *
+     * @param widget The widget to add, or nullptr.
+     * @param point The row and column to add the widget.
+     */
+    virtual void add(Widget& widget, const GridPoint& point)
+    {
+        // Nasty, but it gets the job done.  If a widget is passed in as a
+        // reference, we don't own it, so create a "pointless" shared_ptr that
+        // will not delete it.
+        add(std::shared_ptr<Widget>(&widget, [](Widget*) {}), point);
+    }
+
+    /**
      * Get a widget at the specified row and column.
      *
      * @note Point here is used as a column and row.
