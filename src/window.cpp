@@ -271,15 +271,8 @@ void Window::create_impl(const Rect& rect,
 
     assert(m_impl);
 
-    /// NOLINTNEXTLINE(bugprone-branch-clone)
-    if (plane_window())
-    {
-        SPDLOG_DEBUG("{} backend is PlaneWindow", name());
-    }
-    else
-    {
-        SPDLOG_DEBUG("{} backend is BasicWindow", name());
-    }
+    SPDLOG_DEBUG("{} backend is {}", name(),
+                 plane_window() ? "PlaneWindow" : "BasicWindow");
 }
 
 void Window::main_window()
