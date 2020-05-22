@@ -216,9 +216,12 @@ void XmlWidgetSerializer::reset()
     decl->append_attribute(m_impl->doc.allocate_attribute("encoding", "utf-8"));
     m_impl->doc.append_node(decl);
 
-    auto root = m_impl->doc.allocate_node(rapidxml::node_element, "widgets");
+    auto root = m_impl->doc.allocate_node(rapidxml::node_element, "egt");
     m_impl->doc.append_node(root);
-    m_impl->stack.push_back(root);
+
+    auto widgets = m_impl->doc.allocate_node(rapidxml::node_element, "widgets");
+    root->append_node(widgets);
+    m_impl->stack.push_back(widgets);
 }
 
 bool XmlWidgetSerializer::add(const Widget* widget, int level)

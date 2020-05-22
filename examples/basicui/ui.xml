@@ -1,8 +1,11 @@
-<widgets>
-  <widget type="Window" name="window1">
-    <widget type="Button" name="button1">
-      <property name="text">Press Me</property>
-      <property name="align">center</property>
+<?xml version="1.0" encoding="UTF-8"?>
+<egt>
+  <widgets>
+    <widget type="Window" name="window1">
+      <widget type="Button" name="button1">
+        <property name="text">Press Me</property>
+        <property name="align">center</property>
+      </widget>
     </widget>
-  </widget>
-</widgets>
+  </widgets>
+</egt>

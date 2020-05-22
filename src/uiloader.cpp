@@ -211,14 +211,18 @@ static void parse_resource(rapidxml::xml_node<>* node)
 template<class T>
 static std::shared_ptr<Widget> load_document(T& doc)
 {
-    auto resources = doc.first_node("resources");
+    auto root = doc.first_node("egt");
+    if (!root)
+        return nullptr;
+
+    auto resources = root->first_node("resources");
     for (auto resource = resources->first_node("resource");
          resource; resource = resource->next_sibling("resource"))
     {
         parse_resource(resource);
     }
 
-    auto widgets = doc.first_node("widgets");
+    auto widgets = root->first_node("widgets");
     for (auto widget = widgets->first_node("widget");
          widget; widget = widget->next_sibling("widget"))
     {
