@@ -97,7 +97,7 @@ void EventLoop::draw()
 {
     detail::code_timer(time_event_loop_enabled(), "draw: ", []()
     {
-        for (auto& w : windows())
+        for (auto& w : Application::instance().windows())
         {
             if (!w->visible())
                 continue;

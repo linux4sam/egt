@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/app.h"
 #include "egt/input.h"
 #include "egt/window.h"
 #include <chrono>
@@ -75,10 +76,10 @@ void Input::dispatch(Event& event)
         return;
     }
 
-    if (modal_window())
+    if (Application::instance().modal_window())
     {
         // give event to the modal window
-        auto target = modal_window();
+        auto target = Application::instance().modal_window();
         handler_dispatch(event, eevent, [target](Event & event)
         {
             target->handle(event);
@@ -131,7 +132,7 @@ void Input::dispatch(Event& event)
     }
 
     // give event to any visible window
-    for (auto& w : detail::reverse_iterate(windows()))
+    for (auto& w : detail::reverse_iterate(Application::instance().windows()))
     {
         if (!w->top_level() ||
             w->readonly() ||

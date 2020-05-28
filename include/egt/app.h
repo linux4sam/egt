@@ -35,6 +35,8 @@ inline namespace v1
 
 class Screen;
 class Input;
+class Window;
+class Timer;
 
 /**
  * Application definition.
@@ -89,12 +91,36 @@ public:
     /**
      * Get a reference to the application event loop instance.
      */
-    inline EventLoop& event() { return m_event; }
+    EventLoop& event() { return m_event; }
 
     /**
      * Get a pointer to the Screen instance.
      */
-    inline Screen* screen() const { return m_screen.get(); }
+    Screen* screen() const { return m_screen.get(); }
+
+    /**
+     * Get a pointer to the main Window.
+     */
+    Window* main_window() const { return m_main_window; }
+
+    /**
+     * Get a pointer to the modal Window.
+     *
+     * The modal window is a single window that will receive all events. Only
+     * one window can be modal at any given time.
+     */
+    Window* modal_window() const { return m_modal_window; }
+
+    /// @private
+    void set_modal_window(Window* window)
+    {
+        m_modal_window = window;
+    }
+
+    /**
+     * Get the list of all currently allocated Windows.
+     */
+    const std::vector<Window*>& windows() const { return m_windows; }
 
     /**
      * Paint the entire Screen to a file.
@@ -108,11 +134,18 @@ public:
      * @code{.cpp}
      * app.dump(cout);
      * @endcode
-     *
-     * @deprecated This will eventually be removed/changed in favor of using
-     * the Serializer classes.
      */
     void dump(std::ostream& out) const;
+
+    /**
+     * Dump all allocated timers to the specified std::ostream.
+     *
+     * Example:
+     * @code{.cpp}
+     * app.dump_timers(cout);
+     * @endcode
+     */
+    void dump_timers(std::ostream& out) const;
 
     /**
      * Get a list of input devices configured with the EGT_INPUT_DEVICES
@@ -186,6 +219,21 @@ private:
 
     /// Internal registration handle
     Object::RegisterHandle m_handle{0};
+
+    /// All allocated windpws.
+    std::vector<Window*> m_windows;
+
+    /// The main window.
+    Window* m_main_window{nullptr};
+
+    /// The modal window.
+    Window* m_modal_window{nullptr};
+
+    /// All allocated timers.
+    std::vector<Timer*> m_timers;
+
+    friend class Window;
+    friend class Timer;
 };
 
 }

@@ -420,6 +420,17 @@ void Application::dump(std::ostream& out) const
     dump_timers(out);
 }
 
+void Application::dump_timers(std::ostream& out) const
+{
+    for (const auto& timer : m_timers)
+    {
+        out << fmt::format("Timer name({}) duration({} ms) status({})\n",
+                           timer->name(),
+                           timer->duration().count(),
+                           (timer->running() ? "running" : "idle"));
+    }
+}
+
 const std::vector<std::pair<std::string, std::string>>& Application::get_input_devices()
 {
     return m_input_devices;

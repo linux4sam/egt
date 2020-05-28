@@ -22,7 +22,6 @@
 #include <algorithm>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
-#include <vector>
 
 EGT_EMBED(internal_cursor, SRCDIR "/icons/16px/cursor.png")
 
@@ -30,33 +29,6 @@ namespace egt
 {
 inline namespace v1
 {
-
-static std::vector<Window*> the_windows;
-static Window* the_main_window = nullptr;
-static Window* the_modal_window = nullptr;
-
-Window* main_window()
-{
-    return the_main_window;
-}
-
-Window* modal_window()
-{
-    return the_modal_window;
-}
-
-namespace detail
-{
-void set_modal_window(Window* window)
-{
-    the_modal_window = window;
-}
-}
-
-std::vector<Window*>& windows()
-{
-    return the_windows;
-}
 
 const PixelFormat Window::DEFAULT_FORMAT = PixelFormat::argb8888;
 
@@ -75,7 +47,7 @@ Window::Window(const Rect& rect,
     create_impl(box(), format_hint, hint);
 
     // save off the new window to the window list
-    windows().push_back(this);
+    Application::instance().m_windows.push_back(this);
 }
 
 Window::Window(Frame& parent,
@@ -189,7 +161,7 @@ void Window::do_draw()
 void Window::resize(const Size& size)
 {
     // cannot resize if we are screen
-    if (unlikely(the_main_window == this))
+    if (unlikely(Application::instance().m_main_window == this))
         return;
 
     if (m_impl)
@@ -199,7 +171,7 @@ void Window::resize(const Size& size)
 void Window::scale(float hscale, float vscale)
 {
     // cannot resize if we are screen
-    if (unlikely(the_main_window == this))
+    if (unlikely(Application::instance().m_main_window == this))
         return;
 
     if (m_impl)
@@ -213,9 +185,9 @@ void Window::create_impl(const Rect& rect,
     detail::ignoreparam(format_hint);
     detail::ignoreparam(hint);
 
-    if (!the_main_window)
+    if (!Application::instance().m_main_window)
     {
-        the_main_window = this;
+        Application::instance().m_main_window = this;
         if (Application::instance().screen())
             m_box = Application::instance().screen()->box();
         m_impl = std::make_unique<detail::BasicTopWindow>(this);
@@ -277,7 +249,10 @@ void Window::create_impl(const Rect& rect,
 
 void Window::main_window()
 {
-    the_main_window = this;
+    if (!Application::check_instance())
+        throw std::runtime_error("no application instance");
+
+    Application::instance().m_main_window = this;
 
     if (Application::check_instance() && Application::instance().screen())
         m_box = Application::instance().screen()->box();
@@ -307,20 +282,29 @@ void Window::background(const Image& image)
 
 Window::~Window() noexcept
 {
-    auto i = find(the_windows.begin(), the_windows.end(), this);
-    if (i != the_windows.end())
+    if (!Application::check_instance())
     {
-        the_windows.erase(i);
-    }
-
-    if (the_main_window == this)
-    {
-        the_main_window = nullptr;
-
-        for (auto& window : the_windows)
+        auto i = find(Application::instance().m_windows.begin(),
+                      Application::instance().m_windows.end(), this);
+        if (i != Application::instance().m_windows.end())
         {
-            window->main_window();
-            break;
+            Application::instance().m_windows.erase(i);
+        }
+
+        if (Application::instance().m_main_window == this)
+        {
+            Application::instance().m_main_window = nullptr;
+
+            for (auto& window : Application::instance().m_windows)
+            {
+                window->main_window();
+                break;
+            }
+        }
+
+        if (Application::instance().m_modal_window == this)
+        {
+            Application::instance().m_modal_window = nullptr;
         }
     }
 }

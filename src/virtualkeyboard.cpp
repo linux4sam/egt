@@ -241,16 +241,16 @@ void VirtualKeyboard::key_multichoice(const std::shared_ptr<Key>& k)
         m_multichoice_popup = std::make_shared<Popup>();
         m_multichoice_popup->resize(k->m_multichoice_panel->size());
         m_multichoice_popup->add(k->m_multichoice_panel);
-        main_window()->add(m_multichoice_popup);
+        Application::instance().main_window()->add(m_multichoice_popup);
 
         auto display_origin = k->m_button->display_origin();
-        auto main_window_origin = main_window()->display_to_local(display_origin);
+        auto main_window_origin = Application::instance().main_window()->display_to_local(display_origin);
 
         // Popup on top of the key.
         main_window_origin.y(main_window_origin.y() - m_multichoice_popup->height());
         // If it goes out of the main_window, move it at the bottom of the key.
         if (main_window_origin.y() < 0)
-            main_window_origin.y(main_window()->display_to_local(display_origin).y() + k->m_button->height());
+            main_window_origin.y(Application::instance().main_window()->display_to_local(display_origin).y() + k->m_button->height());
 
         // Popup aligned with key.
         main_window_origin.x(main_window_origin.x() - m_multichoice_popup->width() / 2);
@@ -259,8 +259,8 @@ void VirtualKeyboard::key_multichoice(const std::shared_ptr<Key>& k)
         if (main_window_origin.x() < 0)
             main_window_origin.x(0);
 
-        if (main_window_origin.x() + m_multichoice_popup->width() > main_window()->width())
-            main_window_origin.x(main_window()->width() - m_multichoice_popup->width());
+        if (main_window_origin.x() + m_multichoice_popup->width() > Application::instance().main_window()->width())
+            main_window_origin.x(Application::instance().main_window()->width() - m_multichoice_popup->width());
 
         m_multichoice_popup->move(main_window_origin);
         m_multichoice_popup->show_modal();
@@ -274,7 +274,7 @@ void VirtualKeyboard::key_multichoice(const std::shared_ptr<Key>& k)
             key_multichoice->m_button->on_event([this, k, key_multichoice](Event&)
             {
                 m_multichoice_popup->hide();
-                main_window()->remove(m_multichoice_popup.get());
+                Application::instance().main_window()->remove(m_multichoice_popup.get());
 
                 if (!key_multichoice->m_button->text().empty())
                 {

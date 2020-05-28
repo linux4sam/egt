@@ -48,7 +48,7 @@ public:
             auto diff = event.pointer().drag_start - event.pointer().point;
             auto fromstart = m_start_point - egt::Point(diff.x(), diff.y());
             egt::Rect dest(fromstart, m_widget->box().size());
-            if (egt::main_window()->box().contains(dest))
+            if (egt::Application::instance().main_window()->box().contains(dest))
                 m_widget->move(fromstart);
             break;
         }
@@ -65,13 +65,13 @@ public:
         auto p = egt::Point(m_widget->x() + m_mx,
                             m_widget->y() + m_my);
 
-        if (m_widget->box().right() >= egt::main_window()->size().width())
+        if (m_widget->box().right() >= egt::Application::instance().main_window()->size().width())
             m_mx = std::fabs(m_mx) * -1;
 
         if (p.x() < 0)
             m_mx = std::fabs(m_mx);
 
-        if (m_widget->box().bottom() >= egt::main_window()->size().height())
+        if (m_widget->box().bottom() >= egt::Application::instance().main_window()->size().height())
             m_my = std::fabs(m_my) * -1;
 
         if (p.y() < 0)

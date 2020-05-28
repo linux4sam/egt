@@ -213,8 +213,10 @@ void ComboBox::set_parent(Frame* parent)
 {
     Widget::set_parent(parent);
 
-    /// @todo unsafe to be using main_window() here
-    main_window()->add(m_popup);
+    if (!Application::instance().main_window())
+        throw std::runtime_error("no main window");
+
+    Application::instance().main_window()->add(m_popup);
 
     m_popup->special_child_draw_callback(parent->special_child_draw_callback());
 }

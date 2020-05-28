@@ -18,7 +18,6 @@
 #include <egt/screen.h>
 #include <egt/widgetflags.h>
 #include <memory>
-#include <vector>
 
 namespace egt
 {
@@ -285,34 +284,6 @@ private:
     /// Internal registration handle
     Object::RegisterHandle m_handle{0};
 };
-
-/**
- * Get a pointer to the main window.
- */
-EGT_API Window* main_window();
-
-/**
- * Get a pointer to the modal window.
- *
- * The modal window is a single window that will receive all events. Only
- * one window can be modal at any given time.
- */
-EGT_API Window* modal_window();
-
-namespace detail
-{
-
-/**
- * Set the modal window.
- */
-EGT_API void set_modal_window(Window* window);
-
-}
-
-/**
- * Get the list of all currently allocated Windows.
- */
-EGT_API std::vector<Window*>& windows();
 
 }
 }

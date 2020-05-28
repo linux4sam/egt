@@ -14,7 +14,6 @@
 #include <chrono>
 #include <egt/asio.hpp>
 #include <egt/detail/meta.h>
-#include <iosfwd>
 #include <vector>
 
 namespace egt
@@ -280,11 +279,6 @@ private:
 
     void internal_timer_callback(const asio::error_code& error);
 };
-
-/**
- * Dump debug information about all timers to the specified ostream.
- */
-void dump_timers(std::ostream& out);
 
 }
 }

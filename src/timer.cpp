@@ -6,39 +6,24 @@
 #include "egt/app.h"
 #include "egt/eventloop.h"
 #include "egt/timer.h"
-#include <ostream>
 #include <spdlog/spdlog.h>
-#include <vector>
 
 namespace egt
 {
 inline namespace v1
 {
 
-static std::vector<Timer*> timers;
-
-void dump_timers(std::ostream& out)
-{
-    for (const auto& timer : timers)
-    {
-        out << fmt::format("Timer name({}) duration({} ms) status({})\n",
-                           timer->name(),
-                           timer->duration().count(),
-                           (timer->running() ? "running" : "idle"));
-    }
-}
-
 Timer::Timer() noexcept
     : m_timer(Application::instance().event().io())
 {
-    timers.push_back(this);
+    Application::instance().m_timers.push_back(this);
 }
 
 Timer::Timer(std::chrono::milliseconds duration) noexcept
     : m_timer(Application::instance().event().io()),
       m_duration(duration)
 {
-    timers.push_back(this);
+    Application::instance().m_timers.push_back(this);
 }
 
 void Timer::start()
@@ -154,9 +139,13 @@ Timer::~Timer() noexcept
 {
     do_cancel();
 
-    auto i = std::find(timers.begin(), timers.end(), this);
-    if (i != timers.end())
-        timers.erase(i);
+    if (Application::check_instance())
+    {
+        auto i = std::find(Application::instance().m_timers.begin(),
+                           Application::instance().m_timers.end(), this);
+        if (i != Application::instance().m_timers.end())
+            Application::instance().m_timers.erase(i);
+    }
 }
 
 void PeriodicTimer::start()

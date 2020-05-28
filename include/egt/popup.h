@@ -65,9 +65,9 @@ public:
      */
     virtual void show_modal(bool center = false)
     {
-        if (!modal_window())
+        if (!Application::instance().modal_window())
         {
-            detail::set_modal_window(this);
+            Application::instance().set_modal_window(this);
 
             if (center)
                 this->show_centered();
@@ -87,9 +87,9 @@ public:
     {
         T::hide();
 
-        if (modal_window() == this)
+        if (Application::instance().modal_window() == this)
         {
-            detail::set_modal_window(nullptr);
+            Application::instance().set_modal_window(nullptr);
         }
     }
 };
