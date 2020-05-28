@@ -41,35 +41,36 @@ public:
     virtual bool add(const Widget* widget, int level = 0) = 0;
 
     /// Add a property.
-    void add_property(const std::string& name, const std::string& value,
+    virtual void add_property(const std::string& name, const std::string& value,
+                              const Attributes& attrs = {}) = 0;
+    /// Add a property.
+    void add_property(const std::string& name, const char* value,
                       const Attributes& attrs = {})
     {
-        add_property(name, value.c_str(), attrs);
+        add_property(name, std::string(value), attrs);
     }
 
     /// Add a property.
-    virtual void add_property(const std::string& name, const char* value,
-                              const Attributes& attrs = {}) = 0;
+    void add_property(const std::string& name, int value,
+                      const Attributes& attrs = {});
     /// Add a property.
-    virtual void add_property(const std::string& name, int value,
-                              const Attributes& attrs = {});
+    void add_property(const std::string& name, unsigned int value,
+                      const Attributes& attrs = {});
     /// Add a property.
-    virtual void add_property(const std::string& name, unsigned int value,
-                              const Attributes& attrs = {});
+    void add_property(const std::string& name, const AlignFlags& value,
+                      const Attributes& attrs = {});
     /// Add a property.
-    virtual void add_property(const std::string& name, const AlignFlags& value,
-                              const Attributes& attrs = {});
+    void add_property(const std::string& name, float value,
+                      const Attributes& attrs = {});
     /// Add a property.
-    virtual void add_property(const std::string& name, float value,
-                              const Attributes& attrs = {});
+    void add_property(const std::string& name, double value,
+                      const Attributes& attrs = {});
     /// Add a property.
-    virtual void add_property(const std::string& name, double value,
-                              const Attributes& attrs = {});
-    /// Add a property.
-    virtual void add_property(const std::string& name, const Pattern& value);
+    void add_property(const std::string& name, const Pattern& value);
 
     /// Add a property.
-    virtual void add_property(const std::string& name, bool value);
+    void add_property(const std::string& name, bool value,
+                      const Attributes& attrs = {});
 
     /// Get the current level
     int level() const { return m_level; }
@@ -108,7 +109,7 @@ public:
 
     using Serializer::add_property;
 
-    void add_property(const std::string& name, const char* value,
+    void add_property(const std::string& name, const std::string& value,
                       const Attributes& attrs = {}) override;
 
     void write(std::ostream& out) override;
@@ -148,7 +149,7 @@ public:
 
     using Serializer::add_property;
 
-    void add_property(const std::string& name, const char* value,
+    void add_property(const std::string& name, const std::string& value,
                       const Attributes& attrs = {}) override;
 
 

@@ -57,9 +57,10 @@ void Serializer::add_property(const std::string& name, const Pattern& value)
     add_property(name, color.pixel32());
 }
 
-void Serializer::add_property(const std::string& name, bool value)
+void Serializer::add_property(const std::string& name, bool value,
+                              const Attributes& attrs)
 {
-    add_property(name, detail::to_string(value));
+    add_property(name, detail::to_string(value), attrs);
 }
 
 template<class T>
@@ -127,7 +128,7 @@ bool OstreamWidgetSerializer::add(const Widget* widget, int level)
 }
 
 void OstreamWidgetSerializer::add_property(const std::string& name,
-        const char* value,
+        const std::string& value,
         const Attributes& attrs)
 {
     std::ostringstream out;
@@ -254,11 +255,11 @@ bool XmlWidgetSerializer::add(const Widget* widget, int level)
 }
 
 void XmlWidgetSerializer::add_property(const std::string& name,
-                                       const char* value,
+                                       const std::string& value,
                                        const Attributes& attrs)
 {
     auto node = m_impl->doc.allocate_node(rapidxml::node_element, "property");
-    node->value(m_impl->doc.allocate_string(value));
+    node->value(m_impl->doc.allocate_string(value.c_str()));
     node->append_attribute(m_impl->doc.allocate_attribute("name",
                            m_impl->doc.allocate_string(name.c_str())));
 
