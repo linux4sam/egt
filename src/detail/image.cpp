@@ -65,6 +65,18 @@ static cairo_status_t read_stream(void* closure, unsigned char* data, unsigned i
     return CAIRO_STATUS_SUCCESS;
 }
 
+static constexpr auto MIME_BMP = "image/x-ms-bmp";
+#ifdef HAVE_LIBJPEG
+static constexpr auto MIME_JPEG = "image/jpeg";
+#endif
+#if CAIRO_HAS_PNG_FUNCTIONS == 1
+static constexpr auto MIME_PNG = "image/png";
+#endif
+#ifdef HAVE_LIBRSVG
+static constexpr auto MIME_SVGXML = "image/svg+xml";
+static constexpr auto MIME_SVG = "image/svg";
+#endif
+
 EGT_API shared_cairo_surface_t load_image_from_memory(const unsigned char* data,
         size_t len,
         const std::string& name)
@@ -77,7 +89,7 @@ EGT_API shared_cairo_surface_t load_image_from_memory(const unsigned char* data,
     const auto mimetype = get_mime_type(data, len);
     SPDLOG_DEBUG("mimetype of {} is {}", name, mimetype);
 
-    if (mimetype == "image/x-ms-bmp")
+    if (mimetype == MIME_BMP)
     {
         StreamObject stream = {data, len, 0};
         image = shared_cairo_surface_t(
@@ -86,7 +98,7 @@ EGT_API shared_cairo_surface_t load_image_from_memory(const unsigned char* data,
                     cairo_surface_destroy);
     }
 #ifdef HAVE_LIBJPEG
-    else if (mimetype == "image/jpeg")
+    else if (mimetype == MIME_JPEG)
     {
         StreamObject stream = {data, len, 0};
         image = shared_cairo_surface_t(
@@ -96,7 +108,7 @@ EGT_API shared_cairo_surface_t load_image_from_memory(const unsigned char* data,
     }
 #endif
 #if CAIRO_HAS_PNG_FUNCTIONS == 1
-    else if (mimetype == "image/png")
+    else if (mimetype == MIME_PNG)
     {
         StreamObject stream = {data, len, 0};
         image = shared_cairo_surface_t(
@@ -106,7 +118,7 @@ EGT_API shared_cairo_surface_t load_image_from_memory(const unsigned char* data,
     }
 #endif
 #ifdef HAVE_LIBRSVG
-    else if (mimetype == "image/svg+xml")
+    else if (mimetype == MIME_SVGXML || mimetype == MIME_SVG)
     {
         image = load_svg(data, len);
     }
@@ -141,14 +153,14 @@ shared_cairo_surface_t load_image_from_filesystem(const std::string& path)
 
     shared_cairo_surface_t image;
 
-    if (mimetype == "image/x-ms-bmp")
+    if (mimetype == MIME_BMP)
     {
         image = shared_cairo_surface_t(
                     cairo_image_surface_create_from_bmp(path.c_str()),
                     cairo_surface_destroy);
     }
 #ifdef HAVE_LIBJPEG
-    else if (mimetype == "image/jpeg")
+    else if (mimetype == MIME_JPEG)
     {
         image = shared_cairo_surface_t(
                     cairo_image_surface_create_from_jpeg(path.c_str()),
@@ -156,7 +168,7 @@ shared_cairo_surface_t load_image_from_filesystem(const std::string& path)
     }
 #endif
 #if CAIRO_HAS_PNG_FUNCTIONS == 1
-    else if (mimetype == "image/png")
+    else if (mimetype == MIME_PNG)
     {
         image = shared_cairo_surface_t(
                     cairo_image_surface_create_from_png(path.c_str()),
@@ -164,7 +176,7 @@ shared_cairo_surface_t load_image_from_filesystem(const std::string& path)
     }
 #endif
 #ifdef HAVE_LIBRSVG
-    else if (mimetype == "image/svg+xml")
+    else if (mimetype == MIME_SVGXML || mimetype == MIME_SVG)
     {
         image = load_svg(path);
     }
