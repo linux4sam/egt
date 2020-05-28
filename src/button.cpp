@@ -323,7 +323,8 @@ void ImageButton::serialize(Serializer& serializer) const
     Button::serialize(serializer);
 
     serializer.add_property("showlabel", show_label());
-    m_image.serialize("image", serializer);
+    if (!m_image.empty())
+        m_image.serialize("image", serializer);
 
     // TODO m_image_align
 }

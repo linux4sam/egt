@@ -566,7 +566,8 @@ void TextBox::serialize(Serializer& serializer) const
 
     if (max_length())
         serializer.add_property("maxlength", static_cast<unsigned int>(max_length()));
-    serializer.add_property("text_flags", m_text_flags.to_string());
+    if (!m_text_flags.empty())
+        serializer.add_property("text_flags", m_text_flags.to_string());
 }
 
 void TextBox::deserialize(const std::string& name, const std::string& value,
