@@ -105,7 +105,18 @@ public:
      * Start the timer with the specified duration.  This overwrites any
      * duration specified previously.
      */
-    void start_with_duration(std::chrono::milliseconds duration);
+    void start(std::chrono::milliseconds duration)
+    {
+        m_duration = duration;
+        start();
+    }
+
+    /**
+     * Start the timer with the specified duration.  This overwrites any
+     * duration specified previously.
+     * @deprecated
+     */
+    EGT_DEPRECATED void start_with_duration(std::chrono::milliseconds duration);
 
     /**
      * Change the duration of the timer.
@@ -262,7 +273,7 @@ class EGT_API PeriodicTimer : public Timer
 public:
 
     using Timer::Timer;
-
+    using Timer::start;
     void start() override;
 
 private:

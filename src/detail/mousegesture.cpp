@@ -102,7 +102,7 @@ Event MouseGesture::handle(const Event& event)
 
 void MouseGesture::start(const DisplayPoint& point)
 {
-    m_long_click_timer.start_with_duration(std::chrono::milliseconds(500));
+    m_long_click_timer.start(std::chrono::milliseconds(500));
     m_mouse_start_pos = point;
     m_active = true;
     m_dragging = false;

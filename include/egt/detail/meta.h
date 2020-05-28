@@ -330,4 +330,10 @@ constexpr T bit(T n)
 #define EGT_OPS_COPY_NOMOVE(T)
 #endif
 
+#ifndef SWIG
+#define EGT_DEPRECATED [[deprecated]]
+#else
+#define EGT_DEPRECATED
+#endif
+
 #endif
