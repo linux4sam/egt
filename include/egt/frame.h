@@ -57,8 +57,8 @@ public:
      * @param[in] rect Initial rectangle of the widget.
      * @param[in] flags Widget flags.
      */
-    explicit Frame(Frame& parent, const Rect& rect,
-                   const Flags& flags = {}) noexcept;
+    Frame(Frame& parent, const Rect& rect,
+          const Flags& flags = {}) noexcept;
 
     EGT_OPS_NOCOPY_MOVE(Frame);
 
@@ -451,7 +451,7 @@ public:
      * auto widget = win.spawn<egt::TextBox>("hello world");
      * @endcode
      *
-     * @return a std::unique_ptr of the allocated widget.
+     * @return a std::shared_ptr of the allocated widget.
      */
     template<typename T, typename... Args>
     std::shared_ptr<T> spawn(Args&& ... args)

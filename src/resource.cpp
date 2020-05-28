@@ -24,6 +24,7 @@ namespace egt
 inline namespace v1
 {
 
+// NOLINTNEXTLINE(hicpp-special-member-functions, cppcoreguidelines-special-member-functions)
 struct ResourceManager::ResourceItem
 {
     ResourceItem() = delete;
@@ -33,8 +34,8 @@ struct ResourceManager::ResourceItem
           m_len(len)
     {}
 
-    ResourceItem(const std::vector<unsigned char>& data)
-        : m_data_copy(data),
+    explicit ResourceItem(std::vector<unsigned char> data)
+        : m_data_copy(std::move(data)),
           m_data(m_data_copy.data()),
           m_len(m_data_copy.size())
     {}

@@ -181,8 +181,8 @@ public:
     void remove_handler(RegisterHandle handle);
 
     /**
-    * Get the name of the Timer.
-    */
+     * Get the name of the Timer.
+     */
     const std::string& name() const { return m_name; }
 
     /**

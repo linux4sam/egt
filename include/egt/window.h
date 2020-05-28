@@ -97,10 +97,10 @@ public:
      *            will be responsible for creating a backing screen.  This is
      *            only a hint.
      */
-    explicit Window(Frame& parent,
-                    const Rect& rect,
-                    PixelFormat format_hint = DEFAULT_FORMAT,
-                    WindowHint hint = WindowHint::automatic);
+    Window(Frame& parent,
+           const Rect& rect,
+           PixelFormat format_hint = DEFAULT_FORMAT,
+           WindowHint hint = WindowHint::automatic);
 
     EGT_OPS_NOCOPY_MOVE(Window);
     ~Window() noexcept override;

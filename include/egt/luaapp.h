@@ -38,7 +38,7 @@ public:
      * This function will block until the event loop is told to exit by calling
      * quit().
      */
-    virtual int run() override;
+    int run() override;
 };
 
 }
