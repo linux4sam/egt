@@ -48,6 +48,7 @@ public:
                                 T start = {}, T end = 100, T value = {}) noexcept
         : ValueRangeWidget<T>(rect, start, end, value)
     {
+        this->name("ProgressBar" + std::to_string(this->m_widgetid));
         this->fill_flags(Theme::FillFlag::blend);
         this->border(this->theme().default_border());
     }
@@ -205,6 +206,7 @@ public:
                               T start = 0, T end = 100, T value = 0) noexcept
         : ValueRangeWidget<T>(rect, start, end, value)
     {
+        this->name("SpinProgress" + std::to_string(this->m_widgetid));
         this->fill_flags(Theme::FillFlag::blend);
     }
 
@@ -307,9 +309,7 @@ public:
                      const Serializer::Attributes& attrs) override;
 
 protected:
-    /**
-     * When true, the label text is shown.
-     */
+    /// When true, the label text is shown.
     bool m_show_label{true};
 
 private:
@@ -389,6 +389,7 @@ public:
                             T start = 0, T end = 100, T value = 0) noexcept
         : ValueRangeWidget<T>(rect, start, end, value)
     {
+        this->name("LevelMeter" + std::to_string(this->m_widgetid));
         this->fill_flags(Theme::FillFlag::blend);
         this->padding(2);
     }
@@ -558,6 +559,7 @@ public:
     explicit AnalogMeterType(const Rect& rect = {}) noexcept
         : ValueRangeWidget<T>(rect, 0, 100, 0)
     {
+        this->name("AnalogMeter" + std::to_string(this->m_widgetid));
         this->fill_flags(Theme::FillFlag::blend);
     }
 
