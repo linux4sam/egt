@@ -664,9 +664,9 @@ bool IsTtyFunctionOrSpaceKey(KeySym keysym)
         XK_Delete,
         XK_space
     };
-    for (size_t i = 0; i < base::size(keysyms); ++i)
+    for (unsigned long i : keysyms)
     {
-        if (keysyms[i] == keysym)
+        if (i == keysym)
             return true;
     }
     return false;
