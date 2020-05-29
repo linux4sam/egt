@@ -104,6 +104,12 @@ public:
 
     /**
      * Add a range value to the radial.
+     *
+     * @param range The range value to add.
+     * @param color The color to set.
+     * @param width Width of the value on the radial.
+     * @param flags Any flags associated with the range.
+     * @return A unique handle used to identify the range.
      */
     Object::RegisterHandle add(const std::shared_ptr<RangeValue<T>>& range,
                                const Color& color = {},
@@ -125,10 +131,33 @@ public:
         return handle;
     }
 
+    /**
+     * Remove a range value from the radial.
+     *
+     * @param handle Range handle returned by add().
+     */
+    void remove(Object::RegisterHandle handle)
+    {
+        auto i = std::find_if(this->m_values.begin(), this->m_values.end(),
+                              [&handle](const auto & obj)
+        {
+            return obj->handle == handle;
+        });
+
+        if (i != this->m_values.end())
+        {
+            this->m_values.erase(i);
+            damage();
+        }
+    }
+
     using Widget::color;
 
     /**
      * Set the individual color of a range value.
+     *
+     * @param handle Range handle returned by add().
+     * @param color The color to set.
      */
     void color(Object::RegisterHandle handle, const Color& color)
     {
@@ -333,24 +362,16 @@ protected:
         Object::RegisterHandle handle{0};
     };
 
-    /**
-     * Center text of the widget.
-     */
+    /// Center text of the widget.
     std::string m_text;
 
-    /**
-     * The second value of the widget.
-     */
+    /// The second value of the widget.
     std::vector<ValueData<T>> m_values;
 
-    /**
-     * Counter used to generate unique handles for each handle registration.
-     */
+    /// Counter used to generate unique handles for each handle registration.
     Object::RegisterHandle m_handle_counter{0};
 
-    /**
-     * The starting angle in degrees for the min values.
-     */
+    /// The starting angle in degrees for the min values.
     float m_start_angle{0.f};
 };
 
