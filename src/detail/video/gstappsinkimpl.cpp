@@ -200,13 +200,12 @@ std::string GstAppSinkImpl::create_pipeline(const std::string& uri, bool m_audio
         a_pipe = "! queue ! audioconvert ! volume name=volume ! autoaudiosink sync=false";
     }
 
-    std::ostringstream pipeline;
-    pipeline << "uridecodebin uri=" << uri << " expose-all-streams=false name=video"
-             << caps  << " video. ! queue ! videoscale ! video/x-raw,width=" <<
-             std::to_string(m_size.width()) << ",height=" << std::to_string(m_size.height()) << vc <<
-             " ! appsink name=appsink video. " << a_pipe ;
+    static constexpr auto pipeline =
+        "uridecodebin uri={} expose-all-streams=false name=video " \
+        " {} video. ! queue ! videoscale ! video/x-raw,width={},height{} {} " \
+        " ! appsink name=appsink video. {} ";
 
-    return pipeline.str();
+    return fmt::format(pipeline, m_uri, caps, m_size.width(), m_size.height(), vc, a_pipe);
 }
 
 /* This function takes a textual representation of a pipeline

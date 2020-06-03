@@ -77,16 +77,14 @@ GstKmsSinkImpl::GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool de
 
 std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audiodevice)
 {
-    std::string vc = "BGRx";
+    std::string format = "BGRx";
     if (m_interface.plane_window())
     {
         auto s = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
         assert(s);
         m_gem = s->gem();
-        auto format = detail::egt_format(s->get_plane_format());
+        format = detail::gstreamer_format(detail::egt_format(s->get_plane_format()));
         SPDLOG_DEBUG("egt_format = {}", format);
-
-        vc = detail::gstreamer_format(format);
     }
 
     std::string a_pipe;
@@ -97,7 +95,7 @@ std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audio
         a_pipe = " ! queue ! audioconvert ! volume name=volume ! autoaudiosink sync=false";
     }
 
-    std::ostringstream v_pipe;
+    std::string v_pipe;
     std::array<std::string, 5> hwcodecs{"MPEG-4", "VP8", "H.264", "H.263", "H.26n"};
     auto it = std::find_if(begin(hwcodecs), end(hwcodecs), [&](const std::string & s)
     {
@@ -132,21 +130,19 @@ std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audio
             }
         }
 
-        v_pipe << " ! video/x-raw,width=" << m_size.width() << ",height=" << m_size.height() << ",format=" << vc;
+        v_pipe = fmt::format(" ! video/x-raw,width={},height={},format={}", m_size.width(), m_size.height(), format);
     }
     else
     {
         SPDLOG_DEBUG("Decoding through software decoders");
-        v_pipe << " ! queue ! videoscale ! video/x-raw,width=" << m_size.width() << ",height=" << m_size.height() <<
-               " ! videoconvert ! video/x-raw,format=" << vc;
+        v_pipe = fmt::format(" ! queue ! videoscale ! video/x-raw,width={},height{} " \
+                             " ! videoconvert ! video/x-raw,format={}", m_size.width(), m_size.height(), format);
     }
 
-    std::ostringstream pipeline;
-    pipeline << "uridecodebin uri=" << uri << " expose-all-streams=false name=video"
-             << caps << " video." << v_pipe.str()  << " ! g1kmssink gem-name=" << m_gem
-             << " video. " << a_pipe ;
+    static constexpr auto pipeline = "uridecodebin uri={} expose-all-streams=false name=video  {} " \
+                                     " video. {} ! g1kmssink gem-name={} video. {} ";
 
-    return pipeline.str();
+    return fmt::format(pipeline, m_uri, caps, v_pipe, m_gem, a_pipe);
 }
 
 bool GstKmsSinkImpl::media(const std::string& uri)
