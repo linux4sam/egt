@@ -100,6 +100,7 @@ static const std::pair<std::string, CreateFunction> allocators[] =
     {"egt::v1::SelectableGrid", create_widget<SelectableGrid>},
     {"egt::v1::SideBoard", create_widget<SideBoard>},
     {"egt::v1::Slider", create_widget<Slider>},
+    {"egt::v1::SliderF", create_widget<SliderF>},
     {"egt::v1::SpinProgress", create_widget<SpinProgress>},
     {"egt::v1::Sprite", create_widget<Sprite>},
     {"egt::v1::StaticGrid", create_widget<StaticGrid>},
