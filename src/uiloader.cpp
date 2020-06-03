@@ -216,18 +216,24 @@ static std::shared_ptr<Widget> load_document(T& doc)
         return nullptr;
 
     auto resources = root->first_node("resources");
-    for (auto resource = resources->first_node("resource");
-         resource; resource = resource->next_sibling("resource"))
+    if (resources)
     {
-        parse_resource(resource);
+        for (auto resource = resources->first_node("resource");
+             resource; resource = resource->next_sibling("resource"))
+        {
+            parse_resource(resource);
+        }
     }
 
     auto widgets = root->first_node("widgets");
-    for (auto widget = widgets->first_node("widget");
-         widget; widget = widget->next_sibling("widget"))
+    if (widgets)
     {
-        // TODO: multiple root widgets not supported
-        return parse_widget(widget);
+        for (auto widget = widgets->first_node("widget");
+             widget; widget = widget->next_sibling("widget"))
+        {
+            // TODO: multiple root widgets not supported
+            return parse_widget(widget);
+        }
     }
 
     return nullptr;
