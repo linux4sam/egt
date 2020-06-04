@@ -226,7 +226,7 @@ bin_PROGRAMS=basic
 
 basic_SOURCES=basic.cpp
 basic_CPPFLAGS = $(EGT_CFLAGS)
-basic_LDFLAGS = $(EGT_LIBS) -lpthread
+basic_LDADD = $(EGT_LIBS) -lpthread
 @endcode
 
 @imageSize{eclipse_new_Makefile_am.png,max-width:90%;height:auto;}
