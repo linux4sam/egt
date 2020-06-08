@@ -24,6 +24,7 @@ Frame::Frame(const Rect& rect, const Widget::Flags& flags) noexcept
     : Widget(rect, flags | Widget::Flag::frame)
 {
     name("Frame" + std::to_string(m_widgetid));
+    m_damage.reserve(10);
 }
 
 Frame::Frame(Frame& parent, const Rect& rect, const Widget::Flags& flags) noexcept
