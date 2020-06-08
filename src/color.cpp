@@ -360,21 +360,13 @@ Color ColorMap::interp(float t) const
     return result;
 }
 
-Color ColorMap::interp_cached(float t) const
+Color ColorMap::interp_cached(float t, size_t accuracy) const
 {
     if (empty())
         return {};
 
-    const size_t steps = m_steps.size() - 1;
-    const float sf = detail::clamp<float>(t, 0.f, 1.f) * steps;
-    const size_t k = floorf(sf);
-
-    if (k + 1 >= m_steps.size())
-        return m_steps.back();
-
-    const auto u = fmodf(sf, 1.f);
-
-    const size_t index = (k + u) * 10000;
+    const float sf = detail::clamp<float>(t, 0.f, 1.f);
+    const size_t index = sf * accuracy;
     auto i = m_cache[static_cast<size_t>(m_interp)].find(index);
     if (i != m_cache[static_cast<size_t>(m_interp)].end())
         return i->second;

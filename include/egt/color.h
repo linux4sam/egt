@@ -628,8 +628,9 @@ public:
      * This will use a cache to speed up repetitive calls to interpolate.
      *
      * @param[in] t Offset from 0 to 1.
+     * @param[in] accuracy Accuracy of the cached result.
      */
-    Color interp_cached(float t) const;
+    Color interp_cached(float t, size_t accuracy = 1000) const;
 
     /// Get a reference to the color steps array.
     const StepsArray& steps() const { return m_steps; }
