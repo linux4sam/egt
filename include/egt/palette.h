@@ -289,7 +289,7 @@ public:
      * @param group Color group.
      * @return The color or pattern.
      */
-    const Pattern& color(ColorId id, GroupId group = GroupId::normal) const;
+    EGT_NODISCARD const Pattern& color(ColorId id, GroupId group = GroupId::normal) const;
 
     /**
      * Set a color in the Palette.
@@ -331,7 +331,7 @@ public:
      * @param group Color group.
      * @return True if exists.
      */
-    bool exists(ColorId id, GroupId group = GroupId::normal) const;
+    EGT_NODISCARD bool exists(ColorId id, GroupId group = GroupId::normal) const;
 
     /**
      * Serialize to the specified serializer.
