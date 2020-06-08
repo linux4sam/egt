@@ -14,7 +14,6 @@
 #include "egt/respath.h"
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
-#include <sstream>
 
 #ifdef HAVE_SIMD
 #include "Simd/SimdLib.hpp"
@@ -36,7 +35,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& uri,
         vscale = ImageCache::round(vscale, 0.01);
     }
 
-    const std::string nameid = id(uri, hscale, vscale);
+    const auto nameid = id(uri, hscale, vscale);
 
     auto i = m_cache.find(nameid);
     if (i != m_cache.end())
@@ -93,10 +92,8 @@ shared_cairo_surface_t ImageCache::get(const std::string& uri,
 
     if (cairo_surface_status(image.get()) != CAIRO_STATUS_SUCCESS)
     {
-        std::stringstream ss;
-        ss << "cairo: " << cairo_status_to_string(cairo_surface_status(image.get()))
-           << ": " << uri;
-        throw std::runtime_error(ss.str());
+        throw std::runtime_error(fmt::format(
+                                     "cairo: {}: {}", cairo_status_to_string(cairo_surface_status(image.get())), uri));
     }
 
     m_cache.insert(std::make_pair(nameid, image));
@@ -116,9 +113,7 @@ float ImageCache::round(float v, float fraction)
 
 std::string ImageCache::id(const std::string& name, float hscale, float vscale)
 {
-    std::ostringstream ss;
-    ss << name << "-" << hscale * 100. << "-" << vscale * 100.;
-    return ss.str();
+    return fmt::format("{}-{}-{}", name, hscale * 100, vscale * 100);
 }
 
 #ifdef HAVE_SIMD
