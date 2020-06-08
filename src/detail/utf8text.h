@@ -51,17 +51,17 @@ std::string utf8_char_to_string(T1 ch, T2 e)
  * @param[in] dend Delimiter string end iterator.
  * @param[out] tokens The resulting string tokens.
  */
-template<class T>
+template<class T, class Container>
 void tokenize_with_delimiters(T begin, T end,
                               T dbegin, T dend,
-                              std::vector<std::string>& tokens)
+                              Container& tokens)
 {
     std::string token;
 
     for (auto pos = begin; pos != end;)
     {
-        const auto ch = utf8::next(pos, end);
         bool found = false;
+        const auto ch = utf8::next(pos, end);
         for (auto d = dbegin; d != dend;)
         {
             auto del = utf8::next(d, dend);
