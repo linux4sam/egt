@@ -366,7 +366,7 @@ EGT_API void draw_text(Painter& painter,
                        const Pattern& text_color,
                        const std::function<void(const Point& offset, size_t height)>& draw_cursor = nullptr,
                        size_t cursor_pos = 0,
-                       const Pattern& highlight_color = Color(),
+                       const Pattern& highlight_color = {},
                        size_t select_start = 0,
                        size_t select_len = 0);
 
@@ -383,7 +383,7 @@ EGT_API void draw_text(Painter& painter,
                        const Image& image,
                        const std::function<void(const Point& offset, size_t height)>& draw_cursor = nullptr,
                        size_t cursor_pos = 0,
-                       const Pattern& highlight_color = Color(),
+                       const Pattern& highlight_color = {},
                        size_t select_start = 0,
                        size_t select_len = 0);
 }
