@@ -106,13 +106,13 @@ public:
      * Add a range value to the radial.
      *
      * @param range The range value to add.
-     * @param color The color to set.
+     * @param color The pattern to set.
      * @param width Width of the value on the radial.
      * @param flags Any flags associated with the range.
      * @return A unique handle used to identify the range.
      */
     Object::RegisterHandle add(const std::shared_ptr<RangeValue<T>>& range,
-                               const Color& color = {},
+                               const Pattern& color = {},
                                DefaultDim width = 10,
                                RadialFlags flags = {})
     {
@@ -157,9 +157,9 @@ public:
      * Set the individual color of a range value.
      *
      * @param handle Range handle returned by add().
-     * @param color The color to set.
+     * @param color The pattern to set.
      */
-    void color(Object::RegisterHandle handle, const Color& color)
+    void color(Object::RegisterHandle handle, const Pattern& color)
     {
         for (auto& value : this->m_values)
         {
@@ -343,20 +343,20 @@ protected:
     struct ValueData
     {
         ValueData(std::shared_ptr<RangeValue<T2>> r,
-                  const Color c,
+                  Pattern c,
                   size_t w = 10,
                   // NOLINTNEXTLINE(modernize-pass-by-value)
                   RadialFlags f = {},
                   Object::RegisterHandle h = 0) noexcept
             : range(std::move(r)),
-              color(c),
+              color(std::move(c)),
               width(w),
               flags(f),
               handle(h)
         {}
 
         std::shared_ptr<RangeValue<T2>> range;
-        Color color;
+        Pattern color;
         DefaultDim width{};
         RadialFlags flags{};
         Object::RegisterHandle handle{0};
