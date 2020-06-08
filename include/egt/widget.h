@@ -673,7 +673,7 @@ public:
      *
      * @param id Palette::ColorId to get.
      */
-    EGT_NODISCARD Pattern color(Palette::ColorId id) const;
+    EGT_NODISCARD const Pattern& color(Palette::ColorId id) const;
 
     /**
      * Get a Widget color.
@@ -684,7 +684,7 @@ public:
      * @param id Palette::ColorId to get.
      * @param group Palette::GroupId to get.
      */
-    EGT_NODISCARD Pattern color(Palette::ColorId id, Palette::GroupId group) const;
+    EGT_NODISCARD const Pattern& color(Palette::ColorId id, Palette::GroupId group) const;
 
     /**
      * Add a color to the widget's instance palette.

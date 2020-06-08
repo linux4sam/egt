@@ -355,7 +355,7 @@ void Widget::reset_palette()
     }
 }
 
-Pattern Widget::color(Palette::ColorId id) const
+const Pattern& Widget::color(Palette::ColorId id) const
 {
     Palette::GroupId group = Palette::GroupId::normal;
     if (disabled())
@@ -368,7 +368,7 @@ Pattern Widget::color(Palette::ColorId id) const
     return color(id, group);
 }
 
-Pattern Widget::color(Palette::ColorId id, Palette::GroupId group) const
+const Pattern& Widget::color(Palette::ColorId id, Palette::GroupId group) const
 {
     if (m_palette)
         if (m_palette->exists(id, group))
