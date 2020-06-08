@@ -12,8 +12,8 @@ document covers many aspects of what you need to know.
 ## Code of Conduct
 
 This project and everyone participating in it is governed by the
-[EGT Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to
-uphold this code of conduct.
+[EGT Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating,
+you are expected to uphold this code of conduct.
 
 ## Development Tools Packages
 

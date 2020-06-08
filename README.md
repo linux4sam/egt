@@ -8,7 +8,8 @@ toolkit for Microchip AT91/SAMA5 microprocessors.  It is used to develop
 graphical embedded Linux applications.  EGT provides modern and complete GUI
 functionality, look-and-feel, and performance.
 
-Want to help out or make some changes?  See [Contributing](CONTRIBUTING.md).
+Want to help out, make some changes, found a bug, or have a question?  See
+[Contributing](CONTRIBUTING.md).  Send a pull request or open an issue.
 
 Complete [EGT Programmers Manual](https://linux4sam.github.io/egt-docs/)
 with API reference is available for the latest version.
