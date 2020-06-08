@@ -240,14 +240,19 @@ void Theme::draw_box(Painter& painter,
 
     if (type.is_set(FillFlag::blend) || type.is_set(FillFlag::solid))
     {
-        auto pattern = bg;
-
         // force the pattern on the center of the widget box vertically
-        if (pattern.type() == Pattern::Type::linear)
+        if (bg.type() == Pattern::Type::linear)
+        {
+            auto pattern = bg;
             pattern.linear(Point(box.x() + box.width() / 2., box.y()),
                            Point(box.x() + box.width() / 2., box.y() + box.height()));
+            painter.set(pattern);
+        }
+        else
+        {
+            painter.set(bg);
+        }
 
-        painter.set(pattern);
         cairo_fill_preserve(cr);
     }
 
@@ -351,14 +356,20 @@ void Theme::draw_circle(Painter& painter,
 
     if (type.is_set(FillFlag::blend) || type.is_set(FillFlag::solid))
     {
-        auto pattern = bg;
-
         // force the pattern on the center of the widget box
-        if (pattern.type() == Pattern::Type::linear)
+        if (bg.type() == Pattern::Type::linear ||
+            bg.type() == Pattern::Type::radial)
+        {
+            auto pattern = bg;
             pattern.radial(circle.center(), circle.radius(),
                            circle.center(), 0);
+            painter.set(pattern);
+        }
+        else
+        {
+            painter.set(bg);
+        }
 
-        painter.set(pattern);
         cairo_fill_preserve(cr);
     }
 
