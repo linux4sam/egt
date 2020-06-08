@@ -54,10 +54,30 @@ void BoxSizer::layout()
     if (m_children.empty())
         return;
 
+    // If the sizer will be expanded but it's not done yet, it's useless to
+    // perform the layout.
+    if (!width() && align().is_set(AlignFlag::expand_horizontal))
+        return;
+
+    if (!height() && align().is_set(AlignFlag::expand_vertical))
+        return;
+
     m_in_layout = true;
     auto reset = detail::on_scope_exit([this]() { m_in_layout = false; });
 
-    resize(super_rect());
+    auto new_size = super_rect();
+
+    // If the sizer is expanded, the current size is the maximum one. If not,
+    // the size can be increased to contain the children.
+    if (align().is_set(AlignFlag::expand_horizontal))
+        if (new_size.width() > width())
+            new_size.width(width());
+
+    if (align().is_set(AlignFlag::expand_vertical))
+        if (new_size.height() > height())
+            new_size.height(height());
+
+    resize(new_size);
 
     std::vector<detail::LayoutRect> rects;
 
