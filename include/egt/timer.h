@@ -14,6 +14,7 @@
 #include <chrono>
 #include <egt/asio.hpp>
 #include <egt/detail/meta.h>
+#include <memory>
 #include <vector>
 
 namespace egt
@@ -240,6 +241,9 @@ protected:
 
     /// A user defined name for the Timer.
     std::string m_name;
+
+    struct TimerImpl;
+    std::unique_ptr<TimerImpl> m_impl;
 
 private:
 

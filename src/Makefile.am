@@ -42,6 +42,7 @@ canvas.cpp \
 checkbox.cpp \
 color.cpp \
 combo.cpp \
+detail/asioallocator.h \
 detail/alignment.cpp \
 detail/base64.cpp \
 detail/base64.h \

@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/asioallocator.h"
 #include "egt/app.h"
 #include "egt/eventloop.h"
 #include "egt/timer.h"
@@ -13,15 +14,22 @@ namespace egt
 inline namespace v1
 {
 
+struct Timer::TimerImpl
+{
+    detail::HandlerAllocator allocator;
+};
+
 Timer::Timer() noexcept
-    : m_timer(Application::instance().event().io())
+    : m_timer(Application::instance().event().io()),
+      m_impl(std::make_unique<TimerImpl>())
 {
     Application::instance().m_timers.push_back(this);
 }
 
 Timer::Timer(std::chrono::milliseconds duration) noexcept
     : m_timer(Application::instance().event().io()),
-      m_duration(duration)
+      m_duration(duration),
+      m_impl(std::make_unique<TimerImpl>())
 {
     Application::instance().m_timers.push_back(this);
 }
@@ -41,10 +49,10 @@ void Timer::start()
         internal_timer_callback(error);
     }));
 #else
-    m_timer.async_wait([this](const asio::error_code & error)
+    m_timer.async_wait(detail::make_custom_alloc_handler(m_impl->allocator, [this](const asio::error_code & error)
     {
         internal_timer_callback(error);
-    });
+    }));
 #endif
 }
 
@@ -163,10 +171,10 @@ void PeriodicTimer::start()
         internal_timer_callback(error);
     }))
 #else
-    m_timer.async_wait([this](const asio::error_code & error)
+    m_timer.async_wait(detail::make_custom_alloc_handler(m_impl->allocator, [this](const asio::error_code & error)
     {
         internal_timer_callback(error);
-    });
+    }));
 #endif
 }
 
