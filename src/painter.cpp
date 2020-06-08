@@ -126,11 +126,12 @@ Painter& Painter::draw(const Image& image)
     double x;
     double y;
     cairo_get_current_point(m_cr.get(), &x, &y);
-    cairo_set_source_surface(m_cr.get(), image.surface().get(), x, y);
-    cairo_rectangle(m_cr.get(), x, y, image.size().width(), image.size().height());
 
-    /// @todo no fill here
-    fill();
+    cairo_translate(m_cr.get(), x, y);
+    cairo_set_source(m_cr.get(), image.pattern());
+
+    /// @todo no paint here
+    paint();
 
     return *this;
 }

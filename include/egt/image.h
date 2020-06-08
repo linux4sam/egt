@@ -136,6 +136,7 @@ public:
             float hs = static_cast<float>(size.width()) / static_cast<float>(m_orig_size.width());
             float vs = static_cast<float>(size.height()) / static_cast<float>(m_orig_size.height());
             scale(hs, vs);
+            m_pattern.reset();
         }
     }
 
@@ -187,6 +188,16 @@ public:
         if (m_surface_local.get())
             return m_surface_local;
         return m_surface;
+    }
+
+    /// Get internal pattern representation.
+    EGT_NODISCARD cairo_pattern_t* pattern() const
+    {
+        if (!m_pattern)
+            m_pattern.reset(cairo_pattern_create_for_surface(surface().get()),
+                            cairo_pattern_destroy);
+        assert(m_pattern.get());
+        return m_pattern.get();
     }
 
     /**
@@ -247,6 +258,9 @@ protected:
 
     /// Original image size.
     Size m_orig_size;
+
+    /// Internal pattern representation.
+    mutable shared_cairo_pattern_t m_pattern;
 };
 
 static_assert(detail::rule_of_5<Image>(), "must fulfill rule of 5");

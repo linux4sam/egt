@@ -83,6 +83,7 @@ void Image::load(const std::string& uri, float hscale, float vscale)
 
             m_orig_size = Size(std::ceil(cairo_image_surface_get_width(m_surface.get())),
                                std::ceil(cairo_image_surface_get_height(m_surface.get())));
+            m_pattern.reset();
         }
     }
 }
@@ -98,6 +99,7 @@ void Image::scale(float hscale, float vscale, bool approximate)
         m_surface = detail::image_cache().get(m_uri, hscale, vscale, approximate);
         m_hscale = hscale;
         m_vscale = vscale;
+        m_pattern.reset();
     }
 }
 
