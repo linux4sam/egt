@@ -368,6 +368,8 @@ void StaticGrid::serialize(Serializer& serializer) const
 {
     serializer.add_property("grid_flags", m_grid_flags.to_string());
     serializer.add_property("column_priority", m_column_priority);
+    serializer.add_property("n_col", n_col());
+    serializer.add_property("n_row", n_row());
 
     Frame::serialize(serializer);
 }
@@ -379,6 +381,10 @@ void StaticGrid::deserialize(const std::string& name, const std::string& value,
         m_grid_flags.from_string(value);
     else if (name == "column_priority")
         m_column_priority = detail::from_string(value);
+    else if (name == "n_col")
+        reallocate(GridSize(std::stoi(value), n_row()));
+    else if (name == "n_row")
+        reallocate(GridSize(n_col(), std::stoi(value)));
     else
         Frame::deserialize(name, value, attrs);
 }
