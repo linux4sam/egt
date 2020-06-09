@@ -233,7 +233,7 @@ public:
     {
         auto orig = m_value;
 
-        value = detail::clamp<float>(value, m_min, m_max);
+        value = std::round(detail::clamp<float>(value, m_min, m_max));
 
         if (detail::change_if_diff<float>(m_value, value))
         {
