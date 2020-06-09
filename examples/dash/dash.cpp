@@ -143,9 +143,7 @@ int main(int argc, char** argv)
 
     mph_needle->on_value_changed([speed_text, mph_needle]()
     {
-        std::ostringstream ss;
-        ss << mph_needle->value() << " mph";
-        speed_text->text(ss.str());
+        speed_text->text(std::to_string(static_cast<int>(mph_needle->value())) + " mph");
     });
 
     auto middle_box = dash_background->id_box("#middle");
