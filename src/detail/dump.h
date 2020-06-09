@@ -23,8 +23,8 @@ inline namespace v1
 namespace detail
 {
 
-template<class T>
-void code_timer(bool enable, const std::string& prefix, T&& callback)
+template<class Prefix, class T>
+inline void code_timer(bool enable, const Prefix& prefix, T&& callback)
 {
     if (enable)
     {
