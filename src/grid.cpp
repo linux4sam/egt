@@ -31,6 +31,8 @@ void StaticGrid::reallocate(const GridSize& size)
     if (!size.width() || !size.height())
         throw std::invalid_argument("a static grid needs at least one cell i.e. one row and one col");
 
+    m_grid_size = size;
+
     /// If columns or rows are removed, remove widgets in these cells
     auto current_columns = m_cells.size();
     const auto new_columns = size.width();

@@ -229,6 +229,22 @@ public:
      */
     void column_priority(bool value) { m_column_priority = value; }
 
+    /**
+     * Get the number of columns.
+     */
+    EGT_NODISCARD size_t n_col() const
+    {
+        return m_grid_size.width();
+    }
+
+    /**
+     * Get the number of rows.
+     */
+    EGT_NODISCARD size_t n_row() const
+    {
+        return m_grid_size.height();
+    }
+
     void serialize(Serializer& serializer) const override;
 
     void deserialize(const std::string& name, const std::string& value,
@@ -261,6 +277,8 @@ protected:
     bool m_column_priority{false};
     /// Grid flags.
     GridFlags m_grid_flags{};
+    /// Grid size.
+    GridSize m_grid_size{};
 };
 
 /**
