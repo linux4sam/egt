@@ -282,7 +282,7 @@ void Window::background(const Image& image)
 
 Window::~Window() noexcept
 {
-    if (!Application::check_instance())
+    if (Application::check_instance())
     {
         auto i = find(Application::instance().m_windows.begin(),
                       Application::instance().m_windows.end(), this);
