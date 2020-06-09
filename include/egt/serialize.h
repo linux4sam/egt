@@ -57,6 +57,9 @@ public:
     void add_property(const std::string& name, unsigned int value,
                       const Attributes& attrs = {});
     /// Add a property.
+    void add_property(const std::string& name, size_t value,
+                      const Attributes& attrs = {});
+    /// Add a property.
     void add_property(const std::string& name, const AlignFlags& value,
                       const Attributes& attrs = {});
     /// Add a property.
