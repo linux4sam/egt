@@ -17,6 +17,8 @@ namespace experimental
 GaugeLayer::GaugeLayer(const Image& image) noexcept
     : m_image(image)
 {
+    name("GaugeLayer" + std::to_string(m_widgetid));
+
     if (!m_image.empty())
         m_box.size(m_image.size());
 }
@@ -47,6 +49,7 @@ NeedleLayer::NeedleLayer(const Image& image,
       m_angle_stop(angle_stop),
       m_clockwise(clockwise)
 {
+    name("NeedleLayer" + std::to_string(m_widgetid));
     assert(m_max > m_min);
 }
 
@@ -94,6 +97,18 @@ void NeedleLayer::gauge(Gauge* gauge)
         if (detail::change_if_diff<>(m_gauge, gauge))
             damage();
     }
+}
+
+Gauge::Gauge(const Rect& rect, const Widget::Flags& flags) noexcept
+    : Frame(rect, flags)
+{
+    name("Gauge" + std::to_string(m_widgetid));
+}
+
+Gauge::Gauge(Frame& parent, const Rect& rect, const Widget::Flags& flags) noexcept
+    : Gauge(rect, flags)
+{
+    parent.add(*this);
 }
 
 void Gauge::add(std::shared_ptr<GaugeLayer>& layer)

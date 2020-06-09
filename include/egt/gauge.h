@@ -379,7 +379,21 @@ class EGT_API Gauge : public Frame
 {
 public:
 
-    using Frame::Frame;
+    /**
+    * @param[in] rect Initial rectangle of the widget.
+    * @param[in] flags Widget flags.
+    */
+    explicit Gauge(const Rect& rect = {},
+                   const Flags& flags = {}) noexcept;
+
+    /**
+     * @param[in] parent Parent Frame of the Widget.
+     * @param[in] rect Initial rectangle of the widget.
+     * @param[in] flags Widget flags.
+     */
+    Gauge(Frame& parent, const Rect& rect,
+          const Flags& flags = {}) noexcept;
+
     using Frame::add;
 
     ~Gauge() noexcept override;
