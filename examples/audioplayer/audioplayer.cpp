@@ -84,7 +84,7 @@ struct AudioRadial : public egt::experimental::Radial
         if (angle2 < 1.5 || angle2 > 3.14)
             p -= egt::Point(0, s.height());
 
-        painter.set(egt::Font());
+        painter.set(this->font());
         painter.set(egt::Palette::white);
         painter.draw(p);
         painter.draw(text);
