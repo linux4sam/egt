@@ -26,7 +26,6 @@ class Application;
 namespace detail
 {
 struct X11Data;
-class InputKeyboard;
 
 /**
  * Screen in an X11 window.
@@ -87,9 +86,6 @@ protected:
 
     /// Customer input for dispatching events.
     X11Input m_in;
-
-    /// Keyboard instance
-    std::unique_ptr<InputKeyboard> m_keyboard;
 };
 
 }

@@ -29,13 +29,15 @@ struct X11Data
     Display* display;
     Drawable window;
     Atom wmDeleteMessage;
+
+    /// Keyboard instance
+    InputKeyboard keyboard;
 };
 
 X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
     : m_app(app),
       m_priv(std::make_unique<detail::X11Data>()),
-      m_input(m_app.event().io()),
-      m_keyboard(std::make_unique<InputKeyboard>())
+      m_input(m_app.event().io())
 {
     spdlog::info("X11 Screen");
 
@@ -220,7 +222,7 @@ void X11Screen::handle_read(const asio::error_code& error)
 
                     const auto id = EventId::keyboard_repeat;
                     Event event(id, Key(detail::KeyboardCodeFromXKeyEvent(&e),
-                                        m_keyboard->on_key(e.xkey.keycode, id)));
+                                        m_priv->keyboard.on_key(e.xkey.keycode, id)));
                     m_in.dispatch(event);
                     break;
                 }
@@ -230,7 +232,7 @@ void X11Screen::handle_read(const asio::error_code& error)
         {
             const auto id = e.type == KeyPress ? EventId::keyboard_down : EventId::keyboard_up;
             Event event(id, Key(detail::KeyboardCodeFromXKeyEvent(&e),
-                                m_keyboard->on_key(e.xkey.keycode, id)));
+                                m_priv->keyboard.on_key(e.xkey.keycode, id)));
             m_in.dispatch(event);
             break;
         }
