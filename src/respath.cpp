@@ -135,7 +135,6 @@ SchemeType resolve_path(const std::string& path, std::string& result)
     }
     default:
     {
-        spdlog::warn("unable to parse uri: {}", path);
         break;
     }
     }
