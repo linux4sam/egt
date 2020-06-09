@@ -47,7 +47,7 @@ public:
 class BasicInputKeyboard : public InputKeyboardImpl
 {
 public:
-    virtual uint32_t on_key(uint32_t key, EventId event) override;
+    uint32_t on_key(uint32_t key, EventId event) override;
 protected:
 
     static uint32_t ekey_to_utf32(KeyboardCode code, bool shift, bool caps, bool numlock);
@@ -89,7 +89,7 @@ public:
 
     XkbInputKeyboard();
 
-    virtual uint32_t on_key(uint32_t key, EventId event) override;
+    uint32_t on_key(uint32_t key, EventId event) override;
 
     virtual ~XkbInputKeyboard() = default;
 
@@ -107,32 +107,35 @@ protected:
 class InputKeyboard
 {
 public:
-    InputKeyboard()
-    {
-#ifdef HAVE_XKBCOMMON
-        try
-        {
-            m_impl = std::make_unique<XkbInputKeyboard>();
-            SPDLOG_DEBUG("using xkb input keyboard mapping");
-            return;
-        }
-        catch (...)
-        {
-            spdlog::error("failed to load xkb input keyboard mapping");
-        }
-#endif
-
-        m_impl = std::make_unique<BasicInputKeyboard>();
-        SPDLOG_DEBUG("using basic input keyboard mapping");
-    }
 
     virtual uint32_t on_key(uint32_t key, EventId event)
     {
-        assert(m_impl);
+        // delayed allocation of implementation on first use
+        allocate();
         return m_impl->on_key(key, event);
     }
 
-    virtual ~InputKeyboard() = default;
+    void allocate()
+    {
+        if (!m_impl)
+        {
+#ifdef HAVE_XKBCOMMON
+            try
+            {
+                m_impl = std::make_unique<XkbInputKeyboard>();
+                SPDLOG_DEBUG("using xkb input keyboard mapping");
+                return;
+            }
+            catch (...)
+            {
+                spdlog::error("failed to load xkb input keyboard mapping");
+            }
+#endif
+
+            m_impl = std::make_unique<BasicInputKeyboard>();
+            SPDLOG_DEBUG("using basic input keyboard mapping");
+        }
+    }
 
 protected:
 
