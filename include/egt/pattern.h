@@ -11,9 +11,11 @@
  * @brief Working with patterns.
  */
 
+#include <cairo.h>
 #include <egt/color.h>
 #include <egt/detail/meta.h>
 #include <egt/geometry.h>
+#include <egt/types.h>
 #include <vector>
 
 namespace egt
@@ -113,7 +115,19 @@ public:
     /// Get all of the steps of the pattern
     EGT_NODISCARD const StepArray& steps() const;
 
+    /// Get internal pattern representation.
+    EGT_NODISCARD cairo_pattern_t* pattern() const
+    {
+        if (!m_pattern)
+            create_pattern();
+        assert(m_pattern.get());
+        return m_pattern.get();
+    }
+
 protected:
+
+    /// @private
+    void create_pattern() const;
 
     /// @private
     static bool sort_by_first(const std::pair<float, Color>& a,
@@ -134,6 +148,8 @@ protected:
     Point m_end;
     /// Ending radius of the pattern.
     float m_end_radius{0};
+    /// Internal pattern representation.
+    mutable shared_cairo_pattern_t m_pattern;
 };
 
 static_assert(detail::rule_of_5<Pattern>(), "must fulfill rule of 5");

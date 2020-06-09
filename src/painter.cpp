@@ -40,62 +40,7 @@ void Painter::pop_group()
 
 Painter& Painter::set(const Pattern& pattern)
 {
-    switch (pattern.type())
-    {
-    case Pattern::Type::linear:
-    {
-        auto pat =
-            unique_cairo_pattern_t(cairo_pattern_create_linear(pattern.starting().x(),
-                                   pattern.starting().y(),
-                                   pattern.ending().x(),
-                                   pattern.ending().y()));
-
-        for (const auto& step : pattern.steps())
-        {
-            cairo_pattern_add_color_stop_rgba(pat.get(),
-                                              step.first,
-                                              step.second.redf(),
-                                              step.second.greenf(),
-                                              step.second.bluef(),
-                                              step.second.alphaf());
-        }
-
-        cairo_set_source(m_cr.get(), pat.get());
-        break;
-    }
-    case Pattern::Type::radial:
-    {
-        auto pat =
-            unique_cairo_pattern_t(cairo_pattern_create_radial(pattern.starting().x(),
-                                   pattern.starting().y(),
-                                   pattern.starting_radius(),
-                                   pattern.ending().x(),
-                                   pattern.ending().y(),
-                                   pattern.ending_radius()));
-        for (const auto& step : pattern.steps())
-        {
-            cairo_pattern_add_color_stop_rgba(pat.get(),
-                                              step.first,
-                                              step.second.redf(),
-                                              step.second.greenf(),
-                                              step.second.bluef(),
-                                              step.second.alphaf());
-        }
-
-        cairo_set_source(m_cr.get(), pat.get());
-        break;
-    }
-    case Pattern::Type::solid:
-    {
-        auto color = pattern.color();
-        cairo_set_source_rgba(m_cr.get(),
-                              color.redf(),
-                              color.greenf(),
-                              color.bluef(),
-                              color.alphaf());
-        break;
-    }
-    }
+    cairo_set_source(m_cr.get(), pattern.pattern());
     return *this;
 }
 
