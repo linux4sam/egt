@@ -60,13 +60,13 @@ private:
     /// Input handler to read from the evdev fd.
     asio::posix::stream_descriptor m_input;
 
+    struct LibInputImpl;
+    std::unique_ptr<LibInputImpl> m_impl;
+
     struct libinput* li;
 
     /// The last point seen, indexed by slot, used for reference internally.
     std::array<DisplayPoint, 2> m_last_point;
-
-    /// Keyboard mapping instance.
-    std::unique_ptr<InputKeyboard> m_keyboard;
 };
 
 }

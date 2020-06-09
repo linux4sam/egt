@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/asioallocator.h"
 #include "detail/dump.h"
 #include "detail/input/inputkeyboard.h"
 #include "egt/app.h"
@@ -32,6 +33,13 @@ inline namespace v1
 {
 namespace detail
 {
+
+struct InputLibInput::LibInputImpl
+{
+    detail::HandlerAllocator allocator;
+    /// Keyboard mapping instance.
+    InputKeyboard keyboard;
+};
 
 static int
 open_restricted(const char* path, int flags, void* user_data)
@@ -105,7 +113,7 @@ static struct libinput* tools_open_udev(const char* seat, bool verbose, bool gra
 InputLibInput::InputLibInput(Application& app)
     : m_app(app),
       m_input(app.event().io()),
-      m_keyboard(std::make_unique<InputKeyboard>())
+      m_impl(std::make_unique<LibInputImpl>())
 {
     const char* seat_or_device = "seat0";
     bool verbose = false;
@@ -129,10 +137,11 @@ InputLibInput::InputLibInput(Application& app)
     }));
 #else
     asio::async_read(m_input, asio::null_buffers(),
-                     [this](const asio::error_code & error, std::size_t)
+                     detail::make_custom_alloc_handler(m_impl->allocator,
+                             [this](const asio::error_code & error, std::size_t)
     {
         handle_read(error);
-    });
+    }));
 #endif
 }
 
@@ -229,14 +238,14 @@ void InputLibInput::handle_event_keyboard(struct libinput_event* ev)
     {
     case LIBINPUT_KEY_STATE_PRESSED:
     {
-        const auto unicode = m_keyboard->on_key(key + EVDEV_OFFSET, EventId::keyboard_down);
+        const auto unicode = m_impl->keyboard.on_key(key + EVDEV_OFFSET, EventId::keyboard_down);
         Event event(EventId::keyboard_down, Key(linux_to_ekey(key), unicode));
         dispatch(event);
         break;
     }
     case LIBINPUT_KEY_STATE_RELEASED:
     {
-        const auto unicode = m_keyboard->on_key(key + EVDEV_OFFSET, EventId::keyboard_up);
+        const auto unicode = m_impl->keyboard.on_key(key + EVDEV_OFFSET, EventId::keyboard_up);
         Event event(EventId::keyboard_up, Key(linux_to_ekey(key), unicode));
         dispatch(event);
         break;
@@ -361,10 +370,11 @@ void InputLibInput::handle_read(const asio::error_code& error)
         }));
 #else
         asio::async_read(m_input, asio::null_buffers(),
-                         [this](const asio::error_code & error, std::size_t)
+                         detail::make_custom_alloc_handler(m_impl->allocator,
+                                 [this](const asio::error_code & error, std::size_t)
         {
             handle_read(error);
-        });
+        }));
 #endif
     });
 }
