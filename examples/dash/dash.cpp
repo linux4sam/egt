@@ -158,10 +158,32 @@ int main(int argc, char** argv)
     auto console_text = std::make_shared<egt::Label>();
     console_text->text_align(egt::AlignFlag::center);
     console_text->box(egt::Rect(console_box.x(), console_box.y(), console_box.width(), console_box.height()));
-    console_text->color(egt::Palette::ColorId::label_text, egt::Palette::orange);
     console_text->font(egt::Font(55, egt::Font::Weight::bold));
-    console_text->text("D");
     gauge.add(console_text);
+
+    auto change_state = [&console_text]()
+    {
+        static size_t state = 0;
+        const std::pair<const char*, egt::Color> states[] =
+        {
+            {"P", egt::Palette::white},
+            {"R", egt::Palette::red},
+            {"N", egt::Palette::orange},
+            {"D", egt::Palette::green},
+            {"2", egt::Palette::green},
+            {"1", egt::Palette::green},
+        };
+
+        console_text->color(egt::Palette::ColorId::label_text, states[state].second);
+        console_text->text(states[state].first);
+        if (++state >= 6)
+            state = 0;
+    };
+    change_state();
+
+    timers.emplace_back(std::make_unique<egt::PeriodicTimer>(std::chrono::seconds(2)));
+    timers.back()->on_timeout(change_state);
+    timers.back()->start();
 
     dash_background.reset(nullptr);
 
