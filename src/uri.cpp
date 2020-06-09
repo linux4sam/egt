@@ -57,7 +57,7 @@ void Uri::parse(const std::string& uri)
     // regex suggested by RFC 3986: https://tools.ietf.org/html/rfc3986#page-50
     static const std::regex uri_regex(
         R"(^(([^:\/?#]+):)?(//([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?)",
-        std::regex::extended
+        std::regex::extended | std::regex::optimize
     );
 
     std::smatch match;
