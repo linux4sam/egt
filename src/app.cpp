@@ -151,26 +151,21 @@ void Application::setup_locale(const std::string& name)
     }
 }
 
-static std::once_flag env_flag;
-
 void Application::setup_logging()
 {
-    std::call_once(env_flag, []()
+    auto level = getenv("EGT_DEBUG");
+    if (level)
     {
-        auto level = getenv("EGT_DEBUG");
-        if (level)
-        {
-            auto loglevel = static_cast<spdlog::level::level_enum>(
-                                std::stoi(level));
-            spdlog::set_level(loglevel);
-        }
-        else
-        {
-            spdlog::set_level(spdlog::level::level_enum::warn);
-        }
+        auto loglevel = static_cast<spdlog::level::level_enum>(
+                            std::stoi(level));
+        spdlog::set_level(loglevel);
+    }
+    else
+    {
+        spdlog::set_level(spdlog::level::level_enum::warn);
+    }
 
-        spdlog::set_pattern("%E.%e [%^%l%$] %@ %v");
-    });
+    spdlog::set_pattern("%E.%e [%^%l%$] %@ %v");
 }
 
 void Application::setup_search_paths()
