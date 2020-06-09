@@ -55,7 +55,7 @@ int main(int argc, char** argv)
         return 0;
     }
 
-    egt::Application app(argc, argv, "camera");
+    egt::Application app(argc, argv);
 #ifdef EXAMPLEDATA
     egt::add_search_path(EXAMPLEDATA);
 #endif

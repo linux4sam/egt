@@ -40,7 +40,7 @@ static std::shared_ptr<WindowType> create_window(const egt::Size& size,
 
 int main(int argc, char** argv)
 {
-    egt::Application app(argc, argv, "frames");
+    egt::Application app(argc, argv);
 
     egt::TopWindow win0;
     win0.no_layout(true);

@@ -20,7 +20,7 @@ static std::string last_line(const std::string& str)
 
 int main(int argc, char** argv)
 {
-    egt::Application app(argc, argv, "calc");
+    egt::Application app(argc, argv);
 
     egt::TopWindow win;
     win.color(egt::Palette::ColorId::bg, egt::Palette::black);

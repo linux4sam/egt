@@ -10,7 +10,7 @@
 
 int main(int argc, char** argv)
 {
-    egt::Application app(argc, argv, "sprite");
+    egt::Application app(argc, argv);
 #ifdef EXAMPLEDATA
     egt::add_search_path(EXAMPLEDATA);
 #endif

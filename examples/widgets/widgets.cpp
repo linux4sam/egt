@@ -564,7 +564,7 @@ struct ShapesPage : public egt::NotebookTab
 
 int main(int argc, char** argv)
 {
-    egt::Application app(argc, argv, "widgets");
+    egt::Application app(argc, argv);
     egt::TopWindow win;
 
     egt::VerticalBoxSizer vsizer(win);

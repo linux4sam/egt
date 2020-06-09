@@ -66,7 +66,7 @@ int main(int argc, char** argv)
     auto format = egt::detail::enum_from_string<egt::PixelFormat>(args["format"].as<std::string>());
     auto input(args["input"].as<std::string>());
 
-    egt::Application app(argc, argv, "video");
+    egt::Application app(argc, argv);
 #ifdef EXAMPLEDATA
     egt::add_search_path(EXAMPLEDATA);
 #endif

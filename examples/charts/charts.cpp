@@ -490,7 +490,7 @@ struct LineChartPage : public egt::NotebookTab
 
 int main(int argc, char** argv)
 {
-    egt::Application app(argc, argv, "charts");
+    egt::Application app(argc, argv);
     egt::TopWindow win;
 
     egt::VerticalBoxSizer vsizer(win);

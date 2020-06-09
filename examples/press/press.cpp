@@ -136,7 +136,7 @@ public:
 
 static int run(int argc, char** argv)
 {
-    egt::Application app(argc, argv, "press");
+    egt::Application app(argc, argv);
 
     MainWindow win;
     win.show();

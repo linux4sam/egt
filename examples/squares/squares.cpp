@@ -19,7 +19,7 @@ T random_item(T start, T end, RandomGenerator& e)
 
 int main(int argc, char** argv)
 {
-    egt::Application app(argc, argv, "squares");
+    egt::Application app(argc, argv);
 
     egt::TopWindow win;
 
