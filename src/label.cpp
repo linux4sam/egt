@@ -262,7 +262,7 @@ void ImageLabel::deserialize(const std::string& name, const std::string& value,
     switch (detail::hash(name))
     {
     case detail::hash("showlabel"):
-        show_label(std::stoul(value));
+        show_label(egt::detail::from_string(value));
         break;
     case detail::hash("image"):
         m_image.deserialize(name, value, attrs);
