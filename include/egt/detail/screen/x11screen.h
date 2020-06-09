@@ -6,6 +6,11 @@
 #ifndef EGT_DETAIL_SCREEN_X11SCREEN_H
 #define EGT_DETAIL_SCREEN_X11SCREEN_H
 
+/**
+ * @file
+ * @brief X11 screen support.
+ */
+
 #include <egt/asio.hpp>
 #include <egt/detail/meta.h>
 #include <egt/input.h>

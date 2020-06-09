@@ -6,6 +6,11 @@
 #ifndef EGT_DETAIL_MOUSEGESTURE_H
 #define EGT_DETAIL_MOUSEGESTURE_H
 
+/**
+ * @file
+ * @brief Mouse gesture support.
+ */
+
 #include <chrono>
 #include <egt/detail/meta.h>
 #include <egt/event.h>
@@ -14,10 +19,6 @@
 #include <string>
 #include <vector>
 
-/**
- * @file
- * @brief Mouse gesture support.
- */
 namespace egt
 {
 inline namespace v1
