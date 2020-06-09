@@ -409,10 +409,26 @@ if test "x${have_cairo}" = xyes; then
   fi
 fi
 
-AX_PKG_CHECK_MODULES2(fontconfig, [], [fontconfig], [], [AC_MSG_ERROR([
-     fontconfig is a hard dependency, but a sufficient version was not found.])])
-LIBEGT_EXTRA_CXXFLAGS="${fontconfig_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-LIBEGT_EXTRA_LDFLAGS="${fontconfig_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+# Need to test for
+# #define CAIRO_HAS_FC_FONT 1
+# #define CAIRO_HAS_FT_FONT 1
+
+AC_ARG_WITH([fontconfig],
+    AS_HELP_STRING([--without-fontconfig], [Ignore presence of fontconfig and disable it]),
+    [with_fontconfig=$withval],
+    [with_fontconfig=auto])
+AS_IF([test "x$with_fontconfig" != "xno"],[
+   AX_PKG_CHECK_MODULES2(fontconfig, [], [fontconfig], [have_fontconfig=yes], [have_fontconfig=no])
+   if test "x${have_fontconfig}" = xyes; then
+      AC_DEFINE(HAVE_FONTCONFIG, 1, [Have fontconfig support])
+      LIBEGT_EXTRA_CXXFLAGS="${fontconfig_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${fontconfig_LIBS} -ludev ${LIBEGT_EXTRA_LDFLAGS}"
+   fi
+])
+if test "x$with_fontconfig" = xyes && test "x${have_fontconfig}" != xyes; then
+   AC_MSG_FAILURE([--with-fontconfig was given, but fontconfig not found])
+fi
+AM_CONDITIONAL([HAVE_FONTCONFIG], [test "x${have_fontconfig}" = xyes])
 
 AC_ARG_WITH([plplot],
     AS_HELP_STRING([--without-plplot], [Ignore presence of plplot and disable it]),
@@ -778,4 +794,5 @@ echo "  C++17 Filesystem       ${have_libstdcppfs:-no}"
 echo "  ALSA Sound             ${have_alsa:-no}"
 echo "  sndfile                ${have_sndfile:-no}"
 echo "  plplot                 ${have_plplot:-no}"
+echo "  Fontconfig             ${have_fontconfig:-no}"
 echo

@@ -6,6 +6,7 @@
 #include "egt/canvas.h"
 #include "egt/detail/enum.h"
 #include "egt/font.h"
+#include "egt/respath.h"
 #include "egt/serialize.h"
 #include <cairo-ft.h>
 #include <cassert>
@@ -24,8 +25,68 @@ constexpr Font::Weight Font::DEFAULT_WEIGHT;
 constexpr Font::Size Font::DEFAULT_SIZE;
 constexpr Font::Slant Font::DEFAULT_SLANT;
 
+static shared_cairo_scaled_font_t create_ft_scaled_font(cairo_t* cr, const char* path, const Font& font)
+{
+    SPDLOG_DEBUG("allocating font using FreeType: {}", font.face());
+
+    FT_Library value;
+    FT_Error status = FT_Init_FreeType(&value);
+    if (status != 0)
+    {
+        spdlog::error("error initializing FreeType library");
+        return nullptr;
+    }
+
+    FT_Face face;
+    status = FT_New_Face(value, path, 0, &face);
+    if (status != 0)
+    {
+        spdlog::error("error opening font {}", path);
+        return nullptr;
+    }
+
+    std::unique_ptr<cairo_font_face_t, decltype(cairo_font_face_destroy)*>
+    font_face(cairo_ft_font_face_create_for_ft_face(face, FT_LOAD_NO_HINTING | FT_LOAD_NO_BITMAP),
+              cairo_font_face_destroy);
+
+    static const cairo_user_data_key_t key{};
+    auto s = cairo_font_face_set_user_data(font_face.get(), &key,
+                                           face, reinterpret_cast<cairo_destroy_func_t>(FT_Done_Face));
+    if (s)
+    {
+        spdlog::error("error creating cairo font face from FreeType font {}", font.face());
+        return nullptr;
+    }
+
+    std::unique_ptr<cairo_font_options_t, decltype(cairo_font_options_destroy)*>
+    font_options(cairo_font_options_create(), cairo_font_options_destroy);
+    cairo_get_font_options(cr, font_options.get());
+    cairo_font_options_set_hint_style(font_options.get(), CAIRO_HINT_STYLE_NONE);
+    cairo_font_options_set_hint_metrics(font_options.get(), CAIRO_HINT_METRICS_OFF);
+
+    cairo_matrix_t size_matrix;
+    cairo_matrix_t identity_matrix;
+    cairo_matrix_init_scale(&size_matrix, font.size(), font.size());
+    cairo_matrix_init_identity(&identity_matrix);
+
+    shared_cairo_scaled_font_t scaled_font(cairo_scaled_font_create(font_face.get(),
+                                           &size_matrix,
+                                           &identity_matrix,
+                                           font_options.get()),
+                                           cairo_scaled_font_destroy);
+
+    s = cairo_scaled_font_status(scaled_font.get());
+    if (s)
+        return nullptr;
+
+    return scaled_font;
+}
+
+#if CAIRO_HAS_FC_FONT
 static shared_cairo_scaled_font_t create_scaled_font(cairo_t* cr, const Font& font)
 {
+    SPDLOG_DEBUG("allocating font using Fontconfig: {}", font.face());
+
     std::unique_ptr<cairo_font_options_t, decltype(cairo_font_options_destroy)*>
     font_options(cairo_font_options_create(), cairo_font_options_destroy);
     cairo_get_font_options(cr, font_options.get());
@@ -99,6 +160,7 @@ static shared_cairo_scaled_font_t create_scaled_font(cairo_t* cr, const Font& fo
 
     return scaled_font;
 }
+#endif
 
 // NOLINTNEXTLINE(modernize-pass-by-value)
 Font::Font(const std::string& face)
@@ -212,7 +274,35 @@ struct FontCache
 
         Canvas canvas(Size(100, 100));
         auto cr = canvas.context();
-        auto scaled_font = create_scaled_font(cr.get(), font);
+
+        shared_cairo_scaled_font_t scaled_font;
+
+        std::string path;
+        auto type = detail::resolve_path(font.face(), path);
+
+        switch (type)
+        {
+        case detail::SchemeType::filesystem:
+        {
+            scaled_font = create_ft_scaled_font(cr.get(), path.c_str(), font);
+            break;
+        }
+        case detail::SchemeType::unknown:
+#if CAIRO_HAS_FC_FONT
+        {
+            scaled_font = create_scaled_font(cr.get(), font);
+            break;
+        }
+#endif
+        case detail::SchemeType::resource:
+        case detail::SchemeType::network:
+        default:
+        {
+            throw std::runtime_error("unsupported uri: " + font.face());
+            break;
+        }
+        }
+
         if (scaled_font)
             cache.insert(std::make_pair(font, scaled_font));
         return scaled_font;
