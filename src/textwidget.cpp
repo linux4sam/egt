@@ -72,12 +72,44 @@ Font TextWidget::scale_font(const Size& target, const std::string& text, const F
     return nfont;
 }
 
+struct SizeCache
+{
+    struct SizeItem
+    {
+        std::string text;
+        Font font;
+    };
+
+    std::vector<std::pair<SizeItem, Size>>::iterator find(const std::string& text, const Font& font)
+    {
+        for (auto i = cache.begin(); i != cache.end(); ++i)
+        {
+            if (i->first.text == text && i->first.font == font)
+                return i;
+        }
+
+        return cache.end();
+    }
+
+    std::vector<std::pair<SizeItem, Size>> cache;
+};
+
+static SizeCache size_cache;
+
 Size TextWidget::text_size(const std::string& text) const
 {
+    auto i = size_cache.find(text, this->font());
+    if (i != size_cache.cache.end())
+        return i->second;
+
     Canvas canvas(Size(100, 100));
     Painter painter(canvas.context());
     painter.set(this->font());
-    return painter.font_size(text);
+
+    auto size = painter.font_size(text);
+    if (text.size() < 1024)
+        size_cache.cache.emplace_back(std::make_pair(SizeCache::SizeItem{text, this->font()}, size));
+    return size;
 }
 
 void TextWidget::serialize(Serializer& serializer) const
