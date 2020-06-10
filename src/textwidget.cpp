@@ -136,6 +136,8 @@ void TextWidget::serialize(Serializer& serializer) const
     Widget::serialize(serializer);
     if (!text().empty())
         serializer.add_property("text", text());
+    if (!text_align().empty())
+        serializer.add_property("text_align", text_align());
 }
 
 void TextWidget::deserialize(const std::string& name, const std::string& value,
@@ -143,6 +145,8 @@ void TextWidget::deserialize(const std::string& name, const std::string& value,
 {
     if (name == "text")
         text(value);
+    else if (name == "text_align")
+        text_align(AlignFlags(value));
     else
         Widget::deserialize(name, value, attrs);
 }
