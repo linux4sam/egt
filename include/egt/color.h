@@ -148,7 +148,7 @@ public:
     }
 
     /// Create a Color from a 16 bit pixel representation
-    static constexpr Color pixel16(uint16_t c)
+    EGT_NODISCARD static constexpr Color pixel16(uint16_t c)
     {
         const uint16_t b = (c) & 0x1fu;
         const uint16_t g = (c >> 5u) & 0x3fu;
@@ -167,7 +167,7 @@ public:
     }
 
     /// Create a Color from a 24 bit pixel representation
-    static constexpr Color pixel24(RGBAType c)
+    EGT_NODISCARD static constexpr Color pixel24(RGBAType c)
     {
         return Color((c >> 16u) & 0xffu,
                      (c >> 8u) & 0xffu,
@@ -185,7 +185,7 @@ public:
     }
 
     /// Create a Color from a 24 bit pixel representation
-    static constexpr Color pixel32(RGBAType c)
+    EGT_NODISCARD static constexpr Color pixel32(RGBAType c)
     {
         return Color((c >> 16u) & 0xffu,
                      (c >> 8u) & 0xffu,
@@ -234,7 +234,7 @@ public:
      * @param[in] c RGB value.
      * @param[in] alpha Alpha component in range 0 - 255.
      */
-    static constexpr Color rgb(RGBType c, ComponentType alpha = 255) noexcept
+    EGT_NODISCARD static constexpr Color rgb(RGBType c, ComponentType alpha = 255) noexcept
     {
         return Color(c << 8u | alpha);
     }
@@ -247,7 +247,7 @@ public:
      * @param[in] b Component value as a float from 0.0 to 1.0.
      * @param[in] a Component value as a float from 0.0 to 1.0.
      */
-    static constexpr Color rgbaf(float r, float g, float b, float a = 1.0)
+    EGT_NODISCARD static constexpr Color rgbaf(float r, float g, float b, float a = 1.0)
     {
         Color result;
         result.redf(r);
@@ -269,7 +269,7 @@ public:
      * auto b = Color::css("0074D9");
      * @endcode
      */
-    static Color css(const std::string& hex);
+    EGT_NODISCARD static Color css(const std::string& hex);
 
     /**
      * Return a string hex representation of the color.
@@ -284,7 +284,7 @@ public:
      * @param[in] v Value component in range 0 - 1.
      * @param[in] alpha Alpha component in range 0 - 1.
      */
-    static Color hsvf(float h, float s, float v, float alpha = 1.0);
+    EGT_NODISCARD static Color hsvf(float h, float s, float v, float alpha = 1.0);
 
     /**
      * Create a color from HSL values.
@@ -294,7 +294,7 @@ public:
      * @param[in] l Lightness component in range 0 - 1.
      * @param[in] alpha Alpha component in range 0 - 1.
      */
-    static Color hslf(float h, float s, float l, float alpha = 1.0);
+    EGT_NODISCARD static Color hslf(float h, float s, float l, float alpha = 1.0);
 
     /**
      * Create a shade (darker) color based off this color given a factor.
