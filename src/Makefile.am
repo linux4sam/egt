@@ -170,6 +170,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/embed.h \
 ../include/egt/event.h \
 ../include/egt/eventloop.h \
+../include/egt/fixedvector.h \
 ../include/egt/flags.h \
 ../include/egt/flagsbase.h \
 ../include/egt/font.h \
