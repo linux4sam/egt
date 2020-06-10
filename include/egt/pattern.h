@@ -47,17 +47,26 @@ public:
 
     Pattern() noexcept = default;
 
+    Pattern(const Pattern& rhs);
+    Pattern(Pattern&& rhs) noexcept;
+    Pattern& operator=(const Pattern& rhs);
+    Pattern& operator=(Pattern&& rhs) noexcept;
+
+    ~Pattern() noexcept;
+
     // cppcheck-suppress noExplicitConstructor
     // NOLINTNEXTLINE(hicpp-explicit-conversions, google-explicit-constructor)
-    Pattern(const Color& color);
+    constexpr Pattern(const Color& color) noexcept
+        : m_color(color)
+    {}
 
-    explicit Pattern(Type type, StepArray steps = {});
+    explicit Pattern(Type type, const StepArray& steps = {});
 
-    Pattern(StepArray steps,
+    Pattern(const StepArray& steps,
             const Point& start,
             const Point& end);
 
-    Pattern(StepArray steps,
+    Pattern(const StepArray& steps,
             const Point& start,
             float start_radius,
             const Point& end,
@@ -67,7 +76,7 @@ public:
      * Get the first color of the pattern.
      */
     // NOLINTNEXTLINE(hicpp-explicit-conversions, google-explicit-constructor)
-    operator Color() const
+    constexpr operator Color() const
     {
         return color();
     }
@@ -75,12 +84,18 @@ public:
     /**
      * Get the first color of the pattern.
      */
-    Color color();
+    constexpr Color color()
+    {
+        return m_color;
+    }
 
     /**
      * Get the first color of the pattern.
      */
-    EGT_NODISCARD const Color& color() const;
+    constexpr const Color& color() const
+    {
+        return m_color;
+    }
 
     /**
      * Add a step to the gradient.
@@ -104,13 +119,13 @@ public:
                 const Point& end, float end_radius);
 
     /// Get the starting point of the pattern.
-    EGT_NODISCARD Point starting() const { return m_start; }
+    EGT_NODISCARD Point starting() const;
     /// Set the starting point of the pattern.
-    EGT_NODISCARD float starting_radius() const { return m_start_radius; }
+    EGT_NODISCARD float starting_radius() const;
     /// Get the ending  point of the pattern.
-    EGT_NODISCARD Point ending() const { return m_end; }
+    EGT_NODISCARD Point ending() const;
     /// Set the ending  point of the pattern.
-    EGT_NODISCARD float ending_radius() const { return m_end_radius; }
+    EGT_NODISCARD float ending_radius() const;
 
     /// Get all of the steps of the pattern
     EGT_NODISCARD const StepArray& steps() const;
@@ -136,18 +151,16 @@ protected:
         return (a.first < b.first);
     }
 
-    /// Steps of the pattern
-    StepArray m_steps;
     /// Type of the pattern.
     Type m_type{Type::solid};
-    /// Starting point of the pattern.
-    Point m_start;
-    /// Starting radius of the pattern.
-    float m_start_radius{0};
-    /// Ending point of the pattern.
-    Point m_end;
-    /// Ending radius of the pattern.
-    float m_end_radius{0};
+
+    /// Solid color of the pattern
+    Color m_color;
+
+    struct PatternImpl;
+    /// Implementation details for non-solid color patterns
+    PatternImpl* m_impl{nullptr};
+
     /// Internal pattern representation.
     mutable shared_cairo_pattern_t m_pattern;
 };
