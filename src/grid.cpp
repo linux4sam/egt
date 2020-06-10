@@ -368,8 +368,8 @@ void StaticGrid::serialize(Serializer& serializer) const
 {
     serializer.add_property("grid_flags", m_grid_flags.to_string());
     serializer.add_property("column_priority", m_column_priority);
-    serializer.add_property("n_col", n_col());
-    serializer.add_property("n_row", n_row());
+    serializer.add_property("n_col", static_cast<unsigned int>(n_col()));
+    serializer.add_property("n_row", static_cast<unsigned int>(n_row()));
 
     Frame::serialize(serializer);
 }
