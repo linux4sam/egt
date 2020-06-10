@@ -108,7 +108,7 @@ class InputKeyboard
 {
 public:
 
-    virtual uint32_t on_key(uint32_t key, EventId event)
+    uint32_t on_key(uint32_t key, EventId event)
     {
         // delayed allocation of implementation on first use
         allocate();
