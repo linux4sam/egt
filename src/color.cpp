@@ -18,13 +18,6 @@ namespace egt
 inline namespace v1
 {
 
-Color Color::css(const std::string& hex)
-{
-    std::string str = hex;
-    str.erase(std::remove(str.begin(), str.end(), '#'), str.end());
-    return Color((std::stoi(str, nullptr, 16) << 8) | 0xff);
-}
-
 std::string Color::hex() const
 {
     const RGBAType value = ((red() & 0xff) << 24) |

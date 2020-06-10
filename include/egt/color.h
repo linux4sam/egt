@@ -16,6 +16,7 @@
 #include <cstdint>
 #include <egt/detail/math.h>
 #include <egt/detail/meta.h>
+#include <egt/detail/string.h>
 #include <initializer_list>
 #include <iosfwd>
 #include <map>
@@ -67,7 +68,6 @@ public:
         (c >> 16u) & 0xffu,
         (c >> 8u) & 0xffu,
         c & 0xffu
-
     }
     {}
 
@@ -269,7 +269,15 @@ public:
      * auto b = Color::css("0074D9");
      * @endcode
      */
-    EGT_NODISCARD static Color css(const std::string& hex);
+    EGT_NODISCARD static Color css(const std::string& hex)
+    {
+        return css(hex.c_str());
+    }
+
+    EGT_NODISCARD constexpr static Color css(const char* hex)
+    {
+        return Color((detail::hextoul(hex) << 8) | 0xff);
+    }
 
     /**
      * Return a string hex representation of the color.

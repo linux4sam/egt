@@ -128,6 +128,38 @@ inline std::string to_string(const bool& x)
  */
 EGT_API bool from_string(const std::string& x);
 
+/**
+ * Like, but not the same as strtoul().
+ *
+ * The idea here is a constexpr function to convert a character string to an
+ * integer without a whole lot of error checking.
+ */
+constexpr unsigned int hextoul(const char* str, unsigned int base = 16)
+{
+    unsigned int result = 0;
+    auto s = str;
+
+    while (*s == '#' || *s == ' ' || *s == '\t' || *s == '\n' || *s == '\v' || *s == '\f' || *s == '\r')
+        s++;
+
+    while (*s)
+    {
+        unsigned int c = *s++;
+        if (c >= '0' && c <= '9')
+            c -= '0';
+        else if (c >= 'A' && c <= 'F')
+            c -= 'A' - 10;
+        else if (c >= 'a' && c <= 'f')
+            c -= 'a' - 10;
+        else
+            break;
+        result *= base;
+        result += c;
+    }
+
+    return result;
+}
+
 }
 }
 }
