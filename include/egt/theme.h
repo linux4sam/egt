@@ -186,7 +186,7 @@ public:
     /// Border flags
     using BorderFlags = Flags<BorderFlag>;
 
-    Theme() = default;
+    Theme();
 
     EGT_OPS_MOVE(Theme);
     Theme& operator=(const Theme&) = delete;

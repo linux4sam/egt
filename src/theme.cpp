@@ -43,21 +43,20 @@ void global_theme(std::shared_ptr<Theme> theme)
     }
 }
 
-void Theme::init_palette()
+static Pattern pattern(const Color& color)
 {
-    const auto pattern = [](const Color & color)
+    return Pattern(Pattern::Type::linear,
     {
-        const Pattern patt(Pattern::Type::linear,
-        {
-            {0, color},
-            {0.43, color.shade(.1)},
-            {0.5, color.shade(.15)},
-            {1.0, color.shade(.18)},
-        });
-        return patt;
-    };
+        {0, color},
+        {0.43, color.shade(.1)},
+        {0.5, color.shade(.15)},
+        {1.0, color.shade(.18)},
+    });
+}
 
-    m_palette =
+Theme::Theme()
+    : m_palette
+{
     {
         {
             Palette::GroupId::normal, {
@@ -112,7 +111,13 @@ void Theme::init_palette()
                 {Palette::ColorId::label_text, Palette::black},
             }
         }
-    };
+    }
+}
+{}
+
+void Theme::init_palette()
+{
+
 }
 
 void Theme::init_draw()

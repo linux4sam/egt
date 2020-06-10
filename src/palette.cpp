@@ -16,7 +16,24 @@ namespace egt
 inline namespace v1
 {
 
-Palette& Palette::operator=(const ColorArray& colors)
+namespace detail
+{
+// constexpr version of std::find()
+template<class T, class Key>
+constexpr T find(T begin, T end, const Key& first)
+{
+    while (begin != end)
+    {
+        if (begin->first == first)
+            return begin;
+        ++begin;
+    }
+
+    return end;
+}
+}
+
+Palette& Palette::operator=(const PatternArray& colors)
 {
     m_colors = colors;
     return *this;
@@ -24,10 +41,10 @@ Palette& Palette::operator=(const ColorArray& colors)
 
 const Pattern& Palette::color(ColorId id, GroupId group) const
 {
-    const auto g = m_colors.find(group);
+    const auto g = detail::find(m_colors.begin(), m_colors.end(), group);
     if (g != m_colors.end())
     {
-        const auto c = g->second.find(id);
+        const auto c = detail::find(g->second.begin(), g->second.end(), id);
         if (c != g->second.end())
             return c->second;
     }
@@ -36,22 +53,39 @@ const Pattern& Palette::color(ColorId id, GroupId group) const
                                          group, id));
 }
 
-Palette& Palette::set(ColorId id, GroupId group, const Pattern& color)
+void Palette::set(ColorId id, GroupId group, const Pattern& color)
 {
-    m_colors[group][id] = color;
-    return *this;
+    const auto g = detail::find(m_colors.begin(), m_colors.end(), group);
+    if (g != m_colors.end())
+    {
+        const auto c = detail::find(g->second.begin(), g->second.end(), id);
+        if (c != g->second.end())
+            c->second = color;
+        else
+            g->second.push_back(std::make_pair(id, color));
+    }
+    else
+    {
+        m_colors.push_back();
+        m_colors.back().first = group;
+        m_colors.back().second.emplace_back(id, color);
+    }
 }
 
-Palette& Palette::set(ColorId id, const Pattern& color, GroupId group)
+void Palette::set(ColorId id, const Pattern& color, GroupId group)
 {
-    return set(id, group, color);
+    set(id, group, color);
 }
 
 void Palette::clear(ColorId id, GroupId group)
 {
-    const auto g = m_colors.find(group);
+    const auto g = detail::find(m_colors.begin(), m_colors.end(), group);
     if (g != m_colors.end())
-        g->second.erase(id);
+    {
+        const auto c = detail::find(g->second.begin(), g->second.end(), id);
+        if (c != g->second.end())
+            g->second.erase(c);
+    }
 }
 
 void Palette::clear()
@@ -61,9 +95,9 @@ void Palette::clear()
 
 bool Palette::exists(ColorId id, GroupId group) const
 {
-    auto g = m_colors.find(group);
+    const auto g = detail::find(m_colors.begin(), m_colors.end(), group);
     if (g != m_colors.end())
-        return g->second.find(id) != g->second.end();
+        return detail::find(g->second.begin(), g->second.end(), id) != g->second.end();
 
     return false;
 }

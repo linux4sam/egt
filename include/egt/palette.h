@@ -13,12 +13,13 @@
 
 #include <egt/color.h>
 #include <egt/detail/meta.h>
+#include <egt/fixedvector.h>
 #include <egt/pattern.h>
 #include <egt/serialize.h>
+#include <initializer_list>
 #include <iosfwd>
 #include <memory>
 #include <string>
-#include <unordered_map>
 
 namespace egt
 {
@@ -37,17 +38,6 @@ inline namespace v1
  */
 class EGT_API Palette
 {
-private:
-
-    struct EnumClassHash
-    {
-        template <class T>
-        std::size_t operator()(T t) const
-        {
-            return static_cast<std::size_t>(t);
-        }
-    };
-
 public:
 
     /**
@@ -275,12 +265,16 @@ public:
         label_text,
     };
 
-    using ColorArray = std::unordered_map<GroupId,
-          std::unordered_map<ColorId, Pattern, EnumClassHash>,
-          EnumClassHash>;
+    using PatternArray = FixedVector<std::pair<GroupId,
+          FixedVector<std::pair<ColorId, Pattern>, 10>>, 4>;
 
     Palette() = default;
-    Palette& operator=(const ColorArray& colors);
+
+    constexpr Palette(std::initializer_list<PatternArray::value_type> colors) noexcept
+        : m_colors(colors)
+    {}
+
+    Palette& operator=(const PatternArray& colors);
 
     /**
      * Get a color.
@@ -299,7 +293,7 @@ public:
      * @param color The color or pattern.
      * @return Reference to the Palette instance.
      */
-    Palette& set(ColorId id, GroupId group, const Pattern& color);
+    void set(ColorId id, GroupId group, const Pattern& color);
 
     /**
      * Set a color in a Palette.
@@ -309,7 +303,7 @@ public:
      * @param group Color group.
      * @return Reference to the Palette instance.
      */
-    Palette& set(ColorId id, const Pattern& color, GroupId group = GroupId::normal);
+    void set(ColorId id, const Pattern& color, GroupId group = GroupId::normal);
 
     /**
      * Remove a color from the Palette.
@@ -347,7 +341,7 @@ public:
 protected:
 
     /// Patterns in the palette.
-    ColorArray m_colors;
+    PatternArray m_colors{};
 };
 
 static_assert(detail::rule_of_5<Palette>(), "must fulfill rule of 5");
