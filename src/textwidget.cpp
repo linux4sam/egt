@@ -8,6 +8,7 @@
 #include "egt/painter.h"
 #include "egt/serialize.h"
 #include "egt/textwidget.h"
+#include <deque>
 
 namespace egt
 {
@@ -80,7 +81,7 @@ struct SizeCache
         Font font;
     };
 
-    std::vector<std::pair<SizeItem, Size>>::iterator find(const std::string& text, const Font& font)
+    std::deque<std::pair<SizeItem, Size>>::iterator find(const std::string& text, const Font& font)
     {
         for (auto i = cache.begin(); i != cache.end(); ++i)
         {
@@ -91,7 +92,26 @@ struct SizeCache
         return cache.end();
     }
 
-    std::vector<std::pair<SizeItem, Size>> cache;
+    std::deque<std::pair<SizeItem, Size>>::iterator end()
+    {
+        return cache.end();
+    }
+
+    void add(const std::pair<SizeItem, Size>& item)
+    {
+        static constexpr auto MAX_CACHE_ITEM_SIZE = 1024;
+        if (item.first.text.size() < MAX_CACHE_ITEM_SIZE)
+        {
+            cache.emplace_back(item);
+
+            static constexpr auto MAX_CACHE_ITEMS = 128;
+            while (cache.size() > MAX_CACHE_ITEMS)
+                cache.pop_front();
+        }
+    }
+
+private:
+    std::deque<std::pair<SizeItem, Size>> cache;
 };
 
 static SizeCache size_cache;
@@ -99,7 +119,7 @@ static SizeCache size_cache;
 Size TextWidget::text_size(const std::string& text) const
 {
     auto i = size_cache.find(text, this->font());
-    if (i != size_cache.cache.end())
+    if (i != size_cache.end())
         return i->second;
 
     Canvas canvas(Size(100, 100));
@@ -107,8 +127,7 @@ Size TextWidget::text_size(const std::string& text) const
     painter.set(this->font());
 
     auto size = painter.font_size(text);
-    if (text.size() < 1024)
-        size_cache.cache.emplace_back(std::make_pair(SizeCache::SizeItem{text, this->font()}, size));
+    size_cache.add(std::make_pair(SizeCache::SizeItem{text, this->font()}, size));
     return size;
 }
 
