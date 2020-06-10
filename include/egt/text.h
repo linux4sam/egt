@@ -240,6 +240,22 @@ public:
     void selection(size_t pos, size_t length);
 
     /**
+     * Get the start position of the selection.
+     */
+    EGT_NODISCARD size_t selection_start() const
+    {
+        return m_select_start;
+    }
+
+    /**
+     * Get the length of the selection.
+     */
+    EGT_NODISCARD size_t selection_length() const
+    {
+        return m_select_len;
+    }
+
+    /**
      * Clear any selection.
      *
      * @note This does not delete text, it just clears the selection. To delete

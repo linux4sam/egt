@@ -570,6 +570,10 @@ void TextBox::serialize(Serializer& serializer) const
         serializer.add_property("text_flags", m_text_flags.to_string());
     if (cursor())
         serializer.add_property("cursor", static_cast<unsigned int>(cursor()));
+    if (selection_start())
+        serializer.add_property("selection_start", static_cast<unsigned int>(selection_start()));
+    if (selection_length())
+        serializer.add_property("selection_length", static_cast<unsigned int>(selection_length()));
 }
 
 void TextBox::deserialize(const std::string& name, const std::string& value,
@@ -581,6 +585,10 @@ void TextBox::deserialize(const std::string& name, const std::string& value,
         m_text_flags.from_string(value);
     else if (name == "cursor")
         cursor_set(std::stoul(value));
+    else if (name == "selection_start")
+        selection(std::stoul(value), selection_length());
+    else if (name == "selection_length")
+        selection(selection_start(), std::stoul(value));
     else
         TextWidget::deserialize(name, value, attrs);
 }
