@@ -32,12 +32,6 @@ void Serializer::add_property(const std::string& name, unsigned int value,
     add_property(name, std::to_string(value), attrs);
 }
 
-void Serializer::add_property(const std::string& name, size_t value,
-                              const Attributes& attrs)
-{
-    add_property(name, std::to_string(value), attrs);
-}
-
 void Serializer::add_property(const std::string& name, const AlignFlags& value,
                               const Attributes& attrs)
 {
