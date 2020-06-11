@@ -539,7 +539,7 @@ TEST_P(NoteBookTest, TestWidget)
     else
     {
         EXPECT_NO_THROW(notebook.reset(new egt::Notebook(win, egt::Rect(0, 0, 640, 400))));
-        win.center();
+        EXPECT_NO_THROW(notebook->move_to_center(win.center()));
     }
 
     auto bp = std::make_shared<ButtonPage>();
