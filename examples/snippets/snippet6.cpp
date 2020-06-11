@@ -11,7 +11,7 @@ void register_callback(T)
 {}
 
 /// @[snippet6]
-int main(int argc, const char** argv)
+int main()
 {
     // do something
 

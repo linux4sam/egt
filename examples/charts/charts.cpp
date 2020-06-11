@@ -401,7 +401,7 @@ static std::shared_ptr<egt::HorizontalBoxSizer> create_line_combo(const std::sha
     line_width->on_selected_changed([line_width, chart]()
     {
         auto s = line_width->item_at(line_width->selected());
-        chart->line_width(std::atoi(s.substr(11, 1).c_str()));
+        chart->line_width(strtoul(s.substr(11, 1).c_str(), nullptr, 10));
     });
     line_width->selected(0);
 

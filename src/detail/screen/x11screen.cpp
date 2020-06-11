@@ -26,9 +26,9 @@ namespace detail
 
 struct X11Data
 {
-    Display* display;
-    Drawable window;
-    Atom wmDeleteMessage;
+    Display* display{};
+    Drawable window{};
+    Atom wmDeleteMessage{};
 
     /// Keyboard instance
     InputKeyboard keyboard;
