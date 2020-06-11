@@ -13,14 +13,6 @@ using ::testing::AssertionResult;
 using ::testing::Combine;
 using ::testing::Range;
 
-static int random_item(int start, int end)
-{
-    std::random_device r;
-    std::default_random_engine e {r()};
-    std::uniform_int_distribution<int> dist(start, end);
-    return dist(e);
-}
-
 class CameraWindowTest : public testing::TestWithParam<std::string> {};
 
 TEST_P(CameraWindowTest, CameraWidget)
@@ -32,52 +24,48 @@ TEST_P(CameraWindowTest, CameraWidget)
     egt::Size size(320, 240);
 
     EXPECT_NO_THROW(m_camera.reset(new egt::CameraWindow(size, file)));
-
     if (m_camera)
     {
         EXPECT_NO_THROW(win.add(m_camera));
 
-        bool result = false;
         bool on_error = false;
-        m_camera->on_error([m_camera, &on_error](const std::string & message)
+        std::string error_message;
+        m_camera->on_error([&on_error, &error_message](const std::string & message)
         {
-            if (message.empty() ||
-                (message.find("device removed:") != std::string::npos))
-            {
-                on_error = true;
-            }
+            error_message = message;
+            on_error = true;
         });
 
-        EXPECT_TRUE(result = m_camera->start());
-        if (result)
+        if (m_camera->start())
         {
-            egt::experimental::CPUMonitorUsage tools;
-            egt::PeriodicTimer cputimer(std::chrono::seconds(5));
-            cputimer.on_timeout([m_camera, &tools, &app, &cputimer]()
+            egt::PeriodicTimer cputimer(std::chrono::seconds(1));
+            cputimer.on_timeout([m_camera, &app, &cputimer, &win]()
             {
-                auto p = egt::Point(random_item(1, 480), random_item(1, 240));
-                EXPECT_NO_THROW(m_camera->move(p));
-                EXPECT_EQ(m_camera->point(), p);
-
-                static int quit_count = 0;
-                if (quit_count % 2)
+                static bool scale = true;
+                if (scale)
                 {
-                    EXPECT_NO_THROW(m_camera->scale(1.5, 1.5));
+                    EXPECT_NO_THROW(m_camera->scale(2.5, 2.0));
+                    EXPECT_FLOAT_EQ(m_camera->hscale(), 2.5);
+                    EXPECT_FLOAT_EQ(m_camera->vscale(), 2.0);
+                    scale = false;
                 }
                 else
                 {
                     EXPECT_NO_THROW(m_camera->scale(1.0, 1.0));
+                    EXPECT_FLOAT_EQ(m_camera->hscale(), 1.0);
+                    EXPECT_FLOAT_EQ(m_camera->vscale(), 1.0);
+                    m_camera->move_to_center(win.center());
+                    scale = true;
                 }
 
-                tools.update();
-                EXPECT_LE(static_cast<int>(tools.usage()), 20);
-
-                if (++quit_count >= 10)
+                static int quit_count = 0;
+                if (quit_count > 3)
                 {
                     cputimer.stop();
                     m_camera->stop();
                     EXPECT_NO_THROW(app.quit());
                 }
+                quit_count++;
             });
             cputimer.start();
 
@@ -85,7 +73,12 @@ TEST_P(CameraWindowTest, CameraWidget)
             EXPECT_NO_THROW(win.show());
             EXPECT_NO_THROW(app.run());
 
-
+            EXPECT_FALSE(on_error);
+        }
+        else
+        {
+            if (on_error)
+                FAIL() << error_message;
         }
     }
 }

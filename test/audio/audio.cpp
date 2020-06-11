@@ -12,14 +12,6 @@
 using ::testing::TestWithParam;
 using ::testing::Values;
 
-static int random_item(int start, int end)
-{
-    std::random_device r;
-    std::default_random_engine e {r()};
-    std::uniform_int_distribution<int> dist(start, end);
-    return dist(e);
-}
-
 static bool audio_device()
 {
     std::ifstream infile("/proc/asound/devices");
@@ -54,8 +46,6 @@ TEST_P(AudioPlayerTest, AudioPlayer)
 
     std::string file = GetParam();
 
-    bool on_error = false;
-    bool play = false;
     if (file.empty())
     {
         /**
@@ -69,104 +59,89 @@ TEST_P(AudioPlayerTest, AudioPlayer)
     else
     {
         EXPECT_NO_THROW(m_player.reset(new egt::AudioPlayer(file)));
-
         if (m_player)
         {
-            egt::PeriodicTimer cputimer(std::chrono::seconds(5));
-            m_player->on_error([&cputimer, &app, &on_error](std::string err)
+            egt::PeriodicTimer cputimer(std::chrono::seconds(2));
+            bool on_error = false;
+            std::string error_message;
+            m_player->on_error([&cputimer, &on_error, &error_message](std::string err)
             {
                 on_error = true;
+                error_message = err;
                 if (cputimer.running())
                     cputimer.stop();
-                EXPECT_NO_THROW(app.quit());
             });
 
             if (file.find("concerto.mp3") != std::string::npos)
             {
-                EXPECT_TRUE(play = m_player->play());
-                EXPECT_FALSE(on_error);
-            }
-            else
-            {
-                EXPECT_FALSE(play = m_player->play());
-                EXPECT_TRUE(on_error);
-            }
-
-            m_player->on_eos([&cputimer, &app, &on_error]()
-            {
-                EXPECT_FALSE(on_error);
-                cputimer.stop();
-                EXPECT_NO_THROW(app.quit());
-            });
-
-            m_player->on_state_changed([m_player, &play]()
-            {
-                if (play)
+                m_player->on_eos([&cputimer, &app]()
                 {
-                    EXPECT_TRUE(m_player->playing());
-                }
-                else
+                    if (cputimer.running())
+                        cputimer.stop();
+                    EXPECT_NO_THROW(app.quit());
+                });
+
+                bool state_changed = false;
+                m_player->on_state_changed([&state_changed]()
                 {
-                    EXPECT_FALSE(m_player->playing());
-                }
-            });
+                    state_changed = true;
+                });
 
-            m_player->on_position_changed([&m_player](uint64_t position)
-            {
-                auto d = static_cast<int>(m_player->duration());
-                EXPECT_EQ(d, 865);
-                EXPECT_LE(static_cast<int>(position), d);
-            });
+                bool position = false;
+                m_player->on_position_changed([&position](int64_t pos)
+                {
+                    position = true;
+                });
 
-            /**
-             * This TestCase test below functionality
-             * 1. play and pause
-             * 2. seek audio randomly to 90% of duration.
-             */
-            cputimer.on_timeout([m_player, &play]()
-            {
+                EXPECT_TRUE(m_player->play());
+                if (on_error)
+                    FAIL() << error_message;
+
                 if (m_player->playing())
                 {
                     EXPECT_TRUE(m_player->pause());
-                    play = false;
                 }
-                else
+
+                if (!m_player->playing())
                 {
                     EXPECT_TRUE(m_player->play());
-                    play = true;
                 }
 
-                if (m_player->playing())
+                /**
+                 * This testcase seek audio in steps of 25%.
+                 */
+                cputimer.on_timeout([&m_player]()
                 {
-                    static int count = 0;
-                    float seek = random_item(1, 90) / 100.0;
-                    auto dur = m_player->duration();
-                    if (count <= 3)
+                    if (m_player->playing())
                     {
-                        EXPECT_TRUE(m_player->seek(dur * seek));
+                        static int count = 0;
+                        static float seek = 0.25;
+                        auto dur = m_player->duration();
+                        if (count <= 2)
+                        {
+                            std::cout << " seeking to " << seek << std::endl;
+                            EXPECT_TRUE(m_player->seek(dur * seek));
+                            EXPECT_LE(m_player->position(), (dur * (seek + 0.01)));
+                            seek += 0.25;
+                        }
+                        if (count == 3)
+                        {
+                            EXPECT_TRUE(m_player->seek(dur * 0.998));
+                            EXPECT_LE(m_player->position(), dur);
+                        }
                         count++;
                     }
+                });
+                cputimer.start();
+                EXPECT_NO_THROW(app.run());
 
-                    if (count == 4)
-                    {
-                        EXPECT_TRUE(m_player->seek(dur * 0.98));
-                        count++;
-                    }
-
-                    int volume = random_item(1, 5);
-                    EXPECT_TRUE(m_player->volume(volume));
-                    EXPECT_LE(m_player->volume(), (volume + 1));
-                }
-            });
-            cputimer.start();
-            EXPECT_NO_THROW(app.run());
-
-            if (file.find("concerto.mp3") != std::string::npos)
-            {
                 EXPECT_FALSE(on_error);
+                EXPECT_TRUE(state_changed);
+                EXPECT_TRUE(position);
             }
             else
             {
+                EXPECT_FALSE(m_player->play());
                 EXPECT_TRUE(on_error);
             }
         }
