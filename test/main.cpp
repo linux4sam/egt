@@ -80,6 +80,24 @@ TEST(Color, Basic)
     EXPECT_EQ(c5.green(), 255U);
     EXPECT_FLOAT_EQ(c5.blue(), 127);
     EXPECT_FLOAT_EQ(c5.alpha(), 191);
+
+    egt::Color c6 = egt::Color::css("#112233");
+    EXPECT_EQ(c6.red(), 0x11U);
+    EXPECT_EQ(c6.green(), 0x22U);
+    EXPECT_EQ(c6.blue(), 0x33U);
+    EXPECT_EQ(c6.alpha(), 0xffU);
+
+    egt::Color c7 = egt::Color::css("#aa22ff");
+    EXPECT_EQ(c7.red(), 0xaaU);
+    EXPECT_EQ(c7.green(), 0x22U);
+    EXPECT_EQ(c7.blue(), 0xffU);
+    EXPECT_EQ(c7.alpha(), 0xffU);
+
+    egt::Color c8 = egt::Color::css("aa22ff");
+    EXPECT_EQ(c8.red(), 0xaaU);
+    EXPECT_EQ(c8.green(), 0x22U);
+    EXPECT_EQ(c8.blue(), 0xffU);
+    EXPECT_EQ(c8.alpha(), 0xffU);
 }
 
 TEST(TextBox, Basic)
