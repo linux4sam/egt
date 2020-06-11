@@ -381,8 +381,8 @@ const struct MAP1
 const struct MAP2
 {
     KeySym ch0;
-    unsigned sc;
     KeySym ch1;
+    unsigned sc;
     uint8_t vk;
     bool operator()(const MAP2& m1, const MAP2& m2) const
     {
@@ -395,41 +395,41 @@ const struct MAP2
 } map2[] =
 {
     {
-        0x0023, 0x33, 0x0027,
+        0x0023, 0x0027, 0x33,
         0xBF
     },  // XK_numbersign+BKSL+XK_quoteright: EKEY_OEM_2
     {
-        0x0027, 0x30, 0x0022,
+        0x0027, 0x0022, 0x30,
         0xDE
     },  // XK_quoteright+AC11+XK_quotedbl: EKEY_OEM_7
     {
-        0x0027, 0x31, 0x0022,
+        0x0027, 0x0022, 0x31,
         0xC0
     },  // XK_quoteright+TLDE+XK_quotedbl: EKEY_OEM_3
     {
-        0x0027, 0x31, 0x00B7,
+        0x0027, 0x00B7, 0x31,
         0xDC
     },  // XK_quoteright+TLDE+XK_periodcentered: EKEY_OEM_5
-    {0x0027, 0x33, 0x0000, 0xDC},  // XK_quoteright+BKSL+NoSymbol: EKEY_OEM_5
-    {0x002D, 0x3D, 0x003D, 0xBD},  // XK_minus+AB10+XK_equal: EKEY_OEM_MINUS
-    {0x002F, 0x0C, 0x0033, 0x33},  // XK_slash+AE03+XK_3: EKEY_3
-    {0x002F, 0x0C, 0x003F, 0xBF},  // XK_slash+AE03+XK_question: EKEY_OEM_2
-    {0x002F, 0x13, 0x0030, 0x30},  // XK_slash+AE10+XK_0: EKEY_0
-    {0x002F, 0x13, 0x003F, 0xBF},  // XK_slash+AE10+XK_question: EKEY_OEM_2
-    {0x003D, 0x3D, 0x0025, 0xDF},  // XK_equal+AB10+XK_percent: EKEY_OEM_8
-    {0x003D, 0x3D, 0x002B, 0xBB},  // XK_equal+AB10+XK_plus: EKEY_OEM_PLUS
-    {0x005C, 0x33, 0x007C, 0xDC},  // XK_backslash+BKSL+XK_bar: EKEY_OEM_5
-    {0x0060, 0x31, 0x0000, 0xC0},  // XK_quoteleft+TLDE+NoSymbol: EKEY_OEM_3
-    {0x0060, 0x31, 0x00AC, 0xDF},  // XK_quoteleft+TLDE+XK_notsign: EKEY_OEM_8
-    {0x00A7, 0x31, 0x00B0, 0xBF},  // XK_section+TLDE+XK_degree: EKEY_OEM_2
-    {0x00A7, 0x31, 0x00BD, 0xDC},  // XK_section+TLDE+XK_onehalf: EKEY_OEM_5
-    {0x00E0, 0x30, 0x00B0, 0xDE},  // XK_agrave+AC11+XK_degree: EKEY_OEM_7
-    {0x00E0, 0x30, 0x00E4, 0xDC},  // XK_agrave+AC11+XK_adiaeresis: EKEY_OEM_5
-    {0x00E4, 0x30, 0x00E0, 0xDC},  // XK_adiaeresis+AC11+XK_agrave: EKEY_OEM_5
-    {0x00E9, 0x2F, 0x00C9, 0xBA},  // XK_eacute+AC10+XK_Eacute: EKEY_OEM_1
-    {0x00E9, 0x2F, 0x00F6, 0xDE},  // XK_eacute+AC10+XK_odiaeresis: EKEY_OEM_7
-    {0x00F6, 0x2F, 0x00E9, 0xDE},  // XK_odiaeresis+AC10+XK_eacute: EKEY_OEM_7
-    {0x00FC, 0x22, 0x00E8, 0xBA},  // XK_udiaeresis+AD11+XK_egrave: EKEY_OEM_1
+    {0x0027, 0x0000, 0x33, 0xDC},  // XK_quoteright+BKSL+NoSymbol: EKEY_OEM_5
+    {0x002D, 0x003D, 0x3D, 0xBD},  // XK_minus+AB10+XK_equal: EKEY_OEM_MINUS
+    {0x002F, 0x0033, 0x0C, 0x33},  // XK_slash+AE03+XK_3: EKEY_3
+    {0x002F, 0x003F, 0x0C, 0xBF},  // XK_slash+AE03+XK_question: EKEY_OEM_2
+    {0x002F, 0x0030, 0x13, 0x30},  // XK_slash+AE10+XK_0: EKEY_0
+    {0x002F, 0x003F, 0x13, 0xBF},  // XK_slash+AE10+XK_question: EKEY_OEM_2
+    {0x003D, 0x0025, 0x3D, 0xDF},  // XK_equal+AB10+XK_percent: EKEY_OEM_8
+    {0x003D, 0x002B, 0x3D, 0xBB},  // XK_equal+AB10+XK_plus: EKEY_OEM_PLUS
+    {0x005C, 0x007C, 0x33, 0xDC},  // XK_backslash+BKSL+XK_bar: EKEY_OEM_5
+    {0x0060, 0x0000, 0x31, 0xC0},  // XK_quoteleft+TLDE+NoSymbol: EKEY_OEM_3
+    {0x0060, 0x00AC, 0x31, 0xDF},  // XK_quoteleft+TLDE+XK_notsign: EKEY_OEM_8
+    {0x00A7, 0x00B0, 0x31, 0xBF},  // XK_section+TLDE+XK_degree: EKEY_OEM_2
+    {0x00A7, 0x00BD, 0x31, 0xDC},  // XK_section+TLDE+XK_onehalf: EKEY_OEM_5
+    {0x00E0, 0x00B0, 0x30, 0xDE},  // XK_agrave+AC11+XK_degree: EKEY_OEM_7
+    {0x00E0, 0x00E4, 0x30, 0xDC},  // XK_agrave+AC11+XK_adiaeresis: EKEY_OEM_5
+    {0x00E4, 0x00E0, 0x30, 0xDC},  // XK_adiaeresis+AC11+XK_agrave: EKEY_OEM_5
+    {0x00E9, 0x00C9, 0x2F, 0xBA},  // XK_eacute+AC10+XK_Eacute: EKEY_OEM_1
+    {0x00E9, 0x00F6, 0x2F, 0xDE},  // XK_eacute+AC10+XK_odiaeresis: EKEY_OEM_7
+    {0x00F6, 0x00E9, 0x2F, 0xDE},  // XK_odiaeresis+AC10+XK_eacute: EKEY_OEM_7
+    {0x00FC, 0x00E8, 0x22, 0xBA},  // XK_udiaeresis+AD11+XK_egrave: EKEY_OEM_1
 };
 const struct MAP3
 {
@@ -740,7 +740,7 @@ KeyboardCode KeyboardCodeFromXKeyEvent(const XEvent* xev)
         KeySym keysym_shift = NoSymbol;
         xkey->state |= ShiftMask;
         XLookupString(xkey, nullptr, 0, &keysym_shift, nullptr);
-        MAP2 key2 = {keysym & 0xFFFF, xkey->keycode, keysym_shift & 0xFFFF, 0};
+        MAP2 key2 = {keysym & 0xFFFF, keysym_shift & 0xFFFF, xkey->keycode, 0};
         keycode = FindVK(key2, map2, base::size(map2));
         if (keycode != EKEY_UNKNOWN)
             return keycode;
@@ -1069,6 +1069,8 @@ KeyboardCode KeyboardCodeFromXKeysym(unsigned int keysym)
         return EKEY_KBD_BRIGHTNESS_UP;
         // TODO(sad): some keycodes are still missing.
 #endif
+    default:
+        break;
     }
     SPDLOG_DEBUG("Unknown keysym: {}", keysym);
     return EKEY_UNKNOWN;
