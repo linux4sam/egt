@@ -492,6 +492,167 @@ TEST(Network, URI)
     EXPECT_EQ(uri1.icon_size(), "16");
 }
 
+class Align : public ::testing::Test
+{
+protected:
+    using WidgetType = egt::Frame;
+
+    void SetUp() override
+    {
+        top.show();
+        window.show();
+    }
+
+    // void TearDown() override {}
+
+    egt::Application app;
+    egt::TopWindow top{};
+    egt::Window window{top, egt::Size(400, 400)};
+};
+
+TEST_F(Align, TopLeft)
+{
+    WidgetType widget(window, egt::Size(100, 100));
+    widget.align(egt::AlignFlag::top | egt::AlignFlag::left);
+    EXPECT_EQ(widget.box().top_left(), egt::Point(0, 0));
+    EXPECT_EQ(widget.box().size(), egt::Size(100, 100));
+}
+
+TEST_F(Align, TopCenter)
+{
+    WidgetType widget(window, egt::Size(100, 100));
+    widget.align(egt::AlignFlag::top | egt::AlignFlag::center);
+    EXPECT_EQ(widget.box().top_left(), egt::Point(400 / 2 - 100 / 2, 0));
+    EXPECT_EQ(widget.box().size(), egt::Size(100, 100));
+}
+
+TEST_F(Align, TopRight)
+{
+    WidgetType widget(window, egt::Size(100, 100));
+    widget.align(egt::AlignFlag::top | egt::AlignFlag::right);
+    EXPECT_EQ(widget.box().top_left(), egt::Point(400 - 100, 0));
+    EXPECT_EQ(widget.box().size(), egt::Size(100, 100));
+}
+
+TEST_F(Align, RightCenter)
+{
+    WidgetType widget(window, egt::Size(100, 100));
+    widget.align(egt::AlignFlag::right | egt::AlignFlag::center);
+    EXPECT_EQ(widget.box().top_left(), egt::Point(400 - 100, 400 / 2 - 100 / 2));
+    EXPECT_EQ(widget.box().size(), egt::Size(100, 100));
+}
+
+TEST_F(Align, BottomRight)
+{
+    WidgetType widget(window, egt::Size(100, 100));
+    widget.align(egt::AlignFlag::bottom | egt::AlignFlag::right);
+    EXPECT_EQ(widget.box().top_left(), egt::Point(400 - 100, 400 - 100));
+    EXPECT_EQ(widget.box().size(), egt::Size(100, 100));
+}
+
+TEST_F(Align, BottomCenter)
+{
+    WidgetType widget(window, egt::Size(100, 100));
+    widget.align(egt::AlignFlag::bottom | egt::AlignFlag::center);
+    EXPECT_EQ(widget.box().top_left(), egt::Point(400 / 2 - 100 / 2, 400 - 100));
+    EXPECT_EQ(widget.box().size(), egt::Size(100, 100));
+}
+
+TEST_F(Align, BottomLeft)
+{
+    WidgetType widget(window, egt::Size(100, 100));
+    widget.align(egt::AlignFlag::bottom | egt::AlignFlag::left);
+    EXPECT_EQ(widget.box().top_left(), egt::Point(0, 400 - 100));
+    EXPECT_EQ(widget.box().size(), egt::Size(100, 100));
+}
+
+TEST_F(Align, LeftCenter)
+{
+    WidgetType widget(window, egt::Size(100, 100));
+    widget.align(egt::AlignFlag::center | egt::AlignFlag::left);
+    EXPECT_EQ(widget.box().top_left(), egt::Point(0, 400 / 2 - 100 / 2));
+    EXPECT_EQ(widget.box().size(), egt::Size(100, 100));
+}
+
+TEST_F(Align, Center)
+{
+    WidgetType widget(window, egt::Size(100, 100));
+    widget.align(egt::AlignFlag::center);
+    EXPECT_EQ(widget.box().top_left(), egt::Point(400 / 2 - 100 / 2, 400 / 2 - 100 / 2));
+    EXPECT_EQ(widget.box().size(), egt::Size(100, 100));
+}
+
+TEST_F(Align, ExpandVertical)
+{
+    WidgetType widget(window, egt::Size(100, 100));
+    widget.align(egt::AlignFlag::center | egt::AlignFlag::expand_vertical);
+    EXPECT_EQ(widget.box().top_left(), egt::Point(400 / 2 - 100 / 2, 0));
+    EXPECT_EQ(widget.box().size(), egt::Size(100, 400));
+}
+
+TEST_F(Align, ExpandHorizontal)
+{
+    WidgetType widget(window, egt::Size(100, 100));
+    widget.align(egt::AlignFlag::center | egt::AlignFlag::expand_horizontal);
+    EXPECT_EQ(widget.box().top_left(), egt::Point(0, 400 / 2 - 100 / 2));
+    EXPECT_EQ(widget.box().size(), egt::Size(400, 100));
+}
+
+TEST_F(Align, Expand)
+{
+    WidgetType widget(window, egt::Size(100, 100));
+    widget.align(egt::AlignFlag::expand);
+    EXPECT_EQ(widget.box().top_left(), egt::Point(0, 0));
+    EXPECT_EQ(widget.box().size(), egt::Size(400, 400));
+}
+
+class SizerLayout : public ::testing::Test
+{
+protected:
+
+    void SetUp() override
+    {
+        top.show();
+        window.show();
+    }
+
+    // void TearDown() override {}
+
+    egt::Application app;
+    egt::TopWindow top{};
+    egt::Window window{top, egt::Size(400, 400)};
+};
+
+TEST_F(SizerLayout, Default)
+{
+    egt::BoxSizer vsizer(window, egt::Orientation::vertical);
+
+    egt::Frame widget(vsizer, egt::Size(100, 100));
+    EXPECT_EQ(widget.display_origin(), egt::DisplayPoint(0, 0));
+    EXPECT_EQ(widget.box().size(), egt::Size(100, 100));
+}
+
+TEST_F(SizerLayout, SizerCenter)
+{
+    egt::BoxSizer vsizer(window, egt::Orientation::vertical);
+    vsizer.align(egt::AlignFlag::center);
+
+    egt::Frame widget(vsizer, egt::Size(100, 100));
+    EXPECT_EQ(widget.display_origin(), egt::DisplayPoint(400 / 2 - 100 / 2, 400 / 2 - 100 / 2));
+    EXPECT_EQ(widget.box().size(), egt::Size(100, 100));
+}
+
+TEST_F(SizerLayout, ChildCenter)
+{
+    egt::BoxSizer vsizer(window, egt::Orientation::vertical);
+    vsizer.align(egt::AlignFlag::expand);
+
+    egt::Frame widget(vsizer, egt::Size(100, 100));
+    EXPECT_EQ(widget.display_origin(), egt::DisplayPoint(400 / 2 - 100 / 2, 400 / 2 - 100 / 2));
+    EXPECT_EQ(widget.box().size(), egt::Size(100, 100));
+}
+
+
 int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
