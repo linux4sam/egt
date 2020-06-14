@@ -49,7 +49,7 @@ int main(int argc, char** argv)
         {"0", ".", "=", "+"},
     };
 
-    std::vector<std::vector<std::pair<egt::Palette::ColorId, egt::Color>>> colors =
+    const std::vector<std::vector<std::pair<egt::Palette::ColorId, egt::Color>>> colors =
     {
         {
             std::make_pair(egt::Palette::ColorId::button_bg, egt::Palette::gray),
