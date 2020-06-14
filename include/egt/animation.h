@@ -317,7 +317,7 @@ public:
      * @param animation The animation.
      */
     template<class T>
-    void add(std::shared_ptr<T> animation)
+    void add(const std::shared_ptr<T>& animation)
     {
         add(std::dynamic_pointer_cast<detail::AnimationBase>(animation));
     }
@@ -333,7 +333,7 @@ public:
             return;
 
         const auto i = std::find_if(m_animations.begin(), m_animations.end(),
-                                    [animation](const auto & ptr)
+                                    [&animation](const auto & ptr)
         {
             return ptr.get() == animation.get();
         });
@@ -342,11 +342,16 @@ public:
         {
             m_animations.push_back(animation);
 
-            animation->add_callback([this, animation](EasingScalar)
+            auto weak_animation = std::weak_ptr<detail::AnimationBase>(animation);
+            animation->add_callback([this, weak_animation](EasingScalar)
             {
-                // when the animation ever completes, we go next
-                if (!animation->running())
-                    next();
+                auto animation = weak_animation.lock();
+                if (animation)
+                {
+                    // when the animation ever completes, we go next
+                    if (!animation->running())
+                        next();
+                }
             });
         }
     }

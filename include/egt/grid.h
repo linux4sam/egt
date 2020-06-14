@@ -106,7 +106,7 @@ public:
      *
      * @param widget The widget to add, or nullptr.
      */
-    void add(std::shared_ptr<Widget> widget) override;
+    void add(const std::shared_ptr<Widget>& widget) override;
 
     /**
      * Add a widget to the grid into a specific cell.
@@ -132,7 +132,8 @@ public:
         // Nasty, but it gets the job done.  If a widget is passed in as a
         // reference, we don't own it, so create a "pointless" shared_ptr that
         // will not delete it.
-        add(std::shared_ptr<Widget>(&widget, [](Widget*) {}), column, row);
+        auto w = std::shared_ptr<Widget>(&widget, [](Widget*) {});
+        add(w, column, row);
     }
 
     /**
@@ -160,7 +161,8 @@ public:
         // Nasty, but it gets the job done.  If a widget is passed in as a
         // reference, we don't own it, so create a "pointless" shared_ptr that
         // will not delete it.
-        add(std::shared_ptr<Widget>(&widget, [](Widget*) {}), point);
+        auto w = std::shared_ptr<Widget>(&widget, [](Widget*) {});
+        add(w, point);
     }
 
     /**

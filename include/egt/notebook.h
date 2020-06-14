@@ -94,7 +94,7 @@ public:
 
     using Frame::add;
 
-    void add(std::shared_ptr<Widget> widget) override;
+    void add(const std::shared_ptr<Widget>& widget) override;
 
     void remove(Widget* widget) override;
 

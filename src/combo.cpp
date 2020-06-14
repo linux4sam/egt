@@ -105,7 +105,7 @@ void ComboBoxPopup::show()
     m_list->clear();
     for (const auto& item : m_parent.m_items)
     {
-        const auto p = std::make_shared<StringItem>(item);
+        auto p = std::make_shared<StringItem>(item);
         m_list->add_item(p);
     }
 

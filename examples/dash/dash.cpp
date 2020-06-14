@@ -8,7 +8,7 @@
 #include <memory>
 
 template<class T>
-static auto demo_up_down_animator(std::shared_ptr<T> widget, int min, int max,
+static auto demo_up_down_animator(T* widget, int min, int max,
                                   std::chrono::milliseconds duration = std::chrono::seconds(10),
                                   const egt::EasingFunc& easingin = egt::easing_circular_easein,
                                   const egt::EasingFunc& easingout = egt::easing_circular_easeout)
@@ -49,7 +49,7 @@ static std::shared_ptr<egt::experimental::NeedleLayer> create_needle(egt::experi
     needle->needle_center(needle_point - needle_box.point());
     gauge.add(needle);
 
-    animations.push_back(demo_up_down_animator(needle, min, max, duration, easing));
+    animations.push_back(demo_up_down_animator(needle.get(), min, max, duration, easing));
 
     return needle;
 }

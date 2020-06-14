@@ -150,7 +150,7 @@ Gauge::Gauge(Frame& parent, const Rect& rect, const Widget::Flags& flags) noexce
     parent.add(*this);
 }
 
-void Gauge::add(std::shared_ptr<GaugeLayer>& layer)
+void Gauge::add(const std::shared_ptr<GaugeLayer>& layer)
 {
     if (!layer)
         return;

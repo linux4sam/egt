@@ -34,7 +34,7 @@ Notebook::Notebook(Frame& parent, const Rect& rect) noexcept
     parent.add(*this);
 }
 
-void Notebook::add(std::shared_ptr<Widget> widget)
+void Notebook::add(const std::shared_ptr<Widget>& widget)
 {
     if (!widget)
         return;

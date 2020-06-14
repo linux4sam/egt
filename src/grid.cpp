@@ -156,7 +156,7 @@ void StaticGrid::draw(Painter& painter, const Rect& rect)
     Frame::draw(painter, rect);
 }
 
-void StaticGrid::add(std::shared_ptr<Widget> widget)
+void StaticGrid::add(const std::shared_ptr<Widget>& widget)
 {
     if (!widget)
         return;
@@ -172,7 +172,7 @@ void StaticGrid::add(std::shared_ptr<Widget> widget)
         for (auto& column : m_cells)
         {
             auto i = std::find_if(column.begin(), column.end(),
-                                  [](const std::weak_ptr<Widget>& w)
+                                  [](const auto & w)
             {
                 return w.expired();
             });

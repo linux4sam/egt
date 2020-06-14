@@ -33,13 +33,13 @@ Frame::Frame(Frame& parent, const Rect& rect, const Widget::Flags& flags) noexce
     parent.add(*this);
 }
 
-void Frame::add(std::shared_ptr<Widget> widget)
+void Frame::add(const std::shared_ptr<Widget>& widget)
 {
     if (!widget)
         return;
 
     widget->set_parent(this);
-    m_children.emplace_back(std::move(widget));
+    m_children.emplace_back(widget);
     layout();
 }
 
@@ -49,7 +49,7 @@ bool Frame::is_child(Widget* widget) const
         return false;
 
     auto i = std::find_if(m_children.begin(), m_children.end(),
-                          [widget](const std::shared_ptr<Widget>& ptr)
+                          [widget](const auto & ptr)
     {
         return ptr.get() == widget;
     });
@@ -63,7 +63,7 @@ void Frame::remove(Widget* widget)
         return;
 
     auto i = std::find_if(m_children.begin(), m_children.end(),
-                          [widget](const std::shared_ptr<Widget>& ptr)
+                          [widget](const auto & ptr)
     {
         return ptr.get() == widget;
     });
@@ -328,7 +328,7 @@ void Frame::zorder_top(const Widget* widget)
 size_t Frame::zorder(const Widget* widget) const
 {
     auto i = std::find_if(m_children.begin(), m_children.end(),
-                          [widget](const std::shared_ptr<Widget>& ptr)
+                          [widget](const auto & ptr)
     {
         return ptr.get() == widget;
     });
@@ -456,7 +456,7 @@ void Frame::draw_child(Painter& painter, const Rect& crect, Widget* child)
                 painter.clip();
             }
 
-            detail::code_timer(time_child_draw_enabled(), child->name() + " draw: ", [&]()
+            detail::code_timer(time_child_draw_enabled(), child->name() + " draw: ", [child, &painter, &r]()
             {
                 child->draw(painter, r);
             });
@@ -474,7 +474,7 @@ void Frame::draw_child(Painter& painter, const Rect& crect, Widget* child)
                     painter.clip();
                 }
 
-                detail::code_timer(time_child_draw_enabled(), child->name() + " draw: ", [&]()
+                detail::code_timer(time_child_draw_enabled(), child->name() + " draw: ", [child, &painter, &r]()
                 {
                     child->draw(painter, r);
                 });

@@ -83,7 +83,7 @@ public:
      * Then add a layer index (x-order) here to add widgets to different
      * layers for drawing.
      */
-    virtual void add(std::shared_ptr<Widget> widget);
+    virtual void add(const std::shared_ptr<Widget>& widget);
 
     /**
      * Utility wrapper around add()
@@ -91,7 +91,7 @@ public:
      * @param widget The widget.
      */
     template<class T>
-    void add(std::shared_ptr<T>& widget)
+    void add(const std::shared_ptr<T>& widget)
     {
         auto p = std::dynamic_pointer_cast<Widget>(widget);
         add(p);
@@ -115,7 +115,8 @@ public:
         // Nasty, but it gets the job done.  If a widget is passed in as a
         // reference, we don't own it, so create a "pointless" shared_ptr that
         // will not delete it.
-        add(std::shared_ptr<Widget>(&widget, [](Widget*) {}));
+        auto w = std::shared_ptr<Widget>(&widget, [](Widget*) {});
+        add(w);
     }
 
     /**
@@ -174,7 +175,7 @@ public:
             return nullptr;
 
         auto i = std::find_if(m_children.begin(), m_children.end(),
-                              [&name](const std::shared_ptr<Widget>& obj)
+                              [&name](const auto & obj)
         {
             return obj->name() == name;
         });
@@ -184,7 +185,7 @@ public:
             return std::dynamic_pointer_cast<T>(*i);
 
         i = std::find_if(m_children.begin(), m_children.end(),
-                         [](const std::shared_ptr<Widget>& obj)
+                         [](const auto & obj)
         {
             return obj->frame();
         });

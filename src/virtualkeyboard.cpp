@@ -297,7 +297,7 @@ void VirtualKeyboard::key_multichoice(const std::shared_ptr<Key>& k)
 
 static PopupVirtualKeyboard* the_popup_virtual_keyboard = nullptr;
 
-PopupVirtualKeyboard::PopupVirtualKeyboard(std::shared_ptr<VirtualKeyboard> keyboard) noexcept
+PopupVirtualKeyboard::PopupVirtualKeyboard(const std::shared_ptr<VirtualKeyboard>& keyboard) noexcept
 {
     // Make the keyboard partially transparent.
     fill_flags(Theme::FillFlag::blend);
