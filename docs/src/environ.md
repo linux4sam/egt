@@ -168,4 +168,12 @@ EGT_DEBUG=1 EGT_KMS_BUFFERS=1 ./egt_space
     EGT_WIREFRAME_ENABLE is non-empty.
   </dd>
 
+  <dt>EGT_SHOW_SCREEN_BANDWIDTH</dt>
+  <dd>
+    When non-zero, logs the bandwidth to render the final screen frames.  In
+    other words, the number of bytes transmitted through damage rectangles to
+    the framebuffer being displayed. This can be used to gauge the amount of
+    data changing to render a screen.
+  </dd>
+
 </dl>

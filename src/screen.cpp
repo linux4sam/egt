@@ -16,6 +16,7 @@
 #include <cairo.h>
 #include <cassert>
 #include <cstring>
+#include <numeric>
 #include <string>
 
 #ifdef HAVE_SIMD
@@ -165,34 +166,155 @@ static inline int wireframe_decay()
     return value;
 }
 
+static inline bool screen_bandwidth_enable()
+{
+    static int value = 0;
+    if (value == 0)
+    {
+        if (std::getenv("EGT_SHOW_SCREEN_BANDWIDTH"))
+            value += 1;
+        else
+            value -= 1;
+    }
+    return value == 1;
+}
+
 static std::vector<std::pair<std::chrono::steady_clock::time_point, Rect>> history;
+
+class DamageBandwidth
+{
+public:
+
+    DamageBandwidth() noexcept
+    {
+        start();
+    }
+
+    /**
+     * Start/reset the counter.
+     */
+    void start()
+    {
+        m_start = std::chrono::steady_clock::now();
+        m_frames.clear();
+    }
+
+    /**
+     * Call at the end of every frame.
+     */
+    void end_frame(size_t bytes)
+    {
+        m_frames.push_back(bytes);
+
+        const auto now = std::chrono::steady_clock::now();
+        const auto diff = std::chrono::duration<double>(now - m_start).count();
+        if (diff > 1.0)
+        {
+            auto total = std::accumulate(m_frames.begin(), m_frames.end(), 0ULL);
+            m_bps = total / diff;
+            m_ready = true;
+            start();
+        }
+    }
+
+    /**
+     * Is any calculation ready?
+     */
+    EGT_NODISCARD bool ready() const { return m_ready; }
+
+    /**
+     * Retrieve the current FPS value.
+     */
+    std::string value()
+    {
+        m_ready = false;
+        return pretty(m_bps);
+    }
+
+protected:
+
+    static std::string pretty(size_t bytes)
+    {
+        const char* suffixes[] =
+        {
+            "B/s",
+            "kB/s",
+            "MB/s",
+            "GB/s",
+            "TB/s",
+            "PB/s",
+            "EB/s"
+        };
+        const auto div = 1000;
+        size_t s = 0;
+        double count = bytes;
+        while (count >= div && s < 7)
+        {
+            s++;
+            count /= div;
+        }
+        return fmt::format("{} {}", count, suffixes[s]);
+    }
+
+    /// Start time
+    std::chrono::time_point<std::chrono::steady_clock> m_start{};
+
+    /// Number of frames recorded since start time.
+    std::vector<size_t> m_frames;
+
+    /// Calculated Kbs
+    float m_bps{0.};
+
+    /// Is m_fps valid and ready?
+    bool m_ready{false};
+};
+
+static DamageBandwidth bandwidth;
+
+static size_t pixel_bytes(PixelFormat format)
+{
+    switch (format)
+    {
+    case PixelFormat::rgb565:
+        return 2;
+    case PixelFormat::argb8888:
+    case PixelFormat::xrgb8888:
+        return 4;
+    default:
+        break;
+    }
+
+    throw std::runtime_error("unable to convert format to bytes");
+};
 
 void Screen::copy_to_buffer_software(ScreenBuffer& buffer)
 {
+    // create a new context for each frame
+    unique_cairo_t cr(cairo_create(buffer.surface.get()));
+
+    cairo_set_source_surface(cr.get(), m_surface.get(), 0, 0);
+    cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
+
     if (!wireframe_enable())
     {
-        // create a new context for each frame
-        unique_cairo_t cr(cairo_create(buffer.surface.get()));
-
-        cairo_set_source_surface(cr.get(), m_surface.get(), 0, 0);
-        cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
-
         for (const auto& rect : buffer.damage)
+        {
             cairo_rectangle(cr.get(), rect.x(), rect.y(), rect.width(), rect.height());
+            if (screen_bandwidth_enable())
+            {
+                bandwidth.end_frame(rect.width() * rect.height() * pixel_bytes(m_format));
+                if (bandwidth.ready())
+                    fmt::print("screen bandwidth: {}\n", bandwidth.value());
+            }
+        }
 
         cairo_fill(cr.get());
-        cairo_surface_flush(buffer.surface.get());
     }
     else
     {
         const auto start = std::chrono::steady_clock::now();
 
-        // create a new context for each frame
-        unique_cairo_t cr(cairo_create(buffer.surface.get()));
-
-        cairo_set_source_surface(cr.get(), m_surface.get(), 0, 0);
-        cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
-
+        // paint whole source surface!
         cairo_paint(cr.get());
 
         cairo_set_line_width(cr.get(), 1);
@@ -236,11 +358,17 @@ void Screen::copy_to_buffer_software(ScreenBuffer& buffer)
             if (decay)
                 history.emplace_back(std::make_pair(start, rect));
             cairo_rectangle(cr.get(), rect.x(), rect.y(), rect.width(), rect.height());
+            if (screen_bandwidth_enable())
+            {
+                bandwidth.end_frame(rect.width() * rect.height() * pixel_bytes(m_format));
+                if (bandwidth.ready())
+                    fmt::print("screen bandwidth: {}\n", bandwidth.value());
+            }
         }
         cairo_stroke(cr.get());
-
-        cairo_surface_flush(buffer.surface.get());
     }
+
+    cairo_surface_flush(buffer.surface.get());
 }
 
 void Screen::damage_algorithm(Screen::DamageArray& damage, Rect rect)
