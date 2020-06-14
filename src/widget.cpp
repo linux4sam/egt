@@ -371,8 +371,11 @@ const Pattern& Widget::color(Palette::ColorId id) const
 const Pattern& Widget::color(Palette::ColorId id, Palette::GroupId group) const
 {
     if (m_palette)
-        if (m_palette->exists(id, group))
-            return m_palette->color(id, group);
+    {
+        const Pattern* color;
+        if (m_palette->exists(id, group, &color))
+            return *color;
+    }
 
     return default_palette().color(id, group);
 }

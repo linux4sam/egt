@@ -328,6 +328,16 @@ public:
     EGT_NODISCARD bool exists(ColorId id, GroupId group = GroupId::normal) const;
 
     /**
+     * Check if a color exists in the palette and get the color.
+     *
+     * @param id Color id.
+     * @param group Color group.
+     * @param color The color if found.
+     * @return True if exists.
+     */
+    EGT_NODISCARD bool exists(ColorId id, GroupId group, const Pattern** color) const;
+
+    /**
      * Serialize to the specified serializer.
      */
     void serialize(const std::string& name, Serializer& serializer) const;

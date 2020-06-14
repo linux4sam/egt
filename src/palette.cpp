@@ -102,6 +102,22 @@ bool Palette::exists(ColorId id, GroupId group) const
     return false;
 }
 
+bool Palette::exists(ColorId id, GroupId group, const Pattern** color) const
+{
+    const auto g = detail::find(m_colors.begin(), m_colors.end(), group);
+    if (g != m_colors.end())
+    {
+        auto c = detail::find(g->second.begin(), g->second.end(), id);
+        if (c != g->second.end())
+        {
+            *color = &(c->second);
+            return true;
+        }
+    }
+
+    return false;
+}
+
 constexpr Color Palette::transparent;
 constexpr Color Palette::aliceblue;
 constexpr Color Palette::antiquewhite;
