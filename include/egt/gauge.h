@@ -235,10 +235,12 @@ public:
 
         value = std::round(detail::clamp<float>(value, m_min, m_max));
 
-        if (detail::change_if_diff<float>(m_value, value))
+        if (!detail::float_equal(m_value, value))
         {
+            damage(rectangle_of_rotated());
+            m_value = value;
             on_value_changed.invoke();
-            damage();
+            damage(rectangle_of_rotated());
         }
 
         return orig;
@@ -307,6 +309,8 @@ public:
     }
 
 protected:
+
+    Rect rectangle_of_rotated();
 
     /// @private
     void gauge(Gauge* gauge) override;

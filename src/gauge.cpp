@@ -99,6 +99,45 @@ void NeedleLayer::gauge(Gauge* gauge)
     }
 }
 
+static Point point_calc(const Point& center, const Point& corner, float angle)
+{
+    const auto dx1 = corner.x() - center.x();
+    const auto dy1 = corner.y() - center.y();
+    return {static_cast<Size::DimType>((center.x() + dx1 * std::cos(angle)) - (dy1 * std::sin(angle))),
+            static_cast<Size::DimType>((center.y() - dx1 * std::sin(angle)) + (dy1 * std::cos(angle)))};
+}
+
+/**
+ * Take a rectangle, rotate it around point by angle, and return the resulting
+ * super rectangle that encompases the rotated rectangle.
+ */
+Rect NeedleLayer::rectangle_of_rotated()
+{
+    const auto rect = Rect(Point(0, 0), m_image.size());
+    const auto angle = detail::to_radians(0.0f, -detail::normalize_to_angle(m_value, m_min, m_max,
+                                          m_angle_start, m_angle_stop,
+                                          m_clockwise));
+    const auto center = Point(m_center.x(), m_center.y());
+
+    const auto p1 = point_calc(center, rect.top_left(), angle);
+    const auto p2 = point_calc(center, rect.top_right(), angle);
+    const auto p3 = point_calc(center, rect.bottom_right(), angle);
+    const auto p4 = point_calc(center, rect.bottom_left(), angle);
+
+    const auto xmin = std::round(std::min(std::min(p1.x(), p2.x()), std::min(p3.x(), p4.x())));
+    const auto ymin = std::round(std::min(std::min(p1.y(), p2.y()), std::min(p3.y(), p4.y())));
+
+    const auto xmax = std::round(std::max(std::max(p1.x(), p2.x()), std::max(p3.x(), p4.x())));
+    const auto ymax = std::round(std::max(std::max(p1.y(), p2.y()), std::max(p3.y(), p4.y())));
+
+    const auto res = Rect(xmin + m_point.x() - m_center.x(),
+                          ymin + m_point.y() - m_center.y(),
+                          xmax - xmin,
+                          ymax - ymin);
+
+    return res;
+}
+
 Gauge::Gauge(const Rect& rect, const Widget::Flags& flags) noexcept
     : Frame(rect, flags)
 {
