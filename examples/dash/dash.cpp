@@ -179,7 +179,7 @@ int main(int argc, char** argv)
 
         console_text->color(egt::Palette::ColorId::label_text, states[state].second);
         console_text->text(states[state].first);
-        if (++state >= 6)
+        if (++state >= egt::detail::size(states))
             state = 0;
     };
     change_state();
