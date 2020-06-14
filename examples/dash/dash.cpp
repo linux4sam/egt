@@ -158,7 +158,7 @@ int main(int argc, char** argv)
     auto console_text = std::make_shared<egt::Label>();
     console_text->text_align(egt::AlignFlag::center);
     console_text->box(egt::Rect(console_box.x(), console_box.y(), console_box.width(), console_box.height()));
-    console_text->font(egt::Font(55, egt::Font::Weight::bold));
+    console_text->font(egt::Font(75, egt::Font::Weight::bold));
     gauge.add(console_text);
 
     auto change_state = [&console_text]()
