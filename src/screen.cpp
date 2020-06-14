@@ -12,9 +12,11 @@
 #include "egt/palette.h"
 #include "egt/screen.h"
 #include "egt/types.h"
+#include "egt/utils.h"
 #include <cairo.h>
 #include <cassert>
 #include <cstring>
+#include <string>
 
 #ifdef HAVE_SIMD
 #include "Simd/SimdLib.hpp"
@@ -137,19 +139,108 @@ void Screen::copy_to_buffer(ScreenBuffer& buffer)
 }
 #endif
 
+static inline bool wireframe_enable()
+{
+    static int value = 0;
+    if (value == 0)
+    {
+        if (std::getenv("EGT_WIREFRAME_ENABLE"))
+            value += 1;
+        else
+            value -= 1;
+    }
+    return value == 1;
+}
+
+static inline int wireframe_decay()
+{
+    static int value = -1;
+    if (value == -1)
+    {
+        if (std::getenv("EGT_WIREFRAME_DECAY"))
+            value = std::stoi(std::getenv("EGT_WIREFRAME_DECAY"));
+        else
+            value = 0;
+    }
+    return value;
+}
+
+static std::vector<std::pair<std::chrono::steady_clock::time_point, Rect>> history;
+
 void Screen::copy_to_buffer_software(ScreenBuffer& buffer)
 {
-    // create a new context for each frame
-    unique_cairo_t cr(cairo_create(buffer.surface.get()));
+    if (!wireframe_enable())
+    {
+        // create a new context for each frame
+        unique_cairo_t cr(cairo_create(buffer.surface.get()));
 
-    cairo_set_source_surface(cr.get(), m_surface.get(), 0, 0);
-    cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
+        cairo_set_source_surface(cr.get(), m_surface.get(), 0, 0);
+        cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
 
-    for (const auto& rect : buffer.damage)
-        cairo_rectangle(cr.get(), rect.x(), rect.y(), rect.width(), rect.height());
+        for (const auto& rect : buffer.damage)
+            cairo_rectangle(cr.get(), rect.x(), rect.y(), rect.width(), rect.height());
 
-    cairo_fill(cr.get());
-    cairo_surface_flush(buffer.surface.get());
+        cairo_fill(cr.get());
+        cairo_surface_flush(buffer.surface.get());
+    }
+    else
+    {
+        const auto start = std::chrono::steady_clock::now();
+
+        // create a new context for each frame
+        unique_cairo_t cr(cairo_create(buffer.surface.get()));
+
+        cairo_set_source_surface(cr.get(), m_surface.get(), 0, 0);
+        cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
+
+        cairo_paint(cr.get());
+
+        cairo_set_line_width(cr.get(), 1);
+
+        auto decay = wireframe_decay();
+        if (decay)
+        {
+            cairo_set_source_rgba(cr.get(), .36, .67, .93, 1.0);
+
+            for (auto i = history.begin(); i != history.end();)
+            {
+                bool ignore = false;
+                for (const auto& rect : buffer.damage)
+                {
+                    if (rect == i->second)
+                    {
+                        ignore = true;
+                        break;
+                    }
+                }
+
+                const auto diff = start - i->first;
+                if (ignore || diff > std::chrono::milliseconds(decay))
+                {
+                    i = history.erase(i);
+                }
+                else
+                {
+                    cairo_rectangle(cr.get(), i->second.x(), i->second.y(),
+                                    i->second.width(), i->second.height());
+                    ++i;
+                }
+            }
+            cairo_stroke(cr.get());
+        }
+
+        cairo_set_source_rgba(cr.get(), .36, .99, .04, 1);
+
+        for (const auto& rect : buffer.damage)
+        {
+            if (decay)
+                history.emplace_back(std::make_pair(start, rect));
+            cairo_rectangle(cr.get(), rect.x(), rect.y(), rect.width(), rect.height());
+        }
+        cairo_stroke(cr.get());
+
+        cairo_surface_flush(buffer.surface.get());
+    }
 }
 
 void Screen::damage_algorithm(Screen::DamageArray& damage, Rect rect)

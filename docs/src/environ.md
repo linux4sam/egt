@@ -152,4 +152,20 @@ EGT_DEBUG=1 EGT_KMS_BUFFERS=1 ./egt_space
     option has no effect.
   </dd>
 
+  <dt>EGT_WIREFRAME_ENABLE</dt>
+  <dd>
+    A non-empty value enables drawing of damage rectangles to the display.  This
+    can be used to identify, visually, what is being redrawn each flip to the
+    screen.  This is a debug option and can create additional burden on
+    performance.  This option requires a composition buffer, so it cannot be
+    used with EGT_NO_COMPOSITION_BUFFER.
+  </dd>
+
+  <dt>EGT_WIREFRAME_DECAY</dt>
+  <dd>
+    When non-zero, specifies the amount of decay in milliseconds to visually
+    keep wireframe rectangles around.  This option only applies when
+    EGT_WIREFRAME_ENABLE is non-empty.
+  </dd>
+
 </dl>
