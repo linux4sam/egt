@@ -22,6 +22,7 @@ inline namespace v1
 struct SvgImage::SvgImpl
 {
     std::shared_ptr<RsvgHandle> rsvg;
+    RsvgDimensionData dim{};
 };
 
 SvgImage::SvgImage()
@@ -59,11 +60,8 @@ RectF SvgImage::id_box(const std::string& id) const
     if (m_impl->rsvg)
     {
         auto s = size();
-
-        RsvgDimensionData dim;
-        rsvg_handle_get_dimensions(m_impl->rsvg.get(), &dim);
-        auto hfactor = s.width() / dim.width;
-        auto vfactor = s.height() / dim.height;
+        auto hfactor = s.width() / m_impl->dim.width;
+        auto vfactor = s.height() / m_impl->dim.height;
 
         RsvgPositionData pos;
         if (rsvg_handle_get_position_sub(m_impl->rsvg.get(), &pos, id.c_str()))
@@ -71,6 +69,7 @@ RectF SvgImage::id_box(const std::string& id) const
             result.point(PointF(pos.x * hfactor, pos.y * vfactor));
         }
 
+        RsvgDimensionData dim{};
         if (rsvg_handle_get_dimensions_sub(m_impl->rsvg.get(), &dim, id.c_str()))
         {
             /*
@@ -109,22 +108,19 @@ SizeF SvgImage::size() const
 
     if (m_impl->rsvg)
     {
-        RsvgDimensionData dim;
-        rsvg_handle_get_dimensions(m_impl->rsvg.get(), &dim);
-
         if (m_size.width() <= 0 && m_size.height() > 0)
         {
-            auto factor = m_size.height() / dim.height;
-            result.width(dim.width * factor);
+            auto factor = m_size.height() / m_impl->dim.height;
+            result.width(m_impl->dim.width * factor);
         }
         else if (m_size.height() <= 0 && m_size.width() > 0)
         {
-            auto factor = m_size.width() / dim.width;
-            result.height(dim.height * factor);
+            auto factor = m_size.width() / m_impl->dim.width;
+            result.height(m_impl->dim.height * factor);
         }
 
         if (result.empty())
-            result = SizeF(dim.width, dim.height);
+            result = SizeF(m_impl->dim.width, m_impl->dim.height);
     }
 
     return result;
@@ -152,6 +148,9 @@ void SvgImage::load()
 
         m_impl->rsvg = std::shared_ptr<RsvgHandle>(handle,
         [](RsvgHandle * r) { g_object_unref(r); });
+
+        // this is a somewhat expensive operation, so do it once
+        rsvg_handle_get_dimensions(m_impl->rsvg.get(), &m_impl->dim);
         break;
     }
     case detail::SchemeType::filesystem:
@@ -166,6 +165,9 @@ void SvgImage::load()
 
         m_impl->rsvg = std::shared_ptr<RsvgHandle>(handle,
         [](RsvgHandle * r) { g_object_unref(r); });
+
+        // this is a somewhat expensive operation, so do it once
+        rsvg_handle_get_dimensions(m_impl->rsvg.get(), &m_impl->dim);
         break;
     }
     default:
@@ -201,15 +203,8 @@ shared_cairo_surface_t SvgImage::do_render(const std::string& id, const RectF& r
             cairo_clip(cr);
         }
 
-        RsvgDimensionData dim;
-        rsvg_handle_get_dimensions(m_impl->rsvg.get(), &dim);
-
-        const auto scaled = size() / SizeF(dim.width, dim.height);
-
-        /* Scale *before* setting the source surface (1) */
-        cairo_scale(cr,
-                    scaled.width(),
-                    scaled.height());
+        const auto scaled = size() / SizeF(m_impl->dim.width, m_impl->dim.height);
+        cairo_scale(cr, scaled.width(), scaled.height());
 
         /* To avoid getting the edge pixels blended with 0 alpha, which would
          * occur with the default EXTEND_NONE. Use EXTEND_PAD for 1.2 or newer (2)
