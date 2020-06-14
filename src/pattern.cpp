@@ -133,6 +133,7 @@ Pattern& Pattern::operator=(Pattern&& rhs) noexcept
     m_type = rhs.m_type;
     m_color = rhs.m_color;
     m_impl = rhs.m_impl;
+    rhs.m_impl = nullptr;
     m_pattern = std::move(rhs.m_pattern);
     return *this;
 }
