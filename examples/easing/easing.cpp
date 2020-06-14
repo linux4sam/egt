@@ -6,9 +6,8 @@
 #include <egt/ui>
 #include <map>
 #include <string>
-#include <vector>
 
-static std::vector<std::pair<egt::EasingFunc, std::string>> easing_functions =
+static std::pair<egt::EasingFunc, const char*> easing_functions[] =
 {
     {egt::easing_linear, "linear"},
     {egt::easing_easy, "easy"},
@@ -57,8 +56,8 @@ public:
         background(egt::Image("file:background.png"));
 
         egt::ListBox::ItemArray items;
-        items.resize(easing_functions.size());
-        transform(easing_functions.begin(), easing_functions.end(), items.begin(),
+        items.resize(egt::detail::size(easing_functions));
+        transform(std::begin(easing_functions), std::end(easing_functions), items.begin(),
         [](const std::pair<egt::EasingFunc, std::string>& v) { return std::make_shared<egt::StringItem>(v.second);});
         auto list1 = std::make_shared<egt::ListBox>(items, egt::Rect(egt::Point(0, 0), egt::Size(190, 0)));
         list1->align(egt::AlignFlag::expand_vertical | egt::AlignFlag::right);

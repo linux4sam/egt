@@ -13,7 +13,6 @@
 #include <egt/ui>
 #include <random>
 #include <string>
-#include <vector>
 
 static int random_item(int start, int end)
 {
@@ -25,7 +24,7 @@ static int random_item(int start, int end)
 
 static std::shared_ptr<egt::ComboBox> create_grid_combo(const std::shared_ptr<egt::ChartBase>& chart)
 {
-    static const std::pair<std::string, egt::ChartBase::GridFlag> combo_items[] =
+    static const std::pair<const char*, egt::ChartBase::GridFlag> combo_items[] =
     {
         {"None", egt::ChartBase::GridFlag::none },
         {"Box", egt::ChartBase::GridFlag::box },
@@ -68,8 +67,8 @@ struct PiePage : public egt::NotebookTab
         pie->title("Pie Chart");
 
         egt::PieChart::StringDataArray data;
-        std::vector<int> pdata = { 5, 10, 15, 20, 4, 8, 16, 12};
-        int count = 0;
+        const int pdata[] = { 5, 10, 15, 20, 4, 8, 16, 12};
+        size_t count = 0;
         for (auto& i : pdata)
         {
             data.push_back(make_pair(i, ("label" + std::to_string(count++))));
@@ -220,7 +219,7 @@ struct HorizontalBarPage : public egt::NotebookTab
         auto bar = std::make_shared<egt::HorizontalBarChart>();
         sizer->add(expand(bar));
 
-        const std::vector<std::string> months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+        const char* months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
         if (sdata)
         {
@@ -260,10 +259,10 @@ struct HorizontalBarPage : public egt::NotebookTab
                 {
                     egt::HorizontalBarChart::StringDataArray data1;
                     static size_t i = 0;
-                    data1.push_back(std::make_pair(random_item(1, 150), months.at(i++)));
+                    data1.push_back(std::make_pair(random_item(1, 150), months[i++]));
                     bar->add_data(data1);
 
-                    if (i >= months.size())
+                    if (i >= egt::detail::size(months))
                         i = 0;
                 }
                 else
@@ -295,7 +294,7 @@ struct VerticalBarPage : public egt::NotebookTab
         auto bar = std::make_shared<egt::BarChart>();
         sizer->add(expand(bar));
 
-        const std::vector<std::string> months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+        const char* months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
         if (sdata)
         {
             bar->label("Months", "Sales", "Vertical Bar Chart-2");
@@ -334,10 +333,10 @@ struct VerticalBarPage : public egt::NotebookTab
                 {
                     static size_t i = 0;
                     egt::BarChart::StringDataArray str_data1;
-                    str_data1.push_back(std::make_pair(random_item(1, 50), months.at(i++)));
+                    str_data1.push_back(std::make_pair(random_item(1, 50), months[i++]));
                     bar->add_data(str_data1);
 
-                    if (i >= months.size())
+                    if (i >= egt::detail::size(months))
                         i = 0;
                 }
                 else
@@ -505,7 +504,7 @@ int main(int argc, char** argv)
     logo->margin(5);
     frame->add(logo);
 
-    std::vector<std::pair<std::string, std::function<std::unique_ptr<egt::Theme>()>>> combo_items =
+    const std::pair<const char*, std::function<std::unique_ptr<egt::Theme>()>> combo_items[] =
     {
         {"Default Theme", []{ return std::make_unique<egt::Theme>(); }},
         {"Lapis", []{ return std::make_unique<egt::LapisTheme>(); }},
@@ -544,7 +543,7 @@ int main(int argc, char** argv)
     });
     combo->selected(0);
 
-    std::vector<std::pair<std::string, std::function<std::shared_ptr<egt::NotebookTab>()>>> charts_items =
+    const std::pair<const char*, std::function<std::shared_ptr<egt::NotebookTab>()>> charts_items[] =
     {
         {"Sine Chart", []{ return std::make_shared<LineChartPage>(LineChartType::Sine); }},
         {"Cosine Chart", []{ return std::make_shared<LineChartPage>(LineChartType::Cosine); }},

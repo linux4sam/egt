@@ -57,6 +57,17 @@ protected:
     int m_ratio;
 };
 
+
+namespace detail
+{
+/// Return the size of an array (c++17's std::size()).
+template <class T, std::size_t N>
+constexpr std::size_t size(const T(&)[N]) noexcept
+{
+    return N;
+}
+}
+
 }
 }
 

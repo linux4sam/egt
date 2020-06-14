@@ -8,7 +8,6 @@
 #include <iostream>
 #include <memory>
 #include <string>
-#include <vector>
 
 using WindowType = egt::Window;
 
@@ -46,7 +45,7 @@ int main(int argc, char** argv)
     win0.no_layout(true);
     win0.show();
 
-    const std::vector<std::pair<egt::Color, std::string>> items =
+    const std::pair<egt::Color, const char*> items[] =
     {
         {egt::Palette::red, "red"},
         {egt::Palette::blue, "blue"},

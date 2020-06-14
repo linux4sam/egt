@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <egt/ui>
-#include <vector>
 
 int main(int argc, char** argv)
 {
@@ -26,7 +25,7 @@ int main(int argc, char** argv)
     egt::StaticGrid grid(egt::StaticGrid::GridSize(3, 3));
     sizer.add(expand(grid));
 
-    std::vector<std::pair<std::string, std::string>> drums =
+    const std::pair<const char*, const char*> drums[] =
     {
         {"file:Closed-Hi-Hat-1.wav", "Hi-Hat"},
         {"file:Crash-Cymbal-1.wav", "Symbol"},

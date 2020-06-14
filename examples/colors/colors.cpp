@@ -56,7 +56,7 @@ int main(int argc, char** argv)
         egt::experimental::ColorMap::Interpolation third;
     };
 
-    std::vector<triple> maps =
+    const triple maps[] =
     {
         { "RGB", {egt::Palette::white, egt::Palette::black}, egt::experimental::ColorMap::Interpolation::rgba },
         { "HSV", {egt::Palette::white, egt::Palette::black}, egt::experimental::ColorMap::Interpolation::hsv },
