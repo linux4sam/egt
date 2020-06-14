@@ -67,17 +67,17 @@ EasingScalar easing_bounce(EasingScalar p)
 {
     if (p > 0.9f)
     {
-        EasingScalar result = p - 0.95f;
+        const EasingScalar result = p - 0.95f;
         return 1.0f + result * result * 20.0f - (0.05f * 0.05f * 20.0f);
     }
     else if (p > 0.75f)
     {
-        EasingScalar result = p - 0.825f;
+        const EasingScalar result = p - 0.825f;
         return 1.0f + result * result * 16.0f - (0.075f * 0.075f * 16.0f);
     }
     else if (p > 0.5f)
     {
-        EasingScalar result = p - 0.625f;
+        const EasingScalar result = p - 0.625f;
         return 1.0f + result * result * 12.0f - (0.125f * 0.125f * 12.0f);
     }
 
@@ -88,7 +88,7 @@ EasingScalar easing_bounce(EasingScalar p)
 EasingScalar easing_bouncy(EasingScalar p)
 {
     EasingScalar result = 1.0f;
-    EasingScalar scale = 5.0f;
+    const EasingScalar scale = 5.0f;
     EasingScalar start = 0.5f;
     EasingScalar step = 0.2f;
 
@@ -122,17 +122,17 @@ EasingScalar easing_rubber(EasingScalar p)
 {
     if (p > 0.9f)
     {
-        EasingScalar result = p - 0.95f;
+        const EasingScalar result = p - 0.95f;
         return 1.0f - result * result * 20.0f + (0.05f * 0.05f * 20.0f);
     }
     else if (p > 0.75f)
     {
-        EasingScalar result = p - 0.825f;
+        const EasingScalar result = p - 0.825f;
         return 1.0f + result * result * 18.0f - (0.075f * 0.075f * 18.0f);
     }
     else if (p > 0.5f)
     {
-        EasingScalar result = p - 0.625f;
+        const EasingScalar result = p - 0.625f;
         return 1.0f - result * result * 14.0f + (0.125f * 0.125f * 14.0f);
     }
 
