@@ -1,5 +1,7 @@
 @page started Getting Started
 
+[TOC]
+
 There are various ways to get started with EGT depending on your requirements.
 If you are building EGT on a PC, you can start by just fetching the source of
 the EGT project.  If you are developing for and deploying to a target board,

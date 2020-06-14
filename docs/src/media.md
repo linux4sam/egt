@@ -1,4 +1,6 @@
- @page media_page Media
+@page media_page Media
+
+[TOC]
 
 This chapter discusses media formats supported by EGT.
 

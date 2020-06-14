@@ -1,4 +1,6 @@
- @page debug Debugging
+@page debug Debugging
+
+[TOC]
 
 This chapter covers some of the many tools and techniques to debug an EGT
 application or EGT itself.

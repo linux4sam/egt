@@ -1,4 +1,6 @@
- @page topics Developer Topics
+@page topics Developer Topics
+
+[TOC]
 
 This chapter discusses some common problems and advanced developer topics.
 

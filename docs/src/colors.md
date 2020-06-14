@@ -1,4 +1,6 @@
- @page colors Color, Palette, and Theme
+@page colors Color, Palette, and Theme
+
+[TOC]
 
 This chapter discusses how to to use colors, palettes, and themes.
 

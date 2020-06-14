@@ -1,4 +1,6 @@
- @page intro Introduction
+@page intro Introduction
+
+[TOC]
 
 @section intro_what_is_egt What is EGT?
 

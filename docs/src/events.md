@@ -1,4 +1,6 @@
- @page events Events
+@page events Events
+
+[TOC]
 
 This chapter discusses the event model and how events are handled.
 

@@ -1,4 +1,6 @@
- @page draw Drawing
+@page draw Drawing
+
+[TOC]
 
 This chapter discusses how drawing works and how rectangles are marked for
 redraw.

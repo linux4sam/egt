@@ -1,4 +1,6 @@
-﻿ @page eclipse Eclipse Development Environment Setup
+﻿@page eclipse Eclipse Development Environment Setup
+
+[TOC]
 
 Integration with Eclipse simplifies the compilation, remote execution
 and remote debugging of EGT applications using Buildroot.

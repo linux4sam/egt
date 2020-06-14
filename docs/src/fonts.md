@@ -1,4 +1,6 @@
- @page fonts Fonts
+@page fonts Fonts
+
+[TOC]
 
 This chapter discusses how to to use fonts.
 

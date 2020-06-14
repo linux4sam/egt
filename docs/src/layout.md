@@ -1,4 +1,6 @@
- @page layout Layout
+@page layout Layout
+
+[TOC]
 
 This chapter discusses how Widget layout works.
 

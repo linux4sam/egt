@@ -1,4 +1,6 @@
- @page resources Resources
+@page resources Resources
+
+[TOC]
 
 This chapter discusses resources and how to distribute and use them with EGT.
 

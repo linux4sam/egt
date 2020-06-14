@@ -1,4 +1,6 @@
- @page animations Animations
+@page animations Animations
+
+[TOC]
 
 This chapter discusses how to to use animations.
 
