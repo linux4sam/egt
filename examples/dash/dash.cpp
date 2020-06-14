@@ -19,9 +19,12 @@ static auto demo_up_down_animator(std::shared_ptr<T> widget, int min, int max,
     auto animationdown = std::make_shared<egt::PropertyAnimator>(max, min, duration, easingout);
     animationdown->on_change([widget](egt::PropertyAnimator::Value value) { widget->value(value); });
 
+    auto delay = std::make_shared<egt::AnimationDelay>(std::chrono::milliseconds(500));
+
     auto sequence = std::make_unique<egt::AnimationSequence>(true);
     sequence->add(animationup);
     sequence->add(animationdown);
+    sequence->add(delay);
     sequence->start();
     return sequence;
 }
