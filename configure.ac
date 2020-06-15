@@ -542,16 +542,20 @@ AS_IF([test "x$with_zlib" != "xno"],[
 ])
 AM_CONDITIONAL([HAVE_ZLIB], [test "x${have_zlib}" = xyes])
 
-AC_SEARCH_LIBS([magic_open], [magic], [MAGIC_LIB=-lmagic have_libmagic=yes], [have_libmagic=no])
-AC_CHECK_HEADER([magic.h],
-  [],
-  [have_libmagic=no
+AC_ARG_WITH([libmagic],
+    AS_HELP_STRING([--without-libmagic], [Ignore presence of libmagic and disable it]))
+AS_IF([test "x$with_libmagic" != "xno"],[
+   AC_SEARCH_LIBS([magic_open], [magic], [MAGIC_LIB=-lmagic have_libmagic=yes], [have_libmagic=no])
+   AC_CHECK_HEADER([magic.h],
+     [],
+     [have_libmagic=no
+   ])
+   if test "x${have_libmagic}" = xyes; then
+      AC_DEFINE(HAVE_LIBMAGIC, 1, [Have libmagic support])
+      LIBEGT_EXTRA_LDFLAGS="${MAGIC_LIB} ${LIBEGT_EXTRA_LDFLAGS}"
+   fi
 ])
 AM_CONDITIONAL([HAVE_LIBMAGIC], [test "x${have_libmagic}" = xyes])
-if test "x${have_libmagic}" = xyes; then
-   AC_DEFINE(HAVE_LIBMAGIC, 1, [Have libmagic support])
-   LIBEGT_EXTRA_LDFLAGS="${MAGIC_LIB} ${LIBEGT_EXTRA_LDFLAGS}"
-fi
 
 AC_ARG_WITH([filesystem],
     AS_HELP_STRING([--without-filesystem], [Ignore presence of filesystem and disable it]),
@@ -787,7 +791,7 @@ echo
 
 echo "Features:"
 echo "  Networking             ${have_libcurl:-no}"
-echo "  libmagic               ${have_libmagic:-no (mime type detection disabled)}"
+echo "  libmagic               ${have_libmagic:-no}"
 echo "  LUA Interpreter        ${have_lua:-no}"
 echo "  LUA Bindings           ${have_lua_bindings:-no}"
 echo "  C++17 Filesystem       ${have_libstdcppfs:-no}"
