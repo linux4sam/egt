@@ -40,7 +40,7 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) = 0;
 
-    virtual std::string create_pipeline(const std::string& uri, bool m_audiodevice) = 0;
+    virtual std::string create_pipeline() = 0;
 
     virtual void scale(float scalex, float scaley) = 0;
 

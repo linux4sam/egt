@@ -22,13 +22,13 @@ class GstAppSinkImpl: public GstDecoderImpl
 public:
     explicit GstAppSinkImpl(VideoWindow& interface, const Size& size);
 
-    virtual bool media(const std::string& uri) override;
+    bool media(const std::string& uri) override;
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
-    virtual std::string create_pipeline(const std::string& uri, bool m_audiodevice) override;
+    std::string create_pipeline() override;
 
-    virtual void scale(float scalex, float scaley) override;
+    void scale(float scalex, float scaley) override;
 
     virtual ~GstAppSinkImpl() = default;
 

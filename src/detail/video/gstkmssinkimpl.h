@@ -21,19 +21,19 @@ public:
 
     bool media(const std::string& uri) override;
 
-    virtual void draw(Painter& painter, const Rect& rect) override
+    void draw(Painter& painter, const Rect& rect) override
     {
         ignoreparam(painter);
         ignoreparam(rect);
     }
 
-    virtual void scale(float scalex, float scaley) override
+    void scale(float scalex, float scaley) override
     {
         ignoreparam(scalex);
         ignoreparam(scaley);
     }
 
-    virtual std::string create_pipeline(const std::string& uri, bool m_audiodevice) override;
+    std::string create_pipeline() override;
 
     virtual ~GstKmsSinkImpl() = default;
 

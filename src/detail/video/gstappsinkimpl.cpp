@@ -173,7 +173,7 @@ GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
     return GST_FLOW_ERROR;
 }
 
-std::string GstAppSinkImpl::create_pipeline(const std::string& uri, bool m_audiodevice)
+std::string GstAppSinkImpl::create_pipeline()
 {
     std::string vc = " ! videoconvert ! video/x-raw,format=";
 #ifdef HAVE_LIBPLANES
@@ -202,7 +202,7 @@ std::string GstAppSinkImpl::create_pipeline(const std::string& uri, bool m_audio
 
     static constexpr auto pipeline =
         "uridecodebin uri={} expose-all-streams=false name=video " \
-        " {} video. ! queue ! videoscale ! video/x-raw,width={},height{} {} " \
+        " {} video. ! queue ! videoscale ! video/x-raw,width={},height={} {} " \
         " ! appsink name=appsink video. {} ";
 
     return fmt::format(pipeline, m_uri, caps, m_size.width(), m_size.height(), vc, a_pipe);
@@ -230,7 +230,7 @@ bool GstAppSinkImpl::media(const std::string& uri)
         }
 #endif
 
-        const auto buffer = create_pipeline(uri, m_audiodevice);
+        const auto buffer = create_pipeline();
         SPDLOG_DEBUG("{}", buffer);
 
         GError* error = nullptr;

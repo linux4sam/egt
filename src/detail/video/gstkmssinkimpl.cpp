@@ -75,7 +75,7 @@ GstKmsSinkImpl::GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool de
     }
 }
 
-std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audiodevice)
+std::string GstKmsSinkImpl::create_pipeline()
 {
     std::string format = "BGRx";
     if (m_interface.plane_window())
@@ -135,7 +135,7 @@ std::string GstKmsSinkImpl::create_pipeline(const std::string& uri, bool m_audio
     else
     {
         SPDLOG_DEBUG("Decoding through software decoders");
-        v_pipe = fmt::format(" ! queue ! videoscale ! video/x-raw,width={},height{} " \
+        v_pipe = fmt::format(" ! queue ! videoscale ! video/x-raw,width={},height={} " \
                              " ! videoconvert ! video/x-raw,format={}", m_size.width(), m_size.height(), format);
     }
 
@@ -163,7 +163,7 @@ bool GstKmsSinkImpl::media(const std::string& uri)
         }
 #endif
 
-        const auto buffer = create_pipeline(uri, m_audiodevice);
+        const auto buffer = create_pipeline();
         SPDLOG_DEBUG("{}", buffer);
 
         GError* error = nullptr;
