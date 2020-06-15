@@ -422,7 +422,7 @@ AS_IF([test "x$with_fontconfig" != "xno"],[
    if test "x${have_fontconfig}" = xyes; then
       AC_DEFINE(HAVE_FONTCONFIG, 1, [Have fontconfig support])
       LIBEGT_EXTRA_CXXFLAGS="${fontconfig_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-      LIBEGT_EXTRA_LDFLAGS="${fontconfig_LIBS} -ludev ${LIBEGT_EXTRA_LDFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${fontconfig_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
 if test "x$with_fontconfig" = xyes && test "x${have_fontconfig}" != xyes; then
