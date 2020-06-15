@@ -12,6 +12,7 @@
 #include "egt/detail/image.h"
 #include "egt/resource.h"
 #include "images/bmp/cairo_bmp.h"
+#include <fstream>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <vector>
@@ -66,16 +67,16 @@ static cairo_status_t read_stream(void* closure, unsigned char* data, unsigned i
 }
 
 static constexpr auto MIME_BMP = "image/x-ms-bmp";
-#ifdef HAVE_LIBJPEG
 static constexpr auto MIME_JPEG = "image/jpeg";
-#endif
-#if CAIRO_HAS_PNG_FUNCTIONS == 1
 static constexpr auto MIME_PNG = "image/png";
-#endif
+static constexpr auto MIME_GIF = "image/gif";
 #ifdef HAVE_LIBRSVG
 static constexpr auto MIME_SVGXML = "image/svg+xml";
-static constexpr auto MIME_SVG = "image/svg";
 #endif
+static constexpr auto MIME_SVG = "image/svg";
+static constexpr auto MIME_PDF = "application/pdf";
+static constexpr auto MIME_ZIP = "application/zip";
+static constexpr auto MIME_GZIP = "application/gzip";
 
 EGT_API shared_cairo_surface_t load_image_from_memory(const unsigned char* data,
         size_t len,
@@ -87,6 +88,9 @@ EGT_API shared_cairo_surface_t load_image_from_memory(const unsigned char* data,
     shared_cairo_surface_t image;
 
     const auto mimetype = get_mime_type(data, len);
+    if (mimetype.empty())
+        throw std::runtime_error("unable to determine mimetype for: " + name);
+
     SPDLOG_DEBUG("mimetype of {} is {}", name, mimetype);
 
     if (mimetype == MIME_BMP)
@@ -149,6 +153,8 @@ shared_cairo_surface_t load_image_from_filesystem(const std::string& path)
         throw std::runtime_error("file not found: " + path);
 
     const auto mimetype = get_mime_type(path);
+    if (mimetype.empty())
+        throw std::runtime_error("unable to determine mimetype for: " + path);
     SPDLOG_DEBUG("mimetype of {} is {}", path, mimetype);
 
     shared_cairo_surface_t image;
@@ -218,6 +224,118 @@ EGT_API shared_cairo_surface_t load_image_from_network(const std::string& url)
 static const auto MAGIC_DATABASE = "/usr/share/misc/magic";
 #endif
 
+/*
+ * Basic and quick mime type detection of files or raw data.
+ *
+ * libmagic is wonderfully complete and accurate.  However, it can be a bit slow
+ * due to completeness - sometimes reading entire database files before being
+ * able to determine mime type.  This is a basic implementation that only
+ * supports a couple mime types using basic magic signature detection.
+ */
+struct BasicMimeTypeDetector
+{
+    std::string get_mime_type(const void* buffer, size_t length)
+    {
+        if (length >= 4)
+        {
+            auto signature = reinterpret_cast<const uint32_t*>(buffer);
+            auto mime = mime_type(ntoh(*signature));
+            if (mime)
+                return mime;
+        }
+
+        return {};
+    }
+
+    std::string get_mime_type(const std::string& path)
+    {
+        std::string result;
+        std::ifstream in = std::ifstream(path, std::ios::binary);
+        if (in)
+        {
+            char bytes[4] = {};
+            in.read(bytes, 4);
+            if (in.gcount() == 4)
+                result = get_mime_type(bytes, 4);
+        }
+
+        if (result.empty())
+        {
+            if (path.find("bmp") != std::string::npos)
+                result = MIME_BMP;
+            else if (path.find("jpg") != std::string::npos)
+                result = MIME_JPEG;
+            else if (path.find("png") != std::string::npos)
+                result = MIME_PNG;
+            else if (path.find("gif") != std::string::npos)
+                result = MIME_GIF;
+            else if (path.find("svg") != std::string::npos)
+                result = MIME_SVG;
+            else if (path.find("pdf") != std::string::npos)
+                result = MIME_PDF;
+            // "gzip" before "zip"
+            else if (path.find("gzip") != std::string::npos)
+                result = MIME_GZIP;
+            else if (path.find("zip") != std::string::npos)
+                result = MIME_ZIP;
+        }
+
+        return result;
+    }
+
+private:
+
+    template<typename T>
+    T ntoh(T value)
+    {
+#if BYTE_ORDER == LITTLE_ENDIAN
+        if (sizeof(T) == 8)
+            return __builtin_bswap64(value);
+        if (sizeof(T) == 4)
+            return __builtin_bswap32(value);
+        if (sizeof(T) == 2)
+            return __builtin_bswap16(value);
+        if (sizeof(T) == 1)
+            return value;
+#else
+        return value;
+#endif
+    }
+
+    static const char* mime_type(uint32_t signature)
+    {
+        switch (signature)
+        {
+        case 0x89504E47:
+            return MIME_PNG;
+        case 0x47494638:
+            // technically, to be complete there are 2 variants
+            // 47 49 46 38 37 61
+            // 47 49 46 38 39 61
+            return MIME_GIF;
+        case 0x25504446:
+            return MIME_PDF;
+        case 0xFFD8FFDB:
+        case 0xFFD8FFE0:
+            return MIME_JPEG;
+        case 0x504B0304:
+            return MIME_ZIP;
+        default:
+            break;
+        }
+
+        switch ((signature >> 16) & 0xffff)
+        {
+        case 0x1F8B:
+            return MIME_GZIP;
+        case 0x424D:
+            return MIME_BMP;
+        }
+
+        return nullptr;
+    }
+};
+
 std::string get_mime_type(const void* buffer, size_t length)
 {
     if (!buffer || length <= 0)
@@ -238,6 +356,9 @@ std::string get_mime_type(const void* buffer, size_t length)
 
         magic_close(magic);
     }
+#else
+    BasicMimeTypeDetector detector;
+    result = detector.get_mime_type(buffer, length);
 #endif
     return result;
 }
@@ -260,10 +381,8 @@ std::string get_mime_type(const std::string& path)
         magic_close(magic);
     }
 #else
-    if (path.find("png") != std::string::npos)
-        result = "image/png";
-    else if (path.find("jpg") != std::string::npos)
-        result = "image/jpeg";
+    BasicMimeTypeDetector detector;
+    result = detector.get_mime_type(path);
 #endif
     return result;
 }
