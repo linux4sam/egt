@@ -225,6 +225,31 @@ void InputLibInput::handle_event_touch(struct libinput_event* ev)
     }
 }
 
+void InputLibInput::handle_event_pointer_motion(struct libinput_event* ev)
+{
+    struct libinput_event_pointer* t = libinput_event_get_pointer_event(ev);
+
+    const auto x = libinput_event_pointer_get_dx(t);
+    const auto y = libinput_event_pointer_get_dy(t);
+
+    m_last_point[0] += DisplayPoint(x, y);
+    Event event(EventId::raw_pointer_move, Pointer(m_last_point[0], 0));
+    dispatch(event);
+}
+
+void InputLibInput::handle_event_pointer_motion_absolute(struct libinput_event* ev)
+{
+    struct libinput_event_pointer* t = libinput_event_get_pointer_event(ev);
+
+    const auto& screen_size = Application::instance().screen()->size();
+    const auto x = libinput_event_pointer_get_absolute_x_transformed(t, screen_size.width());
+    const auto y = libinput_event_pointer_get_absolute_y_transformed(t, screen_size.height());
+
+    m_last_point[0] = DisplayPoint(x, y);
+    Event event(EventId::raw_pointer_move, Pointer(m_last_point[0], 0));
+    dispatch(event);
+}
+
 void InputLibInput::handle_event_keyboard(struct libinput_event* ev)
 {
     struct libinput_event_keyboard* k = libinput_event_get_keyboard_event(ev);
@@ -330,17 +355,21 @@ void InputLibInput::handle_read(const asio::error_code& error)
             case LIBINPUT_EVENT_POINTER_BUTTON:
                 handle_event_button(ev);
                 break;
-            case LIBINPUT_EVENT_POINTER_AXIS:
             case LIBINPUT_EVENT_TOUCH_DOWN:
             case LIBINPUT_EVENT_TOUCH_MOTION:
             case LIBINPUT_EVENT_TOUCH_UP:
                 handle_event_touch(ev);
                 break;
+            case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE:
+                handle_event_pointer_motion_absolute(ev);
+                break;
+            case LIBINPUT_EVENT_POINTER_MOTION:
+                handle_event_pointer_motion(ev);
+                break;
             /* These events are not handled. */
+            case LIBINPUT_EVENT_POINTER_AXIS:
             case LIBINPUT_EVENT_TOUCH_CANCEL:
             case LIBINPUT_EVENT_TOUCH_FRAME:
-            case LIBINPUT_EVENT_POINTER_MOTION:
-            case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE:
             case LIBINPUT_EVENT_GESTURE_SWIPE_BEGIN:
             case LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE:
             case LIBINPUT_EVENT_GESTURE_SWIPE_END:

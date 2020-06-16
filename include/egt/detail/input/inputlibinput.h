@@ -51,6 +51,8 @@ private:
     void handle_event_touch(struct libinput_event* ev);
     void handle_event_keyboard(struct libinput_event* ev);
     void handle_event_button(struct libinput_event* ev);
+    void handle_event_pointer_motion(struct libinput_event* ev);
+    void handle_event_pointer_motion_absolute(struct libinput_event* ev);
 
     void handle_read(const asio::error_code& error);
 
@@ -66,7 +68,7 @@ private:
     struct libinput* li;
 
     /// The last point seen, indexed by slot, used for reference internally.
-    std::array<DisplayPoint, 2> m_last_point;
+    std::array<DisplayPoint, 2> m_last_point{};
 };
 
 }
