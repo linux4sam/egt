@@ -144,9 +144,12 @@ int main(int argc, char** argv)
         painter.draw(rect);
         painter.fill();
 
-        std::ostringstream ss;
-        ss << "FPS: " << std::round(fps.fps());
-        label.text(ss.str());
+        if (fps.ready())
+        {
+            std::ostringstream ss;
+            ss << "FPS: " << std::round(fps.fps());
+            label.text(ss.str());
+        }
 
         egt::Screen::DamageArray damage;
         damage.push_back(rect);
@@ -169,6 +172,7 @@ int main(int argc, char** argv)
 
         x_dist = std::uniform_real_distribution<float>(0., static_cast<float>(win.width() - sets[index].w));
         y_dist = std::uniform_real_distribution<float>(0., static_cast<float>(win.height() - sets[index].h));
+        fps.start();
     });
     vtimer.start();
 
