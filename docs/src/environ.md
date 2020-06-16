@@ -123,17 +123,17 @@ EGT_DEBUG=1 EGT_KMS_BUFFERS=1 ./egt_space
 
   <dt>EGT_TIME_DRAW</dt>
   <dd>
-    Print timing information for drawing every widget.
+    When non-empty, print timing information for drawing every widget.
   </dd>
 
   <dt>EGT_TIME_EVENTLOOP</dt>
   <dd>
-    Print timing information for the event loop.
+    When non-empty, print timing information for the event loop.
   </dd>
 
   <dt>EGT_SHOW_FPS</dt>
   <dd>
-    Print the frames per second of the event loop.
+    When non-empty, print the frames per second of the event loop.
   </dd>
 
   <dt>EGT_NO_COMPOSITION_BUFFER</dt>
@@ -170,7 +170,7 @@ EGT_DEBUG=1 EGT_KMS_BUFFERS=1 ./egt_space
 
   <dt>EGT_SHOW_SCREEN_BANDWIDTH</dt>
   <dd>
-    When non-zero, logs the bandwidth to render the final screen frames.  In
+    When non-empty, logs the bandwidth to render the final screen frames.  In
     other words, the number of bytes transmitted through damage rectangles to
     the framebuffer being displayed. This can be used to gauge the amount of
     data changing to render a screen.
@@ -179,6 +179,11 @@ EGT_DEBUG=1 EGT_KMS_BUFFERS=1 ./egt_space
   <dt>EGT_LIBINPUT_VERBOSE</dt>
   <dd>
     When non-empty, turns on verbose logging from libinput as log level info.
+  </dd>
+
+  <dt>EGT_TIME_INPUT</dt>
+  <dd>
+    When non-empty, prints timing information for handling input events.
   </dd>
 
 </dl>
