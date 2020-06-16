@@ -139,6 +139,7 @@ static int run(int argc, char** argv)
     egt::Application app(argc, argv);
 
     MainWindow win;
+    win.show_cursor(egt::Image("icon:cursor_pencil.png;16"));
     win.show();
 
     return app.run();
