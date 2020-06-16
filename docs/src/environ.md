@@ -176,4 +176,9 @@ EGT_DEBUG=1 EGT_KMS_BUFFERS=1 ./egt_space
     data changing to render a screen.
   </dd>
 
+  <dt>EGT_LIBINPUT_VERBOSE</dt>
+  <dd>
+    When non-empty, turns on verbose logging from libinput as log level info.
+  </dd>
+
 </dl>

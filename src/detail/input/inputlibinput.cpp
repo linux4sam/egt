@@ -24,8 +24,18 @@
 #include <unistd.h>
 #include <vector>
 
-// enable libinput verbose logging
-//#ifdef LIBINPUT_VERBOSE_LOG
+static inline bool libinput_verbose()
+{
+    static int value = 0;
+    if (value == 0)
+    {
+        if (std::getenv("EGT_LIBINPUT_VERBOSE"))
+            value += 1;
+        else
+            value -= 1;
+    }
+    return value == 1;
+}
 
 namespace egt
 {
@@ -63,19 +73,16 @@ static constexpr struct libinput_interface interface =
     close_restricted,
 };
 
-#ifdef LIBINPUT_VERBOSE_LOG
 static void log_handler(struct libinput* libinput_context,
                         enum libinput_log_priority priority, const char* fmt, va_list args)
 {
     char buffer[1024];
     vsprintf(buffer, fmt, args);
-    printf(buffer);
+    spdlog::info(buffer);
 }
-#endif
 
-static struct libinput* tools_open_udev(const char* seat, bool verbose, bool grab)
+static struct libinput* tools_open_udev(const char* seat, bool grab)
 {
-    ignoreparam(verbose);
     struct libinput* li;
     struct udev* udev = udev_new();
 
@@ -93,10 +100,11 @@ static struct libinput* tools_open_udev(const char* seat, bool verbose, bool gra
         return nullptr;
     }
 
-#ifdef LIBINPUT_VERBOSE_LOG
-    libinput_log_set_handler(li, log_handler);
-    libinput_log_set_priority(li, LIBINPUT_LOG_PRIORITY_DEBUG);
-#endif
+    if (libinput_verbose())
+    {
+        libinput_log_set_handler(li, log_handler);
+        libinput_log_set_priority(li, LIBINPUT_LOG_PRIORITY_DEBUG);
+    }
 
     if (libinput_udev_assign_seat(li, seat))
     {
@@ -116,8 +124,7 @@ InputLibInput::InputLibInput(Application& app)
       m_impl(std::make_unique<LibInputImpl>())
 {
     const char* seat_or_device = "seat0";
-    bool verbose = false;
-    li = tools_open_udev(seat_or_device, verbose, false);
+    li = tools_open_udev(seat_or_device, false);
     if (!li)
     {
         std::ostringstream ss;
