@@ -117,9 +117,9 @@ class PlPlotLineChart: public PlPlotImpl
 public:
     explicit PlPlotLineChart(LineChart& interface);
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
-    virtual void invoke_damage() override
+    void invoke_damage() override
     {
         m_interface.damage();
     }
@@ -135,9 +135,9 @@ class PlPlotPointChart: public PlPlotImpl
 public:
     explicit PlPlotPointChart(PointChart& interface);
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
-    virtual void invoke_damage() override
+    void invoke_damage() override
     {
         m_interface.damage();
     }
@@ -153,9 +153,9 @@ class PlPlotBarChart: public PlPlotImpl
 public:
     explicit PlPlotBarChart(BarChart& interface);
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
-    virtual void invoke_damage() override
+    void invoke_damage() override
     {
         m_interface.damage();
     }
@@ -174,9 +174,9 @@ class PlPlotHBarChart: public PlPlotImpl
 public:
     explicit PlPlotHBarChart(HorizontalBarChart& interface);
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
-    virtual void invoke_damage() override
+    void invoke_damage() override
     {
         m_interface.damage();
     }
@@ -196,9 +196,9 @@ public:
 
     explicit PlPlotPieChart(PieChart& interface);
 
-    virtual void draw(Painter& painter, const Rect& rect) override;
+    void draw(Painter& painter, const Rect& rect) override;
 
-    virtual void invoke_damage() override
+    void invoke_damage() override
     {
         m_interface.damage();
     }
