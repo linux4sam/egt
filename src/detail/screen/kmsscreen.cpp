@@ -169,7 +169,7 @@ uint32_t KMSScreen::max_buffers()
     static std::once_flag env_flag;
     std::call_once(env_flag, [&]()
     {
-        if (getenv("EGT_KMS_BUFFERS"))
+        if (getenv("EGT_KMS_BUFFERS") && strlen(getenv("EGT_KMS_BUFFERS")))
         {
             num_buffers = std::stoi(getenv("EGT_KMS_BUFFERS"));
         }

@@ -154,7 +154,7 @@ void Application::setup_locale(const std::string& name)
 void Application::setup_logging()
 {
     auto level = getenv("EGT_DEBUG");
-    if (level)
+    if (level && strlen(level))
     {
         auto loglevel = static_cast<spdlog::level::level_enum>(
                             std::stoi(level));
@@ -171,10 +171,11 @@ void Application::setup_logging()
 void Application::setup_search_paths()
 {
     // any added search paths take priority
-    if (getenv("EGT_SEARCH_PATH"))
+    auto path = getenv("EGT_SEARCH_PATH");
+    if (path && strlen(path))
     {
         std::vector<std::string> tokens;
-        detail::tokenize(getenv("EGT_SEARCH_PATH"), ':', tokens);
+        detail::tokenize(path, ':', tokens);
 
         for (auto& token : tokens)
             add_search_path(token);
@@ -194,8 +195,8 @@ void Application::setup_backend(bool primary)
 
     std::string backend;
 
-    const char* value = getenv("EGT_BACKEND");
-    if (value)
+    auto value = getenv("EGT_BACKEND");
+    if (value && strlen(value))
         backend = value;
 
     // try to choose a sane default
@@ -214,8 +215,8 @@ void Application::setup_backend(bool primary)
     if (backend == "x11")
     {
         Size size(800, 480);
-        const char* sizestr = getenv("EGT_SCREEN_SIZE");
-        if (sizestr)
+        auto sizestr = getenv("EGT_SCREEN_SIZE");
+        if (sizestr && strlen(sizestr))
         {
             std::vector<std::string> dims;
             detail::tokenize(sizestr, 'x', dims);
@@ -254,9 +255,9 @@ void Application::setup_inputs()
     m_inputs.clear();
 
     // EGT_INPUT_DEVICES=library:event_device1,event_device2;library:event_device3
-    const char* tmp = getenv("EGT_INPUT_DEVICES");
+    auto tmp = getenv("EGT_INPUT_DEVICES");
 
-    if (tmp)
+    if (tmp && strlen(tmp))
     {
         std::string env_val = tmp;
         std::vector<std::string> inputs;

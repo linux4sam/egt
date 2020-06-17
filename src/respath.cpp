@@ -103,7 +103,7 @@ SchemeType resolve_path(const std::string& path, std::string& result)
         std::call_once(env_flag, []()
         {
             auto dir = std::getenv("EGT_ICONS_DIRECTORY");
-            if (dir)
+            if (dir && strlen(dir))
             {
                 auto icons_dir = std::string(dir);
                 if (!icons_dir.empty())

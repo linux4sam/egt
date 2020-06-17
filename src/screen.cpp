@@ -31,10 +31,7 @@ inline namespace v1
 Screen::Screen() noexcept
 {
     if (getenv("EGT_SCREEN_ASYNC_FLIP"))
-    {
-        if (strlen(getenv("EGT_SCREEN_ASYNC_FLIP")))
-            m_async = true;
-    }
+        m_async = true;
 }
 
 void Screen::flip(const DamageArray& damage)
@@ -158,7 +155,7 @@ static inline int wireframe_decay()
     static int value = -1;
     if (value == -1)
     {
-        if (std::getenv("EGT_WIREFRAME_DECAY"))
+        if (std::getenv("EGT_WIREFRAME_DECAY") && strlen(std::getenv("EGT_WIREFRAME_DECAY")))
             value = std::stoi(std::getenv("EGT_WIREFRAME_DECAY"));
         else
             value = 0;
