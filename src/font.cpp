@@ -3,6 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "detail/egtlog.h"
 #include "egt/canvas.h"
 #include "egt/detail/enum.h"
@@ -10,7 +14,6 @@
 #include "egt/respath.h"
 #include "egt/serialize.h"
 #include <cairo-ft.h>
-#include <cassert>
 #include <map>
 #include <memory>
 
@@ -24,38 +27,39 @@ constexpr Font::Weight Font::DEFAULT_WEIGHT;
 constexpr Font::Size Font::DEFAULT_SIZE;
 constexpr Font::Slant Font::DEFAULT_SLANT;
 
-static shared_cairo_scaled_font_t create_ft_scaled_font(cairo_t* cr, const char* path, const Font& font)
+static FT_Library ftlib{nullptr};
+
+static bool init_freetype()
 {
-    EGTLOG_DEBUG("allocating font using FreeType: {}", font.face());
-
-    FT_Library value;
-    FT_Error status = FT_Init_FreeType(&value);
-    if (status != 0)
+    if (!ftlib)
     {
-        detail::error("error initializing FreeType library");
-        return nullptr;
+        FT_Error status = FT_Init_FreeType(&ftlib);
+        if (status != 0)
+        {
+            detail::error("error initializing FreeType library");
+            return false;
+        }
     }
+    return true;
+}
 
-    FT_Face face;
-    status = FT_New_Face(value, path, 0, &face);
-    if (status != 0)
-    {
-        detail::error("error opening font {}", path);
-        return nullptr;
-    }
+static void ft_done_face_uncached(void* closure)
+{
+    auto face = static_cast<FT_Face>(closure);
+    FT_Done_Face(face);
+}
 
+static shared_cairo_scaled_font_t create_ft_font(cairo_t* cr,
+        FT_Face& face,
+        const Font& font)
+{
     std::unique_ptr<cairo_font_face_t, decltype(cairo_font_face_destroy)*>
     font_face(cairo_ft_font_face_create_for_ft_face(face, FT_LOAD_NO_HINTING | FT_LOAD_NO_BITMAP),
               cairo_font_face_destroy);
 
     static const cairo_user_data_key_t key{};
-    auto s = cairo_font_face_set_user_data(font_face.get(), &key,
-                                           face, reinterpret_cast<cairo_destroy_func_t>(FT_Done_Face));
-    if (s)
-    {
-        detail::error("error creating cairo font face from FreeType font {}", font.face());
+    if (cairo_font_face_set_user_data(font_face.get(), &key, face, ft_done_face_uncached))
         return nullptr;
-    }
 
     std::unique_ptr<cairo_font_options_t, decltype(cairo_font_options_destroy)*>
     font_options(cairo_font_options_create(), cairo_font_options_destroy);
@@ -63,8 +67,8 @@ static shared_cairo_scaled_font_t create_ft_scaled_font(cairo_t* cr, const char*
     cairo_font_options_set_hint_style(font_options.get(), CAIRO_HINT_STYLE_NONE);
     cairo_font_options_set_hint_metrics(font_options.get(), CAIRO_HINT_METRICS_OFF);
 
-    cairo_matrix_t size_matrix;
-    cairo_matrix_t identity_matrix;
+    cairo_matrix_t size_matrix{};
+    cairo_matrix_t identity_matrix{};
     cairo_matrix_init_scale(&size_matrix, font.size(), font.size());
     cairo_matrix_init_identity(&identity_matrix);
 
@@ -74,14 +78,51 @@ static shared_cairo_scaled_font_t create_ft_scaled_font(cairo_t* cr, const char*
                                            font_options.get()),
                                            cairo_scaled_font_destroy);
 
-    s = cairo_scaled_font_status(scaled_font.get());
-    if (s)
+    if (!scaled_font || cairo_scaled_font_status(scaled_font.get()))
         return nullptr;
 
     return scaled_font;
 }
 
-#if CAIRO_HAS_FC_FONT
+static shared_cairo_scaled_font_t create_ft_scaled_font(cairo_t* cr,
+        const char* path,
+        const Font& font)
+{
+    EGTLOG_DEBUG("allocating font using FreeType: {}", font.face());
+
+    if (!init_freetype())
+        return nullptr;
+
+    FT_Face face{};
+    FT_Error status = FT_New_Face(ftlib, path, 0, &face);
+    if (status != 0)
+    {
+        detail::error("error opening font {}", path);
+        return nullptr;
+    }
+
+    return create_ft_font(cr, face, font);
+}
+
+static shared_cairo_scaled_font_t create_ft_scaled_font(cairo_t* cr,
+        const unsigned char* data,
+        size_t len, const Font& font)
+{
+    EGTLOG_DEBUG("allocating memory font using FreeType: {}", font.face());
+
+    if (!init_freetype())
+        return nullptr;
+
+    FT_Face face{};
+    FT_Error status = FT_New_Memory_Face(ftlib, static_cast<const FT_Byte*>(data),
+                                         len, 0, &face);
+    if (status)
+        return nullptr;
+
+    return create_ft_font(cr, face, font);
+}
+
+#ifdef HAVE_FONTCONFIG
 static shared_cairo_scaled_font_t create_scaled_font(cairo_t* cr, const Font& font)
 {
     EGTLOG_DEBUG("allocating font using Fontconfig: {}", font.face());
@@ -96,7 +137,7 @@ static shared_cairo_scaled_font_t create_scaled_font(cairo_t* cr, const Font& fo
         return nullptr;
 
     // NOLINTNEXTLINE
-    FcPatternAddString(pattern.get(), FC_FAMILY, reinterpret_cast<const FcChar8*>(font.face().c_str()));
+    FcPatternAddString(pattern.get(), FC_FAMILY, (const FcChar8*)(font.face().c_str()));
     FcPatternAddDouble(pattern.get(), FC_SIZE, font.size());
 
     int weight = FC_WEIGHT_NORMAL;
@@ -165,6 +206,16 @@ static shared_cairo_scaled_font_t create_scaled_font(cairo_t* cr, const Font& fo
 Font::Font(const std::string& face)
     : m_face(face)
 {}
+
+Font::Font(const unsigned char* data, size_t len,
+           Font::Size size)
+    : m_face("MEMORY"),
+      m_size(size),
+      m_data(data),
+      m_len(len)
+{
+    direct_allocate();
+}
 
 // NOLINTNEXTLINE(modernize-pass-by-value)
 Font::Font(const std::string& face, Font::Size size, Font::Weight weight, Font::Slant slant)
@@ -287,7 +338,7 @@ struct FontCache
             break;
         }
         case detail::SchemeType::unknown:
-#if CAIRO_HAS_FC_FONT
+#ifdef HAVE_FONTCONFIG
         {
             scaled_font = create_scaled_font(cr.get(), font);
             break;
@@ -297,7 +348,7 @@ struct FontCache
         case detail::SchemeType::network:
         default:
         {
-            throw std::runtime_error("unsupported uri: " + font.face());
+            throw std::runtime_error("unable to load font uri: " + font.face());
             break;
         }
         }
@@ -312,6 +363,16 @@ static FontCache font_cache;
 
 cairo_scaled_font_t* Font::scaled_font() const
 {
+    if (m_data && m_len && !m_scaled_font)
+    {
+        Canvas canvas(egt::Size(100, 100));
+        auto cr = canvas.context().get();
+        m_scaled_font = create_ft_scaled_font(cr, m_data, m_len, *this);
+    }
+
+    if (m_scaled_font)
+        return m_scaled_font.get();
+
     return font_cache.scaled_font(*this).get();
 }
 
@@ -330,7 +391,14 @@ void Font::reset_font_cache()
 void Font::shutdown_fonts()
 {
     reset_font_cache();
+#ifdef HAVE_FONTCONFIG
     FcFini();
+#endif
+}
+
+void Font::direct_allocate()
+{
+    m_scaled_font.reset();
 }
 
 }

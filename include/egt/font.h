@@ -76,6 +76,16 @@ public:
     explicit Font(const std::string& face);
 
     /**
+     * Create a font from an in-memory font.
+     *
+     * @param[in] data Raw memory to the font.
+     * @param[in] len Size of bytes of the ram memory.
+     * @param[in] size The size of the font.
+     */
+    explicit Font(const unsigned char* data, size_t len,
+                  Font::Size size = Font::DEFAULT_SIZE);
+
+    /**
      * Create a font based on the supplied parameters.
      *
      * @param[in] face The face name of the font.
@@ -128,7 +138,7 @@ public:
     /**
      * Set the face of the font.
      */
-    void face(const std::string& face) { m_face = face; }
+    void face(const std::string& face) { m_face = face; direct_allocate(); }
 
     /**
      * Get the size of the font.
@@ -138,7 +148,7 @@ public:
     /**
      * Set the size of the font.
      */
-    void size(const Font::Size& s) { m_size = s; }
+    void size(const Font::Size& s) { m_size = s; direct_allocate(); }
 
     /**
      * Get the weight of the font.
@@ -148,7 +158,7 @@ public:
     /**
      * Set the weight of the font.
      */
-    void weight(Font::Weight w) { m_weight = w; }
+    void weight(Font::Weight w) { m_weight = w; direct_allocate(); }
 
     /**
      * Get the slant of the font.
@@ -199,6 +209,8 @@ public:
 
 protected:
 
+    void direct_allocate();
+
     /// Font face name.
     std::string m_face{DEFAULT_FACE};
 
@@ -210,6 +222,11 @@ protected:
 
     /// Font slant.
     Font::Slant m_slant{DEFAULT_SLANT};
+
+    /// Only used when an in-memory font is created.
+    mutable shared_cairo_scaled_font_t m_scaled_font;
+    const unsigned char* m_data{nullptr};
+    size_t m_len{0};
 };
 
 /// @private
