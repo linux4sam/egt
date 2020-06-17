@@ -6,7 +6,7 @@
 
 #include "detail/video/gstdecoderimpl.h"
 #include "detail/video/gstmeta.h"
-#include <egt/app.h>
+#include "egt/app.h"
 #include <exception>
 #include <fstream>
 #include <spdlog/fmt/ostr.h>
