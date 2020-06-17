@@ -409,20 +409,19 @@ if test "x${have_cairo}" = xyes; then
   fi
 fi
 
-# Need to test for
-# #define CAIRO_HAS_FC_FONT 1
-# #define CAIRO_HAS_FT_FONT 1
+AC_CHECK_DECL([CAIRO_HAS_FT_FONT], [], [
+    AC_MSG_FAILURE([cairo is not compiled with freetype support and it is required.])
+   ], [[#include <cairo/cairo-features.h>]])
 
 AC_ARG_WITH([fontconfig],
     AS_HELP_STRING([--without-fontconfig], [Ignore presence of fontconfig and disable it]),
     [with_fontconfig=$withval],
     [with_fontconfig=auto])
 AS_IF([test "x$with_fontconfig" != "xno"],[
-   AX_PKG_CHECK_MODULES2(fontconfig, [], [fontconfig], [have_fontconfig=yes], [have_fontconfig=no])
+   # to use fontconfig - cairo has to be compiled with fontconfig
+   AC_CHECK_DECL([CAIRO_HAS_FC_FONT], [have_fontconfig=yes], [have_fontconfig=no], [[#include <cairo/cairo-features.h>]])
    if test "x${have_fontconfig}" = xyes; then
       AC_DEFINE(HAVE_FONTCONFIG, 1, [Have fontconfig support])
-      LIBEGT_EXTRA_CXXFLAGS="${fontconfig_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-      LIBEGT_EXTRA_LDFLAGS="${fontconfig_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
 if test "x$with_fontconfig" = xyes && test "x${have_fontconfig}" != xyes; then

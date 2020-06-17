@@ -90,13 +90,14 @@ Library              | Dependency        | Notes
 libplanes >= 1.0.0   | Required (Target) | Access to Microchip DRM/KMS hardware driver.
 libdrm >= 2.4.0      | Required (Target) | Access to DRM/KMS hardware drivers.
 cairo >= 1.14.6      | Required          | 2D drawing library.
-fontconfig           | Required          | Support for system level font configuration.
+freetype             | Required          | Support for font rendering.
 x11 >= 1.6.3         | Required (Host)   | Support for X11 display server.
 libinput >= 1.6.3    | Recommended       | Support for reading input devices (keyboard, touchscreen, mouse).
 libjpeg              | Recommended       | Support for JPEG content.
 libmagic             | Recommended       | Support for automatically detecting mime types of content.
 zlib                 | Recommended       | Support for zlib compression.
 libpng               | Recommended       | Support for PNG content.
+fontconfig           | Optional          | Support for system level font configuration.
 lua >= 5.3.1         | Optional          | Support for lua bindings and built in lua interpreter.
 xkbcommon            | Optional          | Support for system configured key mappings.
 tslib >= 1.15        | Optional          | Support for some touchscreen events.
