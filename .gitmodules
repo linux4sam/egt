@@ -2,10 +2,6 @@
 	path = external/layout
 	url = https://github.com/linux4sam/layout.git
 	ignore = untracked
-[submodule "external/spdlog"]
-	path = external/spdlog
-	url = https://github.com/gabime/spdlog.git
-	ignore = untracked
 [submodule "external/googletest"]
 	path = external/googletest
 	url = https://github.com/google/googletest.git
