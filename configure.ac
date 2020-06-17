@@ -158,6 +158,7 @@ else
   CXXFLAGS="$CXXFLAGS -O0 -DSPDLOG_ACTIVE_LEVEL=0"
   CFLAGS="$CFLAGS -O0"
 fi
+LDFLAGS="$LDFLAGS -Wl,--gc-sections"
 
 AC_ARG_ENABLE(gcov,
   [AC_HELP_STRING([--enable-gcov],[turn on code coverage analysis tools])],
