@@ -7,6 +7,7 @@
 #include "config.h"
 #endif
 
+#include "detail/egtlog.h"
 #include "detail/video/gstappsinkimpl.h"
 #include "detail/video/gstkmssinkimpl.h"
 #include "egt/app.h"
@@ -14,7 +15,6 @@
 #include "egt/respath.h"
 #include "egt/video.h"
 #include <fstream>
-#include <spdlog/spdlog.h>
 #include <string>
 #include <thread>
 
@@ -38,7 +38,7 @@ bool is_target_sama5d4()
         std::string line;
         while (getline(infile, line))
         {
-            SPDLOG_DEBUG("CPU: {}", line);
+            EGTLOG_DEBUG("CPU: {}", line);
             if (line.find("SAMA5D4") != std::string::npos)
             {
                 infile.close();
@@ -61,7 +61,7 @@ bool audio_device()
         std::string line;
         while (getline(infile, line))
         {
-            SPDLOG_DEBUG("Sound : {}", line);
+            EGTLOG_DEBUG("Sound : {}", line);
             if (line.find("audio playback") != std::string::npos)
             {
                 infile.close();
@@ -98,14 +98,14 @@ void VideoWindow::create_impl(const Size& size)
 {
     if (plane_window() && detail::is_target_sama5d4())
     {
-        SPDLOG_DEBUG("VideoWindow: Using KMS sink");
+        EGTLOG_DEBUG("VideoWindow: Using KMS sink");
 #ifdef HAVE_LIBPLANES
         m_video_impl = std::make_unique<detail::GstKmsSinkImpl>(*this, size, detail::is_target_sama5d4());
 #endif
     }
     else
     {
-        SPDLOG_DEBUG("VideoWindow: Using APP sink");
+        EGTLOG_DEBUG("VideoWindow: Using APP sink");
         m_video_impl = std::make_unique<detail::GstAppSinkImpl>(*this, size);
     }
 }

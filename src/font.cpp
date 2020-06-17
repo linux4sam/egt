@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/egtlog.h"
 #include "egt/canvas.h"
 #include "egt/detail/enum.h"
 #include "egt/font.h"
@@ -12,8 +13,6 @@
 #include <cassert>
 #include <map>
 #include <memory>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 
 namespace egt
 {
@@ -27,13 +26,13 @@ constexpr Font::Slant Font::DEFAULT_SLANT;
 
 static shared_cairo_scaled_font_t create_ft_scaled_font(cairo_t* cr, const char* path, const Font& font)
 {
-    SPDLOG_DEBUG("allocating font using FreeType: {}", font.face());
+    EGTLOG_DEBUG("allocating font using FreeType: {}", font.face());
 
     FT_Library value;
     FT_Error status = FT_Init_FreeType(&value);
     if (status != 0)
     {
-        spdlog::error("error initializing FreeType library");
+        detail::error("error initializing FreeType library");
         return nullptr;
     }
 
@@ -41,7 +40,7 @@ static shared_cairo_scaled_font_t create_ft_scaled_font(cairo_t* cr, const char*
     status = FT_New_Face(value, path, 0, &face);
     if (status != 0)
     {
-        spdlog::error("error opening font {}", path);
+        detail::error("error opening font {}", path);
         return nullptr;
     }
 
@@ -54,7 +53,7 @@ static shared_cairo_scaled_font_t create_ft_scaled_font(cairo_t* cr, const char*
                                            face, reinterpret_cast<cairo_destroy_func_t>(FT_Done_Face));
     if (s)
     {
-        spdlog::error("error creating cairo font face from FreeType font {}", font.face());
+        detail::error("error creating cairo font face from FreeType font {}", font.face());
         return nullptr;
     }
 
@@ -85,7 +84,7 @@ static shared_cairo_scaled_font_t create_ft_scaled_font(cairo_t* cr, const char*
 #if CAIRO_HAS_FC_FONT
 static shared_cairo_scaled_font_t create_scaled_font(cairo_t* cr, const Font& font)
 {
-    SPDLOG_DEBUG("allocating font using Fontconfig: {}", font.face());
+    EGTLOG_DEBUG("allocating font using Fontconfig: {}", font.face());
 
     std::unique_ptr<cairo_font_options_t, decltype(cairo_font_options_destroy)*>
     font_options(cairo_font_options_create(), cairo_font_options_destroy);
@@ -240,7 +239,7 @@ void Font::deserialize(const std::string& name, const std::string& value,
             slant(detail::enum_from_string<Font::Slant>(a.second));
             break;
         default:
-            spdlog::warn("unhandled attribute {}", a.first);
+            detail::warn("unhandled attribute {}", a.first);
             break;
         }
     }
@@ -270,7 +269,7 @@ struct FontCache
         if (i != cache.end())
             return i->second;
 
-        SPDLOG_TRACE("creating scaled font {}", font);
+        EGTLOG_TRACE("creating scaled font {}", font);
 
         Canvas canvas(Size(100, 100));
         auto cr = canvas.context();

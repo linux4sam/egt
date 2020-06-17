@@ -4,13 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+#include "detail/egtlog.h"
 #include "detail/video/gstdecoderimpl.h"
 #include "detail/video/gstmeta.h"
 #include "egt/app.h"
 #include <exception>
 #include <fstream>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 #include <sstream>
 #include <string>
 
@@ -65,7 +64,7 @@ bool GstDecoderImpl::play()
         auto ret = gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
         if (ret == GST_STATE_CHANGE_FAILURE)
         {
-            spdlog::error("unable to set the pipeline to the play state");
+            detail::error("unable to set the pipeline to the play state");
             destroyPipeline();
             return false;
         }
@@ -80,7 +79,7 @@ bool GstDecoderImpl::pause()
         auto ret = gst_element_set_state(m_pipeline, GST_STATE_PAUSED);
         if (ret == GST_STATE_CHANGE_FAILURE)
         {
-            spdlog::error("unable to set the pipeline to the pause state.");
+            detail::error("unable to set the pipeline to the pause state.");
             destroyPipeline();
             return false;
         }
@@ -157,7 +156,7 @@ void GstDecoderImpl::destroyPipeline()
         GstStateChangeReturn ret = gst_element_set_state(m_pipeline, GST_STATE_NULL);
         if (GST_STATE_CHANGE_FAILURE == ret)
         {
-            spdlog::error("failed to set pipeline to GST_STATE_NULL");
+            detail::error("failed to set pipeline to GST_STATE_NULL");
         }
         g_object_unref(m_pipeline);
         m_pipeline = nullptr;
@@ -200,7 +199,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
 
     auto impl = static_cast<GstDecoderImpl*>(data);
 
-    SPDLOG_TRACE("gst message: {}", GST_MESSAGE_TYPE_NAME(message));
+    EGTLOG_TRACE("gst message: {}", GST_MESSAGE_TYPE_NAME(message));
 
     switch (GST_MESSAGE_TYPE(message))
     {
@@ -211,7 +210,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
         gst_message_parse(gst_message_parse_error, message, error, debug);
         if (error)
         {
-            SPDLOG_DEBUG("gst error: {} {}",
+            EGTLOG_DEBUG("gst error: {} {}",
                          error->message,
                          debug ? debug.get() : "");
 
@@ -232,7 +231,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
         gst_message_parse(gst_message_parse_warning, message, error, debug);
         if (error)
         {
-            SPDLOG_DEBUG("gst warning: {} {}",
+            EGTLOG_DEBUG("gst warning: {} {}",
                          error->message,
                          debug ? debug.get() : "");
         }
@@ -245,7 +244,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
         gst_message_parse(gst_message_parse_info, message, error, debug);
         if (error)
         {
-            SPDLOG_DEBUG("gst info: {} {}",
+            EGTLOG_DEBUG("gst info: {} {}",
                          error->message,
                          debug ? debug.get() : "");
         }
@@ -254,7 +253,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
     break;
     case GST_MESSAGE_EOS:
     {
-        SPDLOG_DEBUG("loopback: {}", (impl->m_interface.loopback() ? "TRUE" : "FALSE"));
+        EGTLOG_DEBUG("loopback: {}", (impl->m_interface.loopback() ? "TRUE" : "FALSE"));
         if (impl->m_interface.loopback())
         {
             gst_element_seek(impl->m_pipeline, 1.0, GST_FORMAT_TIME,
@@ -285,7 +284,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
         if (GST_MESSAGE_SRC(message) == GST_OBJECT(impl->m_pipeline))
         {
-            SPDLOG_DEBUG("state changed from {} to {}",
+            EGTLOG_DEBUG("state changed from {} to {}",
                          gst_element_state_get_name(old_state),
                          gst_element_state_get_name(new_state));
 
@@ -328,7 +327,7 @@ bool GstDecoderImpl::start_discoverer()
             discoverer{gst_discoverer_new(5 * GST_SECOND, &err1)};
     if (!discoverer)
     {
-        spdlog::error("error creating discoverer instance: {} ", std::string(err1->message));
+        detail::error("error creating discoverer instance: {} ", std::string(err1->message));
         m_interface.on_error.invoke("error creating discoverer instance: " + std::string(err1->message));
         g_clear_error(&err1);
         return false;
@@ -339,31 +338,31 @@ bool GstDecoderImpl::start_discoverer()
             info{gst_discoverer_discover_uri(discoverer.get(), m_uri.c_str(), &err2)};
 
     GstDiscovererResult result = gst_discoverer_info_get_result(info.get());
-    SPDLOG_DEBUG("result: {} ", result);
+    EGTLOG_DEBUG("result: {} ", result);
     switch (result)
     {
     case GST_DISCOVERER_URI_INVALID:
     {
-        spdlog::error("invalid URI: {}", m_uri);
+        detail::error("invalid URI: {}", m_uri);
         m_interface.on_error.invoke("invalid URI: " + m_uri);
         return false;
     }
     case GST_DISCOVERER_ERROR:
     {
-        spdlog::error("error: {} ", std::string(err2->message));
+        detail::error("error: {} ", std::string(err2->message));
         m_interface.on_error.invoke("error: " + std::string(err2->message));
         break;
     }
     case GST_DISCOVERER_TIMEOUT:
     {
 
-        spdlog::error("gst discoverer timeout");
+        detail::error("gst discoverer timeout");
         m_interface.on_error.invoke("gst discoverer timeout");
         return false;
     }
     case GST_DISCOVERER_BUSY:
     {
-        spdlog::error("gst discoverer busy");
+        detail::error("gst discoverer busy");
         m_interface.on_error.invoke("gst discoverer busy");
         return false;
     }
@@ -375,7 +374,7 @@ bool GstDecoderImpl::start_discoverer()
         return false;
     }
     case GST_DISCOVERER_OK:
-        SPDLOG_DEBUG("success");
+        EGTLOG_DEBUG("success");
         break;
     }
 
@@ -383,7 +382,7 @@ bool GstDecoderImpl::start_discoverer()
             sinfo{gst_discoverer_info_get_stream_info(info.get())};
     if (!sinfo)
     {
-        spdlog::error("failed to get stream info");
+        detail::error("failed to get stream info");
         m_interface.on_error.invoke("failed to get stream info");
         return false;
     }
@@ -392,7 +391,7 @@ bool GstDecoderImpl::start_discoverer()
             streams{gst_discoverer_container_info_get_streams(GST_DISCOVERER_CONTAINER_INFO(sinfo.get()))};
     if (!streams)
     {
-        spdlog::error("failed to get stream info list");
+        detail::error("failed to get stream info list");
         m_interface.on_error.invoke("failed to get stream info list");
         return false;
     }
@@ -436,7 +435,7 @@ void GstDecoderImpl::get_stream_info(GstDiscovererStreamInfo* info)
             {
                 m_container = desc.get();
             }
-            SPDLOG_DEBUG("{} : {}", type, std::string(desc.get()));
+            EGTLOG_DEBUG("{} : {}", type, std::string(desc.get()));
         }
     }
 }

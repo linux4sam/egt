@@ -6,7 +6,6 @@
 
 #include "detail/input/inputkeyboard.h"
 #include <exception>
-#include <spdlog/spdlog.h>
 
 namespace egt
 {
@@ -200,7 +199,7 @@ uint32_t XkbInputKeyboard::on_key(uint32_t key, EventId event)
     xkb_keysym_t keysym = xkb_state_key_get_one_sym(m_state.get(), keycode);
     char keysym_name[64];
     xkb_keysym_get_name(keysym, keysym_name, sizeof(keysym_name));
-    SPDLOG_TRACE("keysym name {}", keysym_name);
+    EGTLOG_TRACE("keysym name {}", keysym_name);
 #endif
 
     utf32 = xkb_state_key_get_utf32(m_state.get(), keycode);

@@ -4,12 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/app.h"
+#include "detail/egtlog.h"
 #include "egt/input.h"
 #include "egt/window.h"
 #include <chrono>
 #include <egt/detail/mousegesture.h>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 
 namespace egt
 {
@@ -65,10 +64,10 @@ void Input::dispatch(Event& event)
 
     auto eevent = m_mouse->handle(event);
 
-    SPDLOG_TRACE("input event: {}", event);
+    EGTLOG_TRACE("input event: {}", event);
     if (eevent.id() != EventId::none)
     {
-        SPDLOG_TRACE("input event: {}", eevent);
+        EGTLOG_TRACE("input event: {}", eevent);
     }
 
     if (handler_dispatch(event, eevent, [](Event & event) { m_global_handler.invoke_handlers(event); }))
@@ -188,11 +187,11 @@ void mouse_grab(Widget* widget)
     if (widget)
         /// NOLINTNEXTLINE(bugprone-branch-clone)
     {
-        SPDLOG_DEBUG("mouse grab by {}", widget->name());
+        EGTLOG_DEBUG("mouse grab by {}", widget->name());
     }
     else if (mouse_grab_widget)
     {
-        SPDLOG_DEBUG("mouse release by {}", mouse_grab_widget->name());
+        EGTLOG_DEBUG("mouse release by {}", mouse_grab_widget->name());
     }
     mouse_grab_widget = widget;
 }

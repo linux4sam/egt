@@ -5,7 +5,6 @@
  */
 #include "egt/dialog.h"
 #include <memory>
-#include <spdlog/spdlog.h>
 
 namespace egt
 {

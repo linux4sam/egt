@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/egtlog.h"
 #include "detail/input/inputkeyboard.h"
 #include "egt/app.h"
 #include "egt/detail/input/inputevdev.h"
@@ -15,8 +16,6 @@
 #include <cstdlib>
 #include <fcntl.h>
 #include <linux/input.h>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 #include <string>
 #include <sys/time.h>
 #include <unistd.h>
@@ -36,7 +35,7 @@ InputEvDev::InputEvDev(Application& app, const std::string& path)
     m_fd = open(path.c_str(), O_RDONLY | O_CLOEXEC);
     if (m_fd >= 0)
     {
-        spdlog::info("input device: {}", path);
+        detail::info("input device: {}", path);
 
         m_input.assign(m_fd);
 
@@ -56,7 +55,7 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
 {
     if (error)
     {
-        spdlog::error("{}", error);
+        detail::error("{}", error);
         return;
     }
 
@@ -80,7 +79,7 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
     {
         auto value = e->value;
 
-        SPDLOG_DEBUG("event type: {}", e->type);
+        EGTLOG_DEBUG("event type: {}", e->type);
         switch (e->type)
         {
         case EV_REL:

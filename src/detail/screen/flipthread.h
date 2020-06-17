@@ -3,13 +3,13 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/egtlog.h"
 #include "egt/detail/meta.h"
 #include <atomic>
 #include <condition_variable>
 #include <deque>
 #include <memory>
 #include <mutex>
-#include <spdlog/spdlog.h>
 #include <thread>
 
 namespace egt
@@ -63,7 +63,7 @@ struct FlipThread
 
         while (m_max_queue && m_queue.size() >= m_max_queue)
         {
-            SPDLOG_DEBUG("flip thread blocked");
+            EGTLOG_DEBUG("flip thread blocked");
             m_condition.wait(lock);
         }
 

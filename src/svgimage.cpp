@@ -11,8 +11,6 @@
 #include "egt/respath.h"
 #include "egt/svgimage.h"
 #include <librsvg/rsvg.h>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 
 namespace egt
 {

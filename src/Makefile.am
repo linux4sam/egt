@@ -5,7 +5,7 @@ CUSTOM_FLAGS = $(WARN_CFLAGS) \
 	-isystem $(top_srcdir)/external/rapidxml \
 	-isystem $(top_srcdir)/external/utfcpp/source \
 	-isystem $(top_srcdir)/external/layout \
-	-isystem $(top_srcdir)/external/spdlog/include
+	-isystem $(top_srcdir)/external/fmt/include
 
 CUSTOM_CXXFLAGS = -Woverloaded-virtual -DEGT_DLL_EXPORTS
 
@@ -52,7 +52,10 @@ detail/base64.cpp \
 detail/base64.h \
 detail/collision.cpp \
 detail/dump.h \
+detail/egtlog.cpp \
+detail/egtlog.h \
 detail/filesystem.cpp \
+detail/fmt.h \
 detail/image.cpp \
 detail/imagecache.cpp \
 detail/input/inputkeyboard.cpp \
@@ -135,7 +138,6 @@ images/jpeg/cairo_jpg.h
 endif
 
 libegt_la_LIBADD = $(CODE_COVERAGE_LDFLAGS)
-libegt_la_LIBADD += $(top_builddir)/external/libspdlog.la
 if HAVE_SIMD
 libegt_la_LIBADD += $(top_builddir)/external/Simd/prj/cmake/libSimd.a
 endif

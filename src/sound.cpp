@@ -7,6 +7,7 @@
 #include "config.h"
 #endif
 
+#include "detail/egtlog.h"
 #include "egt/detail/filesystem.h"
 #include "egt/respath.h"
 #include "egt/sound.h"
@@ -17,8 +18,6 @@
 #include <deque>
 #include <fstream>
 #include <mutex>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 #include <thread>
 #include <vector>
 
@@ -163,7 +162,7 @@ void Sound::open_file()
 #else
     if (m_impl->channels == 0 || m_impl->rate == 0)
     {
-        spdlog::error("can't play sound file {}: sndfile not available and rate "
+        detail::error("can't play sound file {}: sndfile not available and rate "
                       "and channel not specified", path);
         return;
     }
@@ -173,7 +172,7 @@ void Sound::open_file()
 
     if (!m_impl->in)
     {
-        spdlog::error("can't open file: {}", path);
+        detail::error("can't open file: {}", path);
     }
 }
 
@@ -213,77 +212,77 @@ void Sound::init_alsa_params(unsigned int rate, int channels)
                                             SND_PCM_ACCESS_RW_INTERLEAVED);
     if (err < 0)
     {
-        spdlog::error("can't set interleaved mode. {}", snd_strerror(err));
+        detail::error("can't set interleaved mode. {}", snd_strerror(err));
     }
 
     err = snd_pcm_hw_params_set_format(m_impl->handle, params,
                                        SND_PCM_FORMAT_S16_LE);
     if (err < 0)
     {
-        spdlog::error("can't set format. {}", snd_strerror(err));
+        detail::error("can't set format. {}", snd_strerror(err));
     }
 
     err = snd_pcm_hw_params_set_channels(m_impl->handle, params, channels);
     if (err < 0)
     {
-        spdlog::error("can't set channels number. {}", snd_strerror(err));
+        detail::error("can't set channels number. {}", snd_strerror(err));
     }
 
     err = snd_pcm_hw_params_set_rate_near(m_impl->handle, params, &rate, nullptr);
     if (err < 0)
     {
-        spdlog::error("can't set rate. {}", snd_strerror(err));
+        detail::error("can't set rate. {}", snd_strerror(err));
     }
 
     /* write back hw parameters */
     err = snd_pcm_hw_params(m_impl->handle, params);
     if (err < 0)
     {
-        spdlog::error("can't set hardware parameters. {}", snd_strerror(err));
+        detail::error("can't set hardware parameters. {}", snd_strerror(err));
     }
 
-    SPDLOG_TRACE("PCM name: {}", snd_pcm_name(m_impl->handle));
-    SPDLOG_TRACE("PCM state: {}", snd_pcm_state_name(snd_pcm_state(m_impl->handle)));
+    EGTLOG_TRACE("PCM name: {}", snd_pcm_name(m_impl->handle));
+    EGTLOG_TRACE("PCM state: {}", snd_pcm_state_name(snd_pcm_state(m_impl->handle)));
 
     snd_pcm_hw_params_get_period_size(params, &m_impl->frames, nullptr);
     m_impl->channels = channels;
     m_impl->rate = rate;
 
-    SPDLOG_TRACE("PCM frames: {}", m_impl->frames);
-    SPDLOG_TRACE("PCM channels: {}", m_impl->channels);
+    EGTLOG_TRACE("PCM frames: {}", m_impl->frames);
+    EGTLOG_TRACE("PCM channels: {}", m_impl->channels);
 
     snd_pcm_sw_params_t* sw_params;
 
     err = snd_pcm_sw_params_malloc(&sw_params);
     if (err < 0)
     {
-        spdlog::error("cannot allocate software parameters structure {}",
+        detail::error("cannot allocate software parameters structure {}",
                       snd_strerror(err));
     }
 
     err = snd_pcm_sw_params_current(m_impl->handle, sw_params);
     if (err < 0)
     {
-        spdlog::error("cannot initialize software parameters structure {}",
+        detail::error("cannot initialize software parameters structure {}",
                       snd_strerror(err));
     }
 
     err = snd_pcm_sw_params_set_avail_min(m_impl->handle, sw_params, PERIOD);
     if (err < 0)
     {
-        spdlog::error("cannot set minimum available count {}", snd_strerror(err));
+        detail::error("cannot set minimum available count {}", snd_strerror(err));
     }
 
     err = snd_pcm_sw_params_set_start_threshold(m_impl->handle, sw_params, 0U);
     if (err < 0)
     {
-        spdlog::error("cannot set start mode {}", snd_strerror(err));
+        detail::error("cannot set start mode {}", snd_strerror(err));
     }
 
     err = snd_pcm_sw_params(m_impl->handle, sw_params);
     if (err < 0)
     {
-        spdlog::error("cannot set software parameters {}",  snd_strerror(err));
+        detail::error("cannot set software parameters {}",  snd_strerror(err));
     }
 
     snd_pcm_sw_params_free(sw_params);
@@ -340,7 +339,7 @@ void Sound::play(bool repeat)
                 else if (err < 0)
                 {
                     // NOLINTNEXTLINE(misc-lambda-function-name)
-                    SPDLOG_TRACE("PCM wait error");
+                    EGTLOG_TRACE("PCM wait error");
                     return;
                 }
 
@@ -355,11 +354,11 @@ void Sound::play(bool repeat)
                 {
                     if (frames_to_deliver == -EPIPE)
                     {
-                        spdlog::error("PCM xrun occurred\n");
+                        detail::error("PCM xrun occurred\n");
                     }
                     else
                     {
-                        spdlog::error("PCM unknown avail update return value: {}",
+                        detail::error("PCM unknown avail update return value: {}",
                                       frames_to_deliver);
                     }
 
@@ -395,18 +394,18 @@ void Sound::play(bool repeat)
                 }
 
                 if (err == -EPIPE)
-                    spdlog::error("underrun");
+                    detail::error("underrun");
 
                 if (err < 0)
                     err = snd_pcm_recover(m_impl->handle, err, 0);
 
                 if (err > 0 && err < count / m_impl->channels)
                 {
-                    spdlog::error("short write to PCM device.");
+                    detail::error("short write to PCM device.");
                 }
                 else if (err < 0)
                 {
-                    spdlog::error("can't write to PCM device: {}", snd_strerror(err));
+                    detail::error("can't write to PCM device: {}", snd_strerror(err));
                     //break;
                 }
             }

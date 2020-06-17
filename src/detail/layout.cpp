@@ -6,8 +6,6 @@
 #include "egt/detail/layout.h"
 #include "egt/frame.h"
 #include "egt/sizer.h"
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 
 #define LAY_IMPLEMENTATION
 #include "layout.h"

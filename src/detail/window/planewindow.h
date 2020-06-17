@@ -29,7 +29,7 @@ class PlaneWindow : public BasicWindow
 {
 public:
 
-    explicit PlaneWindow(Window* interface,
+    explicit PlaneWindow(Window* inter,
                          PixelFormat format = PixelFormat::argb8888,
                          WindowHint hint = WindowHint::automatic);
 

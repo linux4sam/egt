@@ -7,13 +7,12 @@
 #include "config.h"
 #endif
 
+#include "detail/egtlog.h"
 #include "egt/detail/image.h"
 #include "egt/detail/meta.h"
 #include "egt/resource.h"
 #include <cstring>
 #include <memory>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 
 #ifdef HAVE_ZLIB
 #include <zlib.h>
@@ -90,7 +89,7 @@ private:
         stream.opaque = Z_NULL;
         if (inflateInit2(&stream, 15 + 32) != Z_OK)
         {
-            spdlog::warn("failed to init zlib inflate");
+            detail::warn("failed to init zlib inflate");
             return;
         }
 
@@ -118,7 +117,7 @@ private:
 
         if (res != Z_STREAM_END)
         {
-            spdlog::warn("failed to finish zlib inflate: {}", res);
+            detail::warn("failed to finish zlib inflate: {}", res);
             return;
         }
 
@@ -240,7 +239,7 @@ ResourceManager::ItemArray ResourceManager::list() const
 void ResourceManager::add(const char* name, const unsigned char* data, size_t len)
 {
     if (exists(name))
-        spdlog::warn("resource added with duplicate name: {}", name);
+        detail::warn("resource added with duplicate name: {}", name);
 
     ResourceItem r(data, len);
     m_resources.insert(std::make_pair(name, r));
@@ -249,7 +248,7 @@ void ResourceManager::add(const char* name, const unsigned char* data, size_t le
 void ResourceManager::add(const char* name, const std::vector<unsigned char>& data)
 {
     if (exists(name))
-        spdlog::warn("resource added with duplicate name: {}", name);
+        detail::warn("resource added with duplicate name: {}", name);
 
     ResourceItem r(data);
     m_resources.insert(std::make_pair(name, r));

@@ -6,7 +6,6 @@
 #include "detail/window/windowimpl.h"
 #include "egt/painter.h"
 #include "egt/window.h"
-#include <spdlog/spdlog.h>
 
 namespace egt
 {

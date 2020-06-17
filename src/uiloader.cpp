@@ -4,13 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "detail/base64.h"
+#include "detail/egtlog.h"
 #include "egt/ui"
 #include "egt/uiloader.h"
 #include <rapidxml.hpp>
 #include <rapidxml_print.hpp>
 #include <rapidxml_utils.hpp>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 
 namespace egt
 {
@@ -36,7 +35,7 @@ static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
         auto name = prop->first_attribute("name");
         if (!name)
         {
-            spdlog::warn("property with no name");
+            detail::warn("property with no name");
             continue;
         }
 
@@ -142,7 +141,7 @@ static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node,
         ttype = type->value();
     else
     {
-        spdlog::warn("widget with no type");
+        detail::warn("widget with no type");
         return nullptr;
     }
 
@@ -175,7 +174,7 @@ static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node,
 
         if (!found)
         {
-            spdlog::error("widget type {} unsupported", ttype);
+            detail::error("widget type {} unsupported", ttype);
             return nullptr;
         }
     }
@@ -197,7 +196,7 @@ static void parse_resource(rapidxml::xml_node<>* node)
         name = n->value();
     else
     {
-        spdlog::warn("resource with no name");
+        detail::warn("resource with no name");
         return;
     }
 

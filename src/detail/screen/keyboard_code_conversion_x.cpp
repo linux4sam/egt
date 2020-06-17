@@ -1,12 +1,12 @@
 // Copyright (c) 2012 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+#include "detail/egtlog.h"
 #include "detail/screen/keyboard_code_conversion_x.h"
 #include "detail/screen/x11wrap.h"
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
-#include <spdlog/spdlog.h>
 #define EKEY_UNSUPPORTED EKEY_UNKNOWN
 namespace egt
 {
@@ -1072,7 +1072,7 @@ KeyboardCode KeyboardCodeFromXKeysym(unsigned int keysym)
     default:
         break;
     }
-    SPDLOG_DEBUG("Unknown keysym: {}", keysym);
+    EGTLOG_DEBUG("Unknown keysym: {}", keysym);
     return EKEY_UNKNOWN;
 }
 

@@ -4,16 +4,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "detail/dump.h"
+#include "detail/egtlog.h"
+#include "egt/eventloop.h"
 #include "detail/priorityqueue.h"
 #include "egt/app.h"
-#include "egt/eventloop.h"
 #include "egt/tools.h"
 #include "egt/widget.h"
 #include "egt/window.h"
 #include <cstdlib>
 #include <egt/asio.hpp>
 #include <numeric>
-#include <spdlog/spdlog.h>
 
 namespace egt
 {
@@ -169,7 +169,7 @@ int EventLoop::run()
         }
     }
 
-    SPDLOG_TRACE("EventLoop::run() exiting");
+    EGTLOG_TRACE("EventLoop::run() exiting");
 
     return 0;
 }

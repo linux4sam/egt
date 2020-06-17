@@ -3,12 +3,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/egtlog.h"
 #include "egt/detail/string.h"
 #include "egt/respath.h"
 #include "egt/uri.h"
 #include <cstdlib>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
+#include <mutex>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <thread>
@@ -57,12 +57,12 @@ static std::string resolve_file_path(const std::string& filename,
     {
         auto test = path + filename;
 
-        SPDLOG_TRACE("looking at file {}", test);
+        EGTLOG_TRACE("looking at file {}", test);
 
         struct stat buf {};
         if (!stat(test.c_str(), &buf))
         {
-            SPDLOG_TRACE("found file {}", test);
+            EGTLOG_TRACE("found file {}", test);
             return test;
         }
     }

@@ -7,7 +7,6 @@
 #include "egt/app.h"
 #include "egt/eventloop.h"
 #include "egt/timer.h"
-#include <spdlog/spdlog.h>
 
 namespace egt
 {

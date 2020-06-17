@@ -10,11 +10,11 @@
 #include "config.h"
 #endif
 
+#include "detail/egtlog.h"
 #include "egt/event.h"
 #include "egt/keycode.h"
 #include <array>
 #include <cassert>
-#include <spdlog/spdlog.h>
 
 #ifdef HAVE_XKBCOMMON
 #include <xkbcommon/xkbcommon.h>
@@ -123,17 +123,17 @@ public:
             try
             {
                 m_impl = std::make_unique<XkbInputKeyboard>();
-                SPDLOG_DEBUG("using xkb input keyboard mapping");
+                EGTLOG_DEBUG("using xkb input keyboard mapping");
                 return;
             }
             catch (...)
             {
-                spdlog::error("failed to load xkb input keyboard mapping");
+                detail::error("failed to load xkb input keyboard mapping");
             }
 #endif
 
             m_impl = std::make_unique<BasicInputKeyboard>();
-            SPDLOG_DEBUG("using basic input keyboard mapping");
+            EGTLOG_DEBUG("using basic input keyboard mapping");
         }
     }
 

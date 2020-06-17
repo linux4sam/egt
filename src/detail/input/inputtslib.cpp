@@ -3,11 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/egtlog.h"
 #include "egt/app.h"
 #include "egt/detail/input/inputtslib.h"
 #include <chrono>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 #include <tslib.h>
 
 namespace egt
@@ -36,7 +35,7 @@ InputTslib::InputTslib(Application& app, const std::string& path)
 
     if (m_impl->ts)
     {
-        spdlog::info("added tslib device {}", path);
+        detail::info("added tslib device {}", path);
 
         // NOLINTNEXTLINE(modernize-loop-convert)
         for (auto i = 0; i < SAMPLE_COUNT; i++)
@@ -66,7 +65,7 @@ void InputTslib::handle_read(const asio::error_code& error)
 {
     if (error)
     {
-        spdlog::error("{}", error);
+        detail::error("{}", error);
         return;
     }
 
@@ -75,7 +74,7 @@ void InputTslib::handle_read(const asio::error_code& error)
     int ret = ts_read_mt(m_impl->ts, samp_mt, CHANNELS, SAMPLE_COUNT);
     if (unlikely(ret < 0))
     {
-        spdlog::warn("ts_read_mt error");
+        detail::warn("ts_read_mt error");
         return;
     }
 
@@ -93,7 +92,7 @@ void InputTslib::handle_read(const asio::error_code& error)
                 continue;
 #endif
 
-            SPDLOG_TRACE("{}.{}: (slot {}) {} {} {} {} {} {}\n",
+            EGTLOG_TRACE("{}.{}: (slot {}) {} {} {} {} {} {}\n",
                          samp_mt[j][i].tv.tv_sec,
                          samp_mt[j][i].tv.tv_usec,
                          samp_mt[j][i].slot,
@@ -118,7 +117,7 @@ void InputTslib::handle_read(const asio::error_code& error)
                 {
                     m_active[slot] = false;
 
-                    SPDLOG_TRACE("mouse up {}", m_last_point[slot]);
+                    EGTLOG_TRACE("mouse up {}", m_last_point[slot]);
 
                     m_last_point[slot] = DisplayPoint(x, y);
                     Event event(EventId::raw_pointer_up, Pointer(m_last_point[slot],
@@ -159,7 +158,7 @@ void InputTslib::handle_read(const asio::error_code& error)
                     {
                         m_active[slot] = true;
 
-                        SPDLOG_TRACE("mouse down {}", m_last_point[slot]);
+                        EGTLOG_TRACE("mouse down {}", m_last_point[slot]);
 
                         Event event(EventId::raw_pointer_down,
                                     Pointer(m_last_point[slot], Pointer::Button::left));
@@ -176,7 +175,7 @@ void InputTslib::handle_read(const asio::error_code& error)
     {
         if (move[slot])
         {
-            SPDLOG_TRACE("mouse move {}", m_last_point[slot]);
+            EGTLOG_TRACE("mouse move {}", m_last_point[slot]);
 
             Event event(EventId::raw_pointer_move,
                         Pointer(m_last_point[slot], Pointer::Button::left));

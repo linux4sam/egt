@@ -10,8 +10,6 @@
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/types.h"
 #include "egt/uri.h"
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 #include <string>
 
 namespace egt
@@ -58,7 +56,7 @@ GstKmsSinkImpl::GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool de
             if (error)
             {
                 if (error->message)
-                    spdlog::error("load plugin error: {}", error->message);
+                    detail::error("load plugin error: {}", error->message);
                 g_error_free(error);
             }
         }
@@ -84,7 +82,7 @@ std::string GstKmsSinkImpl::create_pipeline()
         assert(s);
         m_gem = s->gem();
         format = detail::gstreamer_format(detail::egt_format(s->get_plane_format()));
-        SPDLOG_DEBUG("egt_format = {}", format);
+        EGTLOG_DEBUG("egt_format = {}", format);
     }
 
     std::string a_pipe;
@@ -134,7 +132,7 @@ std::string GstKmsSinkImpl::create_pipeline()
     }
     else
     {
-        SPDLOG_DEBUG("Decoding through software decoders");
+        EGTLOG_DEBUG("Decoding through software decoders");
         v_pipe = fmt::format(" ! queue ! videoscale ! video/x-raw,width={},height={} " \
                              " ! videoconvert ! video/x-raw,format={}", m_size.width(), m_size.height(), format);
     }
@@ -157,14 +155,14 @@ bool GstKmsSinkImpl::media(const std::string& uri)
         {
             if (!start_discoverer())
             {
-                spdlog::error("media file discoverer failed");
+                detail::error("media file discoverer failed");
                 return false;
             }
         }
 #endif
 
         const auto buffer = create_pipeline();
-        SPDLOG_DEBUG("{}", buffer);
+        EGTLOG_DEBUG("{}", buffer);
 
         GError* error = nullptr;
         m_pipeline = gst_parse_launch(buffer.c_str(), &error);
@@ -172,13 +170,13 @@ bool GstKmsSinkImpl::media(const std::string& uri)
         {
             if (error && error->message)
             {
-                SPDLOG_DEBUG("gst_parse_launch failed : {}", error->message);
+                EGTLOG_DEBUG("gst_parse_launch failed : {}", error->message);
                 m_interface.on_error.invoke("gst_parse_launch failed " + std::string(error->message));
             }
             return false;
         }
 
-        SPDLOG_DEBUG("gst_parse_launch success");
+        EGTLOG_DEBUG("gst_parse_launch success");
         if (m_audiodevice & m_audiotrack)
         {
             // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)

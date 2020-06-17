@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/egtlog.h"
 #include "detail/video/gstmeta.h"
 #include "egt/app.h"
 #include "egt/audio.h"
@@ -12,8 +13,6 @@
 #include "egt/video.h"
 #include <exception>
 #include <gst/gst.h>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 #include <sstream>
 #include <thread>
 
@@ -40,7 +39,7 @@ struct AudioPlayerImpl
             GstStateChangeReturn ret = gst_element_set_state(m_pipeline, state);
             if (GST_STATE_CHANGE_FAILURE == ret)
             {
-                spdlog::error("unable to set audio pipeline to {}", state);
+                detail::error("unable to set audio pipeline to {}", state);
                 player->on_error.invoke("audio pipeline set state failed");
                 return false;
             }
@@ -86,7 +85,7 @@ static gboolean query_position(gpointer data)
     if (gst_element_query_position(impl->m_pipeline, GST_FORMAT_TIME, &impl->m_position) &&
         gst_element_query_duration(impl->m_pipeline, GST_FORMAT_TIME, &impl->m_duration))
     {
-        SPDLOG_TRACE("position: {}  && duration: {}", impl->m_position, impl->m_duration);
+        EGTLOG_TRACE("position: {}  && duration: {}", impl->m_position, impl->m_duration);
 
         if (Application::check_instance())
         {
@@ -105,7 +104,7 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
 
     auto impl = static_cast<detail::AudioPlayerImpl*>(data);
 
-    SPDLOG_TRACE("gst message: {}", GST_MESSAGE_TYPE_NAME(message));
+    EGTLOG_TRACE("gst message: {}", GST_MESSAGE_TYPE_NAME(message));
 
     switch (GST_MESSAGE_TYPE(message))
     {
@@ -116,7 +115,7 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
         detail::gst_message_parse(gst_message_parse_error, message, error, debug);
         if (error)
         {
-            SPDLOG_DEBUG("gst error: {} {}",
+            EGTLOG_DEBUG("gst error: {} {}",
                          error.get()->message,
                          debug ? debug.get() : "");
             if (!impl->m_no_events)
@@ -139,7 +138,7 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
         detail::gst_message_parse(gst_message_parse_warning, message, error, debug);
         if (error)
         {
-            SPDLOG_DEBUG("gst warning: {} {}",
+            EGTLOG_DEBUG("gst warning: {} {}",
                          error.get()->message,
                          debug ? debug.get() : "");
         }
@@ -152,7 +151,7 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
         detail::gst_message_parse(gst_message_parse_info, message, error, debug);
         if (error)
         {
-            SPDLOG_DEBUG("gst info: {} {}",
+            EGTLOG_DEBUG("gst info: {} {}",
                          error.get()->message,
                          debug ? debug.get() : "");
         }
@@ -188,7 +187,7 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
         if (GST_MESSAGE_SRC(message) == GST_OBJECT(impl->m_pipeline))
         {
-            SPDLOG_DEBUG("state changed from {} to {}",
+            EGTLOG_DEBUG("state changed from {} to {}",
                          gst_element_state_get_name(old_state),
                          gst_element_state_get_name(new_state));
 
@@ -432,13 +431,13 @@ bool AudioPlayer::createPipeline(const std::string& uri)
     const auto pipeline = fmt::format("uridecodebin uri={} expose-all-streams=false caps=audio/x-raw " \
                                       "! audioconvert ! volume name=volume ! autoaudiosink", uri);
 
-    SPDLOG_DEBUG(pipeline);
+    EGTLOG_DEBUG(pipeline);
 
     GError* error = nullptr;
     m_impl->m_pipeline = gst_parse_launch(pipeline.c_str(), &error);
     if (!m_impl->m_pipeline)
     {
-        spdlog::error("failed to create audio pipeline");
+        detail::error("failed to create audio pipeline");
         on_error.invoke("failed to create audio pipeline");
         return false;
     }
@@ -447,7 +446,7 @@ bool AudioPlayer::createPipeline(const std::string& uri)
     m_impl->m_volume = gst_bin_get_by_name(GST_BIN(m_impl->m_pipeline), "volume");
     if (!m_impl->m_volume)
     {
-        spdlog::error("failed to get volume element");
+        detail::error("failed to get volume element");
         on_error.invoke("failed to get volume element");
         return false;
     }

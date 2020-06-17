@@ -11,9 +11,9 @@
  * @brief Debug dump tools.
  */
 
+#include "detail/fmt.h"
 #include <chrono>
 #include <iomanip>
-#include <spdlog/spdlog.h>
 #include <vector>
 
 namespace egt

@@ -10,7 +10,6 @@
 #include "egt/image.h"
 #include "egt/painter.h"
 #include <algorithm>
-#include <spdlog/spdlog.h>
 
 namespace egt
 {
@@ -34,7 +33,7 @@ PlaneWindow::PlaneWindow(Window* inter,
 
 void PlaneWindow::resize(const Size& size)
 {
-    SPDLOG_TRACE(m_interface->name());
+    EGTLOG_TRACE(m_interface->name());
 
     if (!size.empty() && m_interface->m_box.size() != size)
     {

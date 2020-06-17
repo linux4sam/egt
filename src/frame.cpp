@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/egtlog.h"
 #include "detail/dump.h"
 #include "egt/detail/layout.h"
 #include "egt/detail/math.h"
@@ -11,8 +12,6 @@
 #include "egt/painter.h"
 #include "egt/screen.h"
 #include <cstdlib>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 #include <string>
 
 namespace egt
@@ -203,7 +202,7 @@ void Frame::add_damage(const Rect& rect)
     if (m_in_draw)
         return;
 
-    SPDLOG_TRACE("{} damage:{}", name(), rect);
+    EGTLOG_TRACE("{} damage:{}", name(), rect);
 
     // No damage outside of our box().  There are cases where this is expected,
     // for example, when a widget is halfway off the screen. So, we truncate the
@@ -355,7 +354,7 @@ static inline bool time_child_draw_enabled()
 
 void Frame::draw(Painter& painter, const Rect& rect)
 {
-    SPDLOG_TRACE("{} draw {}", name(), rect);
+    EGTLOG_TRACE("{} draw {}", name(), rect);
 
     Painter::AutoSaveRestore sr(painter);
 

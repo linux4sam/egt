@@ -7,14 +7,13 @@
 #include "config.h"
 #endif
 
+#include "detail/egtlog.h"
 #include "egt/app.h"
 #include "egt/detail/filesystem.h"
 #include "egt/detail/image.h"
 #include "egt/resource.h"
 #include "images/bmp/cairo_bmp.h"
 #include <fstream>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 #include <vector>
 
 #ifdef HAVE_LIBCURL
@@ -91,7 +90,7 @@ EGT_API shared_cairo_surface_t load_image_from_memory(const unsigned char* data,
     if (mimetype.empty())
         throw std::runtime_error("unable to determine mimetype for: " + name);
 
-    SPDLOG_DEBUG("mimetype of {} is {}", name, mimetype);
+    EGTLOG_DEBUG("mimetype of {} is {}", name, mimetype);
 
     if (mimetype == MIME_BMP)
     {
@@ -155,7 +154,7 @@ shared_cairo_surface_t load_image_from_filesystem(const std::string& path)
     const auto mimetype = get_mime_type(path);
     if (mimetype.empty())
         throw std::runtime_error("unable to determine mimetype for: " + path);
-    SPDLOG_DEBUG("mimetype of {} is {}", path, mimetype);
+    EGTLOG_DEBUG("mimetype of {} is {}", path, mimetype);
 
     shared_cairo_surface_t image;
 
@@ -208,7 +207,7 @@ EGT_API shared_cairo_surface_t load_image_from_network(const std::string& url)
                                        url);
 #else
     detail::ignoreparam(url);
-    spdlog::warn("network support not available");
+    detail::warn("network support not available");
 #endif
     return image;
 }

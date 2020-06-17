@@ -36,13 +36,14 @@ esac
 AC_MSG_RESULT([$egt_os_win32])
 AM_CONDITIONAL(OS_WIN32, test "$egt_os_win32" = "yes")
 
-CXXFLAGS="$CXXFLAGS -g"
+CXXFLAGS="$CXXFLAGS -g -std=c++14 -DFMT_HEADER_ONLY"
 CFLAGS="$CFLAGS -g"
 
 if test "x$egt_os_win32" = "xyes"; then
-  CXXFLAGS="$CXXFLAGS -std=gnu++14"
+  CXXFLAGS="$CXXFLAGS -DWIN32 -DEGT_STATIC"
+
 else
-  CXXFLAGS="$CXXFLAGS -std=c++14"
+  CXXFLAGS="$CXXFLAGS -fvisibility=hidden -fvisibility-inlines-hidden"
 fi
 
 AC_DISABLE_STATIC
@@ -139,8 +140,6 @@ AC_CHECK_HEADERS([unistd.h glob.h])
 AC_CHECK_HEADERS([linux/gpio.h],[have_linux_gpio_h=yes],[])
 AM_CONDITIONAL([HAVE_LINUX_GPIO_H], [test "x${have_linux_gpio_h}" = xyes])
 
-CXXFLAGS="$CXXFLAGS -DSPDLOG_COMPILED_LIB -fvisibility=hidden -fvisibility-inlines-hidden"
-
 AC_ARG_ENABLE([debug],
   [AS_HELP_STRING([--enable-debug], [enable debugging support [default=yes]])],
   [enable_debug=$enableval], [enable_debug=yes])
@@ -153,10 +152,15 @@ if test "x$enable_debug" = "xno" ; then
 		      -ftree-vectorize \
 		      -ffunction-sections \
 		      -fdata-sections"
-  CFLAGS="$CFLAGS -DNDEBUG -Ofast"
+  CFLAGS="$CFLAGS -DNDEBUG -Ofast \
+  		      -fno-math-errno \
+  		      -fmerge-all-constants \
+		      -ftree-vectorize \
+		      -ffunction-sections \
+		      -fdata-sections"
 else
-  CXXFLAGS="$CXXFLAGS -O0 -DSPDLOG_ACTIVE_LEVEL=0"
-  CFLAGS="$CFLAGS -O0"
+  CXXFLAGS="$CXXFLAGS -DEGTLOG_ACTIVE_LEVEL=0"
+  CFLAGS="$CFLAGS"
 fi
 LDFLAGS="$LDFLAGS -Wl,--gc-sections"
 

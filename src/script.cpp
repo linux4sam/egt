@@ -7,9 +7,8 @@
 #include "config.h"
 #endif
 
+#include "detail/egtlog.h"
 #include "egt/script.h"
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 
 #ifdef HAVE_LUA
 #include "detail/lua/script.h"
@@ -31,20 +30,20 @@ double lua_evaluate(const std::string& expr)
 
     if (!script_init(nullptr))
     {
-        spdlog::error("can't init lua");
+        detail::error("can't init lua");
         return y;
     }
     cookie = script_load(expr.c_str(), &msg);
     if (msg)
     {
-        spdlog::error("can't load expr: {}", msg);
+        detail::error("can't load expr: {}", msg);
         goto error;
     }
 
     y = script_eval(cookie, &msg);
     if (msg)
     {
-        spdlog::error("can't eval: {}", msg);
+        detail::error("can't eval: {}", msg);
         goto error;
     }
 
@@ -55,7 +54,7 @@ error:
     script_close();
 #else
     detail::ignoreparam(expr);
-    spdlog::warn("lua script support not available");
+    detail::warn("lua script support not available");
 #endif
     return y;
 }

@@ -3,12 +3,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/egtlog.h"
 #include "detail/charts/plplotimpl.h"
 #include "egt/app.h"
 #include "egt/canvas.h"
 #include "egt/screen.h"
 #include <cmath>
-#include <spdlog/spdlog.h>
 #include <type_traits>
 
 namespace egt
@@ -297,7 +297,7 @@ void PlPlotImpl::plplot_verify_viewport()
         m_ymax += ydiff;
     }
 
-    SPDLOG_DEBUG("xmin {} xmax {} ymin {} ymax {}",
+    EGTLOG_DEBUG("xmin {} xmax {} ymin {} ymax {}",
                  m_xmin, m_xmax, m_ymin, m_ymax);
 }
 
@@ -675,7 +675,7 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
 
             if (!m_sdata.empty())
             {
-                SPDLOG_TRACE("m_ydata[{}] = {} ", i, m_ydata.at(i));
+                EGTLOG_TRACE("m_ydata[{}] = {} ", i, m_ydata.at(i));
                 plfbox((i * 2), m_ydata.at(i));
 
                 if (axis() >= 0)

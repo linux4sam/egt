@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/egtlog.h"
 #include "egt/embed.h"
 #include "egt/filedialog.h"
 #include <experimental/filesystem>
-#include <spdlog/spdlog.h>
 
 #ifdef SRCDIR
 EGT_EMBED(internal_folder, SRCDIR "/icons/32px/folder.png")
@@ -69,7 +69,7 @@ bool FileDialog::list_files(const std::string& filepath)
 
     m_title.text(m_filepath);
 
-    SPDLOG_DEBUG("FileDialog : file path is {}", m_filepath);
+    EGTLOG_DEBUG("FileDialog : file path is {}", m_filepath);
 
     m_flist.clear();
 
@@ -89,7 +89,7 @@ bool FileDialog::list_files(const std::string& filepath)
     }
     catch (const fs::filesystem_error& ex)
     {
-        SPDLOG_DEBUG("FileDialog : Error: {}", ex.what());
+        EGTLOG_DEBUG("FileDialog : Error: {}", ex.what());
         return false;
     }
 
@@ -102,7 +102,7 @@ void FileDialog::list_item_selected(int index)
 {
     auto fselect = dynamic_cast<StringItem*>(m_flist.item_at(index).get())->text();
 
-    SPDLOG_DEBUG("FileDialog : File Selected is : {}", fselect);
+    EGTLOG_DEBUG("FileDialog : File Selected is : {}", fselect);
 
     if (fselect == "./")
     {
@@ -112,13 +112,13 @@ void FileDialog::list_item_selected(int index)
     {
         fs::path p = m_filepath;
         m_filepath = p.parent_path().string();
-        SPDLOG_DEBUG("FileDialog : parent dir {}", m_filepath);
+        EGTLOG_DEBUG("FileDialog : parent dir {}", m_filepath);
         selected("");
         list_files(m_filepath);
     }
     else if (fs::is_directory(m_filepath + "/" + fselect))
     {
-        SPDLOG_DEBUG("FileDialog : {} is a directory", fselect);
+        EGTLOG_DEBUG("FileDialog : {} is a directory", fselect);
         selected("");
         if (m_filepath == "/")
             m_filepath += fselect;
@@ -128,7 +128,7 @@ void FileDialog::list_item_selected(int index)
     }
     else if (fs::is_regular_file(m_filepath + "/" + fselect))
     {
-        SPDLOG_DEBUG("FileDialog : {} is a regular file", fselect);
+        EGTLOG_DEBUG("FileDialog : {} is a regular file", fselect);
         selected(fselect);
     }
 }

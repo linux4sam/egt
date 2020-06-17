@@ -7,6 +7,7 @@
 #include "config.h"
 #endif
 
+#include "detail/egtlog.h"
 #include "detail/dump.h"
 #include "detail/window/basicwindow.h"
 #include "detail/window/planewindow.h"
@@ -20,8 +21,6 @@
 #include "egt/painter.h"
 #include "egt/window.h"
 #include <algorithm>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 
 #ifdef SRCDIR
 EGT_EMBED(internal_cursor, SRCDIR "/icons/16px/cursor.png")
@@ -112,7 +111,7 @@ void Window::paint(Painter& painter)
 
 void Window::begin_draw()
 {
-    SPDLOG_TRACE("{} top draw", name());
+    EGTLOG_TRACE("{} top draw", name());
 
     if (m_impl)
         m_impl->begin_draw();
@@ -146,7 +145,7 @@ void Window::do_draw()
     m_in_draw = true;
     auto reset = detail::on_scope_exit([this]() { m_in_draw = false; });
 
-    SPDLOG_TRACE("{} do draw", name());
+    EGTLOG_TRACE("{} do draw", name());
 
     detail::code_timer(time_child_draw_enabled(), name() + " draw: ", [this]()
     {
@@ -220,7 +219,7 @@ void Window::create_impl(const Rect& rect,
         }
         catch (std::exception& e)
         {
-            SPDLOG_DEBUG("non-fatal exception: {}", e.what());
+            EGTLOG_DEBUG("non-fatal exception: {}", e.what());
         }
 
         if (!m_impl)
@@ -233,7 +232,7 @@ void Window::create_impl(const Rect& rect,
             }
             catch (std::exception& e)
             {
-                SPDLOG_DEBUG("non-fatal exception: {}", e.what());
+                EGTLOG_DEBUG("non-fatal exception: {}", e.what());
 #endif
 
                 m_impl = std::make_unique<detail::BasicWindow>(this);
@@ -245,7 +244,7 @@ void Window::create_impl(const Rect& rect,
 
     assert(m_impl);
 
-    SPDLOG_DEBUG("{} backend is {}", name(),
+    EGTLOG_DEBUG("{} backend is {}", name(),
                  plane_window() ? "PlaneWindow" : "BasicWindow");
 }
 

@@ -7,6 +7,7 @@
 #include "config.h"
 #endif
 
+#include "detail/egtlog.h"
 #include "detail/screen/flipthread.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/eventloop.h"
@@ -21,8 +22,6 @@
 #include <planes/fb.h>
 #include <planes/kms.h>
 #include <planes/plane.h>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 #include <string>
 #include <xf86drm.h>
 
@@ -77,7 +76,7 @@ std::vector<planeid> KMSScreen::m_used;
 KMSScreen::KMSScreen(bool allocate_primary_plane,
                      PixelFormat format)
 {
-    spdlog::info("DRM/KMS Screen ({} buffers)", max_buffers());
+    detail::info("DRM/KMS Screen ({} buffers)", max_buffers());
 
 #if defined(HAVE_CAIRO_GFX2D)
     if (getenv("EGT_USE_GFX2D") && strlen(getenv("EGT_USE_GFX2D")))
@@ -109,7 +108,7 @@ KMSScreen::KMSScreen(bool allocate_primary_plane,
         plane_fb_map(m_plane.get());
         plane_apply(m_plane.get());
 
-        SPDLOG_DEBUG("primary plane dumb buffer {},{} {}", plane_width(m_plane.get()),
+        EGTLOG_DEBUG("primary plane dumb buffer {},{} {}", plane_width(m_plane.get()),
                      plane_height(m_plane.get()), format);
 
         if (!m_gfx2d)
@@ -121,7 +120,7 @@ KMSScreen::KMSScreen(bool allocate_primary_plane,
 #if defined(HAVE_CAIRO_GFX2D)
         else
         {
-            SPDLOG_DEBUG("use gfx2d surfaces");
+            EGTLOG_DEBUG("use gfx2d surfaces");
             m_size = Size(plane_width(m_plane.get()), plane_height(m_plane.get()));
 
             cairo_format_t f = detail::cairo_format(format);
@@ -274,7 +273,7 @@ unique_plane_t KMSScreen::allocate_overlay(const Size& size,
         PixelFormat format,
         WindowHint hint)
 {
-    SPDLOG_TRACE("request to allocate overlay {} {} {}", size, format, hint);
+    EGTLOG_TRACE("request to allocate overlay {} {} {}", size, format, hint);
     unique_plane_t plane;
 
     if (hint == WindowHint::software)
@@ -308,7 +307,7 @@ unique_plane_t KMSScreen::allocate_overlay(const Size& size,
         plane_fb_map(plane.get());
         plane_set_pos(plane.get(), 0, 0);
 
-        SPDLOG_DEBUG("allocated overlay index {} {},{} {} {}", plane->index,
+        EGTLOG_DEBUG("allocated overlay index {} {},{} {} {}", plane->index,
                      plane_width(plane.get()), plane_height(plane.get()),
                      format, plane->type);
     }
@@ -384,7 +383,7 @@ size_t KMSScreen::max_brightness() const
     std::ifstream max_brightness_file{max_backlight_path};
     max_brightness_file >> max_brightness;
 #else
-    spdlog::warn("getting screen brightness requires std::experimental::filesystem");
+    detail::warn("getting screen brightness requires std::experimental::filesystem");
 #endif
     return max_brightness;
 }
@@ -398,7 +397,7 @@ size_t KMSScreen::brightness() const
     std::ifstream brightness_file{brightness_backlight_path};
     brightness_file >> brightness;
 #else
-    spdlog::warn("getting screen brightness requires std::experimental::filesystem");
+    detail::warn("getting screen brightness requires std::experimental::filesystem");
 #endif
     return brightness;
 }
@@ -412,7 +411,7 @@ void KMSScreen::brightness(size_t brightness)
     auto const backlight_dir = get_backlight_dir("/sys/class/backlight/");
     std::ofstream{backlight_dir / "brightness"} << std::to_string(brightness);
 #else
-    spdlog::warn("setting screen brightness requires std::experimental::filesystem");
+    detail::warn("setting screen brightness requires std::experimental::filesystem");
 #endif
 }
 

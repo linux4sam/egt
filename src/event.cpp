@@ -3,12 +3,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/egtlog.h"
 #include "egt/detail/enum.h"
 #include "egt/event.h"
 #include "egt/input.h"
 #include <ostream>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 #include <string>
 
 namespace egt

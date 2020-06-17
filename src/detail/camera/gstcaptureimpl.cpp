@@ -7,6 +7,7 @@
 #include "config.h"
 #endif
 
+#include "detail/egtlog.h"
 #include "detail/camera/gstcameraimpl.h"
 #include "detail/camera/gstcaptureimpl.h"
 #include "detail/video/gstmeta.h"
@@ -15,8 +16,6 @@
 #include "egt/types.h"
 #include <exception>
 #include <gst/gst.h>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 #include <sstream>
 
 namespace egt
@@ -65,7 +64,7 @@ CaptureImpl::CaptureImpl(experimental::CameraCapture& interface,
      */
     if (!gst_registry_find_plugin(gst_registry_get(), "playback"))
     {
-        SPDLOG_DEBUG("manually loading gstreamer plugins");
+        EGTLOG_DEBUG("manually loading gstreamer plugins");
 
         auto plugins =
         {
@@ -89,7 +88,7 @@ CaptureImpl::CaptureImpl(experimental::CameraCapture& interface,
             if (error)
             {
                 if (error->message)
-                    spdlog::error("load plugin error: {}", error->message);
+                    detail::error("load plugin error: {}", error->message);
                 g_error_free(error);
             }
         }
@@ -107,7 +106,7 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
 
     std::unique_lock<std::mutex> lock(impl->m_mutex);
 
-    SPDLOG_TRACE("gst message: {}", GST_MESSAGE_TYPE_NAME(message));
+    EGTLOG_TRACE("gst message: {}", GST_MESSAGE_TYPE_NAME(message));
 
     switch (GST_MESSAGE_TYPE(message))
     {
@@ -118,7 +117,7 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
         gst_message_parse(gst_message_parse_error, message, error, debug);
         if (error)
         {
-            SPDLOG_DEBUG("gst error: {} {}",
+            EGTLOG_DEBUG("gst error: {} {}",
                          error->message,
                          debug ? debug.get() : "");
 
@@ -139,7 +138,7 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
         gst_message_parse(gst_message_parse_warning, message, error, debug);
         if (error)
         {
-            SPDLOG_DEBUG("gst warning: {} {}",
+            EGTLOG_DEBUG("gst warning: {} {}",
                          error->message,
                          debug ? debug.get() : "");
         }
@@ -152,7 +151,7 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
         gst_message_parse(gst_message_parse_info, message, error, debug);
         if (error)
         {
-            SPDLOG_DEBUG("gst info: {} {}",
+            EGTLOG_DEBUG("gst info: {} {}",
                          error->message,
                          debug ? debug.get() : "");
         }
@@ -172,7 +171,7 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
         GstStructure* props = gst_device_get_properties(device);
         if (props)
         {
-            SPDLOG_DEBUG("device properties: {}", gst_structure_to_string(props));
+            EGTLOG_DEBUG("device properties: {}", gst_structure_to_string(props));
             devnode = gst_structure_get_string(props, "device.path");
             gst_structure_free(props);
         }
@@ -196,7 +195,7 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
         GstStructure* props = gst_device_get_properties(device);
         if (props)
         {
-            SPDLOG_DEBUG("device properties: {}", gst_structure_to_string(props));
+            EGTLOG_DEBUG("device properties: {}", gst_structure_to_string(props));
             devnode = gst_structure_get_string(props, "device.path");
             gst_structure_free(props);
         }
@@ -271,7 +270,7 @@ bool CaptureImpl::start()
     }
     }
 
-    SPDLOG_DEBUG(pipe);
+    EGTLOG_DEBUG(pipe);
 
     /* Make sure we don't leave orphan references */
     stop();
@@ -315,7 +314,7 @@ void CaptureImpl::stop()
         GstStateChangeReturn ret = gst_element_set_state(m_pipeline, GST_STATE_NULL);
         if (GST_STATE_CHANGE_FAILURE == ret)
         {
-            spdlog::error("set pipeline to NULL state failed");
+            detail::error("set pipeline to NULL state failed");
         }
 
         g_object_unref(m_pipeline);

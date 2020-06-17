@@ -8,6 +8,7 @@
 #endif
 
 #include "detail/camera/gstcameraimpl.h"
+#include "detail/egtlog.h"
 #include "detail/video/gstmeta.h"
 #include "egt/app.h"
 #ifdef HAVE_LIBPLANES
@@ -18,8 +19,6 @@
 #include "egt/video.h"
 #include <exception>
 #include <gst/gst.h>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 
 namespace egt
 {
@@ -60,7 +59,7 @@ CameraImpl::CameraImpl(CameraWindow& interface, const Rect& rect,
      */
     if (!gst_registry_find_plugin(gst_registry_get(), "playback"))
     {
-        SPDLOG_DEBUG("manually loading gstreamer plugins");
+        EGTLOG_DEBUG("manually loading gstreamer plugins");
         auto plugins =
         {
             "/usr/lib/gstreamer-1.0/libgstcoreelements.so",
@@ -81,7 +80,7 @@ CameraImpl::CameraImpl(CameraWindow& interface, const Rect& rect,
             if (error)
             {
                 if (error->message)
-                    spdlog::error("load plugin error: {}", error->message);
+                    detail::error("load plugin error: {}", error->message);
                 g_error_free(error);
             }
         }
@@ -98,7 +97,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
 
     auto impl = static_cast<CameraImpl*>(data);
 
-    SPDLOG_TRACE("gst message: {}", GST_MESSAGE_TYPE_NAME(message));
+    EGTLOG_TRACE("gst message: {}", GST_MESSAGE_TYPE_NAME(message));
 
     switch (GST_MESSAGE_TYPE(message))
     {
@@ -109,7 +108,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
         gst_message_parse(gst_message_parse_error, message, error, debug);
         if (error)
         {
-            SPDLOG_DEBUG("gst error: {} {}",
+            EGTLOG_DEBUG("gst error: {} {}",
                          error->message,
                          debug ? debug.get() : "");
 
@@ -130,7 +129,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
         gst_message_parse(gst_message_parse_warning, message, error, debug);
         if (error)
         {
-            SPDLOG_DEBUG("gst warning: {} {}",
+            EGTLOG_DEBUG("gst warning: {} {}",
                          error->message,
                          debug ? debug.get() : "");
         }
@@ -143,7 +142,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
         gst_message_parse(gst_message_parse_info, message, error, debug);
         if (error)
         {
-            SPDLOG_DEBUG("gst info: {} {}",
+            EGTLOG_DEBUG("gst info: {} {}",
                          error->message,
                          debug ? debug.get() : "");
         }
@@ -158,7 +157,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
         GstStructure* props = gst_device_get_properties(device);
         if (props)
         {
-            SPDLOG_DEBUG("device properties: {}", gst_structure_to_string(props));
+            EGTLOG_DEBUG("device properties: {}", gst_structure_to_string(props));
             devnode = gst_structure_get_string(props, "device.path");
             gst_structure_free(props);
         }
@@ -181,7 +180,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
         GstStructure* props = gst_device_get_properties(device);
         if (props)
         {
-            SPDLOG_DEBUG("device properties: {}", gst_structure_to_string(props));
+            EGTLOG_DEBUG("device properties: {}", gst_structure_to_string(props));
             devnode = gst_structure_get_string(props, "device.path");
             gst_structure_free(props);
         }
@@ -224,7 +223,7 @@ void CameraImpl::draw(Painter& painter, const Rect& rect)
         gst_structure_get_int(capsStruct, "width", &width);
         gst_structure_get_int(capsStruct, "height", &height);
 
-        SPDLOG_TRACE("videowidth = {}  videoheight = {}", width, height);
+        EGTLOG_TRACE("videowidth = {}  videoheight = {}", width, height);
 
         gst_sample_ref(m_camerasample);
         GstBuffer* buffer = gst_sample_get_buffer(m_camerasample);
@@ -328,7 +327,7 @@ bool CameraImpl::start()
     get_camera_device_caps();
 
     auto box = m_interface.content_area();
-    SPDLOG_DEBUG("box = {}", box);
+    EGTLOG_DEBUG("box = {}", box);
 
     /*
      * if user constructs a default constructor, then size of
@@ -361,18 +360,18 @@ bool CameraImpl::start()
         w = std::get<0>(m_resolutions.at(index));
         h = std::get<1>(m_resolutions.at(index));
 
-        SPDLOG_DEBUG("closest match of camerawindow : {} is {} ", box.size(), Size(w, h));
+        EGTLOG_DEBUG("closest match of camerawindow : {} is {} ", box.size(), Size(w, h));
     }
 
     std::string vscale;
     if ((w != box.width()) || (h != box.height()))
     {
         vscale = fmt::format(" videoscale ! video/x-raw,width={},height={} !", box.width(), box.height());
-        SPDLOG_DEBUG("scaling video: {} to {} ", Size(w, h), box.size());
+        EGTLOG_DEBUG("scaling video: {} to {} ", Size(w, h), box.size());
     }
 
     const auto format = detail::gstreamer_format(m_interface.format());
-    SPDLOG_DEBUG("format: {}  ", format);
+    EGTLOG_DEBUG("format: {}  ", format);
 
     static constexpr auto appsink_pipe =
         "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={} ! {} " \
@@ -380,7 +379,7 @@ bool CameraImpl::start()
 
     pipe = fmt::format(appsink_pipe, m_devnode, w, h, format, vscale);
 
-    SPDLOG_DEBUG(pipe);
+    EGTLOG_DEBUG(pipe);
 
     /* Make sure we don't leave orphan references */
     stop();
@@ -433,7 +432,7 @@ void CameraImpl::stop()
         GstStateChangeReturn ret = gst_element_set_state(m_pipeline, GST_STATE_NULL);
         if (GST_STATE_CHANGE_FAILURE == ret)
         {
-            spdlog::error("set pipeline to NULL state failed");
+            detail::error("set pipeline to NULL state failed");
         }
         g_object_unref(m_pipeline);
         m_pipeline = nullptr;
@@ -486,17 +485,17 @@ get_camera_device_caps(const std::string& dev_name, BusCallback bus_callback, vo
 
             // Probe all device properties and store them internally:
             GstStringHandle display_name{gst_device_get_display_name(device)};
-            SPDLOG_DEBUG("name : {}", display_name.get());
+            EGTLOG_DEBUG("name : {}", display_name.get());
 
             GstStringHandle dev_string{gst_device_get_device_class(device)};
-            SPDLOG_DEBUG("class : {}", dev_string.get());
+            EGTLOG_DEBUG("class : {}", dev_string.get());
 
             GstCaps* caps = gst_device_get_caps(device);
             if (caps)
             {
                 resolutions.clear();
                 int size = gst_caps_get_size(caps);
-                SPDLOG_DEBUG("caps : ");
+                EGTLOG_DEBUG("caps : ");
                 for (int j = 0; j < size; ++j)
                 {
                     GstStructure* s = gst_caps_get_structure(caps, j);
@@ -510,7 +509,7 @@ get_camera_device_caps(const std::string& dev_name, BusCallback bus_callback, vo
                         gst_structure_get_int(s, "height", &height);
                         caps_format = std::string(gst_structure_get_string(s, "format"));
                         resolutions.emplace_back(std::make_tuple(width, height));
-                        SPDLOG_DEBUG("{}, format=(string){}, width=(int){}, "
+                        EGTLOG_DEBUG("{}, format=(string){}, width=(int){}, "
                                      "height=(int){}", caps_name, caps_format, width, height);
                     }
                 }
@@ -531,7 +530,7 @@ get_camera_device_caps(const std::string& dev_name, BusCallback bus_callback, vo
             GstStructure* props = gst_device_get_properties(device);
             if (props)
             {
-                SPDLOG_DEBUG("device properties: {}", gst_structure_to_string(props));
+                EGTLOG_DEBUG("device properties: {}", gst_structure_to_string(props));
 
                 devnode = std::string(gst_structure_get_string(props, "device.path"));
                 gst_structure_free(props);
@@ -543,7 +542,7 @@ get_camera_device_caps(const std::string& dev_name, BusCallback bus_callback, vo
         g_list_free(devlist);
     }
 
-    SPDLOG_DEBUG("camera device node : {}", devnode);
+    EGTLOG_DEBUG("camera device node : {}", devnode);
 
     return std::make_tuple(devnode, caps_name, caps_format, resolutions);
 }

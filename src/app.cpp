@@ -7,6 +7,7 @@
 #include "config.h"
 #endif
 
+#include "detail/egtlog.h"
 #include "egt/app.h"
 #include "egt/detail/filesystem.h"
 #include "egt/detail/screen/kmsscreen.h"
@@ -24,7 +25,6 @@
 #include <iostream>
 #include <libintl.h>
 #include <regex>
-#include <spdlog/spdlog.h>
 #include <string>
 #include <thread>
 
@@ -91,7 +91,7 @@ Application::Application(int argc, char** argv,
 
     if (the_app)
     {
-        spdlog::warn("more than one application instance created");
+        detail::warn("more than one application instance created");
     }
     else
     {
@@ -128,24 +128,24 @@ void Application::setup_events()
 
 void Application::setup_info()
 {
-    spdlog::info("EGT Version {}", egt_version());
+    detail::info("EGT Version {}", egt_version());
 
 #ifdef HAVE_SIMD
     auto info = SimdCpuInfo();
-    spdlog::debug("SSE: {}", ((info & (1 << SimdCpuInfoSse)) ? "Yes" : "No"));
-    spdlog::debug("SSE2: {}", ((info & (1 << SimdCpuInfoSse2)) ? "Yes" : "No"));
-    spdlog::debug("SSE3: {}", ((info & (1 << SimdCpuInfoSse3)) ? "Yes" : "No"));
-    spdlog::debug("SSSE3: {}", ((info & (1 << SimdCpuInfoSsse3)) ? "Yes" : "No"));
-    spdlog::debug("SSE4.1: {}", ((info & (1 << SimdCpuInfoSse41)) ? "Yes" : "No"));
-    spdlog::debug("SSE4.2: {}", ((info & (1 << SimdCpuInfoSse42)) ? "Yes" : "No"));
-    spdlog::debug("AVX: {}", ((info & (1 << SimdCpuInfoAvx)) ? "Yes" : "No"));
-    spdlog::debug("AVX2: {}", ((info & (1 << SimdCpuInfoAvx2)) ? "Yes" : "No"));
-    spdlog::debug("AVX-512F: {}", ((info & (1 << SimdCpuInfoAvx512f)) ? "Yes" : "No"));
-    spdlog::debug("AVX-512BW: {}", ((info & (1 << SimdCpuInfoAvx512bw)) ? "Yes" : "No"));
-    spdlog::debug("PowerPC-Altivec: {}", ((info & (1 << SimdCpuInfoVmx)) ? "Yes" : "No"));
-    spdlog::debug("PowerPC-VSX: {}", ((info & (1 << SimdCpuInfoVsx)) ? "Yes" : "No"));
-    spdlog::debug("ARM-NEON: {}", ((info & (1 << SimdCpuInfoNeon)) ? "Yes" : "No"));
-    spdlog::debug("MIPS-MSA: {}", ((info & (1 << SimdCpuInfoMsa)) ? "Yes" : "No"));
+    detail::debug("SSE: {}", ((info & (1 << SimdCpuInfoSse)) ? "Yes" : "No"));
+    detail::debug("SSE2: {}", ((info & (1 << SimdCpuInfoSse2)) ? "Yes" : "No"));
+    detail::debug("SSE3: {}", ((info & (1 << SimdCpuInfoSse3)) ? "Yes" : "No"));
+    detail::debug("SSSE3: {}", ((info & (1 << SimdCpuInfoSsse3)) ? "Yes" : "No"));
+    detail::debug("SSE4.1: {}", ((info & (1 << SimdCpuInfoSse41)) ? "Yes" : "No"));
+    detail::debug("SSE4.2: {}", ((info & (1 << SimdCpuInfoSse42)) ? "Yes" : "No"));
+    detail::debug("AVX: {}", ((info & (1 << SimdCpuInfoAvx)) ? "Yes" : "No"));
+    detail::debug("AVX2: {}", ((info & (1 << SimdCpuInfoAvx2)) ? "Yes" : "No"));
+    detail::debug("AVX-512F: {}", ((info & (1 << SimdCpuInfoAvx512f)) ? "Yes" : "No"));
+    detail::debug("AVX-512BW: {}", ((info & (1 << SimdCpuInfoAvx512bw)) ? "Yes" : "No"));
+    detail::debug("PowerPC-Altivec: {}", ((info & (1 << SimdCpuInfoVmx)) ? "Yes" : "No"));
+    detail::debug("PowerPC-VSX: {}", ((info & (1 << SimdCpuInfoVsx)) ? "Yes" : "No"));
+    detail::debug("ARM-NEON: {}", ((info & (1 << SimdCpuInfoNeon)) ? "Yes" : "No"));
+    detail::debug("MIPS-MSA: {}", ((info & (1 << SimdCpuInfoMsa)) ? "Yes" : "No"));
 #endif
 }
 
@@ -164,16 +164,9 @@ void Application::setup_logging()
     auto level = getenv("EGT_DEBUG");
     if (level && strlen(level))
     {
-        auto loglevel = static_cast<spdlog::level::level_enum>(
-                            std::stoi(level));
-        spdlog::set_level(loglevel);
+        auto loglevel = std::stoi(level);
+        detail::loglevel(loglevel);
     }
-    else
-    {
-        spdlog::set_level(spdlog::level::level_enum::warn);
-    }
-
-    spdlog::set_pattern("%E.%e [%^%l%$] %@ %v");
 }
 
 void Application::setup_search_paths()
@@ -235,7 +228,7 @@ void Application::setup_backend(bool primary)
             }
             else
             {
-                spdlog::warn("invalid EGT_SCREEN_SIZE: {}", sizestr);
+                detail::warn("invalid EGT_SCREEN_SIZE: {}", sizestr);
             }
         }
 
@@ -253,7 +246,7 @@ void Application::setup_backend(bool primary)
                 m_screen = std::make_unique<detail::FrameBuffer>("/dev/fb0");
             else
 #endif
-                spdlog::info("no screen backend");
+                detail::info("no screen backend");
 
 }
 
@@ -279,7 +272,7 @@ void Application::setup_inputs()
 
             if (tokens.size() != 2)
             {
-                spdlog::warn("invalid EGT_INPUT_DEVICES string: {}", input);
+                detail::warn("invalid EGT_INPUT_DEVICES string: {}", input);
                 continue;
             }
 
@@ -320,7 +313,7 @@ void Application::setup_inputs()
 #ifdef HAVE_TSLIB
             m_inputs.push_back(std::make_unique<detail::InputTslib>(*this, device.second));
 #else
-            spdlog::warn("tslib requested but no support compiled in");
+            detail::warn("tslib requested but no support compiled in");
 #endif
         }
         else if (device.first == "evdev")
@@ -328,18 +321,18 @@ void Application::setup_inputs()
 #ifdef HAVE_LINUX_INPUT_H
             m_inputs.push_back(std::make_unique<detail::InputEvDev>(*this, device.second));
 #else
-            spdlog::warn("evdev requested but no support compiled in");
+            detail::warn("evdev requested but no support compiled in");
 #endif
         }
         else if (device.first == "libinput")
         {
 #ifndef HAVE_LIBINPUT
-            spdlog::warn("libinput requested but no support compiled in");
+            detail::warn("libinput requested but no support compiled in");
 #endif
         }
         else
         {
-            spdlog::warn("unknown input type requested: {}", device.first);
+            detail::warn("unknown input type requested: {}", device.first);
         }
     }
 

@@ -8,12 +8,11 @@
 #endif
 
 #include "detail/dump.h"
+#include "detail/egtlog.h"
 #include "egt/detail/image.h"
 #include "egt/detail/imagecache.h"
 #include "egt/detail/math.h"
 #include "egt/respath.h"
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 
 #ifdef HAVE_SIMD
 #include "Simd/SimdLib.hpp"
@@ -41,7 +40,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& uri,
     if (i != m_cache.end())
         return i->second;
 
-    SPDLOG_DEBUG("image cache miss {} hscale:{} vscale:{}", uri, hscale, vscale);
+    EGTLOG_DEBUG("image cache miss {} hscale:{} vscale:{}", uri, hscale, vscale);
 
     shared_cairo_surface_t image;
 

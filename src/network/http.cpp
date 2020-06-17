@@ -3,14 +3,13 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/egtlog.h"
 #include "egt/app.h"
 #include "egt/eventloop.h"
 #include "egt/network/http.h"
 #include <cassert>
 #include <chrono>
 #include <curl/curl.h>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 #include <string>
 #include <unordered_map>
 
@@ -31,7 +30,7 @@ struct HttpClientRequestData
 
     inline void on_read(const unsigned char* data, size_t len, bool done = false)
     {
-        SPDLOG_TRACE("http read data len {}", len);
+        EGTLOG_TRACE("http read data len {}", len);
 
         if (m_read_callback)
             m_read_callback(data, len, done);
@@ -131,7 +130,7 @@ public:
                                                     &(HttpClientRequestManager::Instance()->m_running));
             if (mc != CURLM_OK)
             {
-                spdlog::warn("curl_multi_socket_action error: {}", mc);
+                detail::warn("curl_multi_socket_action error: {}", mc);
             }
 
             check_multi_info();
@@ -153,7 +152,7 @@ public:
         CURLMcode rc = curl_multi_socket_action(multi->m_multi, s, what, &multi->m_running);
         if (rc != CURLM_OK)
         {
-            spdlog::warn("curl_multi_socket_action: {}", int(rc));
+            detail::warn("curl_multi_socket_action: {}", int(rc));
         }
 
         check_multi_info();

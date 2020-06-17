@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/egtlog.h"
 #include "detail/asioallocator.h"
 #include "detail/dump.h"
 #include "detail/input/inputkeyboard.h"
@@ -17,8 +18,6 @@
 #include <libinput.h>
 #include <libudev.h>
 #include <linux/input.h>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 #include <sstream>
 #include <string>
 #include <unistd.h>
@@ -78,7 +77,7 @@ static void log_handler(struct libinput* libinput_context,
 {
     char buffer[1024];
     vsprintf(buffer, fmt, args);
-    spdlog::info(buffer);
+    detail::info(buffer);
 }
 
 static struct libinput* tools_open_udev(const char* seat, bool grab)
@@ -88,14 +87,14 @@ static struct libinput* tools_open_udev(const char* seat, bool grab)
 
     if (!udev)
     {
-        spdlog::warn("Failed to initialize udev");
+        detail::warn("Failed to initialize udev");
         return nullptr;
     }
 
     li = libinput_udev_create_context(&interface, &grab, udev);
     if (!li)
     {
-        spdlog::warn("Failed to initialize context from udev");
+        detail::warn("Failed to initialize context from udev");
         udev_unref(udev);
         return nullptr;
     }
@@ -108,7 +107,7 @@ static struct libinput* tools_open_udev(const char* seat, bool grab)
 
     if (libinput_udev_assign_seat(li, seat))
     {
-        spdlog::warn("failed to set seat");
+        detail::warn("failed to set seat");
         libinput_unref(li);
         udev_unref(udev);
         return nullptr;
@@ -184,7 +183,7 @@ void InputLibInput::handle_event_device_notify(struct libinput_event* ev)
         }
     }
 
-    spdlog::info("{} {} {}", type, libinput_device_get_sysname(dev),
+    detail::info("{} {} {}", type, libinput_device_get_sysname(dev),
                  libinput_device_get_name(dev));
 }
 
@@ -262,7 +261,7 @@ void InputLibInput::handle_event_keyboard(struct libinput_event* ev)
     struct libinput_event_keyboard* k = libinput_event_get_keyboard_event(ev);
     const auto key = libinput_event_keyboard_get_key(k);
 
-    SPDLOG_TRACE("key:{} state:{}", key, libinput_event_keyboard_get_key_state(k));
+    EGTLOG_TRACE("key:{} state:{}", key, libinput_event_keyboard_get_key_state(k));
 
     static const auto EVDEV_OFFSET = 8;
 
@@ -290,7 +289,7 @@ void InputLibInput::handle_event_button(struct libinput_event* ev)
     struct libinput_event_pointer* p = libinput_event_get_pointer_event(ev);
     const auto button = libinput_event_pointer_get_button(p);
 
-    SPDLOG_TRACE("button:{}", button);
+    EGTLOG_TRACE("button:{}", button);
 
     Pointer::Button b = Pointer::Button::none;
     switch (button)
@@ -336,7 +335,7 @@ void InputLibInput::handle_read(const asio::error_code& error)
 {
     if (error)
     {
-        spdlog::error("{}", error);
+        detail::error("{}", error);
         return;
     }
 

@@ -7,6 +7,7 @@
 #include "config.h"
 #endif
 
+#include "detail/fmt.h"
 #include "egt/detail/filesystem.h"
 #include <climits>
 #include <cstring>
@@ -14,7 +15,6 @@
 #include <iterator>
 #include <libgen.h>
 #include <memory>
-#include <spdlog/spdlog.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>

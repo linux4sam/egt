@@ -6,8 +6,6 @@
 #include "detail/utf8text.h"
 #include "egt/detail/layout.h"
 #include "egt/image.h"
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 
 namespace egt
 {

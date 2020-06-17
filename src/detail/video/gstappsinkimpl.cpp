@@ -8,12 +8,11 @@
 #include "config.h"
 #endif
 
+#include "detail/egtlog.h"
 #include "detail/video/gstappsinkimpl.h"
 #include "egt/app.h"
 #include "egt/types.h"
 #include "egt/uri.h"
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 #include <string>
 
 #ifdef HAVE_LIBPLANES
@@ -40,7 +39,7 @@ GstAppSinkImpl::GstAppSinkImpl(VideoWindow& interface, const Size& size)
      */
     if (!gst_registry_find_plugin(gst_registry_get(), "playback"))
     {
-        SPDLOG_DEBUG("manually loading gstreamer plugins");
+        EGTLOG_DEBUG("manually loading gstreamer plugins");
         static constexpr auto plugins =
         {
             "/usr/lib/gstreamer-1.0/libgstcoreelements.so",
@@ -66,7 +65,7 @@ GstAppSinkImpl::GstAppSinkImpl(VideoWindow& interface, const Size& size)
             if (error)
             {
                 if (error->message)
-                    spdlog::error("load plugin error: {}", error->message);
+                    detail::error("load plugin error: {}", error->message);
                 g_error_free(error);
             }
         }
@@ -182,7 +181,7 @@ std::string GstAppSinkImpl::create_pipeline()
         auto s = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
         assert(s);
         PixelFormat fmt = detail::egt_format(s->get_plane_format());
-        SPDLOG_DEBUG("egt_format = {}", fmt);
+        EGTLOG_DEBUG("egt_format = {}", fmt);
 
         vc += detail::gstreamer_format(fmt);
     }
@@ -224,14 +223,14 @@ bool GstAppSinkImpl::media(const std::string& uri)
         {
             if (!start_discoverer())
             {
-                spdlog::error("media file discoverer failed");
+                detail::error("media file discoverer failed");
                 return false;
             }
         }
 #endif
 
         const auto buffer = create_pipeline();
-        SPDLOG_DEBUG("{}", buffer);
+        EGTLOG_DEBUG("{}", buffer);
 
         GError* error = nullptr;
         m_pipeline = gst_parse_launch(buffer.c_str(), &error);
@@ -239,7 +238,7 @@ bool GstAppSinkImpl::media(const std::string& uri)
         {
             if (error && error->message)
             {
-                spdlog::error("{}", error->message);
+                detail::error("{}", error->message);
                 m_interface.on_error.invoke(error->message);
             }
             return false;
@@ -249,7 +248,7 @@ bool GstAppSinkImpl::media(const std::string& uri)
         m_appsink = gst_bin_get_by_name(GST_BIN(m_pipeline), "appsink");
         if (!m_appsink)
         {
-            spdlog::error("failed to get app sink element");
+            detail::error("failed to get app sink element");
             m_interface.on_error.invoke("failed to get app sink element");
             return false;
         }
@@ -260,7 +259,7 @@ bool GstAppSinkImpl::media(const std::string& uri)
             m_volume = gst_bin_get_by_name(GST_BIN(m_pipeline), "volume");
             if (!m_volume)
             {
-                spdlog::error("failed to get volume element");
+                detail::error("failed to get volume element");
                 m_interface.on_error.invoke("failed to get volume element");
                 return false;
             }

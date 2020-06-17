@@ -3,13 +3,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/egtlog.h"
 #include "egt/detail/string.h"
 #include "egt/uri.h"
 #include <algorithm>
 #include <cctype>
 #include <regex>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 #include <string>
 
 namespace egt
@@ -67,7 +66,7 @@ void Uri::parse(const std::string& uri)
         int counter = 0;
         for (const auto& res : match)
         {
-            SPDLOG_TRACE("{}: {}", counter++, res);
+            EGTLOG_TRACE("{}: {}", counter++, res);
         }
 #endif
 
@@ -127,7 +126,7 @@ void Uri::parse(const std::string& uri)
     }
     else
     {
-        spdlog::warn("invalid uri: {}", uri);
+        detail::warn("invalid uri: {}", uri);
         clear();
     }
 }

@@ -8,7 +8,7 @@
 #endif
 
 #include "egt/keycode.h"
-#include <spdlog/spdlog.h>
+#include "detail/egtlog.h"
 
 #ifdef HAVE_LINUX_INPUT_H
 #include <linux/input.h>
@@ -165,12 +165,12 @@ KeyboardCode linux_to_ekey(int code)
     {
         if (i.first == code)
         {
-            SPDLOG_TRACE("key {} to keycode {}", code, i.second);
+            EGTLOG_TRACE("key {} to keycode {}", code, i.second);
             return i.second;
         }
     }
 
-    SPDLOG_DEBUG("unable to map key {} to keycode", code);
+    EGTLOG_DEBUG("unable to map key {} to keycode", code);
 
     return EKEY_UNKNOWN;
 }

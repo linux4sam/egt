@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/egtlog.h"
 #include "egt/canvas.h"
 #include "egt/detail/alignment.h"
 #include "egt/detail/enum.h"
@@ -18,8 +19,6 @@
 #include "egt/widget.h"
 #include <cassert>
 #include <ostream>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 #include <string>
 
 namespace egt
@@ -89,7 +88,7 @@ void Widget::handle(Event& event)
     if (event.quit())
         return;
 
-    SPDLOG_TRACE("{} handle {}", name(), event);
+    EGTLOG_TRACE("{} handle {}", name(), event);
 
     switch (event.id())
     {
@@ -729,7 +728,7 @@ void Widget::deserialize(const std::string& name, const std::string& value,
         m_palette->deserialize(name, value, attrs);
         break;
     default:
-        spdlog::warn("unhandled property {}", name);
+        detail::warn("unhandled property {}", name);
         break;
     }
 }

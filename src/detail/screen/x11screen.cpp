@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/egtlog.h"
 #include "detail/input/inputkeyboard.h"
 #include "detail/screen/keyboard_code_conversion_x.h"
 #include "detail/screen/x11wrap.h"
@@ -14,8 +15,6 @@
 #include <cairo-xlib.h>
 #include <cairo.h>
 #include <cstdlib>
-#include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 
 namespace egt
 {
@@ -39,7 +38,7 @@ X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
       m_priv(std::make_unique<detail::X11Data>()),
       m_input(m_app.event().io())
 {
-    spdlog::info("X11 Screen");
+    detail::info("X11 Screen");
 
     m_priv->display = XOpenDisplay(nullptr);
     if (!m_priv->display)
@@ -150,7 +149,7 @@ void X11Screen::handle_read(const asio::error_code& error)
 {
     if (error)
     {
-        spdlog::error("{}", error);
+        detail::error("{}", error);
         return;
     }
 
@@ -159,7 +158,7 @@ void X11Screen::handle_read(const asio::error_code& error)
         XEvent e;
         XNextEvent(m_priv->display, &e);
 
-        SPDLOG_TRACE("x11 event: {}", e.type);
+        EGTLOG_TRACE("x11 event: {}", e.type);
 
         switch (e.type)
         {
