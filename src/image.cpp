@@ -129,7 +129,10 @@ void Image::serialize(const std::string& name, Serializer& serializer) const
     if (!detail::float_equal(vscale(), 1.0f))
         attrs.emplace_back("vscale", std::to_string(vscale()));
 
-    serializer.add_property(name, m_uri, attrs);
+    if (!m_uri.empty())
+        serializer.add_property(name, m_uri, attrs);
+
+    // TODO: serialize raw image data without uri
 }
 
 void Image::deserialize(const std::string& name, const std::string& value,
