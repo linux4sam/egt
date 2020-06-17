@@ -19,9 +19,9 @@ inline namespace v1
 namespace detail
 {
 
-PlaneWindow::PlaneWindow(Window* interface,
+PlaneWindow::PlaneWindow(Window* inter,
                          PixelFormat format, WindowHint hint)
-    : BasicWindow(interface),
+    : BasicWindow(inter),
       m_format(format),
       m_hint(hint)
 {

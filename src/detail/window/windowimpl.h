@@ -33,7 +33,7 @@ public:
      * Construct the implementation and provide a pointer to the parent
      * interface.
      */
-    explicit WindowImpl(Window* interface, Screen* screen = nullptr);
+    explicit WindowImpl(Window* inter, Screen* screen = nullptr);
 
     virtual void damage(const Rect& rect);
     virtual Screen* screen();

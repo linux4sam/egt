@@ -25,7 +25,7 @@ class BasicWindow : public detail::WindowImpl
 {
 public:
 
-    explicit BasicWindow(Window* interface, Screen* screen = nullptr);
+    explicit BasicWindow(Window* inter, Screen* screen = nullptr);
 
     virtual ~BasicWindow() = default;
 };
@@ -37,7 +37,7 @@ class BasicTopWindow : public BasicWindow
 {
 public:
 
-    explicit BasicTopWindow(Window* interface);
+    explicit BasicTopWindow(Window* inter);
 
     virtual ~BasicTopWindow() = default;
 };
