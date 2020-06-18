@@ -12,7 +12,9 @@
 #include "egt/sizer.h"
 #include "egt/virtualkeyboard.h"
 
+#ifdef SRCDIR
 EGT_EMBED(internal_microphone, SRCDIR "/icons/32px/microphone.png")
+#endif
 
 namespace egt
 {

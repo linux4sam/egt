@@ -13,7 +13,11 @@ if HAVE_SIMD
 CUSTOM_FLAGS += -isystem $(top_srcdir)/external/Simd/src/
 endif
 
-AM_CXXFLAGS = -DDATADIR=\"$(datadir)\" -DSRCDIR=\"$(abs_top_srcdir)\"
+# MinGW env has a problem with using the variable -DDATADIR=\"$(datadir)\"
+# resulting in the error:
+#    expected unqualified-id before string constant
+# Workaround is to use DATAPATH instead.
+AM_CXXFLAGS = -DDATAPATH=\"$(datadir)\" -DSRCDIR=\"$(abs_top_srcdir)\"
 
 lib_LTLIBRARIES = libegt.la
 libegt_la_CXXFLAGS = \

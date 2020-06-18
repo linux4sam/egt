@@ -93,11 +93,12 @@ SchemeType resolve_path(const std::string& path, std::string& result)
     }
     case detail::hash("icon"):
     {
+
         type = SchemeType::filesystem;
         result = uri.path();
 
         static std::string egt_icons_dir =
-            std::string(DATADIR) + "/libegt/icons/";
+            std::string(DATAPATH) + "/libegt/icons/";
         static std::once_flag env_flag;
         std::call_once(env_flag, []()
         {

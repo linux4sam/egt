@@ -8,7 +8,9 @@
 #include <experimental/filesystem>
 #include <spdlog/spdlog.h>
 
+#ifdef SRCDIR
 EGT_EMBED(internal_folder, SRCDIR "/icons/32px/folder.png")
+#endif
 
 namespace fs = std::experimental::filesystem;
 

@@ -146,7 +146,7 @@ void Application::setup_locale(const std::string& name)
     if (!name.empty())
     {
         setlocale(LC_ALL, "");
-        bindtextdomain(name.c_str(), (std::string(DATADIR) + "/locale/").c_str());
+        bindtextdomain(name.c_str(), (std::string(DATAPATH) + "/locale/").c_str());
         textdomain(name.c_str());
     }
 }

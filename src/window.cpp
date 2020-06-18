@@ -23,7 +23,9 @@
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 
+#ifdef SRCDIR
 EGT_EMBED(internal_cursor, SRCDIR "/icons/16px/cursor.png")
+#endif
 
 namespace egt
 {

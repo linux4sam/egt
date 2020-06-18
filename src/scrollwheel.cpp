@@ -11,8 +11,10 @@
 #include <memory>
 #include <string>
 
+#ifdef SRCDIR
 EGT_EMBED(internal_arrow_up, SRCDIR "/icons/32px/arrow_up.png")
 EGT_EMBED(internal_arrow_down, SRCDIR "/icons/32px/arrow_down.png")
+#endif
 
 namespace egt
 {
