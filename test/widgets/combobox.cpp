@@ -5,19 +5,10 @@
  */
 #include <egt/ui>
 #include <gtest/gtest.h>
-#include <random>
 
 using ::testing::TestWithParam;
 using ::testing::Values;
 using ::testing::Range;
-
-static int random_item(int start, int end)
-{
-    std::random_device r;
-    std::default_random_engine e {r()};
-    std::uniform_int_distribution<int> dist(start, end);
-    return dist(e);
-}
 
 class ComboBoxWidgetTest : public testing::TestWithParam<int> {};
 
@@ -27,7 +18,7 @@ TEST_P(ComboBoxWidgetTest, TestWidget)
     egt::TopWindow win;
     std::shared_ptr<egt::ComboBox> widget;
 
-    auto item_count = random_item(300, 700);
+    auto item_count = 200;
     egt::ComboBox::ItemArray items;
     for (auto x = 0; x < item_count; x++)
         items.push_back("Testitem " + std::to_string(x));
@@ -67,7 +58,8 @@ TEST_P(ComboBoxWidgetTest, TestWidget)
     EXPECT_TRUE(widget->item_at(5) == "Testitem 5");
 
     EXPECT_TRUE(widget->remove("Testitem 5"));
-    EXPECT_EQ(static_cast<int>(widget->item_count()), (item_count - 1));
+    item_count -= 1;
+    EXPECT_EQ(static_cast<int>(widget->item_count()), item_count);
 
     bool state = false;
     widget->on_selected_changed([&state]()
@@ -84,15 +76,17 @@ TEST_P(ComboBoxWidgetTest, TestWidget)
         static int flag = 0;
         if (flag % 2)
         {
-            item_count = random_item(1, 10);
-            for (auto x = 0; x <= item_count; x++)
+            for (auto x = 0; x < 5; x++)
                 widget->add_item("Testitem " + std::to_string(x));
+            item_count += 5;
+            EXPECT_EQ(static_cast<int>(widget->item_count()), item_count);
         }
         else
         {
-            item_count = random_item(1, 10);
-            for (auto x = 0; x <= item_count; x++)
+            for (auto x = 0; x < 3; x++)
                 widget->remove("Testitem " + std::to_string(x));
+            item_count -= 3;
+            EXPECT_EQ(static_cast<int>(widget->item_count()), item_count);
         }
         flag++;
 

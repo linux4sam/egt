@@ -6,7 +6,6 @@
 #include <egt/ui>
 #include <gtest/gtest.h>
 #include <fstream>
-#include <random>
 #include <string>
 
 using ::testing::TestWithParam;

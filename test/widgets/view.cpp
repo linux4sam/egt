@@ -5,20 +5,11 @@
  */
 #include <egt/ui>
 #include <gtest/gtest.h>
-#include <random>
 
 using ::testing::Combine;
 using ::testing::TestWithParam;
 using ::testing::Values;
 using ::testing::Range;
-
-static int random_item(int start, int end)
-{
-    std::random_device r;
-    std::default_random_engine e {r()};
-    std::uniform_int_distribution<int> dist(start, end);
-    return dist(e);
-}
 
 class ViewTest : public testing::TestWithParam<::testing::tuple<int, int>> {};
 
@@ -37,8 +28,9 @@ TEST_P(ViewTest, TestWidget)
 
     for (int j = 0; j < 100; j++)
     {
-        auto x = random_item(0, 1600);
-        auto y = random_item(0, 800);
+        //place button widget in 1600x800 view
+        auto x = 16 * j;
+        auto y = 8 * j;
         auto text1 = std::make_shared<egt::Button>("Button " + std::to_string(j), egt::Rect(x, y, 200, 80));
         EXPECT_NO_THROW(widget->add(text1));
     }
@@ -48,11 +40,9 @@ TEST_P(ViewTest, TestWidget)
     egt::PeriodicTimer cputimer(std::chrono::milliseconds(1));
     cputimer.on_timeout([widget, &cputimer, &app, &rect, &hp, &vp]()
     {
-        int mx = rect.width();
-        int my = rect.height();
-        auto px = random_item(0, mx);
-        auto py = random_item(0, my);
         static int count = 0;
+        int px = 30 * count;
+        int py = 24 * count;
 
         if ((hp == egt::ScrolledView::Policy::always) &&
             (vp == egt::ScrolledView::Policy::always))
@@ -81,14 +71,10 @@ TEST_P(ViewTest, TestWidget)
         {
             auto s = egt::Size(320, 160);
             widget->resize(s);
-            mx = s.width();
-            my = s.height();
             EXPECT_EQ(widget->size(), s);
         }
         else
         {
-            mx = rect.width();
-            my = rect.height();
             widget->resize(rect.size());
             EXPECT_EQ(widget->size(), rect.size());
         }

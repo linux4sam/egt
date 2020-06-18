@@ -5,20 +5,11 @@
  */
 #include <egt/ui>
 #include <gtest/gtest.h>
-#include <random>
 
 using ::testing::Combine;
 using ::testing::TestWithParam;
 using ::testing::Values;
 using ::testing::Range;
-
-static int random_item(int start, int end)
-{
-    std::random_device r;
-    std::default_random_engine e {r()};
-    std::uniform_int_distribution<int> dist(start, end);
-    return dist(e);
-}
 
 class FrameTest : public testing::TestWithParam<int> {};
 
@@ -35,8 +26,8 @@ TEST_P(FrameTest, TestWidget)
     int wcount = 0;
     for (int i = 0; i < 10; i++)
     {
-        auto w = random_item(40, 150);
-        auto h = random_item(40, 150);
+        auto w = 800 - (i * 10);
+        auto h = 200 - (i * 10);
         auto text1 = std::make_shared<egt::TextBox>("textBox " + std::to_string(i), egt::Rect(0, 0, w, h), egt::AlignFlag::center);
         EXPECT_NO_THROW(widget->add(text1));
         wcount++;
@@ -53,7 +44,8 @@ TEST_P(FrameTest, TestWidget)
         {
             for (int j = 10; j < 20; j++)
             {
-                auto text2 = std::make_shared<egt::TextBox>("textBox " + std::to_string(j), egt::Rect(random_item(0, 720), random_item(0, 340), 80, 100));
+                auto r = egt::Rect((720 - (j * 30)), (380 - (j * 17)), 80, 100);
+                auto text2 = std::make_shared<egt::TextBox>("textBox " + std::to_string(j), r);
                 EXPECT_NO_THROW(widget->add(text2));
             }
             remove_all = true;
@@ -86,4 +78,4 @@ TEST_P(FrameTest, TestWidget)
 
 }
 
-INSTANTIATE_TEST_SUITE_P(FrameTestGroup, FrameTest, Values(1, 2, 4));
+INSTANTIATE_TEST_SUITE_P(FrameTestGroup, FrameTest, testing::Values(1, 2, 4));

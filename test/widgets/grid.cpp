@@ -5,20 +5,11 @@
  */
 #include <egt/ui>
 #include <gtest/gtest.h>
-#include <random>
 
 using ::testing::Combine;
 using ::testing::TestWithParam;
 using ::testing::Values;
 using ::testing::Range;
-
-static int random_item(int start, int end)
-{
-    std::random_device r;
-    std::default_random_engine e {r()};
-    std::uniform_int_distribution<int> dist(start, end);
-    return dist(e);
-}
 
 class StaticGridTest : public testing::TestWithParam<::testing::tuple<int, int>> {};
 
@@ -114,7 +105,6 @@ TEST_P(SelectableGridTest, TestWidget)
     else
     {
         EXPECT_TRUE(widget->get(egt::StaticGrid::GridPoint(0, 0)) == nullptr);
-
         for (int i = 0; i <  rows;  i++)
         {
             for (int j = 0; j < columns; j++)
@@ -127,18 +117,25 @@ TEST_P(SelectableGridTest, TestWidget)
         }
         EXPECT_TRUE(static_cast<int>(widget->count_children()) == (rows * columns));
 
-        cputimer.on_timeout([widget, &cputimer, &app]()
+        int col = 0;
+        int row = 0;
+        widget->on_selected_changed([&widget, &row, &col]()
         {
-            static int count = 8;
-            int r = random_item(0, widget->last_add_row());
-            int c = random_item(0, widget->last_add_column());
-            widget->selected(c, r);
-            if (++count >= 8)
+            EXPECT_EQ(widget->selected(), egt::StaticGrid::GridPoint(col, row));
+        });
+
+        cputimer.on_timeout([&widget, &cputimer, &app, &row, &col]()
+        {
+            for (row = 0; row < widget->last_add_column();  row++)
             {
-                count = 0;
-                cputimer.stop();
-                app.quit();
+                for (col = 0; col < widget->last_add_row(); col++)
+                {
+                    widget->selected(col, row);
+                }
             }
+            cputimer.stop();
+            app.quit();
+
         });
         cputimer.start();
     }
