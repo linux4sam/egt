@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/egtlog.h"
 #include "detail/video/gstkmssinkimpl.h"
 #include "detail/video/gstmeta.h"
 #include "egt/app.h"
