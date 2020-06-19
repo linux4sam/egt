@@ -84,7 +84,7 @@ protected:
         friend class X11Screen;
     };
 
-    /// Customer input for dispatching events.
+    /// Custom input for dispatching events.
     X11Input m_in;
 };
 
