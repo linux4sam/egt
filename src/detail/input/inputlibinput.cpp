@@ -72,8 +72,9 @@ static constexpr struct libinput_interface interface =
     close_restricted,
 };
 
-static void log_handler(struct libinput* libinput_context,
-                        enum libinput_log_priority priority, const char* fmt, va_list args)
+static void log_handler(struct libinput*,
+                        enum libinput_log_priority,
+                        const char* fmt, va_list args)
 {
     char buffer[1024];
     vsprintf(buffer, fmt, args);

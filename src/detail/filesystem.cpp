@@ -56,6 +56,7 @@ std::string extract_filename(const std::string& path)
 static char* custom_strdup(const char* str)
 {
     const size_t len = strlen(str) + 1;
+    // NOLINTNEXTLINE(cppcoreguidelines-owning-memory, cppcoreguidelines-no-malloc, hicpp-no-malloc)
     char* buf = static_cast<char*>(malloc(len));
     if (buf)
         return static_cast<char*>(memcpy(buf, str, len));
