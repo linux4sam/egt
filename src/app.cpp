@@ -204,20 +204,6 @@ void Application::setup_backend(bool primary)
     if (value && strlen(value))
         backend = value;
 
-    // try to choose a sane default
-    if (backend.empty())
-    {
-#if defined(HAVE_LIBPLANES)
-        backend = "kms";
-#elif defined(HAVE_X11)
-        backend = "x11";
-#elif defined(HAVE_SDL2)
-        backend = "sdl2";
-#elif defined(HAVE_FBDEV)
-        backend = "fbdev";
-#endif
-    }
-
     Size size(800, 480);
     auto sizestr = getenv("EGT_SCREEN_SIZE");
     if (sizestr && strlen(sizestr))
@@ -235,31 +221,36 @@ void Application::setup_backend(bool primary)
         }
     }
 
-
-#ifdef HAVE_X11
-    if (backend == "x11")
+    // backends listed in order of automatic priority
+    const std::pair<const char*, std::function<std::unique_ptr<egt::Screen>()>> backends[] =
     {
-        m_screen = std::make_unique<detail::X11Screen>(*this, size);
-    }
-    else
-#endif
 #ifdef HAVE_LIBPLANES
-        if (backend == "kms")
-            m_screen = std::make_unique<detail::KMSScreen>(primary);
-        else
+        {"kms", [&primary]() { return std::make_unique<detail::KMSScreen>(primary); }},
+#endif
+#ifdef HAVE_X11
+        {"x11", [this, &size]() { return std::make_unique<detail::X11Screen>(*this, size); }},
 #endif
 #ifdef HAVE_SDL2
-            if (backend == "sdl2")
-                m_screen = std::make_unique<detail::SDLScreen>(*this, size);
-            else
+        {"sdl2", [this, &size]() { return std::make_unique<detail::SDLScreen>(*this, size); }},
 #endif
 #ifdef HAVE_FBDEV
-                if (backend == "fbdev")
-                    m_screen = std::make_unique<detail::FrameBuffer>("/dev/fb0");
-                else
+        {"fbdev", []() { return std::make_unique<detail::FrameBuffer>("/dev/fb0"); }},
 #endif
-                    detail::info("no screen backend");
+    };
 
+    if (backend != "none")
+    {
+        for (auto& b : backends)
+        {
+            if (backend.empty() || b.first == backend)
+            {
+                m_screen = b.second();
+                return;
+            }
+        }
+    }
+
+    detail::info("no screen backend");
 }
 
 void Application::setup_inputs()
