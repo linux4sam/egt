@@ -107,7 +107,7 @@ std::string readlink(const std::string& path)
         return std::to_string(GetModuleFileNameA(NULL, buff, MAX_PATH_SIZE));
     }
     len = sizeof(_fullpath(buff, path.c_str(), sizeof(buff) - 1));
-#elif defined(HAVE_GLOB_H)
+#else
     len = ::readlink(path.c_str(), buff, sizeof(buff) - 1);
 #endif
     if (len != -1)
