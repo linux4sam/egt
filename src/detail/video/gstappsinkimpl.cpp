@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -11,6 +10,7 @@
 #include "detail/egtlog.h"
 #include "detail/video/gstappsinkimpl.h"
 #include "egt/app.h"
+#include "egt/detail/filesystem.h"
 #include "egt/types.h"
 #include "egt/uri.h"
 #include <string>
@@ -42,26 +42,40 @@ GstAppSinkImpl::GstAppSinkImpl(VideoWindow& interface, const Size& size)
         EGTLOG_DEBUG("manually loading gstreamer plugins");
         static constexpr auto plugins =
         {
-            "/usr/lib/gstreamer-1.0/libgstcoreelements.so",
-            "/usr/lib/gstreamer-1.0/libgsttypefindfunctions.so",
-            "/usr/lib/gstreamer-1.0/libgstplayback.so",
-            "/usr/lib/gstreamer-1.0/libgstavi.so",
-            "/usr/lib/gstreamer-1.0/libgstisomp4.so",
-            "/usr/lib/gstreamer-1.0/libgstapp.so",
-            "/usr/lib/gstreamer-1.0/libgstmpeg2dec.so",
-            "/usr/lib/gstreamer-1.0/libgstvideoscale.so",
-            "/usr/lib/gstreamer-1.0/libgstvideoconvert.so",
-            "/usr/lib/gstreamer-1.0/libgstvolume.so",
-            "/usr/lib/gstreamer-1.0/libgstaudioconvert.so",
-            "/usr/lib/gstreamer-1.0/libgstalsa.so",
-            "/usr/lib/gstreamer-1.0/libgstlibav.so",
-            "/usr/lib/gstreamer-1.0/libgstvideoparsersbad.so",
+            "libgstcoreelements.so",
+            "libgsttypefindfunctions.so",
+            "libgstplayback.so",
+            "libgstavi.so",
+            "libgstisomp4.so",
+            "libgstapp.so",
+            "libgstmpeg2dec.so",
+            "libgstvideoscale.so",
+            "libgstvideoconvert.so",
+            "libgstvolume.so",
+            "libgstaudioconvert.so",
+            "libgstalsa.so",
+            "libgstlibav.so",
+            "libgstvideoparsersbad.so",
         };
+
+        std::string path;
+        if (std::getenv("GST_PLUGIN_SYSTEM_PATH"))
+        {
+            path = std::getenv("GST_PLUGIN_SYSTEM_PATH");
+        }
+        else if (detail::exists("/usr/lib/gstreamer-1.0/"))
+        {
+            path = "/usr/lib/gstreamer-1.0/";
+        }
+        else if (detail::exists("/usr/lib/x86_64-linux-gnu/gstreamer-1.0/"))
+        {
+            path = "/usr/lib/x86_64-linux-gnu/gstreamer-1.0/";
+        }
 
         for (const auto& plugin : plugins)
         {
             GError* error = nullptr;
-            gst_plugin_load_file(plugin, &error);
+            gst_plugin_load_file(std::string(path + plugin).c_str(), &error);
             if (error)
             {
                 if (error->message)
