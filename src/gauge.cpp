@@ -132,8 +132,8 @@ Rect NeedleLayer::rectangle_of_rotated()
 
     const auto res = Rect(xmin + m_point.x() - m_center.x(),
                           ymin + m_point.y() - m_center.y(),
-                          xmax - xmin,
-                          ymax - ymin);
+                          xmax - xmin + 1,
+                          ymax - ymin + 1);
 
     return res;
 }
