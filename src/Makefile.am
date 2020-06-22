@@ -54,6 +54,9 @@ detail/collision.cpp \
 detail/dump.h \
 detail/egtlog.cpp \
 detail/egtlog.h \
+detail/eraw.cpp \
+detail/eraw.h \
+detail/erawimage.h \
 detail/filesystem.cpp \
 detail/fmt.h \
 detail/image.cpp \
@@ -136,6 +139,11 @@ if HAVE_LIBJPEG
 libegt_la_SOURCES += \
 images/jpeg/cairo_jpg.c \
 images/jpeg/cairo_jpg.h
+endif
+
+if CPU_ARM
+libegt_la_SOURCES += \
+detail/memset32.S
 endif
 
 libegt_la_LIBADD = $(CODE_COVERAGE_LDFLAGS)

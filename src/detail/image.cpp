@@ -8,6 +8,7 @@
 #endif
 
 #include "detail/egtlog.h"
+#include "detail/eraw.h"
 #include "egt/app.h"
 #include "egt/detail/filesystem.h"
 #include "egt/detail/image.h"
@@ -76,6 +77,7 @@ static constexpr auto MIME_SVG = "image/svg";
 static constexpr auto MIME_PDF = "application/pdf";
 static constexpr auto MIME_ZIP = "application/zip";
 static constexpr auto MIME_GZIP = "application/gzip";
+static constexpr auto MIME_ERAW = "image/eraw";
 
 EGT_API shared_cairo_surface_t load_image_from_memory(const unsigned char* data,
         size_t len,
@@ -99,6 +101,10 @@ EGT_API shared_cairo_surface_t load_image_from_memory(const unsigned char* data,
                     cairo_image_surface_create_from_bmp_stream(
                         read_stream, &stream),
                     cairo_surface_destroy);
+    }
+    else if (mimetype == MIME_ERAW)
+    {
+        image = load_eraw(data, len);
     }
 #ifdef HAVE_LIBJPEG
     else if (mimetype == MIME_JPEG)
@@ -163,6 +169,10 @@ shared_cairo_surface_t load_image_from_filesystem(const std::string& path)
         image = shared_cairo_surface_t(
                     cairo_image_surface_create_from_bmp(path.c_str()),
                     cairo_surface_destroy);
+    }
+    else if (mimetype == MIME_ERAW)
+    {
+        image = load_eraw(path);
     }
 #ifdef HAVE_LIBJPEG
     else if (mimetype == MIME_JPEG)
@@ -282,6 +292,7 @@ private:
 
     static const char* mime_type(uint32_t signature)
     {
+        EGTLOG_DEBUG("signature: {}", signature);
         switch (signature)
         {
         case 0x89504E47:
@@ -298,6 +309,8 @@ private:
             return MIME_JPEG;
         case 0x504B0304:
             return MIME_ZIP;
+        case 0xA22A5050:
+            return MIME_ERAW;
         default:
             break;
         }

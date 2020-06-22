@@ -24,7 +24,7 @@ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 LT_PREREQ([2.2])
 LT_INIT([win32-dll])
 
-AC_MSG_CHECKING([for native Win32])
+AC_MSG_CHECKING([for native WIN32])
 case "$host" in
   *-*-mingw*)
       egt_os_win32=yes
@@ -35,6 +35,18 @@ case "$host" in
 esac
 AC_MSG_RESULT([$egt_os_win32])
 AM_CONDITIONAL(OS_WIN32, test "$egt_os_win32" = "yes")
+
+AC_MSG_CHECKING([for native ARM])
+case "$host" in
+  arm*)
+      egt_cpu_arm=yes
+      ;;
+  *)
+      egt_cpu_arm=no
+      ;;
+esac
+AC_MSG_RESULT([$egt_cpu_arm])
+AM_CONDITIONAL(CPU_ARM, test "$egt_cpu_arm" = "yes")
 
 CXXFLAGS="$CXXFLAGS -g -std=c++14 -DFMT_HEADER_ONLY"
 CFLAGS="$CFLAGS -g"
@@ -56,6 +68,7 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PROG_MKDIR_P
+AM_PROG_AS
 
 pkgconfigdir=${libdir}/pkgconfig
 AC_SUBST(pkgconfigdir)
