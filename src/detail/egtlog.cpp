@@ -11,7 +11,7 @@ inline namespace v1
 {
 namespace detail
 {
-static int l = EGTLOG_LEVEL_INFO;
+static int l = EGTLOG_LEVEL_WARN;
 
 void loglevel(int level)
 {
