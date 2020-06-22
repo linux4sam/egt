@@ -35,47 +35,32 @@ TEST_P(FrameTest, TestWidget)
     auto c = widget->count_children();
     EXPECT_EQ(static_cast<int>(c), wcount);
 
-    egt::PeriodicTimer cputimer(std::chrono::milliseconds(1));
-    cputimer.on_timeout([widget, &app, &cputimer, &c]()
+    while (c)
     {
-        static bool remove_all = false;
-        c = widget->count_children();
-        if (c == 0)
+        auto w = widget->child_at(--c);
+        EXPECT_TRUE(w != nullptr);
+        if (w != nullptr)
         {
-            for (int j = 10; j < 20; j++)
-            {
-                auto r = egt::Rect((720 - (j * 30)), (380 - (j * 17)), 80, 100);
-                auto text2 = std::make_shared<egt::TextBox>("textBox " + std::to_string(j), r);
-                EXPECT_NO_THROW(widget->add(text2));
-            }
-            remove_all = true;
+            EXPECT_NO_THROW(widget->remove(w.get()));
         }
-        else
+    }
+
+    EXPECT_EQ(widget->count_children(), c);
+
+    if (c == 0)
+    {
+        size_t j = 0;
+        for (j = 0; j < 10; j++)
         {
-            if (!remove_all)
-            {
-                auto w = widget->child_at(c - 1);
-                EXPECT_TRUE(w != nullptr);
-                if (w != nullptr)
-                {
-                    auto n = w->name();
-                    EXPECT_NO_THROW(widget->remove(w.get()));
-                }
-            }
-            else
-            {
-                EXPECT_NO_THROW(widget->remove_all());
-                cputimer.stop();
-                app.quit();
-            }
+            auto r = egt::Rect((720 - (j * 30)), (380 - (j * 17)), 80, 100);
+            auto text2 = std::make_shared<egt::TextBox>("textBox " + std::to_string(j), r);
+            EXPECT_NO_THROW(widget->add(text2));
         }
-    });
-    cputimer.start();
+        EXPECT_EQ(widget->count_children(), j);
 
-    widget->show();
-    win.show();
-    app.run();
-
+        widget->remove_all();
+        EXPECT_EQ(static_cast<int>(widget->count_children()), 0);
+    }
 }
 
 INSTANTIATE_TEST_SUITE_P(FrameTestGroup, FrameTest, testing::Values(1, 2, 4));

@@ -37,13 +37,12 @@ TEST_P(ViewTest, TestWidget)
 
     EXPECT_EQ(widget->offset(), egt::Point(0, 0));
 
-    egt::PeriodicTimer cputimer(std::chrono::milliseconds(1));
-    cputimer.on_timeout([widget, &cputimer, &app, &rect, &hp, &vp]()
+    int px;
+    int py;
+    for (int count = 0; count <= 10; count++)
     {
-        static int count = 0;
-        int px = 30 * count;
-        int py = 24 * count;
-
+        px = 30 * count;
+        py = 24 * count;
         if ((hp == egt::ScrolledView::Policy::always) &&
             (vp == egt::ScrolledView::Policy::always))
         {
@@ -62,10 +61,6 @@ TEST_P(ViewTest, TestWidget)
             widget->voffset(-py);
             EXPECT_EQ(widget->offset(), egt::Point(0, -py));
         }
-        else
-        {
-            count = 10;
-        }
 
         if (count % 2)
         {
@@ -78,18 +73,6 @@ TEST_P(ViewTest, TestWidget)
             widget->resize(rect.size());
             EXPECT_EQ(widget->size(), rect.size());
         }
-
-        if (++count >= 10)
-        {
-            count = 0;
-            cputimer.stop();
-            app.quit();
-        }
-    });
-    cputimer.start();
-
-    win.show();
-    app.run();
+    }
 }
-
 INSTANTIATE_TEST_SUITE_P(ViewTestGroup, ViewTest, Combine(Range(0, 3), Range(0, 3)));

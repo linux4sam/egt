@@ -70,38 +70,14 @@ TEST_P(ComboBoxWidgetTest, TestWidget)
     EXPECT_EQ(widget->selected(), 4);
     EXPECT_TRUE(state);
 
-    egt::PeriodicTimer cputimer(std::chrono::milliseconds(1));
-    cputimer.on_timeout([widget, &item_count, &cputimer, &app]()
-    {
-        static int flag = 0;
-        if (flag % 2)
-        {
-            for (auto x = 0; x < 5; x++)
-                widget->add_item("Testitem " + std::to_string(x));
-            item_count += 5;
-            EXPECT_EQ(static_cast<int>(widget->item_count()), item_count);
-        }
-        else
-        {
-            for (auto x = 0; x < 3; x++)
-                widget->remove("Testitem " + std::to_string(x));
-            item_count -= 3;
-            EXPECT_EQ(static_cast<int>(widget->item_count()), item_count);
-        }
-        flag++;
+    for (auto x = 0; x < 5; x++)
+        widget->add_item("Testitem " + std::to_string(x));
+    item_count += 5;
+    EXPECT_EQ(static_cast<int>(widget->item_count()), item_count);
 
-        if (flag >= 5)
-        {
-            flag = 0;
-            cputimer.stop();
-            app.quit();
-        }
-
-    });
-    cputimer.start();
-
-    //win.show();
-    app.run();
-
+    for (auto x = 0; x < 3; x++)
+        widget->remove("Testitem " + std::to_string(x));
+    item_count -= 3;
+    EXPECT_EQ(static_cast<int>(widget->item_count()), item_count);
 }
 INSTANTIATE_TEST_SUITE_P(ComboBoxWidgetTestGroup, ComboBoxWidgetTest, Range(0, 4));

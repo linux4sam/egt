@@ -574,33 +574,7 @@ TEST_P(NoteBookTest, TestWidget)
         ++scount;
     });
 
-    egt::PeriodicTimer cputimer(std::chrono::milliseconds(1));
-    cputimer.on_timeout([notebook, &cputimer, &app, &count, &scount, &win]()
-    {
-        auto rm = notebook->count_children();
-        if (rm)
-        {
-            notebook->remove(notebook->get(rm - 1));
-            count++;
-        }
-        else
-        {
-            EXPECT_EQ(notebook->selected(), -1);
-            EXPECT_EQ(scount, count - 2);
-            count = 0;
-            scount = 0;
-
-            //ASSERT_EXIT(notebook->remove(nullptr),::testing::KilledBySignal(SIGABRT),".*");
-            EXPECT_THROW(notebook->add(notebook), std::runtime_error);
-            EXPECT_THROW(notebook->add(win), std::invalid_argument);
-            EXPECT_NO_THROW(win.remove(notebook.get()));
-            cputimer.stop();
-            app.quit();
-        }
-    });
-
-    egt::PeriodicTimer cputimer1(std::chrono::milliseconds(1));
-    cputimer1.on_timeout([notebook, &cputimer1, &count, &cputimer]()
+    for (count = 0; count <= 11; count++)
     {
         if (count % 2)
         {
@@ -608,21 +582,34 @@ TEST_P(NoteBookTest, TestWidget)
         }
         else
         {
-            notebook->selected(notebook->child_at(count).get());
+            auto w = notebook->child_at(count).get();
+            EXPECT_TRUE(w != nullptr);
+            if (w != nullptr)
+            {
+                EXPECT_NO_THROW(notebook->selected(w));
+            }
         }
-
         EXPECT_EQ(notebook->selected(), count);
-        if (count >= 11)
-        {
-            cputimer1.stop();
-            cputimer.start();
-        }
-        count++;
-    });
-    cputimer1.start();
+    }
 
-    win.show();
-    app.run();
+    EXPECT_EQ(scount, count - 1);
+
+    auto rcount = notebook->count_children();
+    while (rcount)
+    {
+        auto rm = notebook->get(--rcount);
+        EXPECT_TRUE(rm != nullptr);
+        if (rm != nullptr)
+        {
+            EXPECT_NO_THROW(notebook->remove(rm));
+        }
+    }
+    EXPECT_EQ(notebook->selected(), -1);
+
+    //ASSERT_EXIT(notebook->remove(nullptr),::testing::KilledBySignal(SIGABRT),".*");
+    EXPECT_THROW(notebook->add(notebook), std::runtime_error);
+    EXPECT_THROW(notebook->add(win), std::invalid_argument);
+    EXPECT_NO_THROW(win.remove(notebook.get()));
 }
 
 INSTANTIATE_TEST_SUITE_P(NoteBookTestGroup, NoteBookTest, Range(0, 2));

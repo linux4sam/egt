@@ -35,49 +35,20 @@ TEST_P(SizerTest, TestWidget)
 
     EXPECT_EQ(widget->orient(), orient);
 
-    egt::PeriodicTimer cputimer(std::chrono::milliseconds(1));
-    cputimer.on_timeout([widget, &cputimer, &app]()
-    {
-        static int count = 0;
+    widget->justify(egt::Justification::start);
+    EXPECT_EQ(widget->justify(), egt::Justification::start);
 
-        if (count == 0)
-        {
-            widget->justify(egt::Justification::start);
-            EXPECT_EQ(widget->justify(), egt::Justification::start);
-        }
-        else if (count == 1)
-        {
-            widget->justify(egt::Justification::ending);
-            EXPECT_EQ(widget->justify(), egt::Justification::ending);
-        }
-        else if (count == 2)
-        {
-            widget->justify(egt::Justification::justify);
-            EXPECT_EQ(widget->justify(), egt::Justification::justify);
-        }
-        else if (count == 3)
-        {
-            widget->justify(egt::Justification::none);
-            EXPECT_EQ(widget->justify(), egt::Justification::none);
-        }
-        else if (count == 4)
-        {
-            widget->justify(egt::Justification::middle);
-            EXPECT_EQ(widget->justify(), egt::Justification::middle);
-        }
+    widget->justify(egt::Justification::ending);
+    EXPECT_EQ(widget->justify(), egt::Justification::ending);
 
-        if (++count >= 5)
-        {
-            count = 0;
-            cputimer.stop();
-            app.quit();
-        }
-    });
-    cputimer.start();
+    widget->justify(egt::Justification::justify);
+    EXPECT_EQ(widget->justify(), egt::Justification::justify);
 
-    win.show();
-    app.run();
+    widget->justify(egt::Justification::none);
+    EXPECT_EQ(widget->justify(), egt::Justification::none);
 
+    widget->justify(egt::Justification::middle);
+    EXPECT_EQ(widget->justify(), egt::Justification::middle);
 }
 
 INSTANTIATE_TEST_SUITE_P(SizerTestGroup, SizerTest, Values(1, 2, 4, 8));

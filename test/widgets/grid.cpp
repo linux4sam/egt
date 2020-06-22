@@ -28,7 +28,6 @@ TEST_P(StaticGridTest, TestWidget)
     EXPECT_TRUE(widget->last_add_column() == -1);
     EXPECT_TRUE(widget->last_add_row() == -1);
 
-    egt::PeriodicTimer cputimer(std::chrono::milliseconds(1));
     if ((rows == 0) || (columns == 0))
     {
         ASSERT_EXIT((widget->get(egt::StaticGrid::GridPoint(0, 0)), exit(0)), ::testing::KilledBySignal(SIGSEGV), ".*");
@@ -50,28 +49,22 @@ TEST_P(StaticGridTest, TestWidget)
                 EXPECT_EQ(widget->last_add_column(), j);
             }
         }
-        EXPECT_TRUE(static_cast<int>(widget->count_children()) == (rows * columns));
+        int tcount = static_cast<int>(widget->count_children());
+        EXPECT_EQ(tcount, (rows * columns));
 
-        cputimer.on_timeout([widget, &cputimer, &app]()
+        for (int r = widget->last_add_row(); r >= 0; r--)
         {
-            int r = widget->last_add_row();
-            int c = widget->last_add_column();
-            auto rm = widget->get(egt::StaticGrid::GridPoint(c, r));
-            if (rm != nullptr)
+            for (int c = widget->last_add_column(); c >= 0; c--)
             {
-                widget->remove(rm);
+                auto rm = widget->get(egt::StaticGrid::GridPoint(c, r));
+                if (rm != nullptr)
+                {
+                    widget->remove(rm);
+                    EXPECT_EQ(static_cast<int>(widget->count_children()), --tcount);
+                }
             }
-            else
-            {
-                cputimer.stop();
-                app.quit();
-            }
-        });
-        cputimer.start();
+        }
     }
-
-    win.show();
-    app.run();
 }
 
 INSTANTIATE_TEST_SUITE_P(StaticGridTestGroup, StaticGridTest, Combine(Range(1, 3), Range(1, 3)));
@@ -94,7 +87,6 @@ TEST_P(SelectableGridTest, TestWidget)
     EXPECT_TRUE(widget->last_add_column() == -1);
     EXPECT_TRUE(widget->last_add_row() == -1);
 
-    egt::PeriodicTimer cputimer(std::chrono::milliseconds(1));
     if ((rows == 0) || (columns == 0))
     {
         ASSERT_EXIT((widget->get(egt::StaticGrid::GridPoint(0, 0)), exit(0)), ::testing::KilledBySignal(SIGSEGV), ".*");
@@ -124,24 +116,14 @@ TEST_P(SelectableGridTest, TestWidget)
             EXPECT_EQ(widget->selected(), egt::StaticGrid::GridPoint(col, row));
         });
 
-        cputimer.on_timeout([&widget, &cputimer, &app, &row, &col]()
+        for (row = 0; row < widget->last_add_column();  row++)
         {
-            for (row = 0; row < widget->last_add_column();  row++)
+            for (col = 0; col < widget->last_add_row(); col++)
             {
-                for (col = 0; col < widget->last_add_row(); col++)
-                {
-                    widget->selected(col, row);
-                }
+                widget->selected(col, row);
             }
-            cputimer.stop();
-            app.quit();
-
-        });
-        cputimer.start();
+        }
     }
-
-    win.show();
-    app.run();
 }
 
 INSTANTIATE_TEST_SUITE_P(SelectableGridTestGroup, SelectableGridTest, Combine(Range(1, 5), Range(1, 5)));
