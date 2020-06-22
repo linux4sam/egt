@@ -319,10 +319,13 @@ std::string get_mime_type(const void* buffer, size_t length)
     if (!buffer || length <= 0)
         return {};
 
-    std::string result;
+    BasicMimeTypeDetector detector;
+    std::string result = detector.get_mime_type(buffer, length);
+    if (!result.empty())
+        return result;
+
 #ifdef HAVE_LIBMAGIC
     magic_t magic = magic_open(MAGIC_MIME_TYPE);
-
     if (magic)
     {
         if (!magic_load(magic, MAGIC_DATABASE))
@@ -334,19 +337,20 @@ std::string get_mime_type(const void* buffer, size_t length)
 
         magic_close(magic);
     }
-#else
-    BasicMimeTypeDetector detector;
-    result = detector.get_mime_type(buffer, length);
 #endif
+
     return result;
 }
 
 std::string get_mime_type(const std::string& path)
 {
-    std::string result;
+    BasicMimeTypeDetector detector;
+    std::string result = detector.get_mime_type(path);
+    if (!result.empty())
+        return result;
+
 #ifdef HAVE_LIBMAGIC
     magic_t magic = magic_open(MAGIC_MIME_TYPE);
-
     if (magic)
     {
         if (!magic_load(magic, MAGIC_DATABASE))
@@ -358,10 +362,8 @@ std::string get_mime_type(const std::string& path)
 
         magic_close(magic);
     }
-#else
-    BasicMimeTypeDetector detector;
-    result = detector.get_mime_type(path);
 #endif
+
     return result;
 }
 
