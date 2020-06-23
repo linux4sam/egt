@@ -250,7 +250,7 @@ protected:
             s++;
             count /= div;
         }
-        return fmt::format("{} {}", count, suffixes[s]);
+        return fmt::format("{:.2f} {}", count, suffixes[s]);
     }
 
     /// Start time
