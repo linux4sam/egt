@@ -258,27 +258,6 @@ struct BasicMimeTypeDetector
                 result = get_mime_type(bytes, 4);
         }
 
-        if (result.empty())
-        {
-            if (path.find("bmp") != std::string::npos)
-                result = MIME_BMP;
-            else if (path.find("jpg") != std::string::npos)
-                result = MIME_JPEG;
-            else if (path.find("png") != std::string::npos)
-                result = MIME_PNG;
-            else if (path.find("gif") != std::string::npos)
-                result = MIME_GIF;
-            else if (path.find("svg") != std::string::npos)
-                result = MIME_SVG;
-            else if (path.find("pdf") != std::string::npos)
-                result = MIME_PDF;
-            // "gzip" before "zip"
-            else if (path.find("gzip") != std::string::npos)
-                result = MIME_GZIP;
-            else if (path.find("zip") != std::string::npos)
-                result = MIME_ZIP;
-        }
-
         return result;
     }
 
