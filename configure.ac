@@ -160,7 +160,6 @@ if test "x$enable_debug" = "xno" ; then
 		      -fdata-sections"
 else
   CXXFLAGS="$CXXFLAGS -DEGTLOG_ACTIVE_LEVEL=0"
-  CFLAGS="$CFLAGS"
 fi
 LDFLAGS="$LDFLAGS -Wl,--gc-sections"
 
@@ -369,7 +368,7 @@ AS_IF([test "x$with_lua" != "xno"],[
       LIBEGT_EXTRA_LDFLAGS="${lua_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 
       AC_ARG_ENABLE(lua-bindings,
-        [AC_HELP_STRING([--enable-lua-bindings],[enable lua bindings (default: no)])],
+        [AC_HELP_STRING([--enable-lua-bindings],[enable lua bindings [default=no]])],
         [enable_lua_bindings=$enableval], [enable_lua_bindings=no])
       if test "x$enable_lua_bindings" = "xyes";
       then
