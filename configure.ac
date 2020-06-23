@@ -388,10 +388,19 @@ fi
 AM_CONDITIONAL([HAVE_LUA], [test "x${have_lua}" = xyes])
 AM_CONDITIONAL([ENABLE_LUA_BINDINGS], [test "x${have_lua_bindings}" = xyes])
 
-AC_CHECK_HEADER([readline/readline.h], [have_readline=yes], [have_readline=no])
-if test "x${have_readline}" = xyes; then
-   LIBEGT_EXTRA_CXXFLAGS="-DLUA_USE_READLINE ${LIBEGT_EXTRA_CXXFLAGS}"
-   LIBEGT_EXTRA_LDFLAGS="-lreadline ${LIBEGT_EXTRA_LDFLAGS}"
+AC_ARG_WITH([readline],
+    AS_HELP_STRING([--without-readline], [Ignore presence of readline and disable it]),
+    [with_readline=$withval],
+    [with_readline=auto])
+AS_IF([test "x$with_readline" != "xno"],[
+   AC_CHECK_HEADER([readline/readline.h], [have_readline=yes], [have_readline=no])
+   if test "x${have_readline}" = xyes; then
+      LIBEGT_EXTRA_CXXFLAGS="-DLUA_USE_READLINE ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="-lreadline ${LIBEGT_EXTRA_LDFLAGS}"
+   fi
+])
+if test "x$with_readline" = xyes && test "x${have_readline}" != xyes; then
+   AC_MSG_FAILURE([--with-readline was given, but readline not found])
 fi
 
 AX_PKG_CHECK_MODULES2(libplanes, [], [libplanes >= 1.0.0], [have_libplanes=yes], [have_libplanes=no])
