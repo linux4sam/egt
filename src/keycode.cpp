@@ -154,9 +154,9 @@ static constexpr std::pair<int, KeyboardCode> keys[] =
     {KEY_WLAN, EKEY_WLAN},
     {KEY_POWER, EKEY_POWER},
     {KEY_COMPOSE, EKEY_COMPOSE},
+#endif
     // non-standard key code, used by some DTS gpio_keys
     {0x104, EKEY_USER1},
-#endif
 };
 
 KeyboardCode linux_to_ekey(int code)

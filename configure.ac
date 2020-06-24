@@ -1,4 +1,4 @@
-AC_PREREQ([2.63])
+AC_PREREQ([2.64])
 AC_INIT([libegt],[1.0])
 
 AC_CONFIG_HEADERS([config.h])
@@ -24,42 +24,10 @@ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 LT_PREREQ([2.2])
 LT_INIT([win32-dll])
 
-AC_MSG_CHECKING([for native WIN32])
-case "$host" in
-  *-*-mingw*)
-      egt_os_win32=yes
-      ;;
-  *)
-      egt_os_win32=no
-      ;;
-esac
-AC_MSG_RESULT([$egt_os_win32])
-AM_CONDITIONAL(OS_WIN32, test "$egt_os_win32" = "yes")
-
-AC_MSG_CHECKING([for native ARM])
-case "$host" in
-  arm*)
-      egt_cpu_arm=yes
-      ;;
-  *)
-      egt_cpu_arm=no
-      ;;
-esac
-AC_MSG_RESULT([$egt_cpu_arm])
-AM_CONDITIONAL(CPU_ARM, test "$egt_cpu_arm" = "yes")
-
-CXXFLAGS="$CXXFLAGS -g -std=c++14 -DFMT_HEADER_ONLY"
-CFLAGS="$CFLAGS -g"
-
-if test "x$egt_os_win32" = "xyes"; then
-  CXXFLAGS="$CXXFLAGS -DWIN32 -DEGT_STATIC"
-
-else
-  CXXFLAGS="$CXXFLAGS -fvisibility=hidden -fvisibility-inlines-hidden"
-fi
-
+AC_LANG(C++)
 AC_DISABLE_STATIC
 AC_PROG_CXX
+AX_CXX_COMPILE_STDCXX(14, noext)
 AX_CODE_COVERAGE
 AC_PROG_AWK
 AC_PROG_CC
@@ -72,6 +40,42 @@ AM_PROG_AS
 
 pkgconfigdir=${libdir}/pkgconfig
 AC_SUBST(pkgconfigdir)
+
+# do not set CXXFLAGS/CFLAGS before here in order to pickup defaults
+
+AC_MSG_CHECKING([for native WIN32])
+case "$host" in
+  *-*-mingw*)
+      egt_os_win32=yes
+      ;;
+  *)
+      egt_os_win32=no
+      ;;
+esac
+AC_MSG_RESULT([$egt_os_win32])
+AM_CONDITIONAL(OS_WIN32, test "$egt_os_win32" = "yes")
+
+if test "x$egt_os_win32" = "xyes"; then
+  AX_APPEND_FLAG([-DWIN32], [CXXFLAGS])
+  AX_APPEND_FLAG([-DEGT_STATIC], [CXXFLAGS])
+  AX_APPEND_FLAG([-DWIN32], [CFLAGS])
+  AX_APPEND_FLAG([-DEGT_STATIC], [CFLAGS])
+else
+  AX_APPEND_COMPILE_FLAGS([-fvisibility=hidden -fvisibility-inlines-hidden], [CXXFLAGS])
+  AX_APPEND_COMPILE_FLAGS([-fvisibility=hidden], [CFLAGS])
+fi
+
+AC_MSG_CHECKING([for native ARM])
+case "$host" in
+  arm*)
+      egt_cpu_arm=yes
+      ;;
+  *)
+      egt_cpu_arm=no
+      ;;
+esac
+AC_MSG_RESULT([$egt_cpu_arm])
+AM_CONDITIONAL(CPU_ARM, test "$egt_cpu_arm" = "yes")
 
 AC_DEFUN([EGT_CC_TRY_FLAG], [
   AC_MSG_CHECKING([whether $CC supports $1])
@@ -158,23 +162,22 @@ AC_ARG_ENABLE([debug],
   [enable_debug=$enableval], [enable_debug=yes])
 
 if test "x$enable_debug" = "xno" ; then
-  AC_MSG_NOTICE([Disabling debugging])
-  CXXFLAGS="$CXXFLAGS -DNDEBUG -Ofast \
-		      -fno-math-errno \
-		      -fmerge-all-constants \
-		      -ftree-vectorize \
-		      -ffunction-sections \
-		      -fdata-sections"
-  CFLAGS="$CFLAGS -DNDEBUG -Ofast \
-  		      -fno-math-errno \
-  		      -fmerge-all-constants \
-		      -ftree-vectorize \
-		      -ffunction-sections \
-		      -fdata-sections"
+  AC_MSG_NOTICE([enabling optimization flags])
+  AX_APPEND_FLAG([-DNDEBUG], [CXXFLAGS])
+  AX_APPEND_FLAG([-DNDEBUG], [CFLAGS])
+  OPT_FLAGS="-fno-math-errno -fmerge-all-constants -ftree-vectorize \
+  		-ffunction-sections -fdata-sections"
+  for F in $OPT_FLAGS; do
+      AC_LANG(C)
+      AX_APPEND_COMPILE_FLAGS([$F], [CFLAGS])
+      AC_LANG(C++)
+      AX_APPEND_COMPILE_FLAGS([$F], [CXXFLAGS])
+  done
+  AX_APPEND_COMPILE_FLAGS([-Wl,--gc-sections], [LDFLAGS])
 else
-  CXXFLAGS="$CXXFLAGS -DEGTLOG_ACTIVE_LEVEL=0"
+  AX_APPEND_FLAG([-DEGTLOG_ACTIVE_LEVEL=0], [CXXFLAGS])
 fi
-LDFLAGS="$LDFLAGS -Wl,--gc-sections"
+AX_APPEND_FLAG([-DFMT_HEADER_ONLY], [CXXFLAGS])
 
 AC_ARG_ENABLE(gcov,
   [AC_HELP_STRING([--enable-gcov],[turn on code coverage analysis tools])],
@@ -189,9 +192,9 @@ then
 
   if test "$ac_cv_c_gcc_ftest_coverage" = "yes"
   then
-    CFLAGS="$CFLAGS --coverage"
-    CXXFLAGS="$CXXFLAGS --coverage"
-    LDFLAGS="${LDFLAGS} -lgcov"
+    AX_APPEND_COMPILE_FLAGS([--coverage], [CFLAGS])
+    AX_APPEND_COMPILE_FLAGS([--coverage], [CXXFLAGS])
+    AX_APPEND_COMPILE_FLAGS([-lgcov], [LDFLAGS])
     dnl Turn off optimization so code coverage tool
     dnl can get accurate line numbers
     CFLAGS=`echo "$CFLAGS" | sed -e 's/-O[0-9a-z]*//g'`
@@ -211,8 +214,8 @@ then
 
   if test "$ac_cv_c_gcc_pg" = "yes"
   then
-    CFLAGS="$CFLAGS -pg"
-    CXXFLAGS="$CXXFLAGS -pg"
+    AX_APPEND_COMPILE_FLAGS([-pg], [CFLAGS])
+    AX_APPEND_COMPILE_FLAGS([-pg], [CXXFLAGS])
   else
     ac_cv_c_gcc_pg=no
   fi
@@ -242,8 +245,8 @@ AC_ARG_ENABLE([lto],
   [enable_lto=$enableval], [enable_lto=no])
 if test "x$enable_lto" = "xyes" ; then
   AC_MSG_NOTICE([enabling LTO])
-  CFLAGS="$CFLAGS -flto"
-  CXXFLAGS="$CXXFLAGS -flto"
+  AX_APPEND_COMPILE_FLAGS([-flto], [CFLAGS])
+  AX_APPEND_COMPILE_FLAGS([-flto], [CXXFLAGS])
 fi
 
 # Checks for typedefs, structures, and compiler characteristics.
@@ -601,7 +604,7 @@ AS_IF([test "x$with_filesystem" != "xno"],[
    AM_CONDITIONAL([HAVE_EXPERIMENTAL_FILESYSTEM], [test "x${have_libstdcppfs}" = xyes])
    if test "x${have_libstdcppfs}" = xyes;
    then
-      LDFLAGS="${LDFLAGS} -lstdc++fs"
+      AX_APPEND_FLAG([-lstdc++fs], [LDFLAGS])
       AC_DEFINE(HAVE_EXPERIMENTAL_FILESYSTEM, 1, [Have experimental filesystem support])
       AC_SUBST(include_filedialog, ["#define EGT_HAS_FILEDIALOG 1"])
    fi
@@ -806,6 +809,8 @@ echo "  LTO                    ${enable_lto:-no}"
 echo "  SIMD                   ${enable_simd:-no}"
 echo "  Examples               ${enable_examples}"
 echo "  CXXFLAGS               ${CXXFLAGS}"
+echo "  CFLAGS                 ${CFLAGS}"
+echo "  LDFLAGS                ${LDFLAGS}"
 echo
 
 echo "Display:"
