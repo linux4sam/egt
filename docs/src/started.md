@@ -171,6 +171,27 @@ build a complete SDK and target filesystem for a board, follow the
 instructions found in that project's
 [README](https://github.com/linux4sam/meta-atmel/blob/warrior/README).
 
+@section started_windows Building for Windows
+
+The EGT examples can be built for 32 bit or 54 bit Windows on Linux using the
+[mxe project](https://mxe.cc/).
+
+For example, to build 64 bit static binaries, this can be done with the
+`x86_64-w64-mingw32.static` target.
+
+@code{.unparsed}
+git clone https://github.com/mxe/mxe.git
+cd mxe
+make MXE_TARGETS=x86_64-w64-mingw32.static cc libpng jpeg freetype cairo libsndfile sdl2 librsvg
+... wait ...
+export PATH=`pwd`/usr/bin:$PATH
+@endcode
+
+@code{.unparsed}
+cd ~/egt
+./configure --host=i686-w64-mingw32.static
+make
+@endcode
 
 @section started_first First Application
 
