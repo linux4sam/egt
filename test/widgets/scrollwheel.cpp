@@ -39,8 +39,6 @@ TEST_P(ScrollwheelTest, Test1)
         }
 
         EXPECT_EQ(static_cast<int>(widget->item_count()), item_count);
-
-        EXPECT_TRUE(widget->value() == "Testitem 0");
     }
     else if (type == 1)
     {
@@ -75,6 +73,7 @@ TEST_P(ScrollwheelTest, Test1)
     else if (type == 5)
     {
         EXPECT_NO_THROW(widget.reset(new egt::Scrollwheel(egt::Rect(0, 0, 100, 150), 0, 9, 1)));
+        EXPECT_NO_THROW(win.add(expand(widget)));
 
         EXPECT_EQ(widget->size(), egt::Size(100, 150));
 
@@ -88,7 +87,36 @@ TEST_P(ScrollwheelTest, Test1)
     });
     widget->selected(5);
     EXPECT_TRUE(value_changed);
+    EXPECT_EQ(static_cast<int>(widget->selected()), 5);
 
+    int i;
+    if (type == 5)
+    {
+        EXPECT_TRUE(widget->value() == "5");
+
+        for (i = 10; i < 20; i++)
+            widget->add_item(std::to_string(i));
+        EXPECT_EQ(static_cast<int>(widget->item_count()), item_count + 10);
+
+        for (int i = 0; i < 5; i++)
+            widget->remove_item(std::to_string(i));
+        EXPECT_EQ(static_cast<int>(widget->item_count()), item_count + 5);
+    }
+    else
+    {
+        EXPECT_TRUE(widget->value() == "Testitem 5");
+
+        for (i = 10; i < 20; i++)
+            widget->add_item("Testitem " + std::to_string(i));
+        EXPECT_EQ(static_cast<int>(widget->item_count()), item_count + 10);
+
+        for (int i = 0; i < 5; i++)
+            widget->remove_item("Testitem " + std::to_string(i));
+        EXPECT_EQ(static_cast<int>(widget->item_count()), item_count + 5);
+    }
+
+    widget->clear_items();
+    EXPECT_EQ(static_cast<int>(widget->item_count()), 0);
 
     widget->orient(egt::Orientation::horizontal);
     EXPECT_EQ(widget->orient(), egt::Orientation::horizontal);
