@@ -186,6 +186,8 @@ std::vector<std::string> glob(const std::string& pattern)
         } while (FindNextFileA(hFind, &file));
         FindClose(hFind);
     }
+#else
+    ignoreparam(pattern);
 #endif
     return filenames;
 }

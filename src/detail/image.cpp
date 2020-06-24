@@ -71,8 +71,8 @@ static constexpr auto MIME_PNG = "image/png";
 static constexpr auto MIME_GIF = "image/gif";
 #ifdef HAVE_LIBRSVG
 static constexpr auto MIME_SVGXML = "image/svg+xml";
-#endif
 static constexpr auto MIME_SVG = "image/svg";
+#endif
 static constexpr auto MIME_PDF = "application/pdf";
 static constexpr auto MIME_ZIP = "application/zip";
 static constexpr auto MIME_GZIP = "application/gzip";
