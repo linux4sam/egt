@@ -463,6 +463,8 @@ if test "x$with_fontconfig" = xyes && test "x${have_fontconfig}" != xyes; then
 fi
 AM_CONDITIONAL([HAVE_FONTCONFIG], [test "x${have_fontconfig}" = xyes])
 
+AC_CHECK_DECL([CAIRO_HAS_PNG_FUNCTIONS], [have_png=yes], [have_png=no], [[#include <cairo/cairo-features.h>]])
+
 AC_ARG_WITH([plplot],
     AS_HELP_STRING([--without-plplot], [Ignore presence of plplot and disable it]),
     [with_plplot=$withval],
@@ -825,8 +827,7 @@ echo "Media:"
 echo "  gstreamer              ${have_gstreamer:-no}"
 echo "  SVG                    ${have_librsvg:-no}"
 echo "  JPEG                   ${have_libjpeg:-no}"
-echo "  PNG                    yes"
-echo "  BMP                    yes"
+echo "  PNG                    ${have_png:-no}"
 echo
 
 echo "Features:"
