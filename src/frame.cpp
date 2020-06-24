@@ -490,6 +490,7 @@ void Frame::draw_child(Painter& painter, const Rect& crect, Widget* child)
 
 void Frame::paint_to_file(const std::string& filename)
 {
+#if CAIRO_HAS_PNG_FUNCTIONS == 1
     /// @todo should this be redirected to parent()?
     std::string name = filename;
     if (name.empty())
@@ -497,6 +498,9 @@ void Frame::paint_to_file(const std::string& filename)
 
     auto surface = cairo_get_target(screen()->context().get());
     cairo_surface_write_to_png(surface, name.c_str());
+#else
+    detail::error("png support not available");
+#endif
 }
 
 void Frame::paint_children_to_file()

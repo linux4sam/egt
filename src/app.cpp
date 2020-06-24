@@ -377,6 +377,7 @@ void Application::quit()
 
 void Application::paint_to_file(const std::string& filename)
 {
+#if CAIRO_HAS_PNG_FUNCTIONS == 1
     auto name = filename;
     if (name.empty())
     {
@@ -403,6 +404,9 @@ void Application::paint_to_file(const std::string& filename)
     }
 
     cairo_surface_write_to_png(surface.get(), name.c_str());
+#else
+    detail::error("png support not available");
+#endif
 }
 
 // NOLINTNEXTLINE(readability-convert-member-functions-to-static)

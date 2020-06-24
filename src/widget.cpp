@@ -460,6 +460,7 @@ void Widget::paint(Painter& painter)
 
 void Widget::paint_to_file(const std::string& filename)
 {
+#if CAIRO_HAS_PNG_FUNCTIONS == 1
     std::string name = filename;
     if (name.empty())
         name = fmt::format("{}.png", this->name());
@@ -474,6 +475,9 @@ void Widget::paint_to_file(const std::string& filename)
     Painter painter(cr);
     paint(painter);
     cairo_surface_write_to_png(surface.get(), name.c_str());
+#else
+    detail::error("png support not available");
+#endif
 }
 
 void Widget::walk(const WalkCallback& callback, int level)
