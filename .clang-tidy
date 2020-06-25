@@ -4,7 +4,7 @@ Checks: "*,\
 -bugprone-lambda-function-name,\
 -bugprone-narrowing-conversions,\
 -cert-err58-cpp,\
--clang-diagnostic-unknown-warning-option,\
+-clang-diagnostic-c++17-extensions,\
 -clang-diagnostic-unknown-warning-option,\
 -cppcoreguidelines-avoid-c-arrays,\
 -cppcoreguidelines-avoid-magic-numbers,\
