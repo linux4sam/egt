@@ -282,7 +282,7 @@ static size_t pixel_bytes(PixelFormat format)
     }
 
     throw std::runtime_error("unable to convert format to bytes");
-};
+}
 
 void Screen::copy_to_buffer_software(ScreenBuffer& buffer)
 {
