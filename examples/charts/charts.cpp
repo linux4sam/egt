@@ -425,17 +425,17 @@ struct LineChartPage : public egt::NotebookTab
         sizer->add(egt::expand(line));
 
         egt::LineChart::DataArray data;
-        for (float i = 0.; i < M_PI * 2; i += 0.2)
+        for (auto i = 0; i < 6283; i += 200)
         {
             if (type == LineChartType::Cosine)
             {
                 line->label("x-axis", "y-axis", "Cosine Chart");
-                data.push_back(std::make_pair(i, std::cos(i)));
+                data.push_back(std::make_pair(i / 1000., std::cos(i / 1000.)));
             }
             else if (type == LineChartType::Sine)
             {
                 line->label("x-axis", "y-axis", "Sine Chart");
-                data.push_back(std::make_pair(i, std::sin(i)));
+                data.push_back(std::make_pair(i / 1000., std::sin(i / 1000.)));
             }
         }
         line->data(data);
@@ -456,22 +456,22 @@ struct LineChartPage : public egt::NotebookTab
                 egt::LineChart::DataArray data1;
                 if (type == LineChartType::Cosine)
                 {
-                    static float ci = M_PI * 2;
+                    static int ci = 6283;
                     static int csize = 4;
-                    for (; ci < M_PI * csize; ci += 0.2)
+                    for (; ci < 3141 * csize; ci += 200)
                     {
-                        data1.push_back(std::make_pair(ci, std::cos(ci)));
+                        data1.push_back(std::make_pair(ci / 1000., std::cos(ci / 1000.)));
                     }
                     line->add_data(data1);
                     csize ++;
                 }
                 else if (type == LineChartType::Sine)
                 {
-                    static float si = M_PI * 2;
+                    static int si = 6283;
                     static int ssize = 4;
-                    for (; si < M_PI * ssize; si += 0.2)
+                    for (; si < 3141 * ssize; si += 200)
                     {
-                        data1.push_back(std::make_pair(si, std::sin(si)));
+                        data1.push_back(std::make_pair(si / 1000., std::sin(si / 1000.)));
                     }
                     line->add_data(data1);
                     ssize ++;
