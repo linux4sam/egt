@@ -83,9 +83,7 @@ GstKmsSinkImpl::GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool de
     auto format = detail::egt_format(s->get_plane_format());
     if ((format != PixelFormat::yuyv) && (format != PixelFormat::xrgb8888))
     {
-        std::ostringstream ss;
-        ss << "Error: Invalid format: supported formats are xrgb8888 & yuyv for sama5d4";
-        throw std::runtime_error(ss.str());
+        throw std::runtime_error("Error: Invalid format: supported formats are xrgb8888 & yuyv for sama5d4");
     }
 }
 
