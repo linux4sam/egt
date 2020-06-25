@@ -52,7 +52,6 @@ CPPCHECK_CMD = $(CPPCHECK_BIN) \
 	--suppress=*:*asio/* \
 	--config-exclude=include/egt/asio/ \
 	--config-exclude=include/egt/asio.hpp \
-	--config-exclude=include/egt/detail/floatingpoint.h \
 	--error-exitcode=0 \
 	-j 4 \
 	--force \
