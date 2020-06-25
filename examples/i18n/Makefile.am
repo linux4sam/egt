@@ -83,15 +83,5 @@ build-po: build-pot
 build-pot: i18n.cpp
 	$(MRESG_V_GEN)$(XGETTEXT) $(XGETTEXT_ARGS) -o i18n.pot $<
 
-TIDY_OPTIONS = $(AM_CPPFLAGS) $(CUSTOM_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-TIDY_SOURCE = $(filter-out $(BUILT_SOURCES),$(SOURCES))
-
-tidy-local: all-am
-	@for source in $(TIDY_SOURCE); do \
-		[[ $$source == *.c ]] && continue; \
-		[[ $$source == *.hpp ]] && continue; \
-		[[ $$source == *.ipp ]] && continue; \
-		$(CLANG_TIDY_BIN) $(srcdir)/$$source -- $(TIDY_OPTIONS); \
-	done
-
-tidy: tidy-local
+TIDY_FLAGS = $(CUSTOM_CXXFLAGS)
+include ../../src/Makefile.tidy

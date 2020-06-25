@@ -1,0 +1,22 @@
+TIDY_OPTIONS = $(AM_CPPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(TIDY_FLAGS) -std=c++14
+TIDY_SOURCE = $(filter-out $(BUILT_SOURCES),$(SOURCES))
+TIDY_OPTS = $(filter-out -findirect-inlining,$(TIDY_OPTIONS))
+
+tidy-local:
+	@for source in $(TIDY_SOURCE); do \
+		[[ $$source == *.c ]] && continue; \
+		[[ $$source == *.h ]] && continue; \
+		[[ $$source == *.hpp ]] && continue; \
+		[[ $$source == *.ipp ]] && continue; \
+		echo "  TIDY    " $$source; \
+		$(CLANG_TIDY_BIN) -quiet $(srcdir)/$$source -- $(TIDY_OPTS); \
+	done
+
+tidy: tidy-local
+	@list='$(SUBDIRS)'; for subdir in $$list; do \
+	  if test "$$subdir" = .; then :; else \
+	    ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) tidy); \
+	  fi; \
+	done;
+
+.PHONY: tidy tidy-local

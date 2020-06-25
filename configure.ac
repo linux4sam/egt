@@ -1,4 +1,4 @@
-AC_PREREQ([2.64])
+AC_PREREQ([2.69])
 AC_INIT([libegt],[1.0])
 
 AC_CONFIG_HEADERS([config.h])
@@ -10,7 +10,7 @@ if test "x$program_prefix" = xNONE; then
   program_prefix="egt_"
 fi
 
-AC_CANONICAL_SYSTEM
+AC_CANONICAL_TARGET
 AC_ARG_PROGRAM
 
 PKG_PROG_PKG_CONFIG
@@ -106,10 +106,11 @@ MAYBE_WARN="-Wall -Wextra \
 -Wno-attributes -Wno-long-long \
 -Wno-missing-field-initializers \
 -Wno-unused-parameter \
+-Wno-variadic-macros \
 -Wno-psabi" # no warnings about gcc abi changes
 
 AC_ARG_ENABLE(sanitize,
-  [AC_HELP_STRING([--enable-sanitize],[turn on sanitize analysis tools])],
+  [AS_HELP_STRING([--enable-sanitize],[turn on sanitize analysis tools])],
   [enable_sanitize=$enableval], [enable_sanitize=no])
 
 if test "x$enable_sanitize" = "xyes";
@@ -166,7 +167,8 @@ if test "x$enable_debug" = "xno" ; then
   AX_APPEND_FLAG([-DNDEBUG], [CXXFLAGS])
   AX_APPEND_FLAG([-DNDEBUG], [CFLAGS])
   OPT_FLAGS="-fno-math-errno -fmerge-all-constants -ftree-vectorize \
-  		-ffunction-sections -fdata-sections"
+  		-ffunction-sections -fdata-sections \
+		-finline-small-functions -findirect-inlining"
   for F in $OPT_FLAGS; do
       AC_LANG(C)
       AX_APPEND_COMPILE_FLAGS([$F], [CFLAGS])
@@ -177,17 +179,16 @@ if test "x$enable_debug" = "xno" ; then
 else
   AX_APPEND_FLAG([-DEGTLOG_ACTIVE_LEVEL=0], [CXXFLAGS])
 fi
-AX_APPEND_FLAG([-DFMT_HEADER_ONLY], [CXXFLAGS])
 
 AC_ARG_ENABLE(gcov,
-  [AC_HELP_STRING([--enable-gcov],[turn on code coverage analysis tools])],
+  [AS_HELP_STRING([--enable-gcov],[turn on code coverage analysis tools])],
   [enable_gcov=$enableval], [enable_gcov=no])
 
-dnl Check for --enable-gcov and add appropriate flags for gcc
-dnl Note that these extra switches are NOT applied to the loader
+# Check for --enable-gcov and add appropriate flags for gcc
+# Note that these extra switches are NOT applied to the loader
 if test "x$enable_gcov" = "xyes";
 then
-  dnl Check for -fprofile-arcs and -ftest-coverage option
+  # Check for -fprofile-arcs and -ftest-coverage option
   EGT_CC_TRY_FLAG([--coverage], ac_cv_c_gcc_ftest_coverage="yes")
 
   if test "$ac_cv_c_gcc_ftest_coverage" = "yes"
@@ -195,8 +196,8 @@ then
     AX_APPEND_COMPILE_FLAGS([--coverage], [CFLAGS])
     AX_APPEND_COMPILE_FLAGS([--coverage], [CXXFLAGS])
     AX_APPEND_COMPILE_FLAGS([-lgcov], [LDFLAGS])
-    dnl Turn off optimization so code coverage tool
-    dnl can get accurate line numbers
+    # Turn off optimization so code coverage tool
+    # can get accurate line numbers
     CFLAGS=`echo "$CFLAGS" | sed -e 's/-O[0-9a-z]*//g'`
     CXXFLAGS=`echo "$CXXFLAGS" | sed -e 's/-O[0-9a-z]*//g'`
   else
@@ -205,7 +206,7 @@ then
 fi
 
 AC_ARG_ENABLE(profile,
-  [AC_HELP_STRING([--enable-profile],[turn on profiling tools])],
+  [AS_HELP_STRING([--enable-profile],[turn on profiling tools])],
   [enable_profile=$enableval], [enable_profile=no])
 
 if test "x$enable_profile" = "xyes";
@@ -263,9 +264,9 @@ AC_TYPE_UINT8_T
 AC_FUNC_MMAP
 AC_CHECK_FUNCS([floor memmove memset munmap select setlocale sqrt strerror])
 
-AX_PTHREAD([LIBS="$PTHREAD_LIBS $LIBS"
-            CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
-            CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"],
+AX_PTHREAD([AX_APPEND_FLAG([$PTHREAD_LIBS], [LIBS])
+	    AX_APPEND_FLAG([$PTHREAD_CFLAGS], [CFLAGS])
+	    AX_APPEND_FLAG([$PTHREAD_CFLAGS], [CXXFLAGS])],
             AC_MSG_ERROR(Can not find pthreads.  This is required.))
 
 AC_ARG_WITH([x11],
@@ -384,7 +385,7 @@ AS_IF([test "x$with_lua" != "xno"],[
       LIBEGT_EXTRA_LDFLAGS="${lua_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 
       AC_ARG_ENABLE(lua-bindings,
-        [AC_HELP_STRING([--enable-lua-bindings],[enable lua bindings [default=no]])],
+        [AS_HELP_STRING([--enable-lua-bindings],[enable lua bindings [default=no]])],
         [enable_lua_bindings=$enableval], [enable_lua_bindings=no])
       if test "x$enable_lua_bindings" = "xyes";
       then
@@ -485,13 +486,13 @@ AS_IF([test "x$with_plplot" != "xno"],[
       ac_save_CFLAGS="$CFLAGS"
       CFLAGS=$plplotcxx_CFLAGS
       AC_LANG_PUSH([C])
-      AC_TRY_COMPILE([
+      AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
       #include <plplot/plDevs.h>
-      ],[
+      ]], [[
       #ifndef PLD_extcairo
       #error
       #endif
-      ],[
+      ]])],[
          result=yes
          AC_DEFINE([HAVE_EXTCAIRO], [], [extcairo found])
       ],[result=no])
@@ -797,7 +798,7 @@ AC_CONFIG_FILES([Makefile
 	lua/Makefile])
 AC_OUTPUT
 
-dnl report how we have been configured
+# report how we have been configured
 echo
 echo "Configured EGT ${PACKAGE_VERSION} for \`${host}'"
 echo

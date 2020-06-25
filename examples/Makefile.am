@@ -313,22 +313,8 @@ keys_keys_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 keys_keysdir = $(prefix)/share/egt/examples/keys
 keys_keys_LDFLAGS = $(AM_LDFLAGS)
 
-TIDY_OPTIONS = $(AM_CPPFLAGS) $(CUSTOM_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-
-tidy-local: all-am
-	@for source in $(SOURCES); do \
-		[[ $$source == *.c ]] && continue; \
-		[[ $$source == *.hpp ]] && continue; \
-		[[ $$source == *.ipp ]] && continue; \
-		$(CLANG_TIDY_BIN) $(srcdir)/$$source -- $(TIDY_OPTIONS); \
-	done
-
-tidy: tidy-local
-	@list='$(SUBDIRS)'; for subdir in $$list; do \
-	  if test "$$subdir" = .; then :; else \
-	    ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) tidy); \
-	  fi; \
-	done;
+TIDY_FLAGS = $(CUSTOM_CXXFLAGS)
+include ../src/Makefile.tidy
 
 EXTRA_DIST = \
 	boards/boards.xml \

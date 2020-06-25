@@ -7,8 +7,6 @@ CUSTOM_FLAGS = $(WARN_CFLAGS) \
 	-isystem $(top_srcdir)/external/layout \
 	-isystem $(top_srcdir)/external/fmt/include
 
-CUSTOM_CXXFLAGS = -Woverloaded-virtual -DEGT_DLL_EXPORTS
-
 if HAVE_SIMD
 CUSTOM_FLAGS += -isystem $(top_srcdir)/external/Simd/src/
 endif
@@ -17,7 +15,9 @@ endif
 # resulting in the error:
 #    expected unqualified-id before string constant
 # Workaround is to use DATAPATH instead.
-AM_CXXFLAGS = -DDATAPATH=\"$(datadir)\" -DSRCDIR=\"$(abs_top_srcdir)\"
+CUSTOM_FLAGS += -DDATAPATH=\"$(datadir)\" -DSRCDIR=\"$(abs_top_srcdir)\"
+
+CUSTOM_CXXFLAGS = -Woverloaded-virtual -DEGT_DLL_EXPORTS -DFMT_HEADER_ONLY
 
 lib_LTLIBRARIES = libegt.la
 libegt_la_CXXFLAGS = \
@@ -418,17 +418,8 @@ dist-hook:
 BUILT_SOURCES = $(top_builddir)/include/egt/version.h $(top_builddir)/include/egt/ui
 EXTRA_DIST = $(top_srcdir)/include/egt/version.h.in $(top_srcdir)/include/egt/ui.in
 
-TIDY_OPTIONS = $(AM_CPPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(libegt_la_CXXFLAGS)
-TIDY_SOURCE = $(filter-out $(BUILT_SOURCES),$(SOURCES))
-
-tidy-local: all-am
-	@for source in $(TIDY_SOURCE); do \
-		[[ $$source == *.c ]] && continue; \
-		[[ $$source == *.h ]] && continue; \
-		$(CLANG_TIDY_BIN) $(srcdir)/$$source -- $(TIDY_OPTIONS); \
-	done
-
-tidy: tidy-local
+TIDY_FLAGS = $(libegt_la_CXXFLAGS)
+include Makefile.tidy
 
 checkheaders:
 	@$(top_srcdir)/scripts/checkheaders.sh \

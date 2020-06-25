@@ -56,14 +56,4 @@ snippet10_SOURCES = snippet10.cpp
 snippet10_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 snippet10_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 
-TIDY_OPTIONS = $(AM_CPPFLAGS) $(CUSTOM_CXXFLAGS) $(CPPFLAGS) $(CXXFLAGS)
-
-tidy-local: all-am
-	@for source in $(SOURCES); do \
-		[[ $$source == *.c ]] && continue; \
-		[[ $$source == *.hpp ]] && continue; \
-		[[ $$source == *.ipp ]] && continue; \
-		$(CLANG_TIDY_BIN) $(srcdir)/$$source -- $(TIDY_OPTIONS); \
-	done
-
-tidy: tidy-local
+tidy:
