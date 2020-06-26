@@ -31,8 +31,17 @@ GaugeLayer::GaugeLayer(Gauge& gauge, const Image& image) noexcept
 
 void GaugeLayer::draw(Painter& painter, const Rect&)
 {
-    painter.draw(point());
-    painter.draw(m_image);
+    if (m_mask_color == Color(0x00000000))
+    {
+        painter.draw(point());
+        painter.draw(m_image);
+    }
+    else
+    {
+        painter.set(m_mask_color);
+        painter.mask(m_image, point());
+        painter.fill();
+    }
 }
 
 NeedleLayer::NeedleLayer(const Image& image,

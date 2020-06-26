@@ -11,6 +11,7 @@
  * @brief Working with gauges.
  */
 
+#include <egt/color.h>
 #include <egt/detail/math.h>
 #include <egt/detail/meta.h>
 #include <egt/frame.h>
@@ -68,6 +69,12 @@ public:
         damage();
     }
 
+    void mask_color(const Color& color)
+    {
+        if (detail::change_if_diff<>(m_mask_color, color))
+            damage();
+    }
+
     /**
      * Get the gauge of the layer.
      */
@@ -89,15 +96,14 @@ protected:
         }
     }
 
-    /**
-     * The Layer image.
-     */
+    /// The Layer image.
     Image m_image;
 
-    /**
-     * Parent gauge.
-     */
+    /// Parent gauge.
     Gauge* m_gauge{nullptr};
+
+    /// Optional mask color
+    Color m_mask_color;
 
     friend class Gauge;
 };
