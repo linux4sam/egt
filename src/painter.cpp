@@ -81,6 +81,13 @@ Painter& Painter::draw(const Image& image)
     return *this;
 }
 
+Painter& Painter::mask(const Image& image, const Point& point)
+{
+    cairo_mask_surface(m_cr.get(), image.surface().get(), point.x(), point.y());
+
+    return *this;
+}
+
 Painter& Painter::draw(const Rect& rect, const Image& image)
 {
     double x;

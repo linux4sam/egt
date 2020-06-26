@@ -279,6 +279,11 @@ public:
     Painter& draw(const Image& image);
 
     /**
+     * Draw an image as a mask.
+     */
+    Painter& mask(const Image& image, const Point& point = {});
+
+    /**
      * @param[in] rect The source rect to copy.
      * @param[in] image The image surface to draw.
      */
