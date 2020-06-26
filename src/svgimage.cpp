@@ -74,12 +74,12 @@ RectF SvgImage::id_box(const std::string& id) const
              * This +1 here in both dimensions is a hack of a workaround.  The
              * existing API in librsvg uses integers for position and dimension
              * data.  Of course this is a problem because the SVG can have
-             * floating point values.  They fixes this in around 2.46 of librsvg
+             * floating point values.  They fixed this in around 2.46 of librsvg
              * with a new API.
              *
              * See https://gitlab.gnome.org/GNOME/librsvg/blob/master/librsvg/rsvg.h#L208
              */
-            result.size(SizeF(dim.em * hfactor + 1, dim.ex * vfactor + 1));
+            result.size(SizeF((dim.em + 1) * hfactor, (dim.ex + 1) * vfactor));
         }
     }
 
