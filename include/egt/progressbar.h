@@ -418,10 +418,8 @@ public:
     }
 
     /// Default draw method for the widget.
-    static void default_draw(LevelMeterType<T>& widget, Painter& painter, const Rect& rect)
+    static void default_draw(LevelMeterType<T>& widget, Painter& painter, const Rect&)
     {
-        detail::ignoreparam(rect);
-
         widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
         const auto b = widget.content_area();

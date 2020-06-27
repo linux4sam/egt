@@ -68,7 +68,7 @@
 #define EGT_HAVE_ATTRIBUTE(x) 0
 #endif
 
-#if EGT_HAVE_ATTRIBUTE(nodiscard)
+#if EGT_HAVE_ATTRIBUTE(nodiscard) && !defined(__clang__)
 #define EGT_NODISCARD [[nodiscard]]
 #elif EGT_HAVE_ATTRIBUTE(warn_unused_result)
 #define EGT_NODISCARD __attribute__((warn_unused_result))
