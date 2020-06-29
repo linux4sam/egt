@@ -89,6 +89,11 @@ shared_cairo_surface_t ImageCache::get(const std::string& uri,
         });
     }
 
+    if (!image)
+    {
+        throw std::runtime_error(fmt::format("unable to load image: {}", uri));
+    }
+
     if (cairo_surface_status(image.get()) != CAIRO_STATUS_SUCCESS)
     {
         throw std::runtime_error(fmt::format(
