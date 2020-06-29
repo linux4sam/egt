@@ -638,7 +638,7 @@ const struct MAP3
 template <class T_MAP>
 KeyboardCode FindVK(const T_MAP& key, const T_MAP* map, size_t size)
 {
-    T_MAP comp = {0};
+    T_MAP comp{};
     const T_MAP* p = std::lower_bound(map, map + size, key, comp);
     if (p != map + size && !comp(*p, key) && !comp(key, *p))
         return static_cast<KeyboardCode>(p->vk);
