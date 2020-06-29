@@ -172,7 +172,7 @@ EasingScalar easing_quadratic_easeout(EasingScalar p)
 
 EasingScalar easing_quadratic_easeinout(EasingScalar p)
 {
-    if (p < 0.5)
+    if (p < 0.5f)
     {
         return 2 * p * p;
     }
@@ -195,14 +195,14 @@ EasingScalar easing_cubic_easeout(EasingScalar p)
 
 EasingScalar easing_cubic_easeinout(EasingScalar p)
 {
-    if (p < 0.5)
+    if (p < 0.5f)
     {
         return 4 * p * p * p;
     }
     else
     {
         EasingScalar f = ((2 * p) - 2);
-        return 0.5 * f * f * f + 1;
+        return 0.5f * f * f * f + 1;
     }
 }
 
@@ -219,7 +219,7 @@ EasingScalar easing_quartic_easeout(EasingScalar p)
 
 EasingScalar easing_quartic_easeinout(EasingScalar p)
 {
-    if (p < 0.5)
+    if (p < 0.5f)
     {
         return 8 * p * p * p * p;
     }
@@ -243,14 +243,14 @@ EasingScalar easing_quintic_easeout(EasingScalar p)
 
 EasingScalar easing_quintic_easeinout(EasingScalar p)
 {
-    if (p < 0.5)
+    if (p < 0.5f)
     {
         return 16 * p * p * p * p * p;
     }
     else
     {
         EasingScalar f = ((2 * p) - 2);
-        return  0.5 * f * f * f * f * f + 1;
+        return  0.5f * f * f * f * f * f + 1;
     }
 }
 
@@ -266,7 +266,7 @@ EasingScalar easing_sine_easeout(EasingScalar p)
 
 EasingScalar easing_sine_easeinout(EasingScalar p)
 {
-    return 0.5 * (1 - std::cos(p * detail::pi<EasingScalar>()));
+    return 0.5f * (1 - std::cos(p * detail::pi<EasingScalar>()));
 }
 
 EasingScalar easing_circular_easein(EasingScalar p)
@@ -281,24 +281,24 @@ EasingScalar easing_circular_easeout(EasingScalar p)
 
 EasingScalar easing_circular_easeinout(EasingScalar p)
 {
-    if (p < 0.5)
+    if (p < 0.5f)
     {
-        return 0.5 * (1 - std::sqrt(1 - 4 * (p * p)));
+        return 0.5f * (1 - std::sqrt(1 - 4 * (p * p)));
     }
     else
     {
-        return 0.5 * (std::sqrt(-((2 * p) - 3) * ((2 * p) - 1)) + 1);
+        return 0.5f * (std::sqrt(-((2 * p) - 3) * ((2 * p) - 1)) + 1);
     }
 }
 
 EasingScalar easing_exponential_easein(EasingScalar p)
 {
-    return detail::float_equal(p, 0.0f) ? p : std::pow(2, 10 * (p - 1));
+    return detail::float_equal(p, 0.0f) ? p : std::pow(2.0f, 10 * (p - 1));
 }
 
 EasingScalar easing_exponential_easeout(EasingScalar p)
 {
-    return detail::float_equal(p, 1.0f) ? p : 1 - std::pow(2, -10 * p);
+    return detail::float_equal(p, 1.0f) ? p : 1 - std::pow(2.0f, -10 * p);
 }
 
 EasingScalar easing_exponential_easeinout(EasingScalar p)
@@ -306,22 +306,22 @@ EasingScalar easing_exponential_easeinout(EasingScalar p)
     if (detail::float_equal(p, 0.0f) || detail::float_equal(p, 1.0f))
         return p;
 
-    if (p < 0.5)
+    if (p < 0.5f)
     {
-        return 0.5 * std::pow(2, (20 * p) - 10);
+        return 0.5f * std::pow(2.0f, (20 * p) - 10);
     }
     else
     {
-        return -0.5 * std::pow(2, (-20 * p) + 10) + 1;
+        return -0.5f * std::pow(2.0f, (-20 * p) + 10) + 1;
     }
 }
 
 EasingScalar easing_cubic_bezier::operator()(EasingScalar p)
 {
-    return std::pow(1. - p, 3.) * m_p0 +
-           3. * p * std::pow(1. - p, 2.) * m_p1 +
-           3. * std::pow(p, 2.) * (1. - p) * m_p2 +
-           std::pow(p, 3.) * m_p3;
+    return std::pow(1.0f - p, 3.0f) * m_p0 +
+           3.0f * p * std::pow(1.0f - p, 2.0f) * m_p1 +
+           3.0f * std::pow(p, 2.0f) * (1.0f - p) * m_p2 +
+           std::pow(p, 3.0f) * m_p3;
 }
 
 }

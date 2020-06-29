@@ -237,10 +237,10 @@ public:
         auto b = widget.content_area();
 
         auto dim = std::min(b.width(), b.height());
-        float linew = dim / 10.;
-        float radius = dim / 2. - (linew / 2.);
+        float linew = dim / 10.0f;
+        float radius = dim / 2.0f - (linew / 2.0f);
         auto angle1 = detail::to_radians<float>(180, 0);
-        auto angle2 = detail::to_radians<float>(180, widget.value() / 100. * 360.);
+        auto angle2 = detail::to_radians<float>(180, widget.value() / 100.0f * 360.0f);
 
         painter.line_width(linew);
         painter.set(widget.color(Palette::ColorId::button_fg, Palette::GroupId::disabled));
@@ -254,7 +254,7 @@ public:
         if (widget.show_label())
         {
             std::string text = std::to_string(widget.value());
-            auto f = TextWidget::scale_font(Size(dim * 0.75, dim * 0.75), text, widget.font());
+            auto f = TextWidget::scale_font(Size(dim * 0.75f, dim * 0.75f), text, widget.font());
             painter.set(f);
             painter.set(widget.color(Palette::ColorId::text));
             auto size = painter.text_size(text);
@@ -573,7 +573,7 @@ public:
     {
         detail::ignoreparam(rect);
 
-        static const auto tick_width = 1.0;
+        static const auto tick_width = 1.0f;
 
         widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
@@ -591,31 +591,31 @@ public:
         // ticks and labels
         for (auto tick = 0; tick <= 100; tick += 10)
         {
-            const auto xangle = std::cos(detail::pi<float>() * tick * 0.01);
-            const auto yangle = std::sin(detail::pi<float>() * tick * 0.01);
+            const auto xangle = std::cos(detail::pi<float>() * tick * 0.01f);
+            const auto yangle = std::sin(detail::pi<float>() * tick * 0.01f);
             painter.set(widget.color(Palette::ColorId::button_fg,
                                      Palette::GroupId::disabled));
             painter.draw(Point(hw * xangle,
                                -hw * yangle),
-                         Point((hw + 10.0) * xangle,
-                               -(hw + 10.0) * yangle));
+                         Point((hw + 10.0f) * xangle,
+                               -(hw + 10.0f) * yangle));
             painter.stroke();
 
             const auto text = std::to_string(tick);
             painter.set(widget.color(Palette::ColorId::text));
             const auto size = painter.text_size(text);
-            painter.draw(Point(-(hw + 30.0) * xangle - size.width() / 2.0,
-                               -(hw + 30.0) * yangle - size.height() / 2.0));
+            painter.draw(Point(-(hw + 30.0f) * xangle - size.width() / 2.0f,
+                               -(hw + 30.0f) * yangle - size.height() / 2.0f));
             painter.draw(text);
             painter.stroke();
         }
 
         // needle
-        const auto dest = Point((-hw - 15.0) * std::cos(detail::pi<float>() * widget.value() * 0.01),
-                                (-hw - 15.0) * std::sin(detail::pi<float>() * widget.value() * 0.01));
+        const auto dest = Point((-hw - 15.0f) * std::cos(detail::pi<float>() * widget.value() * 0.01f),
+                                (-hw - 15.0f) * std::sin(detail::pi<float>() * widget.value() * 0.01f));
 
         painter.set(widget.color(Palette::ColorId::button_fg));
-        painter.line_width(tick_width * 2.0);
+        painter.line_width(tick_width * 2.0f);
         painter.draw(Point(), dest);
         painter.stroke();
         painter.draw(Circle(Point(), 5));

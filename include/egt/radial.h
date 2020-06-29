@@ -293,7 +293,7 @@ public:
         auto radians = c.angle_to<float>(point);
         float angle = detail::to_degrees(radians);
         if (angle < 0)
-            angle = angle + 360.;
+            angle = angle + 360.0f;
         return angle;
     }
 
@@ -305,7 +305,7 @@ public:
         const auto n = (static_cast<float>(value) -
                         static_cast<float>(min)) /
                        (static_cast<float>(max) - static_cast<float>(min));
-        return n * 360.;
+        return n * 360.0f;
     }
 
     /**

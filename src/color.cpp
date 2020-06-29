@@ -38,9 +38,9 @@ std::ostream& operator<<(std::ostream& os, const Color& color)
 
 struct hsv
 {
-    double h; // angle in degrees
-    double s; // a fraction between 0 and 1
-    double v; // a fraction between 0 and 1
+    float h; // angle in degrees
+    float s; // a fraction between 0 and 1
+    float v; // a fraction between 0 and 1
 };
 
 static hsv rgb2hsv(const Color& in)
@@ -55,20 +55,20 @@ static hsv rgb2hsv(const Color& in)
 
     out.v = max;
     auto delta = max - min;
-    if (delta < 0.00001)
+    if (delta < 0.00001f)
     {
         out.s = 0;
         out.h = 0;
         return out;
     }
 
-    if (max > 0.0)
+    if (max > 0.0f)
     {
         out.s = (delta / max);
     }
     else
     {
-        out.s = 0.0;
+        out.s = 0.0f;
         out.h = NAN;
         return out;
     }
@@ -76,14 +76,14 @@ static hsv rgb2hsv(const Color& in)
     if (in.redf() >= max)
         out.h = (in.greenf() - in.bluef()) / delta;
     else if (in.greenf() >= max)
-        out.h = 2.0 + (in.bluef() - in.redf()) / delta;
+        out.h = 2.0f + (in.bluef() - in.redf()) / delta;
     else
-        out.h = 4.0 + (in.redf() - in.greenf()) / delta;
+        out.h = 4.0f + (in.redf() - in.greenf()) / delta;
 
-    out.h *= 60.0;
+    out.h *= 60.0f;
 
-    if (out.h < 0.0)
-        out.h += 360.0;
+    if (out.h < 0.0f)
+        out.h += 360.0f;
 
     return out;
 }
@@ -92,7 +92,7 @@ static Color hsv2rgb(hsv in)
 {
     Color out;
 
-    if (in.s <= 0.0)
+    if (in.s <= 0.0f)
     {
         out.redf(in.v);
         out.greenf(in.v);
@@ -100,15 +100,15 @@ static Color hsv2rgb(hsv in)
         return out;
     }
 
-    double hh = in.h;
-    if (hh >= 360.0)
-        hh = 0.0;
-    hh /= 60.0;
+    float hh = in.h;
+    if (hh >= 360.0f)
+        hh = 0.0f;
+    hh /= 60.0f;
     auto i = static_cast<int64_t>(hh);
-    double ff = hh - i;
-    double p = in.v * (1.0 - in.s);
-    double q = in.v * (1.0 - (in.s * ff));
-    double t = in.v * (1.0 - (in.s * (1.0 - ff)));
+    float ff = hh - i;
+    float p = in.v * (1.0f - in.s);
+    float q = in.v * (1.0f - (in.s * ff));
+    float t = in.v * (1.0f - (in.s * (1.0f - ff)));
 
     switch (i)
     {
@@ -150,9 +150,9 @@ static Color hsv2rgb(hsv in)
 
 struct hsl
 {
-    double h; // angle in degrees
-    double s; // a fraction between 0 and 1
-    double l; // a fraction between 0 and 1
+    float h; // angle in degrees
+    float s; // a fraction between 0 and 1
+    float l; // a fraction between 0 and 1
 };
 
 static hsl rgb2hsl(const Color& rgb)
@@ -270,9 +270,9 @@ Color Color::interp_hsv(const Color& a, const Color& b, float t)
     hsv cb = rgb2hsv(b);
     hsv final{};
 
-    final.h = linear_interpolator(ca.h, cb.h, static_cast<double>(t));
-    final.s = linear_interpolator(ca.s, cb.s, static_cast<double>(t));
-    final.v = linear_interpolator(ca.v, cb.v, static_cast<double>(t));
+    final.h = linear_interpolator(ca.h, cb.h, t);
+    final.s = linear_interpolator(ca.s, cb.s, t);
+    final.v = linear_interpolator(ca.v, cb.v, t);
 
     return {hsv2rgb(final),
             static_cast<ComponentType>(a.alpha() + (b.alpha() - a.alpha()) * t)};

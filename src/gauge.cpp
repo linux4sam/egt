@@ -96,7 +96,7 @@ void NeedleLayer::draw(Painter& painter, const Rect&)
                                             m_clockwise);
 
     draw_image(painter, m_point,
-               m_center, m_image, detail::to_radians<double>(0, angle));
+               m_center, m_image, detail::to_radians<float>(0, angle));
 }
 
 void NeedleLayer::gauge(Gauge* gauge)
@@ -133,11 +133,11 @@ Rect NeedleLayer::rectangle_of_rotated()
     const auto p3 = point_calc(center, rect.bottom_right(), angle);
     const auto p4 = point_calc(center, rect.bottom_left(), angle);
 
-    const auto xmin = std::round(std::min(std::min(p1.x(), p2.x()), std::min(p3.x(), p4.x())));
-    const auto ymin = std::round(std::min(std::min(p1.y(), p2.y()), std::min(p3.y(), p4.y())));
+    const auto xmin = std::roundf(std::min(std::min(p1.x(), p2.x()), std::min(p3.x(), p4.x())));
+    const auto ymin = std::roundf(std::min(std::min(p1.y(), p2.y()), std::min(p3.y(), p4.y())));
 
-    const auto xmax = std::round(std::max(std::max(p1.x(), p2.x()), std::max(p3.x(), p4.x())));
-    const auto ymax = std::round(std::max(std::max(p1.y(), p2.y()), std::max(p3.y(), p4.y())));
+    const auto xmax = std::roundf(std::max(std::max(p1.x(), p2.x()), std::max(p3.x(), p4.x())));
+    const auto ymax = std::roundf(std::max(std::max(p1.y(), p2.y()), std::max(p3.y(), p4.y())));
 
     const auto res = Rect(xmin + m_point.x() - m_center.x(),
                           ymin + m_point.y() - m_center.y(),

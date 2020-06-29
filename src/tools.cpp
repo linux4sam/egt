@@ -45,8 +45,8 @@ void CPUMonitorUsage::update()
     size_t total_time{};
     if (get_cpu_times(idle_time, total_time))
     {
-        const float idle_time_diff = idle_time - m_last_idle_time;
-        const float total_time_diff = total_time - m_last_total_time;
+        const double idle_time_diff = idle_time - m_last_idle_time;
+        const double total_time_diff = total_time - m_last_total_time;
         m_cpu_usage = 100.0 * (1.0 - idle_time_diff / total_time_diff);
         m_last_idle_time = idle_time;
         m_last_total_time = total_time;

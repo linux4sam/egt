@@ -313,9 +313,9 @@ public:
      */
     EGT_NODISCARD constexpr Color shade(float factor) const
     {
-        return Color(red() * (1. - factor),
-                     green() * (1. - factor),
-                     blue() * (1. - factor),
+        return Color(red() * (1.0f - factor),
+                     green() * (1.0f - factor),
+                     blue() * (1.0f - factor),
                      alpha());
     }
 
@@ -339,19 +339,19 @@ public:
      */
     EGT_NODISCARD Color hue(float h) const
     {
-        auto u = std::cos(h * detail::pi<float>() / 180.);
-        auto w = std::sin(h * detail::pi<float>() / 180.);
+        auto u = std::cos(h * detail::pi<float>() / 180.0f);
+        auto w = std::sin(h * detail::pi<float>() / 180.0f);
 
         Color ret;
-        ret.red((.299 + .701 * u + .168 * w) * red()
-                + (.587 - .587 * u + .330 * w) * green()
-                + (.114 - .114 * u - .497 * w) * blue());
-        ret.green((.299 - .299 * u - .328 * w) * red()
-                  + (.587 + .413 * u + .035 * w) * green()
-                  + (.114 - .114 * u + .292 * w) * blue());
-        ret.blue((.299 - .3 * u + 1.25 * w) * red()
-                 + (.587 - .588 * u - 1.05 * w) * green()
-                 + (.114 + .886 * u - .203 * w) * blue());
+        ret.red((0.299f + 0.701f * u + 0.168f * w) * red()
+                + (0.587f - 0.587f * u + 0.330f * w) * green()
+                + (0.114f - 0.114f * u - 0.497f * w) * blue());
+        ret.green((0.299f - 0.299f * u - 0.328f * w) * red()
+                  + (0.587f + 0.413f * u + 0.035f * w) * green()
+                  + (0.114f - 0.114f * u + 0.292f * w) * blue());
+        ret.blue((0.299f - 0.3f * u + 1.25f * w) * red()
+                 + (0.587f - 0.588f * u - 1.05f * w) * green()
+                 + (0.114f + 0.886f * u - 0.203f * w) * blue());
         return ret;
     }
 

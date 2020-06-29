@@ -423,7 +423,7 @@ void PlPlotImpl::plplot_label(const shared_cairo_t& cr, Rect b, const Font& font
             y = (b.y() + (b.height() * 0.5)) - (te.x_bearing + (te.width * 0.5));
 
             cairo_move_to(cr.get(), x, y);
-            cairo_rotate(cr.get(), detail::pi<float>() * 2.5);
+            cairo_rotate(cr.get(), detail::pi<float>() * 2.5f);
             cairo_show_text(cr.get(), m_ylabel.c_str());
         }
     }

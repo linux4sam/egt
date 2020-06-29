@@ -301,9 +301,9 @@ size_t TextBox::width_to_len(const std::string& str) const
         const auto txt = detail::utf8_char_to_string(ch.base(), str.cend());
         cairo_text_extents_t te;
         cairo_text_extents(cr.get(), txt.c_str(), &te);
-        if (total + te.x_advance > b.width())
+        if (total + static_cast<float>(te.x_advance) > b.width())
             return len;
-        total += te.x_advance;
+        total += static_cast<float>(te.x_advance);
         len++;
     }
 

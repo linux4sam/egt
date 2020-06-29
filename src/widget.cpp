@@ -142,8 +142,8 @@ void Widget::resize(const Size& size)
 
 void Widget::resize_by_ratio(DefaultDim hratio, DefaultDim vratio)
 {
-    Size size(static_cast<float>(width()) * (static_cast<float>(hratio) / 100.),
-              static_cast<float>(height()) * (static_cast<float>(vratio) / 100.));
+    Size size(static_cast<float>(width()) * (static_cast<float>(hratio) / 100.0f),
+              static_cast<float>(height()) * (static_cast<float>(vratio) / 100.0f));
     resize(size);
 }
 

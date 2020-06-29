@@ -654,7 +654,7 @@ public:
      */
     EGT_NODISCARD constexpr PointType<Dim, DimCompat> center() const noexcept
     {
-        return PointType<Dim, DimCompat>(x() + (width() / 2.), y() + (height() / 2.));
+        return PointType<Dim, DimCompat>(x() + (width() / 2.f), y() + (height() / 2.f));
     }
 
     /**

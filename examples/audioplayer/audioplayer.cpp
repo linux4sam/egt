@@ -78,10 +78,10 @@ struct AudioRadial : public egt::experimental::Radial
         auto text = seconds_to_human(m_value->value());
         auto s = painter.text_size(text);
 
-        if (angle2 > 1.5)
+        if (angle2 > 1.5f)
             p -= egt::Point(s.width() + offset, 0);
 
-        if (angle2 < 1.5 || angle2 > 3.14)
+        if (angle2 < 1.5f || angle2 > 3.14f)
             p -= egt::Point(0, s.height());
 
         painter.set(this->font());

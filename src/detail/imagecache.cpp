@@ -77,8 +77,8 @@ shared_cairo_surface_t ImageCache::get(const std::string& uri,
     {
         shared_cairo_surface_t back = get(uri, 1.0);
 
-        double width = cairo_image_surface_get_width(back.get());
-        double height = cairo_image_surface_get_height(back.get());
+        auto width = cairo_image_surface_get_width(back.get());
+        auto height = cairo_image_surface_get_height(back.get());
 
         detail::code_timer(false, "scale: ", [&]()
         {

@@ -36,7 +36,7 @@ Rect align_algorithm_force(const Rect& orig, const Rect& bounding,
     {
         p.x(bounding.x() + padding +
             static_cast<float>(bounding.width() - padding * 2) *
-            (static_cast<float>(xratio) / 100.));
+            (static_cast<float>(xratio) / 100.0f));
     }
     else if (align.is_set(AlignFlag::left))
         p.x(bounding.x() + padding);
@@ -51,7 +51,7 @@ Rect align_algorithm_force(const Rect& orig, const Rect& bounding,
     {
         p.y(bounding.y() + padding +
             static_cast<float>(bounding.height() - padding * 2) *
-            (static_cast<float>(yratio) / 100.));
+            (static_cast<float>(yratio) / 100.0f));
     }
     else if (align.is_set(AlignFlag::top))
         p.y(bounding.y() + padding);
@@ -65,7 +65,7 @@ Rect align_algorithm_force(const Rect& orig, const Rect& bounding,
     if (horizontal_ratio)
     {
         s.width(static_cast<float>(bounding.width() - padding * 2) *
-                (static_cast<float>(horizontal_ratio) / 100.));
+                (static_cast<float>(horizontal_ratio) / 100.0f));
     }
     else if (align.is_set(AlignFlag::expand_horizontal))
     {
@@ -76,7 +76,7 @@ Rect align_algorithm_force(const Rect& orig, const Rect& bounding,
     if (vertical_ratio)
     {
         s.height(static_cast<float>(bounding.height() - padding * 2) *
-                 (static_cast<float>(vertical_ratio) / 100.));
+                 (static_cast<float>(vertical_ratio) / 100.0f));
     }
     else if (align.is_set(AlignFlag::expand_vertical))
     {

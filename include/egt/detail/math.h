@@ -56,13 +56,13 @@ constexpr T angle_diff(T angle_start, T angle_stop, bool clockwise = true)
     if (clockwise)
     {
         angle_stop -= angle_start;
-        if (angle_stop < 0.0)
-            angle_stop += 360.;
+        if (angle_stop < 0.0f)
+            angle_stop += 360.0f;
         return angle_stop;
     }
 
     angle_stop -= angle_start;
-    return mmod(360. - angle_stop, 360.);
+    return mmod(360.0f - angle_stop, 360.0f);
 }
 
 /**
@@ -71,7 +71,7 @@ constexpr T angle_diff(T angle_start, T angle_stop, bool clockwise = true)
 template <class T>
 constexpr T to_degrees(T radians)
 {
-    return radians * (180.0 / pi<T>());
+    return radians * (180.0f / pi<T>());
 }
 
 /**
@@ -81,7 +81,7 @@ template <class T>
 constexpr T to_radians(T zero, T degrees)
 {
     degrees += zero;
-    return degrees * (pi<T>() / 180.0);
+    return degrees * (pi<T>() / 180.0f);
 }
 
 /// Clamp a value between a hi and low value.
