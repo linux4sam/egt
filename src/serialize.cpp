@@ -176,8 +176,8 @@ static void print_node(std::string prefix, std::ostream& out,
 
     for (auto i = node.children.begin(); i != node.children.end(); ++i)
     {
-        const bool last = (i + 1) == node.children.end();
-        print_node(prefix, out, *i, last);
+        const bool l = (i + 1) == node.children.end();
+        print_node(prefix, out, *i, l);
     }
 }
 

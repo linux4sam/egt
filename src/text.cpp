@@ -264,8 +264,8 @@ void TextBox::max_length(size_t len)
     {
         if (m_max_len)
         {
-            const auto len = detail::utf8len(m_text);
-            if (len > m_max_len)
+            const auto length = detail::utf8len(m_text);
+            if (length > m_max_len)
             {
                 auto i = m_text.begin();
                 utf8::advance(i, m_max_len, m_text.end());
