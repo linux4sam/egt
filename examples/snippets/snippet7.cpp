@@ -19,12 +19,12 @@ struct MyClass
     }
 };
 
-void func()
+static void func()
 {
     MyClass instance;
 }
 
-int main(int argc, const char** argv)
+int main()
 {
     func();
     return 0;

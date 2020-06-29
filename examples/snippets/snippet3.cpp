@@ -6,7 +6,7 @@
 #include <iostream>
 
 /// @[snippet3]
-int add(int first, int second)
+static int add(int first, int second)
 {
     return first + second;
 }

@@ -17,7 +17,7 @@ int main()
 
     int value = 0;
     register_callback(
-        [&value](egt::Event & event)
+        [&value](egt::Event&)
     {
         value++;
         std::cout << value << std::endl;

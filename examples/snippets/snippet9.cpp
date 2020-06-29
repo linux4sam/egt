@@ -5,7 +5,7 @@
  */
 #include <cstdint>
 
-void do_something(const char*) {}
+static void do_something(const char*) {}
 
 /// @[snippet9]
 class MyClass
@@ -26,7 +26,7 @@ private:
     char* m_ptr{nullptr};
 };
 
-void func()
+static void func()
 {
     MyClass instance(32);
     do_something(instance.get());

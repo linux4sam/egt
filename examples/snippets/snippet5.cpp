@@ -13,13 +13,13 @@ void register_callback(T)
 /// @[snippet5]
 static int value = 0;
 
-static void callback(egt::Event& event)
+static void callback(egt::Event&)
 {
     value++;
     std::cout << value << std::endl;
 }
 
-int main(int argc, const char** argv)
+int main()
 {
     // do something
 

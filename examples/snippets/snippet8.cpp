@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-void do_something(const char*) {}
+static void do_something(const char*) {}
 
 /// @[snippet8]
-void func()
+static void func()
 {
     char* ptr = new char[32];
     do_something(ptr);
