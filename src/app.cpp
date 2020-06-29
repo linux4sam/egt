@@ -87,7 +87,8 @@ bool Application::check_instance()
 
 Application::Application(int argc, char** argv,
                          const std::string& name, bool primary)
-    : m_argc(argc),
+    : m_event(*this),
+      m_argc(argc),
       m_argv(argv),
       m_signals(event().io(), SIGUSR1, SIGUSR2)
 {

@@ -55,6 +55,8 @@ struct ResourceManager::ResourceItem
     }
 
     ResourceItem& operator=(const ResourceItem&) = delete;
+    ResourceItem(ResourceItem&&) = default;
+    ResourceItem& operator=(ResourceItem&&) = default;
 
     inline const unsigned char* data()
     {

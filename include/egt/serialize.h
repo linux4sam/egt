@@ -34,6 +34,12 @@ class EGT_API Serializer
 {
 public:
 
+    Serializer() noexcept = default;
+    Serializer(const Serializer&) = default;
+    Serializer& operator=(const Serializer&) = default;
+    Serializer(Serializer&&) noexcept = default;
+    Serializer& operator=(Serializer&&) noexcept = default;
+
     /// Attributes array type.
     using Attributes = std::vector<std::pair<std::string, std::string>>;
 
@@ -78,6 +84,8 @@ public:
     /// Write to the specified ostream.
     virtual void write(std::ostream& out) = 0;
 
+    virtual ~Serializer() noexcept = default;
+
 protected:
 
     /// Current serialize tree level
@@ -99,8 +107,10 @@ class EGT_API OstreamWidgetSerializer : public Serializer
 {
 public:
     OstreamWidgetSerializer();
-    EGT_OPS_NOCOPY_MOVE(OstreamWidgetSerializer);
-    ~OstreamWidgetSerializer() noexcept;
+    OstreamWidgetSerializer(const OstreamWidgetSerializer&) = delete;
+    OstreamWidgetSerializer& operator=(const OstreamWidgetSerializer&) = delete;
+    OstreamWidgetSerializer(OstreamWidgetSerializer&&) noexcept = default;
+    OstreamWidgetSerializer& operator=(OstreamWidgetSerializer&&) noexcept = default;
 
     /// Clear or reset, the serializer for re-use.
     void reset();
@@ -113,6 +123,8 @@ public:
                       const Attributes& attrs = {}) override;
 
     void write(std::ostream& out) override;
+
+    ~OstreamWidgetSerializer() noexcept override;
 
 private:
 
@@ -139,8 +151,10 @@ class EGT_API XmlWidgetSerializer : public Serializer
 {
 public:
     XmlWidgetSerializer();
-    EGT_OPS_NOCOPY_MOVE(XmlWidgetSerializer);
-    ~XmlWidgetSerializer() noexcept;
+    XmlWidgetSerializer(const XmlWidgetSerializer&) = delete;
+    XmlWidgetSerializer& operator=(const XmlWidgetSerializer&) = delete;
+    XmlWidgetSerializer(XmlWidgetSerializer&&) noexcept = default;
+    XmlWidgetSerializer& operator=(XmlWidgetSerializer&&) noexcept = default;
 
     /// Clear or reset, the serializer for re-use.
     void reset();
@@ -158,6 +172,8 @@ public:
 
     /// Write to the specified ostream.
     void write(std::ostream& out) override;
+
+    ~XmlWidgetSerializer() noexcept override;
 
 private:
 

@@ -67,9 +67,6 @@ public:
         parent.add(*this);
     }
 
-    EGT_OPS_NOCOPY_MOVE(ProgressBarType);
-    ~ProgressBarType() noexcept override = default;
-
     void draw(Painter& painter, const Rect& rect) override
     {
         Drawer<ProgressBarType<T>>::draw(*this, painter, rect);
@@ -224,8 +221,6 @@ public:
         parent.add(*this);
     }
 
-    EGT_OPS_NOCOPY_MOVE(SpinProgressType);
-    ~SpinProgressType() noexcept override = default;
 
     void draw(Painter& painter, const Rect& rect) override
     {
@@ -409,9 +404,6 @@ public:
         parent.add(*this);
     }
 
-    EGT_OPS_NOCOPY_MOVE(LevelMeterType);
-    ~LevelMeterType() noexcept override = default;
-
     void draw(Painter& painter, const Rect& rect) override
     {
         Drawer<LevelMeterType<T>>::draw(*this, painter, rect);
@@ -570,9 +562,6 @@ public:
     {
         parent.add(*this);
     }
-
-    EGT_OPS_NOCOPY_MOVE(AnalogMeterType);
-    ~AnalogMeterType() noexcept override = default;
 
     void draw(Painter& painter, const Rect& rect) override
     {

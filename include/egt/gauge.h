@@ -50,9 +50,6 @@ public:
      */
     explicit GaugeLayer(Gauge& gauge, const Image& image = {}) noexcept;
 
-    EGT_OPS_NOCOPY_MOVE(GaugeLayer);
-    ~GaugeLayer() noexcept override = default;
-
     void draw(Painter& painter, const Rect& rect) override;
 
     /**
@@ -143,9 +140,6 @@ public:
                          float angle_start = 0,
                          float angle_stop = 360,
                          bool clockwise = true) noexcept;
-
-    EGT_OPS_NOCOPY_MOVE(NeedleLayer);
-    ~NeedleLayer() noexcept override = default;
 
     void draw(Painter& painter, const Rect& rect) override;
 
@@ -406,8 +400,6 @@ public:
 
     using Frame::add;
 
-    ~Gauge() noexcept override;
-
     /**
      * Add a GaugeLayer to the Gauge.
      *
@@ -434,6 +426,8 @@ public:
 
     /// Remove a layer from the gauge.
     void remove(GaugeLayer* layer);
+
+    ~Gauge() noexcept override;
 
 protected:
 

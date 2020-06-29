@@ -350,7 +350,5 @@ void ComboBox::deserialize(const std::string& name, const std::string& value,
         Widget::deserialize(name, value, attrs);
 }
 
-ComboBox::~ComboBox() noexcept = default;
-
 }
 }

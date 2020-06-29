@@ -69,9 +69,10 @@ public:
     explicit Sound(const std::string& uri, unsigned int rate, int channels,
                    const std::string& device = "default");
 
-    Sound() = delete;
-    EGT_OPS_NOCOPY_MOVE(Sound);
-    virtual ~Sound() noexcept;
+    Sound(const Sound&) = delete;
+    Sound& operator=(const Sound&) = delete;
+    Sound(Sound&&) noexcept;
+    Sound& operator=(Sound&&) noexcept;
 
     /**
      * Play the sound.
@@ -82,6 +83,8 @@ public:
      * @param repeat Should the sound keep repeating?
      */
     void play(bool repeat = false);
+
+    virtual ~Sound() noexcept;
 
 protected:
     /// @private

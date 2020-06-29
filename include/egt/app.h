@@ -48,7 +48,6 @@ class Timer;
 class EGT_API Application
 {
 public:
-
     /**
      * @param[in] argc Application argument count.
      * @param[in] argv Application argument array.
@@ -59,8 +58,10 @@ public:
     explicit Application(int argc = 0, char** argv = nullptr,
                          const std::string& name = {}, bool primary = true);
 
-    EGT_OPS_NOCOPY_NOMOVE(Application);
-    virtual ~Application() noexcept;
+    Application(const Application&) = delete;
+    Application& operator=(const Application&) = delete;
+    Application(Application&&) = delete;
+    Application& operator=(Application&&) = delete;
 
     /**
      * Reference to the main Application instance.
@@ -163,6 +164,8 @@ public:
      */
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     EGT_NODISCARD inline const char** argv() const { return const_cast<const char**>(m_argv); }
+
+    virtual ~Application() noexcept;
 
 protected:
 

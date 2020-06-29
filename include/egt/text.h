@@ -133,8 +133,10 @@ public:
             const AlignFlags& text_align = default_text_align(),
             const TextFlags& flags = {}) noexcept;
 
-    EGT_OPS_NOCOPY_MOVE_EXCEPT(TextBox);
-    ~TextBox() noexcept override;
+    TextBox(const TextBox&) = delete;
+    TextBox& operator=(const TextBox&) = delete;
+    TextBox(TextBox&&) = default;
+    TextBox& operator=(TextBox&&) = default;
 
     void handle(Event& event) override;
 
@@ -297,6 +299,8 @@ public:
 
     void deserialize(const std::string& name, const std::string& value,
                      const Serializer::Attributes& attrs) override;
+
+    ~TextBox() noexcept override;
 
 protected:
 

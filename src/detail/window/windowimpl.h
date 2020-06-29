@@ -29,6 +29,11 @@ public:
 
     WindowImpl() = delete;
 
+    WindowImpl(const WindowImpl&) = delete;
+    WindowImpl& operator=(const WindowImpl&) = delete;
+    WindowImpl(WindowImpl&&) noexcept = default;
+    WindowImpl& operator=(WindowImpl&&) noexcept = default;
+
     /**
      * Construct the implementation and provide a pointer to the parent
      * interface.

@@ -25,15 +25,13 @@ namespace detail
  * This creates a flip queue used for queuing up flip calls when using more
  * than one buffer.
  */
-struct FlipThread
+struct FlipThread : private NonCopyable<FlipThread>
 {
     explicit FlipThread(uint32_t max_queue = 0)
         : m_max_queue(max_queue)
     {
         m_thread = std::thread(&FlipThread::run, this);
     }
-
-    EGT_OPS_NOCOPY_NOMOVE(FlipThread);
 
     void run()
     {

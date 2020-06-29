@@ -26,6 +26,12 @@ public:
 
     PlPlotImpl();
 
+    // special functions deleted because they are never used
+    PlPlotImpl(const PlPlotImpl&) = delete;
+    PlPlotImpl& operator=(const PlPlotImpl&) = delete;
+    PlPlotImpl(PlPlotImpl&&) = delete;
+    PlPlotImpl& operator=(PlPlotImpl&&) = delete;
+
     void title(const std::string& title);
 
     void label(const std::string& xlabel, const std::string& ylabel, const std::string& title);
@@ -124,8 +130,6 @@ public:
         m_interface.damage();
     }
 
-    virtual ~PlPlotLineChart();
-
 protected:
     LineChart& m_interface;
 };
@@ -142,8 +146,6 @@ public:
         m_interface.damage();
     }
 
-    virtual ~PlPlotPointChart();
-
 protected:
     PointChart& m_interface;
 };
@@ -159,8 +161,6 @@ public:
     {
         m_interface.damage();
     }
-
-    virtual ~PlPlotBarChart();
 
 protected:
     void plfbox(PLFLT x0, PLFLT y0);
@@ -181,8 +181,6 @@ public:
         m_interface.damage();
     }
 
-    virtual ~PlPlotHBarChart();
-
 protected:
     void plfHbox(PLFLT x0, PLFLT y0);
 
@@ -202,8 +200,6 @@ public:
     {
         m_interface.damage();
     }
-
-    virtual ~PlPlotPieChart();
 
 protected:
     PieChart& m_interface;

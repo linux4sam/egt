@@ -576,10 +576,6 @@ public:
     /// Type used for color steps array
     using StepsArray = std::vector<Color>;
 
-    ColorMap() noexcept = default;
-    EGT_OPS_COPY_MOVE(ColorMap);
-    ~ColorMap() noexcept = default;
-
     /**
      * @param[in] interp Interpolation color space.
      */

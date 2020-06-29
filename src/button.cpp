@@ -170,7 +170,7 @@ Size Button::min_size_hint() const
     return default_size() + Widget::min_size_hint();
 }
 
-Button::~Button()
+Button::~Button() noexcept
 {
     if (m_group)
         m_group->remove(this);

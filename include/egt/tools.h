@@ -69,9 +69,6 @@ public:
         start();
     }
 
-    EGT_OPS_COPY_MOVE(FramesPerSecond);
-    ~FramesPerSecond() noexcept = default;
-
     /**
      * Start/reset the counter.
      */

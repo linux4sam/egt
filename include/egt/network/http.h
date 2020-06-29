@@ -54,9 +54,12 @@ public:
     /**
      * Create a request for the specified URL.
      */
-    HttpClientRequest() noexcept;
-    EGT_OPS_NOCOPY_NOMOVE(HttpClientRequest);
-    virtual ~HttpClientRequest() noexcept;
+    explicit HttpClientRequest() noexcept;
+
+    HttpClientRequest(const HttpClientRequest&) = delete;
+    HttpClientRequest& operator=(const HttpClientRequest&) = delete;
+    HttpClientRequest(HttpClientRequest&&) noexcept;
+    HttpClientRequest& operator=(HttpClientRequest&&) noexcept;
 
     /**
      * Start the download.
@@ -68,6 +71,8 @@ public:
     {
         return m_impl.get();
     }
+
+    virtual ~HttpClientRequest() noexcept;
 
 protected:
 

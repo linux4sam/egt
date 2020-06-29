@@ -82,8 +82,10 @@ public:
            int frame_count, const Point& frame_point = {},
            WindowHint hint = WindowHint::automatic);
 
-    EGT_OPS_NOCOPY_MOVE(Sprite);
-    ~Sprite() noexcept override;
+    Sprite(const Sprite&) = delete;
+    Sprite& operator=(const Sprite&) = delete;
+    Sprite(Sprite&&) noexcept;
+    Sprite& operator=(Sprite&&) noexcept;
 
     void draw(Painter& painter, const Rect& rect) override;
 
@@ -142,6 +144,8 @@ public:
      * left corner of the image, specify where the top left corner is.
      */
     uint32_t add_strip(int frame_count, const Point& frame_point = {});
+
+    ~Sprite() noexcept override;
 
 protected:
 

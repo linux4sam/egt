@@ -296,7 +296,7 @@ void Font::deserialize(const std::string& name, const std::string& value,
     }
 }
 
-struct FontCache
+struct FontCache : private detail::NonCopyable<FontCache>
 {
     struct FontCompare
     {

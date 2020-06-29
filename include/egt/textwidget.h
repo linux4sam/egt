@@ -52,9 +52,6 @@ public:
                         const Rect& rect = {},
                         const AlignFlags& text_align = AlignFlag::center) noexcept;
 
-    EGT_OPS_NOCOPY_MOVE(TextWidget);
-    ~TextWidget() noexcept override = default;
-
     /**
      * Set the text.
      *

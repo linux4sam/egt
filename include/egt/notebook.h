@@ -89,9 +89,6 @@ public:
      */
     explicit Notebook(Frame& parent, const Rect& rect = {}) noexcept;
 
-    EGT_OPS_NOCOPY_MOVE(Notebook);
-    ~Notebook() noexcept override = default;
-
     using Frame::add;
 
     void add(const std::shared_ptr<Widget>& widget) override;

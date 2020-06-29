@@ -45,8 +45,10 @@ public:
      */
     explicit ButtonGroup(bool imperative = false, bool exclusive = true) noexcept;
 
-    EGT_OPS_NOCOPY_MOVE(ButtonGroup);
-    ~ButtonGroup() noexcept;
+    ButtonGroup(const ButtonGroup&) = delete;
+    ButtonGroup& operator=(const ButtonGroup&) = delete;
+    ButtonGroup(ButtonGroup&&) = default;
+    ButtonGroup& operator=(ButtonGroup&&) = default;
 
     /**
      * Set the exclusive property of the group.
@@ -98,6 +100,8 @@ public:
      * @param callback The callback to invoke.
      */
     void foreach_checked(const CheckedCallback& callback);
+
+    ~ButtonGroup() noexcept;
 
 protected:
 

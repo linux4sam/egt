@@ -86,8 +86,10 @@ public:
                            PixelFormat format = PixelFormat::yuyv,
                            const std::string& device = "/dev/video0");
 
-    EGT_OPS_NOCOPY_MOVE(CameraCapture);
-    ~CameraCapture() noexcept override;
+    CameraCapture(const CameraCapture&) = delete;
+    CameraCapture& operator=(const CameraCapture&) = delete;
+    CameraCapture(CameraCapture&&) = default;
+    CameraCapture& operator=(CameraCapture&&) = default;
 
     /**
      * Set the output.
@@ -114,6 +116,8 @@ public:
      * Stop camera capture and finish the output.
      */
     void stop();
+
+    ~CameraCapture() override;
 
 protected:
 

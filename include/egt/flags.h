@@ -41,8 +41,7 @@ class Flags : public FlagsBase<T>
 public:
     using FlagsBase<T>::FlagsBase;
 
-    EGT_OPS_MOVE(Flags);
-    ~Flags() noexcept override = default;
+    constexpr Flags() noexcept = default;
 
     /**
      * Event signal.
@@ -98,6 +97,10 @@ public:
         }
         return *this;
     }
+
+    Flags(Flags&&) noexcept = default;
+    Flags& operator=(Flags&&) noexcept = default;
+    ~Flags() noexcept = default;
 
     /// Set a single flag.
     bool set(T flag) noexcept

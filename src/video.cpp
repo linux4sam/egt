@@ -202,6 +202,9 @@ bool VideoWindow::has_audio() const
     return m_video_impl->has_audio();
 }
 
+VideoWindow::VideoWindow(VideoWindow&&) noexcept = default;
+VideoWindow& VideoWindow::operator=(VideoWindow&&) noexcept = default;
+
 VideoWindow::~VideoWindow() noexcept
 {
     m_video_impl->destroyPipeline();

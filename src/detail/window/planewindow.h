@@ -33,25 +33,30 @@ public:
                          PixelFormat format = PixelFormat::argb8888,
                          WindowHint hint = WindowHint::automatic);
 
-    virtual void resize(const Size& size) override;
+    PlaneWindow(const PlaneWindow&) = delete;
+    PlaneWindow& operator=(const PlaneWindow&) = delete;
+    PlaneWindow(PlaneWindow&&) noexcept = default;
+    PlaneWindow& operator=(PlaneWindow&&) noexcept = default;
 
-    virtual void scale(float scalex, float scaley) override;
+    void resize(const Size& size) override;
 
-    virtual void damage(const Rect& rect) override;
+    void scale(float scalex, float scaley) override;
 
-    virtual void move(const Point& point) override;
+    void damage(const Rect& rect) override;
 
-    virtual void begin_draw() override;
+    void move(const Point& point) override;
 
-    virtual void show() override;
+    void begin_draw() override;
 
-    virtual void hide() override;
+    void show() override;
 
-    virtual void paint(Painter& painter) override;
+    void hide() override;
 
-    virtual void allocate_screen() override;
+    void paint(Painter& painter) override;
 
-    virtual ~PlaneWindow();
+    void allocate_screen() override;
+
+    ~PlaneWindow() noexcept override;
 
 protected:
 

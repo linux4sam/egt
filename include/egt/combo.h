@@ -82,9 +82,6 @@ public:
                       const ItemArray& items = {},
                       const Rect& rect = {}) noexcept;
 
-    EGT_OPS_NOCOPY_MOVE(ComboBox);
-    ~ComboBox() noexcept override;
-
     void handle(Event& event) override;
 
     void resize(const Size& s) override;

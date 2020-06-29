@@ -93,8 +93,10 @@ public:
                 PixelFormat format = PixelFormat::xrgb8888,
                 WindowHint hint = WindowHint::overlay);
 
-    EGT_OPS_NOCOPY_MOVE(VideoWindow);
-    ~VideoWindow() noexcept override;
+    VideoWindow(const VideoWindow&) = delete;
+    VideoWindow& operator=(const VideoWindow&) = delete;
+    VideoWindow(VideoWindow&&) noexcept;
+    VideoWindow& operator=(VideoWindow&&) noexcept;
 
     void do_draw() override
     {
@@ -219,6 +221,8 @@ public:
      * @return true if supported and false if not supported.
      */
     EGT_NODISCARD bool has_audio() const;
+
+    ~VideoWindow() noexcept override;
 
 protected:
     /// Loopback enabled.

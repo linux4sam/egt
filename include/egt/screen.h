@@ -40,8 +40,10 @@ public:
     using DamageArray = std::vector<Rect>;
 
     Screen() noexcept;
-    EGT_OPS_NOCOPY_MOVE(Screen);
-    virtual ~Screen() noexcept;
+    Screen(const Screen&) = default;
+    Screen& operator=(const Screen&) = default;
+    Screen(Screen&&) noexcept = default;
+    Screen& operator=(Screen&&) noexcept = default;
 
     /**
      * Perform a flip of the buffers.
@@ -146,6 +148,8 @@ public:
      * Get the format of the screen.
      */
     EGT_NODISCARD PixelFormat format() const { return m_format; };
+
+    virtual ~Screen() noexcept = default;
 
 protected:
 

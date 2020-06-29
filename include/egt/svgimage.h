@@ -52,7 +52,11 @@ public:
      */
     explicit SvgImage(const std::string& uri, const SizeF& size = {});
 
-    EGT_OPS_NOCOPY_MOVE_EXCEPT(SvgImage);
+    SvgImage(const SvgImage&) = delete;
+    SvgImage& operator=(const SvgImage&) = delete;
+    SvgImage(SvgImage&&) noexcept;
+    SvgImage& operator=(SvgImage&&) noexcept;
+
     ~SvgImage() noexcept;
 
     /**

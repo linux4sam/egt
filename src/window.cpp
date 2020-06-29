@@ -281,6 +281,9 @@ void Window::background(const Image& image)
     }
 }
 
+Window::Window(Window&&) noexcept = default;
+Window& Window::operator=(Window&&) noexcept = default;
+
 Window::~Window() noexcept
 {
     if (Application::check_instance())
@@ -326,9 +329,6 @@ struct CursorWindow : public Window
         no_layout(true);
         readonly(true);
     }
-
-    EGT_OPS_NOCOPY_MOVE(CursorWindow);
-    ~CursorWindow() noexcept override = default;
 
     void handle(Event&) override
     {

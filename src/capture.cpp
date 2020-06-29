@@ -43,7 +43,7 @@ void CameraCapture::stop()
     m_impl->stop();
 }
 
-CameraCapture::~CameraCapture() noexcept = default;
+CameraCapture::~CameraCapture() = default;
 
 }
 }

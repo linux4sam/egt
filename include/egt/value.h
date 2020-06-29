@@ -41,9 +41,6 @@ public:
     {
     }
 
-    EGT_OPS_NOCOPY_MOVE(Value);
-    ~Value() noexcept override = default;
-
     /// Get the current value.
     explicit operator T() const
     {
@@ -111,10 +108,6 @@ public:
     {
         assert(m_max > m_min);
     }
-
-    RangeValue() noexcept = default;
-    EGT_OPS_NOCOPY_MOVE(RangeValue);
-    ~RangeValue() noexcept override = default;
 
     /// Get the current value.
     explicit operator T() const

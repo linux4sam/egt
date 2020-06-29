@@ -44,8 +44,10 @@ public:
     explicit X11Screen(Application& app, const Size& size = Size(800, 480),
                        bool borderless = false);
 
-    EGT_OPS_NOCOPY_NOMOVE(X11Screen);
-    ~X11Screen() noexcept override;
+    X11Screen(const X11Screen&) = delete;
+    X11Screen& operator=(const X11Screen&) = delete;
+    X11Screen(X11Screen&&) = delete;
+    X11Screen& operator=(X11Screen&&) = delete;
 
     void schedule_flip() override
     {}
@@ -54,6 +56,8 @@ public:
 
     /// Disable window decorations
     void disable_window_decorations();
+
+    ~X11Screen() noexcept override;
 
 protected:
 

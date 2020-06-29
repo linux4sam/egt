@@ -52,9 +52,6 @@ public:
           m_value(value)
     {}
 
-    EGT_OPS_NOCOPY_MOVE(ValueWidget);
-    ~ValueWidget() noexcept override = default;
-
     /**
      * Set the value.
      *
@@ -130,9 +127,6 @@ public:
         if (m_value < m_start)
             m_value = m_start;
     }
-
-    EGT_OPS_NOCOPY_MOVE(ValueRangeWidget);
-    ~ValueRangeWidget() noexcept override = default;
 
     /**
      * Set value.

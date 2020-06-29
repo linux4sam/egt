@@ -81,9 +81,6 @@ public:
                           Policy horizontal_policy = Policy::as_needed,
                           Policy vertical_policy = Policy::as_needed) noexcept;
 
-    EGT_OPS_NOCOPY_MOVE(ScrolledView);
-    ~ScrolledView() noexcept override = default;
-
     void handle(Event& event) override;
 
     void draw(Painter& painter, const Rect& rect) override;

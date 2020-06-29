@@ -184,7 +184,7 @@ void PlaneWindow::deallocate_screen()
     }
 }
 
-PlaneWindow::~PlaneWindow()
+PlaneWindow::~PlaneWindow() noexcept
 {
     deallocate_screen();
 }

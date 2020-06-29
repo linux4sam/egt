@@ -49,9 +49,10 @@ public:
     explicit KMSScreen(bool allocate_primary_plane = true,
                        PixelFormat format = PixelFormat::rgb565);
 
-    EGT_OPS_NOCOPY_MOVE(KMSScreen);
-
-    ~KMSScreen() noexcept override;
+    KMSScreen(const KMSScreen&) = delete;
+    KMSScreen& operator=(const KMSScreen&) = delete;
+    KMSScreen(KMSScreen&&) noexcept;
+    KMSScreen& operator=(KMSScreen&&) noexcept;
 
     /// Available plane types.
     enum class plane_type
@@ -81,6 +82,8 @@ public:
     EGT_NODISCARD size_t brightness() const override;
 
     void brightness(size_t brightness) override;
+
+    ~KMSScreen() noexcept override;
 
     /// Get the number of buffers to use for KMS planes.
     static uint32_t max_buffers();

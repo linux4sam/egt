@@ -170,8 +170,10 @@ public:
     explicit Widget(Frame& parent, const Rect& rect = {},
                     const Widget::Flags& flags = {}) noexcept;
 
-    EGT_OPS_NOCOPY_MOVE(Widget);
-    ~Widget() noexcept override;
+    Widget(const Widget&) = delete;
+    Widget& operator=(const Widget&) = delete;
+    Widget(Widget&&) noexcept = default;
+    Widget& operator=(Widget&&) noexcept = default;
 
     /**
      * Draw the widget.
@@ -1284,6 +1286,8 @@ public:
      */
     virtual void deserialize(const std::string& name, const std::string& value,
                              const Serializer::Attributes& attrs);
+
+    ~Widget() noexcept override;
 
 protected:
 

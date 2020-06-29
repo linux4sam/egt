@@ -102,8 +102,10 @@ public:
            PixelFormat format_hint = DEFAULT_FORMAT,
            WindowHint hint = WindowHint::automatic);
 
-    EGT_OPS_NOCOPY_MOVE(Window);
-    ~Window() noexcept override;
+    Window(const Window&) = delete;
+    Window& operator=(const Window&) = delete;
+    Window(Window&&) noexcept;
+    Window& operator=(Window&&) noexcept;
 
     using Frame::damage;
 
@@ -163,6 +165,8 @@ public:
 
         return PixelFormat::invalid;
     }
+
+    ~Window() noexcept override;
 
 protected:
 
@@ -263,13 +267,16 @@ public:
 
     using Window::Window;
 
-    ~TopWindow() noexcept override;
+    TopWindow& operator=(const TopWindow&) = delete;
+    TopWindow& operator=(TopWindow&&) = default;
 
     /// Show the cursor.
     void show_cursor(const Image& image = Image("res:internal_cursor"));
 
     /// Hide the cursor.
     void hide_cursor();
+
+    ~TopWindow() noexcept override;
 
 protected:
 

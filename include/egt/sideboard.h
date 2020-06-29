@@ -75,9 +75,6 @@ public:
      */
     SideBoard(PositionFlag position, WindowHint hint);
 
-    EGT_OPS_NOCOPY_MOVE_EXCEPT(SideBoard);
-    ~SideBoard() noexcept override = default;
-
     void handle(Event& event) override;
 
     /**

@@ -99,8 +99,10 @@ public:
      */
     explicit LineChart(const Rect& rect = {});
 
-    EGT_OPS_NOCOPY_MOVE(LineChart);
-    ~LineChart() noexcept override;
+    LineChart(const LineChart&) = delete;
+    LineChart& operator=(const LineChart&) = delete;
+    LineChart(LineChart&&) noexcept;
+    LineChart& operator=(LineChart&&) noexcept;
 
     void draw(Painter& painter, const Rect& rect) override;
 
@@ -187,6 +189,8 @@ public:
      */
     void bank(float bank);
 
+    ~LineChart() override;
+
 protected:
 
     /// @private
@@ -219,8 +223,10 @@ public:
      */
     explicit PointChart(const Rect& rect = {});
 
-    EGT_OPS_NOCOPY_MOVE(PointChart);
-    ~PointChart() noexcept override;
+    PointChart(const PointChart&) = delete;
+    PointChart& operator=(const PointChart&) = delete;
+    PointChart(PointChart&&) noexcept;
+    PointChart& operator=(PointChart&&) noexcept;
 
     void draw(Painter& painter, const Rect& rect) override;
 
@@ -299,6 +305,8 @@ public:
      */
     void bank(float bank);
 
+    ~PointChart() override;
+
 protected:
 
     /// @private
@@ -331,8 +339,10 @@ public:
      */
     explicit BarChart(const Rect& rect = {});
 
-    EGT_OPS_NOCOPY_MOVE(BarChart);
-    ~BarChart() noexcept override;
+    BarChart(const BarChart&) = delete;
+    BarChart& operator=(const BarChart&) = delete;
+    BarChart(BarChart&&) noexcept;
+    BarChart& operator=(BarChart&&) noexcept;
 
     void draw(Painter& painter, const Rect& rect) override;
 
@@ -426,6 +436,8 @@ public:
      */
     void bank(float bank);
 
+    ~BarChart() override;
+
 protected:
 
     /// @private
@@ -453,8 +465,12 @@ public:
      */
     explicit HorizontalBarChart(const Rect& rect = {});
 
-    EGT_OPS_NOCOPY_MOVE(HorizontalBarChart);
-    ~HorizontalBarChart() noexcept override;
+    HorizontalBarChart(const HorizontalBarChart&) = delete;
+    HorizontalBarChart& operator=(const HorizontalBarChart&) = delete;
+    HorizontalBarChart(HorizontalBarChart&&) noexcept;
+    HorizontalBarChart& operator=(HorizontalBarChart&&) noexcept;
+
+    ~HorizontalBarChart() override;
 };
 
 /**
@@ -477,8 +493,10 @@ public:
      */
     explicit PieChart(const Rect& rect = {});
 
-    EGT_OPS_NOCOPY_MOVE(PieChart);
-    ~PieChart() noexcept override;
+    PieChart(const PieChart&) = delete;
+    PieChart& operator=(const PieChart&) = delete;
+    PieChart(PieChart&&) noexcept;
+    PieChart& operator=(PieChart&&) noexcept;
 
     void draw(Painter& painter, const Rect& rect) override;
 
@@ -528,6 +546,8 @@ public:
      * @param[in] size The new size of the PieChart.
      */
     void resize(const Size& size) override;
+
+    ~PieChart() override;
 
 protected:
 

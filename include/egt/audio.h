@@ -74,8 +74,10 @@ public:
      */
     explicit AudioPlayer(const std::string& uri);
 
-    EGT_OPS_NOCOPY_MOVE(AudioPlayer);
-    ~AudioPlayer() noexcept override;
+    AudioPlayer(const AudioPlayer&) = delete;
+    AudioPlayer& operator=(const AudioPlayer&) = delete;
+    AudioPlayer(AudioPlayer&&) = default;
+    AudioPlayer& operator=(AudioPlayer&&) = default;
 
     /**
      * Sets the media file URI to the current pipeline
@@ -147,6 +149,8 @@ public:
      * Returns true if the stream is currently playing.
      */
     EGT_NODISCARD bool playing() const;
+
+    ~AudioPlayer() noexcept override;
 
 protected:
 

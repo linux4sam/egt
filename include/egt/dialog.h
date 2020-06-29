@@ -64,9 +64,6 @@ public:
      */
     explicit Dialog(const Rect& rect = {}) noexcept;
 
-    EGT_OPS_NOCOPY_MOVE(Dialog);
-    ~Dialog() noexcept override = default;
-
     /**
      * Set the title info for this dialog.
      *

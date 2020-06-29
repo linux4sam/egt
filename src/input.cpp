@@ -165,6 +165,9 @@ void Input::dispatch(Event& event)
     }
 }
 
+Input::Input(Input&&) noexcept = default;
+Input& Input::operator=(Input&&) noexcept = default;
+
 Input::~Input() noexcept = default;
 
 Object Input::m_global_handler;

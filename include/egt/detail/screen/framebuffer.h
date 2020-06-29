@@ -37,11 +37,15 @@ public:
      */
     explicit FrameBuffer(const std::string& path = "/dev/fb0");
 
-    EGT_OPS_NOCOPY_MOVE(FrameBuffer);
-    ~FrameBuffer() noexcept override;
+    FrameBuffer(const FrameBuffer&) = delete;
+    FrameBuffer& operator=(const FrameBuffer&) = delete;
+    FrameBuffer(FrameBuffer&&) = default;
+    FrameBuffer& operator=(FrameBuffer&&) = default;
 
     void schedule_flip() override
     {}
+
+    ~FrameBuffer() noexcept override;
 
 protected:
 

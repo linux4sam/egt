@@ -41,8 +41,6 @@ public:
     using Underlying = typename std::underlying_type<T>::type;
 
     constexpr FlagsBase() noexcept = default;
-    EGT_OPS_COPY_MOVE(FlagsBase);
-    virtual ~FlagsBase() noexcept = default;
 
     /// Construct with a single flag.
     // cppcheck-suppress noExplicitConstructor

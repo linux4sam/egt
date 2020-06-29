@@ -142,6 +142,11 @@ void Timer::invoke_handlers()
         callback.callback();
 }
 
+// NOLINTNEXTLINE(hicpp-noexcept-move,performance-noexcept-move-constructor)
+Timer::Timer(Timer&&) = default;
+// NOLINTNEXTLINE(hicpp-noexcept-move,performance-noexcept-move-constructor)
+Timer& Timer::operator=(Timer&&) = default;
+
 Timer::~Timer() noexcept
 {
     do_cancel();

@@ -91,9 +91,6 @@ public:
                         const GridSize& size = GridSize(1, 1),
                         DefaultDim border = 0);
 
-    EGT_OPS_NOCOPY_MOVE(StaticGrid);
-    ~StaticGrid() noexcept override = default;
-
     void draw(Painter& painter, const Rect& rect) override;
 
     using Frame::add;

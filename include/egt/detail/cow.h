@@ -33,9 +33,7 @@ class CopyOnWriteAllocate
 {
 public:
 
-    CopyOnWriteAllocate() noexcept = default;
-    EGT_OPS_COPY_MOVE(CopyOnWriteAllocate);
-    ~CopyOnWriteAllocate() noexcept = default;
+    CopyOnWriteAllocate() = default;
 
     /// Construct with a pointer to the object. This now owns the pointer.
     explicit CopyOnWriteAllocate(T* t)

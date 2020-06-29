@@ -99,9 +99,6 @@ public:
         parent.add(*this);
     }
 
-    EGT_OPS_NOCOPY_MOVE(RadialType);
-    ~RadialType() noexcept override = default;
-
     /**
      * Add a range value to the radial.
      *

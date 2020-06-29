@@ -137,9 +137,6 @@ public:
         parent.add(*this);
     }
 
-    EGT_OPS_NOCOPY_MOVE(SliderType);
-    ~SliderType() override = default;
-
     void handle(Event& event) override
     {
         Widget::handle(event);

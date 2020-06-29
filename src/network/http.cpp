@@ -47,9 +47,6 @@ public:
         return i.get();
     }
 
-    EGT_OPS_NOCOPY_NOMOVE(HttpClientRequestManager);
-    ~HttpClientRequestManager() noexcept = default;
-
     static int socket_callback(CURL* easy,
                                curl_socket_t s,
                                int what,
@@ -351,6 +348,9 @@ void HttpClientRequest::cleanup()
         m_impl->easy = nullptr;
     }
 }
+
+HttpClientRequest::HttpClientRequest(HttpClientRequest&&) noexcept = default;
+HttpClientRequest& HttpClientRequest::operator=(HttpClientRequest&&) noexcept = default;
 
 HttpClientRequest::~HttpClientRequest() noexcept
 {

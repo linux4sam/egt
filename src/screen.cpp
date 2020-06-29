@@ -496,7 +496,5 @@ void Screen::brightness(size_t brightness)
     detail::ignoreparam(brightness);
 }
 
-Screen::~Screen() noexcept = default;
-
 }
 }

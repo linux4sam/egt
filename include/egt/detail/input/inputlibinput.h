@@ -42,7 +42,7 @@ public:
      * @throws std::runtime_error if unable to open device.
      */
     explicit InputLibInput(Application& app);
-    EGT_OPS_NOCOPY_NOMOVE(InputLibInput);
+
     ~InputLibInput() noexcept override;
 
 private:

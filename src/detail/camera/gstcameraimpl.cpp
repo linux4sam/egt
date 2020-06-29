@@ -439,7 +439,7 @@ void CameraImpl::stop()
     }
 }
 
-CameraImpl::~CameraImpl()
+CameraImpl::~CameraImpl() noexcept
 {
     if (m_gmain_loop)
     {

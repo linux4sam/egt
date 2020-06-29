@@ -40,8 +40,11 @@ class EGT_API Input
 public:
 
     Input();
-    EGT_OPS_NOCOPY_MOVE(Input);
-    virtual ~Input() noexcept;
+
+    Input(const Input&) = delete;
+    Input& operator=(const Input&) = delete;
+    Input(Input&&) noexcept;
+    Input& operator=(Input&&) noexcept;
 
     /**
      * Get a reference to the global input Object.
@@ -64,6 +67,8 @@ public:
     {
         return m_global_handler;
     }
+
+    virtual ~Input() noexcept;
 
 protected:
 

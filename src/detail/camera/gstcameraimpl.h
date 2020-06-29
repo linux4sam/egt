@@ -24,15 +24,21 @@ public:
     CameraImpl(CameraWindow& interface, const Rect& rect,
                const std::string& device);
 
-    virtual void draw(Painter& painter, const Rect& rect);
+    // special functions deleted because they are never used
+    CameraImpl(const CameraImpl&) = delete;
+    CameraImpl& operator=(const CameraImpl&) = delete;
+    CameraImpl(CameraImpl&&) = delete;
+    CameraImpl& operator=(CameraImpl&&) = delete;
 
-    virtual bool start();
+    void draw(Painter& painter, const Rect& rect);
 
-    virtual void stop();
+    bool start();
 
-    virtual void scale(float scalex, float scaley);
+    void stop();
 
-    virtual ~CameraImpl();
+    void scale(float scalex, float scaley);
+
+    ~CameraImpl() noexcept;
 
 protected:
     CameraWindow& m_interface;

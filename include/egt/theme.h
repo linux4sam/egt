@@ -188,10 +188,10 @@ public:
 
     Theme();
 
-    EGT_OPS_MOVE(Theme);
-    Theme& operator=(const Theme&) = delete;
-    Theme(const Theme& rhs) = default;
-    virtual ~Theme() noexcept = default;
+    Theme(const Theme&) = default;
+    Theme& operator=(const Theme&) = default;
+    Theme(Theme&&) noexcept = default;
+    Theme& operator=(Theme&&) noexcept = default;
 
     /**
      * Get a reference to the theme Palette.
@@ -304,6 +304,8 @@ public:
         init_font();
         init_draw();
     }
+
+    virtual ~Theme() noexcept = default;
 
 protected:
 

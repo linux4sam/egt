@@ -60,7 +60,10 @@ public:
     Frame(Frame& parent, const Rect& rect,
           const Flags& flags = {}) noexcept;
 
-    EGT_OPS_NOCOPY_MOVE(Frame);
+    Frame(const Frame&) = delete;
+    Frame& operator=(const Frame&) = delete;
+    Frame(Frame&&) noexcept = default;
+    Frame& operator=(Frame&&) noexcept = default;
 
     ~Frame() noexcept override;
 

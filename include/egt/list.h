@@ -89,9 +89,6 @@ struct EGT_API StringItem : public ImageLabel
         fill_flags(Theme::FillFlag::blend);
     }
 
-    EGT_OPS_NOCOPY_MOVE(StringItem);
-    ~StringItem() noexcept override = default;
-
     using ImageLabel::min_size_hint;
 
     EGT_NODISCARD Size min_size_hint() const override
@@ -164,9 +161,6 @@ public:
      * @param[in] rect Initial rectangle of the widget.
      */
     explicit ListBox(Frame& parent, const ItemArray& items = {}, const Rect& rect = {}) noexcept;
-
-    EGT_OPS_NOCOPY_MOVE(ListBox);
-    ~ListBox() noexcept override = default;
 
     void handle(Event& event) override;
 

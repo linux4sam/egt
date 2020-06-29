@@ -35,8 +35,6 @@ public:
 
     std::string create_pipeline() override;
 
-    virtual ~GstKmsSinkImpl() = default;
-
 protected:
     int m_gem{-1};
     bool m_hwdecoder{false};

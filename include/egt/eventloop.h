@@ -18,7 +18,6 @@
 
 namespace egt
 {
-
 namespace asio
 {
 class io_context;
@@ -26,6 +25,7 @@ class io_context;
 
 inline namespace v1
 {
+class Application;
 
 namespace detail
 {
@@ -39,10 +39,11 @@ class EGT_API EventLoop
 {
 public:
 
-    EventLoop() noexcept;
-
-    EGT_OPS_NOCOPY_MOVE(EventLoop);
-    virtual ~EventLoop() noexcept;
+    EventLoop(Application& app) noexcept;
+    EventLoop(const EventLoop&) = delete;
+    EventLoop& operator=(const EventLoop&) = delete;
+    EventLoop(EventLoop&&) = delete;
+    EventLoop& operator=(EventLoop&&) = delete;
 
     /**
      * Get a reference to the internal ASIO io_context object.
@@ -55,7 +56,7 @@ public:
      * @note You do not normally need to call this directly.  It is called by
      * step() and run() automatically.
      */
-    virtual void draw();
+    void draw();
 
     /**
      * Run the event loop.
@@ -64,7 +65,7 @@ public:
      *
      * @return The number of events handled.
      */
-    virtual int run();
+    int run();
 
     /**
      * Single step on the event loop.
@@ -79,7 +80,7 @@ public:
      * @note If calling this manually, this will not invoke any idle callbacks.
      * @return The number of events handled.
      */
-    virtual int step();
+    int step();
 
     /**
      * Run some pending events and return.
@@ -88,14 +89,14 @@ public:
      * you must manually call draw().
      * @return The number of events handled.
      */
-    virtual int poll();
+    int poll();
 
     /**
      * Quit the event loop.
      *
      * This will cause the run() function to return.
      */
-    virtual void quit();
+    void quit();
 
     /**
      * Event callback function definition.
@@ -109,6 +110,8 @@ public:
 
     /// @private
     detail::PriorityQueue& queue();
+
+    ~EventLoop() noexcept;
 
 protected:
 
@@ -128,8 +131,10 @@ protected:
 
     /// Used internally to determine whether the event loop should exit.
     bool m_do_quit{false};
-};
 
+    /// Application reference.
+    Application& m_app;
+};
 
 }
 }

@@ -99,8 +99,10 @@ public:
                           PixelFormat format_hint = PixelFormat::yuyv,
                           WindowHint hint = WindowHint::overlay);
 
-    EGT_OPS_NOCOPY_MOVE(CameraWindow);
-    ~CameraWindow() noexcept override;
+    CameraWindow(const CameraWindow&) = delete;
+    CameraWindow& operator=(const CameraWindow&) = delete;
+    CameraWindow(CameraWindow&&) = default;
+    CameraWindow& operator=(CameraWindow&&) = default;
 
     void do_draw() override
     {
@@ -141,6 +143,8 @@ public:
     {
         return m_vscale;
     }
+
+    ~CameraWindow() noexcept override;
 
 protected:
 

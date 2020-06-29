@@ -296,6 +296,9 @@ void Sprite::create_impl(const Image& image, const Size& frame_size,
     }
 }
 
+Sprite::Sprite(Sprite&&) noexcept = default;
+Sprite& Sprite::operator=(Sprite&&) noexcept = default;
+
 Sprite::~Sprite() noexcept = default;
 
 }

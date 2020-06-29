@@ -24,10 +24,7 @@ namespace detail
 class BasicWindow : public detail::WindowImpl
 {
 public:
-
     explicit BasicWindow(Window* inter, Screen* screen = nullptr);
-
-    virtual ~BasicWindow() = default;
 };
 
 /**
@@ -36,10 +33,7 @@ public:
 class BasicTopWindow : public BasicWindow
 {
 public:
-
     explicit BasicTopWindow(Window* inter);
-
-    virtual ~BasicTopWindow() = default;
 };
 
 }

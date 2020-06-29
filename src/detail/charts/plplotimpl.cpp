@@ -538,8 +538,6 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
 
 }
 
-PlPlotLineChart::~PlPlotLineChart() = default;
-
 PlPlotPointChart::PlPlotPointChart(PointChart& interface)
     : m_interface(interface)
 {
@@ -592,8 +590,6 @@ void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
 
     plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).color());
 }
-
-PlPlotPointChart::~PlPlotPointChart() = default;
 
 PlPlotBarChart::PlPlotBarChart(BarChart& interface)
     : m_interface(interface)
@@ -698,8 +694,6 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
     plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).color());
 }
 
-PlPlotBarChart::~PlPlotBarChart() = default;
-
 PlPlotHBarChart::PlPlotHBarChart(HorizontalBarChart& interface)
     : m_interface(interface)
 {
@@ -803,8 +797,6 @@ void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
     plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).color());
 }
 
-PlPlotHBarChart::~PlPlotHBarChart() = default;
-
 PlPlotPieChart::PlPlotPieChart(PieChart& interface)
     : m_interface(interface)
 {
@@ -895,8 +887,6 @@ void PlPlotPieChart::draw(Painter& painter, const Rect& rect)
     plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).color());
 
 }
-
-PlPlotPieChart::~PlPlotPieChart() = default;
 
 } // end of namespace detail
 

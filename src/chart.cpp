@@ -88,7 +88,10 @@ void LineChart::bank(float bank)
     m_impl->bank(bank);
 }
 
-LineChart::~LineChart() noexcept = default;
+LineChart::LineChart(LineChart&&) noexcept = default;
+LineChart& LineChart::operator=(LineChart&&) noexcept = default;
+
+LineChart::~LineChart() = default;
 
 PointChart::PointChart(const Rect& rect)
     : ChartBase(rect),
@@ -161,7 +164,9 @@ void PointChart::grid_width(const int val)
     m_impl->grid_width(val);
 }
 
-PointChart::~PointChart() noexcept = default;
+PointChart::PointChart(PointChart&&) noexcept = default;
+PointChart& PointChart::operator=(PointChart&&) noexcept = default;
+PointChart::~PointChart() = default;
 
 BarChart::BarChart(const Rect& rect)
     : ChartBase(rect),
@@ -251,7 +256,9 @@ void BarChart::bank(float bank)
     m_impl->bank(bank);
 }
 
-BarChart::~BarChart() noexcept = default;
+BarChart::BarChart(BarChart&&) noexcept = default;
+BarChart& BarChart::operator=(BarChart&&) noexcept = default;
+BarChart::~BarChart() = default;
 
 HorizontalBarChart::HorizontalBarChart(const Rect& rect)
     : BarChart(rect, std::make_unique<detail::PlPlotHBarChart>(*this))
@@ -259,7 +266,10 @@ HorizontalBarChart::HorizontalBarChart(const Rect& rect)
     name("HorizontalBarChart" + std::to_string(m_widgetid));
 }
 
-HorizontalBarChart::~HorizontalBarChart() noexcept = default;
+HorizontalBarChart::HorizontalBarChart(HorizontalBarChart&&) noexcept = default;
+HorizontalBarChart& HorizontalBarChart::operator=(HorizontalBarChart&&) noexcept = default;
+
+HorizontalBarChart::~HorizontalBarChart() = default;
 
 PieChart::PieChart(const Rect& rect)
     : Widget(rect),
@@ -312,7 +322,10 @@ void PieChart::resize(const Size& size)
     }
 }
 
-PieChart::~PieChart() noexcept = default;
+PieChart::PieChart(PieChart&&) noexcept = default;
+PieChart& PieChart::operator=(PieChart&&) noexcept = default;
+
+PieChart::~PieChart() = default;
 
 }
 }

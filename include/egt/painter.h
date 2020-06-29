@@ -63,14 +63,16 @@ public:
      */
     struct AutoSaveRestore
     {
-        AutoSaveRestore() = delete;
-        EGT_OPS_NOCOPY_NOMOVE(AutoSaveRestore);
-
         explicit AutoSaveRestore(Painter& painter)
             : m_painter(painter)
         {
             m_painter.save();
         }
+
+        AutoSaveRestore(const AutoSaveRestore&) = delete;
+        AutoSaveRestore& operator=(const AutoSaveRestore&) = delete;
+        AutoSaveRestore(AutoSaveRestore&&) = delete;
+        AutoSaveRestore& operator=(AutoSaveRestore&&) = delete;
 
         ~AutoSaveRestore()
         {
@@ -95,14 +97,16 @@ public:
      */
     struct AutoGroup
     {
-        AutoGroup() = delete;
-        EGT_OPS_NOCOPY_NOMOVE(AutoGroup);
-
         explicit AutoGroup(Painter& painter)
             : m_painter(painter)
         {
             m_painter.push_group();
         }
+
+        AutoGroup(const AutoGroup&) = delete;
+        AutoGroup& operator=(const AutoGroup&) = delete;
+        AutoGroup(AutoGroup&&) = delete;
+        AutoGroup& operator=(AutoGroup&&) = delete;
 
         ~AutoGroup()
         {

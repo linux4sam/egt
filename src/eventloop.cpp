@@ -27,8 +27,9 @@ struct EventLoop::EventLoopImpl
     detail::PriorityQueue m_queue;
 };
 
-EventLoop::EventLoop() noexcept
-    : m_impl(std::make_unique<EventLoopImpl>())
+EventLoop::EventLoop(Application& app) noexcept
+    : m_impl(std::make_unique<EventLoopImpl>()),
+      m_app(app)
 {}
 
 asio::io_context& EventLoop::io()
@@ -95,9 +96,9 @@ void EventLoop::quit()
 
 void EventLoop::draw()
 {
-    detail::code_timer(time_event_loop_enabled(), "draw: ", []()
+    detail::code_timer(time_event_loop_enabled(), "draw: ", [this]()
     {
-        for (auto& w : Application::instance().windows())
+        for (auto& w : m_app.windows())
         {
             if (!w->visible())
                 continue;

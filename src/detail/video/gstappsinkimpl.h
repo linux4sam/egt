@@ -30,8 +30,6 @@ public:
 
     void scale(float scalex, float scaley) override;
 
-    virtual ~GstAppSinkImpl() = default;
-
 protected:
     GstElement* m_appsink;
 

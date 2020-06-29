@@ -32,9 +32,11 @@ class EGT_API Object
 {
 public:
 
-    Object() = default;
-    EGT_OPS_NOCOPY_MOVE(Object);
-    virtual ~Object() noexcept = default;
+    Object() noexcept = default;
+    Object(const Object&) = delete;
+    Object& operator=(const Object&) = delete;
+    Object(Object&&) = default;
+    Object& operator=(Object&&) = default;
 
     /// Get the name of the Object.
     EGT_NODISCARD const std::string& name() const { return m_name; }
@@ -101,6 +103,8 @@ public:
      * @param handle The handle returned from on_event().
      */
     void remove_handler(RegisterHandle handle);
+
+    virtual ~Object() noexcept = default;
 
 protected:
 

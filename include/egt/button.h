@@ -103,8 +103,10 @@ public:
            const Rect& rect,
            const AlignFlags& text_align = default_text_align()) noexcept;
 
-    EGT_OPS_NOCOPY_MOVE(Button);
-    ~Button() override;
+    Button(const Button&) = delete;
+    Button& operator=(const Button&) = delete;
+    Button(Button&&) noexcept = default;
+    Button& operator=(Button&&) noexcept = default;
 
     void handle(Event& event) override;
 
@@ -144,6 +146,8 @@ public:
     using TextWidget::min_size_hint;
 
     EGT_NODISCARD Size min_size_hint() const override;
+
+    ~Button() noexcept override;
 
 protected:
 
@@ -224,9 +228,6 @@ public:
                 const std::string& text,
                 const Rect& rect,
                 const AlignFlags& text_align = default_text_align()) noexcept;
-
-    EGT_OPS_NOCOPY_MOVE(ImageButton);
-    ~ImageButton() override = default;
 
     void draw(Painter& painter, const Rect& rect) override;
 

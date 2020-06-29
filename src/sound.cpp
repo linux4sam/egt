@@ -37,7 +37,10 @@ struct PlaybackThread
         m_thread = std::thread(&PlaybackThread::run, this);
     }
 
-    EGT_OPS_NOCOPY_NOMOVE(PlaybackThread);
+    PlaybackThread(const PlaybackThread&) = delete;
+    PlaybackThread& operator=(const PlaybackThread&) = delete;
+    PlaybackThread(PlaybackThread&&) = delete;
+    PlaybackThread& operator=(PlaybackThread&&) = delete;
 
     void run()
     {
@@ -414,6 +417,9 @@ void Sound::play(bool repeat)
         snd_pcm_drain(m_impl->handle);
     });
 }
+
+Sound::Sound(Sound&&) noexcept = default;
+Sound& Sound::operator=(Sound&&) noexcept = default;
 
 Sound::~Sound() noexcept
 {

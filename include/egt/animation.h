@@ -75,9 +75,11 @@ class EGT_API AnimationBase
 {
 public:
 
-    AnimationBase() noexcept = default;
-    EGT_OPS_NOCOPY_MOVE(AnimationBase);
-    virtual ~AnimationBase() noexcept = default;
+    AnimationBase() = default;
+    AnimationBase(const AnimationBase&) = delete;
+    AnimationBase& operator=(const AnimationBase&) = delete;
+    AnimationBase(AnimationBase&&) noexcept = default;
+    AnimationBase& operator=(AnimationBase&&) noexcept = default;
 
     /**
      * Start the animation.
@@ -126,6 +128,8 @@ public:
         m_callbacks.clear();
     }
 
+    virtual ~AnimationBase() noexcept = default;
+
 protected:
 
     /// The running state of the animation.
@@ -158,10 +162,6 @@ protected:
 class EGT_API Animation : public detail::AnimationBase
 {
 public:
-
-    Animation() = default;
-    EGT_OPS_NOCOPY_MOVE(Animation);
-    ~Animation() noexcept override = default;
 
     /**
      * @param[in] start The starting value of the animation.
@@ -291,9 +291,6 @@ public:
     explicit AnimationSequence(bool loop = false) noexcept
         : m_loop(loop)
     {}
-
-    EGT_OPS_NOCOPY_MOVE(AnimationSequence);
-    ~AnimationSequence() noexcept override = default;
 
     /**
      * Add an animation to the animation sequence.
@@ -481,10 +478,6 @@ class EGT_API AutoAnimation : public Animation
 {
 public:
 
-    AutoAnimation() = default;
-    EGT_OPS_NOCOPY_MOVE_EXCEPT(AutoAnimation);
-    ~AutoAnimation() noexcept override = default;
-
     /**
      * @param[in] start The starting value of the animation.
      * @param[in] end The ending value of the animation.
@@ -573,9 +566,6 @@ public:
     })
     {}
 
-    EGT_OPS_NOCOPY_MOVE_EXCEPT(PropertyAnimatorType);
-    ~PropertyAnimatorType() noexcept override = default;
-
     /// Property callback type
     using PropertyCallback = std::function<void (T v)>;
 
@@ -638,8 +628,6 @@ class EGT_API AnimationDelay : public detail::AnimationBase
 public:
 
     AnimationDelay() = delete;
-    EGT_OPS_NOCOPY_MOVE_EXCEPT(AnimationDelay);
-    ~AnimationDelay() noexcept override = default;
 
     /**
      * @param duration The delay time for the animation.

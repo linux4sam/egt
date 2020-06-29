@@ -29,15 +29,21 @@ public:
                 experimental::CameraCapture::ContainerType container,
                 const std::string& device);
 
-    virtual void set_output(const std::string& output,
-                            experimental::CameraCapture::ContainerType container = experimental::CameraCapture::ContainerType::avi,
-                            PixelFormat format = PixelFormat::yuv420);
+    // special functions deleted because they are never used
+    CaptureImpl(const CaptureImpl&) = delete;
+    CaptureImpl& operator=(const CaptureImpl&) = delete;
+    CaptureImpl(CaptureImpl&&) = delete;
+    CaptureImpl& operator=(CaptureImpl&&) = delete;
 
-    virtual bool start();
+    void set_output(const std::string& output,
+                    experimental::CameraCapture::ContainerType container = experimental::CameraCapture::ContainerType::avi,
+                    PixelFormat format = PixelFormat::yuv420);
+
+    bool start();
 
     void stop();
 
-    virtual ~CaptureImpl();
+    ~CaptureImpl() noexcept;
 
 protected:
     experimental::CameraCapture& m_interface;

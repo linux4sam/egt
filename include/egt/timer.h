@@ -88,8 +88,12 @@ public:
      */
     explicit Timer(std::chrono::milliseconds duration) noexcept;
 
-    EGT_OPS_NOCOPY_MOVE_EXCEPT(Timer);
-    virtual ~Timer() noexcept;
+    Timer(const Timer&) = delete;
+    Timer& operator=(const Timer&) = delete;
+    // NOLINTNEXTLINE(hicpp-noexcept-move,performance-noexcept-move-constructor)
+    Timer(Timer&&);
+    // NOLINTNEXTLINE(hicpp-noexcept-move,performance-noexcept-move-constructor)
+    Timer& operator=(Timer&&);
 
     /**
      * Start the timer.
@@ -195,6 +199,8 @@ public:
      * @param[in] name Name to set for the Object.
      */
     void name(const std::string& name) { m_name = name; }
+
+    virtual ~Timer() noexcept;
 
 protected:
 

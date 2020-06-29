@@ -322,7 +322,7 @@ void CaptureImpl::stop()
     }
 }
 
-CaptureImpl::~CaptureImpl()
+CaptureImpl::~CaptureImpl() noexcept
 {
     stop();
 

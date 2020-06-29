@@ -141,6 +141,22 @@ ReverseRange<T> reverse_iterate(T& x)
 #endif
 
 /**
+ * Utility base class to make a derived class non-copy-able.
+ */
+template<class T>
+class EGT_API NonCopyable
+{
+public:
+    NonCopyable(const NonCopyable&) = delete;
+    NonCopyable& operator=(const NonCopyable&) = delete;
+    NonCopyable(NonCopyable&&) noexcept = default;
+    NonCopyable& operator=(NonCopyable&&) noexcept = default;
+protected:
+    NonCopyable() = default;
+    ~NonCopyable() = default;
+};
+
+/**
  * Rule of 5 static assert all in one.
  *
  * Example usage is intended for static_assert:
@@ -225,11 +241,6 @@ constexpr bool change_if_diff(double& old, const double& to)
 template<class T>
 struct EGT_API ScopeExit
 {
-    ScopeExit() noexcept = delete;
-    ScopeExit(const ScopeExit&) = delete;
-    ScopeExit& operator=(const ScopeExit&) = delete;
-    ScopeExit& operator=(ScopeExit&&) noexcept = delete;
-
     /**
      * @param f Callable to call on destruction.
      */
@@ -255,6 +266,11 @@ struct EGT_API ScopeExit
     {
         other.m_active = false;
     }
+
+    ScopeExit() = delete;
+    ScopeExit(const ScopeExit&) = delete;
+    ScopeExit& operator=(const ScopeExit&) = delete;
+    ScopeExit& operator=(ScopeExit&&) = delete;
 
     ~ScopeExit()
     {
@@ -293,63 +309,5 @@ constexpr T bit(T n)
 }
 }
 }
-
-#ifndef SWIG
-#define EGT_OPS_COPY(T)					\
-    T(const T&) = default;				\
-    T& operator=(const T&) = default /* NOLINT */
-
-#define EGT_OPS_NOCOPY(T)				\
-    T(const T&) = delete;				\
-    T& operator=(const T&) = delete /* NOLINT */
-
-#define EGT_OPS_MOVE(T)					\
-    T(T&&) noexcept = default; /* NOLINT */		\
-    T& operator=(T&&) noexcept = default /* NOLINT */
-
-#define EGT_OPS_MOVE_EXCEPT(T)				\
-    T(T&&) = default; /* NOLINT */			\
-    T& operator=(T&&) = default /* NOLINT */
-
-#define EGT_OPS_NOMOVE(T)				\
-    T(T&&) noexcept = delete; /* NOLINT */		\
-    T& operator=(T&&) noexcept = delete /* NOLINT */
-
-#define EGT_OPS_COPY_MOVE(T)			\
-    EGT_OPS_COPY(T);				\
-    EGT_OPS_MOVE(T)
-
-#define EGT_OPS_NOCOPY_MOVE(T)			\
-    EGT_OPS_NOCOPY(T);				\
-    EGT_OPS_MOVE(T)
-
-#define EGT_OPS_COPY_MOVE_EXCEPT(T)			\
-    EGT_OPS_COPY(T);					\
-    EGT_OPS_MOVE_EXCEPT(T)
-
-#define EGT_OPS_NOCOPY_MOVE_EXCEPT(T)		\
-    EGT_OPS_NOCOPY(T);				\
-    EGT_OPS_MOVE_EXCEPT(T)
-
-#define EGT_OPS_NOCOPY_NOMOVE(T)		\
-    EGT_OPS_NOCOPY(T);				\
-    EGT_OPS_NOMOVE(T)
-
-#define EGT_OPS_COPY_NOMOVE(T)			\
-    EGT_OPS_COPY(T);				\
-    EGT_OPS_NOMOVE(T)
-#else
-#define EGT_OPS_COPY(T)
-#define EGT_OPS_NOCOPY(T)
-#define EGT_OPS_MOVE(T)
-#define EGT_OPS_MOVE_EXCEPT(T)
-#define EGT_OPS_NOMOVE(T)
-#define EGT_OPS_COPY_MOVE(T)
-#define EGT_OPS_NOCOPY_MOVE(T)
-#define EGT_OPS_COPY_MOVE_EXCEPT(T)
-#define EGT_OPS_NOCOPY_MOVE_EXCEPT(T)
-#define EGT_OPS_NOCOPY_NOMOVE(T)
-#define EGT_OPS_COPY_NOMOVE(T)
-#endif
 
 #endif

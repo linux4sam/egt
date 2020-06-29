@@ -37,9 +37,6 @@ class EGT_API ResourceManager
 {
 public:
 
-    EGT_OPS_NOCOPY_NOMOVE(ResourceManager);
-    ~ResourceManager() noexcept = default;
-
     /**
      * Get a reference to the ResourceManager instance.
      */

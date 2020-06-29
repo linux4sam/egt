@@ -34,13 +34,11 @@ class EGT_API InputEvDev : public Input
 {
 public:
 
-    InputEvDev() = delete;
-
     /**
      * @throws std::runtime_error if unable to open device.
      */
     explicit InputEvDev(Application& app, const std::string& path);
-    EGT_OPS_NOCOPY_MOVE_EXCEPT(InputEvDev);
+
     ~InputEvDev() noexcept override;
 
 private:

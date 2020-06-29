@@ -81,9 +81,6 @@ public:
           const Rect& rect,
           const AlignFlags& text_align = default_text_align()) noexcept;
 
-    EGT_OPS_NOCOPY_MOVE(Label);
-    ~Label() override = default;
-
     using TextWidget::text;
 
     void draw(Painter& painter, const Rect& rect) override;
@@ -169,9 +166,6 @@ public:
                const std::string& text,
                const Rect& rect,
                const AlignFlags& text_align = default_text_align()) noexcept;
-
-    EGT_OPS_NOCOPY_MOVE(ImageLabel);
-    ~ImageLabel() override = default;
 
     void draw(Painter& painter, const Rect& rect) override;
 

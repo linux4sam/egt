@@ -40,7 +40,10 @@ public:
      */
     explicit SDLScreen(Application& app, const Size& size = Size(800, 480));
 
-    EGT_OPS_NOCOPY_NOMOVE(SDLScreen);
+    SDLScreen(const SDLScreen&) = delete;
+    SDLScreen& operator=(const SDLScreen&) = delete;
+    SDLScreen(SDLScreen&&) = delete;
+    SDLScreen& operator=(SDLScreen&&) = delete;
 
     void schedule_flip() override
     {}

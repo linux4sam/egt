@@ -222,6 +222,8 @@ shared_cairo_surface_t SvgImage::do_render(const std::string& id, const RectF& r
     return canvas.surface();
 }
 
+SvgImage::SvgImage(SvgImage&&) noexcept = default;
+SvgImage& SvgImage::operator=(SvgImage&&) noexcept = default;
 SvgImage::~SvgImage() noexcept = default;
 
 }

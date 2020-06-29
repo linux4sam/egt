@@ -149,6 +149,8 @@ void OstreamWidgetSerializer::add_property(const std::string& name,
     m_impl->current->attrs.push_back(out.str());
 }
 
+OstreamWidgetSerializer::~OstreamWidgetSerializer() noexcept = default;
+
 static void print_node(std::string prefix, std::ostream& out,
                        const StringNode& node, bool last = true)
 {
@@ -189,8 +191,6 @@ void OstreamWidgetSerializer::write(std::ostream& out)
     std::string prefix;
     print_node(prefix, out, m_impl->doc.children.front());
 }
-
-OstreamWidgetSerializer::~OstreamWidgetSerializer() noexcept = default;
 
 struct XmlWidgetSerializer::XmlSerializerImpl
 {

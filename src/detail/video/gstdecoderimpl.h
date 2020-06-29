@@ -32,7 +32,12 @@ class GstDecoderImpl
 {
 public:
 
+    // special functions deleted because they are never used
     GstDecoderImpl() = delete;
+    GstDecoderImpl(const GstDecoderImpl&) = delete;
+    GstDecoderImpl& operator=(const GstDecoderImpl&) = delete;
+    GstDecoderImpl(GstDecoderImpl&&) = delete;
+    GstDecoderImpl& operator=(GstDecoderImpl&&) = delete;
 
     explicit GstDecoderImpl(VideoWindow& interface, const Size& size);
 

@@ -30,6 +30,8 @@ class InputKeyboardImpl
 {
 public:
 
+    InputKeyboardImpl() noexcept = default;
+
     /**
      * Handle a key from the input device.
      *
@@ -37,7 +39,12 @@ public:
      */
     virtual uint32_t on_key(uint32_t key, EventId event) = 0;
 
-    virtual ~InputKeyboardImpl() = default;
+    InputKeyboardImpl(const InputKeyboardImpl&) = default;
+    InputKeyboardImpl& operator=(const InputKeyboardImpl&) = default;
+    InputKeyboardImpl(InputKeyboardImpl&&) noexcept = default;
+    InputKeyboardImpl& operator=(InputKeyboardImpl&&) noexcept = default;
+
+    virtual ~InputKeyboardImpl() noexcept = default;
 };
 
 /**
