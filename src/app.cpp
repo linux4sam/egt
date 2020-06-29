@@ -406,6 +406,7 @@ void Application::paint_to_file(const std::string& filename)
 
     cairo_surface_write_to_png(surface.get(), name.c_str());
 #else
+    detail::ignoreparam(filename);
     detail::error("png support not available");
 #endif
 }

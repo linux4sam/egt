@@ -476,6 +476,7 @@ void Widget::paint_to_file(const std::string& filename)
     paint(painter);
     cairo_surface_write_to_png(surface.get(), name.c_str());
 #else
+    detail::ignoreparam(filename);
     detail::error("png support not available");
 #endif
 }

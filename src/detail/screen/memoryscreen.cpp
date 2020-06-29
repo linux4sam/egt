@@ -29,6 +29,7 @@ void MemoryScreen::save_to_file(const std::string& filename) const
 #if CAIRO_HAS_PNG_FUNCTIONS == 1
     cairo_surface_write_to_png(m_canvas.surface().get(), filename.c_str());
 #else
+    detail::ignoreparam(filename);
     detail::error("png support not available");
 #endif
 }
