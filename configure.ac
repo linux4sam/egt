@@ -61,8 +61,10 @@ if test "x$egt_os_win32" = "xyes"; then
   AX_APPEND_FLAG([-DWIN32], [CFLAGS])
   AX_APPEND_FLAG([-DEGT_STATIC], [CFLAGS])
 else
-  AX_APPEND_COMPILE_FLAGS([-fvisibility=hidden -fvisibility-inlines-hidden], [CXXFLAGS])
-  AX_APPEND_COMPILE_FLAGS([-fvisibility=hidden], [CFLAGS])
+  AC_LANG(C)
+  AX_APPEND_COMPILE_FLAGS2([-fvisibility=hidden], [CFLAGS], [-Werror])
+  AC_LANG(C++)
+  AX_APPEND_COMPILE_FLAGS2([-fvisibility=hidden -fvisibility-inlines-hidden], [CXXFLAGS], [-Werror])
 fi
 
 AC_MSG_CHECKING([for native ARM])
@@ -77,23 +79,6 @@ esac
 AC_MSG_RESULT([$egt_cpu_arm])
 AM_CONDITIONAL(CPU_ARM, test "$egt_cpu_arm" = "yes")
 
-AC_DEFUN([EGT_CC_TRY_FLAG], [
-  AC_MSG_CHECKING([whether $CC supports $1])
-
-  egt_save_CFLAGS="$CFLAGS"
-  CFLAGS="$CFLAGS $1 -Werror"
-
-  AC_COMPILE_IFELSE([AC_LANG_SOURCE([ ])], [egt_cc_flag=yes], [egt_cc_flag=no])
-  CFLAGS="$egt_save_CFLAGS"
-
-  if test "x$egt_cc_flag" = "xyes"; then
-    ifelse([$2], , :, [$2])
-  else
-    ifelse([$3], , :, [$3])
-  fi
-  AC_MSG_RESULT([$egt_cc_flag])
-])
-
 MAYBE_WARN="-Wall -Wextra \
 -pedantic \
 -Wfloat-equal \
@@ -102,12 +87,21 @@ MAYBE_WARN="-Wall -Wextra \
 -Wwrite-strings \
 -Wmissing-declarations \
 -Wpacked \
--Wstrict-aliasing=2 -Winit-self \
--Wno-attributes -Wno-long-long \
--Wno-missing-field-initializers \
--Wno-unused-parameter \
 -Wno-variadic-macros \
+-Wstrict-aliasing \
+-Winit-self \
+-Woverloaded-virtual \
 -Wno-psabi" # no warnings about gcc abi changes
+
+AC_LANG(C)
+for W in $MAYBE_WARN; do
+    AX_APPEND_COMPILE_FLAGS2([$W], [CFLAGS], [-Werror])
+done
+
+AC_LANG(C++)
+for W in $MAYBE_WARN; do
+    AX_APPEND_COMPILE_FLAGS2([$W], [CXXFLAGS], [-Werror])
+done
 
 AC_ARG_ENABLE(sanitize,
   [AS_HELP_STRING([--enable-sanitize],[turn on sanitize analysis tools])],
@@ -115,39 +109,18 @@ AC_ARG_ENABLE(sanitize,
 
 if test "x$enable_sanitize" = "xyes";
 then
-	MAYBE_WARN="$MAYBE_WARN -fsanitize=address -fsanitize=leak \
-			-fsanitize=undefined -fno-omit-frame-pointer"
+  AC_MSG_NOTICE([enabling sanitize])
+
+  AC_LANG(C)
+  AX_APPEND_COMPILE_FLAGS2([-fsanitize=address -fsanitize=leak \
+  			    -fsanitize=undefined -fno-omit-frame-pointer],
+	[CFLAGS],[-Werror],,[AC_MSG_ERROR(sanitize flags not supported)])
+
+  AC_LANG(C++)
+  AX_APPEND_COMPILE_FLAGS2([-fsanitize=address -fsanitize=leak \
+  			    -fsanitize=undefined -fno-omit-frame-pointer],
+	[CXXFLAGS],[-Werror],,[AC_MSG_ERROR(sanitize flags not supported)])
 fi
-
-# invalidate cached value if MAYBE_WARN has changed
-if test "x$egt_cv_warn_maybe" != "x$MAYBE_WARN"; then
-	unset egt_cv_warn_cflags
-fi
-AC_CACHE_CHECK([for supported warning flags], egt_cv_warn_cflags, [
-	echo
-	WARN_CFLAGS=""
-
-	# Some warning options are not supported by all versions of
-	# gcc, so test all desired options against the current
-	# compiler.
-	#
-	# Note that there are some order dependencies
-	# here. Specifically, an option that disables a warning will
-	# have no net effect if a later option then enables that
-	# warnings, (perhaps implicitly). So we put some grouped
-	# options (-Wall and -Wextra) up front and the -Wno options
-	# last.
-
-	for W in $MAYBE_WARN; do
-		EGT_CC_TRY_FLAG([$W], [WARN_CFLAGS="$WARN_CFLAGS $W"])
-	done
-
-	egt_cv_warn_cflags=$WARN_CFLAGS
-	egt_cv_warn_maybe=$MAYBE_WARN
-
-	AC_MSG_CHECKING([which warning flags were supported])])
-WARN_CFLAGS="$egt_cv_warn_cflags"
-AC_SUBST(WARN_CFLAGS)
 
 # Checks for header files.
 AC_PATH_X
@@ -171,11 +144,11 @@ if test "x$enable_debug" = "xno" ; then
 		-finline-small-functions -findirect-inlining"
   for F in $OPT_FLAGS; do
       AC_LANG(C)
-      AX_APPEND_COMPILE_FLAGS([$F], [CFLAGS])
+      AX_APPEND_COMPILE_FLAGS2([$F], [CFLAGS], [-Werror])
       AC_LANG(C++)
-      AX_APPEND_COMPILE_FLAGS([$F], [CXXFLAGS])
+      AX_APPEND_COMPILE_FLAGS2([$F], [CXXFLAGS], [-Werror])
   done
-  AX_APPEND_COMPILE_FLAGS([-Wl,--gc-sections], [LDFLAGS])
+  AX_APPEND_COMPILE_FLAGS2([-Wl,--gc-sections], [LDFLAGS])
 else
   AX_APPEND_FLAG([-DEGTLOG_ACTIVE_LEVEL=0], [CXXFLAGS])
 fi
@@ -185,24 +158,23 @@ AC_ARG_ENABLE(gcov,
   [enable_gcov=$enableval], [enable_gcov=no])
 
 # Check for --enable-gcov and add appropriate flags for gcc
-# Note that these extra switches are NOT applied to the loader
 if test "x$enable_gcov" = "xyes";
 then
-  # Check for -fprofile-arcs and -ftest-coverage option
-  EGT_CC_TRY_FLAG([--coverage], ac_cv_c_gcc_ftest_coverage="yes")
+  AC_LANG(C)
+  AX_APPEND_COMPILE_FLAGS2([--coverage],
+	[CFLAGS],[-Werror],,[AC_MSG_ERROR(coverage flags not supported)])
 
-  if test "$ac_cv_c_gcc_ftest_coverage" = "yes"
-  then
-    AX_APPEND_COMPILE_FLAGS([--coverage], [CFLAGS])
-    AX_APPEND_COMPILE_FLAGS([--coverage], [CXXFLAGS])
-    AX_APPEND_COMPILE_FLAGS([-lgcov], [LDFLAGS])
-    # Turn off optimization so code coverage tool
-    # can get accurate line numbers
-    CFLAGS=`echo "$CFLAGS" | sed -e 's/-O[0-9a-z]*//g'`
-    CXXFLAGS=`echo "$CXXFLAGS" | sed -e 's/-O[0-9a-z]*//g'`
-  else
-    ac_cv_c_gcc_ftest_coverage=no
-  fi
+  AC_LANG(C++)
+  AX_APPEND_COMPILE_FLAGS2([--coverage],
+	[CXXFLAGS],[-Werror],,[AC_MSG_ERROR(coverage flags not supported)])
+
+  AX_APPEND_COMPILE_FLAGS2([-lgcov],
+	[LDFLAGS],[-Werror],,[AC_MSG_ERROR(coverage flags not supported)])
+
+  # Turn off optimization so code coverage tool
+  # can get accurate line numbers
+  CFLAGS=`echo "$CFLAGS" | sed -e 's/-O[0-9a-z]*//g'`
+  CXXFLAGS=`echo "$CXXFLAGS" | sed -e 's/-O[0-9a-z]*//g'`
 fi
 
 AC_ARG_ENABLE(profile,
@@ -211,15 +183,13 @@ AC_ARG_ENABLE(profile,
 
 if test "x$enable_profile" = "xyes";
 then
-  EGT_CC_TRY_FLAG([-pg], ac_cv_c_gcc_pg="yes")
+  AC_LANG(C)
+  AX_APPEND_COMPILE_FLAGS2([-pg],
+	[CFLAGS],[-Werror],,[AC_MSG_ERROR(profile flags not supported)])
 
-  if test "$ac_cv_c_gcc_pg" = "yes"
-  then
-    AX_APPEND_COMPILE_FLAGS([-pg], [CFLAGS])
-    AX_APPEND_COMPILE_FLAGS([-pg], [CXXFLAGS])
-  else
-    ac_cv_c_gcc_pg=no
-  fi
+  AC_LANG(C++)
+  AX_APPEND_COMPILE_FLAGS2([-pg],
+	[CXXFLAGS],[-Werror],,[AC_MSG_ERROR(profile flags not supported)])
 fi
 
 AC_ARG_ENABLE([icons],
@@ -246,8 +216,17 @@ AC_ARG_ENABLE([lto],
   [enable_lto=$enableval], [enable_lto=no])
 if test "x$enable_lto" = "xyes" ; then
   AC_MSG_NOTICE([enabling LTO])
-  AX_APPEND_COMPILE_FLAGS([-flto], [CFLAGS])
-  AX_APPEND_COMPILE_FLAGS([-flto], [CXXFLAGS])
+
+  AC_LANG(C)
+  AX_APPEND_COMPILE_FLAGS2([-flto],
+	[CFLAGS],[-Werror],,[AC_MSG_ERROR(lto flags not supported)])
+
+  AC_LANG(C++)
+  AX_APPEND_COMPILE_FLAGS2([-flto],
+	[CXXFLAGS],[-Werror],,[AC_MSG_ERROR(lto flags not supported)])
+
+  AX_APPEND_COMPILE_FLAGS2([-flto],
+	[LDFLAGS],[-Werror],,[AC_MSG_ERROR(lto flags not supported)])
 fi
 
 # Checks for typedefs, structures, and compiler characteristics.

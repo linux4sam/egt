@@ -1,4 +1,4 @@
-CUSTOM_FLAGS = $(WARN_CFLAGS) \
+CUSTOM_FLAGS = \
 	-I$(top_srcdir)/src \
 	-I$(top_srcdir)/include \
 	-I$(top_builddir)/include \
@@ -17,7 +17,7 @@ endif
 # Workaround is to use DATAPATH instead.
 CUSTOM_FLAGS += -DDATAPATH=\"$(datadir)\" -DSRCDIR=\"$(abs_top_srcdir)\"
 
-CUSTOM_CXXFLAGS = -Woverloaded-virtual -DEGT_DLL_EXPORTS -DFMT_HEADER_ONLY
+CUSTOM_CXXFLAGS = -DEGT_DLL_EXPORTS -DFMT_HEADER_ONLY
 
 lib_LTLIBRARIES = libegt.la
 libegt_la_CXXFLAGS = \

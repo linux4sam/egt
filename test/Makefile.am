@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = subdir-objects
 
-CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
+CUSTOM_CXXFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_builddir)/include \
 	$(cairo_CFLAGS) \

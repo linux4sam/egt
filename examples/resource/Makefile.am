@@ -1,4 +1,4 @@
-CUSTOM_CXXFLAGS = $(WARN_CFLAGS) \
+CUSTOM_CXXFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_builddir)/include \
 	-isystem $(top_srcdir)/external/rapidxml \
