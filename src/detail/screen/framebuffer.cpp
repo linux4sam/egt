@@ -41,7 +41,22 @@ FrameBuffer::FrameBuffer(const std::string& path)
     if (m_fb == MAP_FAILED) // NOLINT
         throw std::runtime_error(("could not map framebuffer device: " + path).c_str());
 
-    init(&m_fb, 1, Size(varinfo.xres, varinfo.yres));
+    PixelFormat format = PixelFormat::invalid;
+    switch (varinfo.bits_per_pixel)
+    {
+    case 16:
+        format = PixelFormat::rgb565;
+        break;
+    case 24:
+    case 32:
+        format = PixelFormat::xrgb8888;
+        break;
+    }
+
+    if (format == PixelFormat::invalid)
+        throw std::runtime_error("unable to determine framebuffer pixel format");
+
+    init(&m_fb, 1, Size(varinfo.xres, varinfo.yres), format);
 }
 
 FrameBuffer::~FrameBuffer() noexcept
