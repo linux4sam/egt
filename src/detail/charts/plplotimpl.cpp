@@ -33,6 +33,9 @@ inline bool change_if_diff(T1& first, T2& second, const T3& to)
         first.clear();
         second.clear();
 
+        first.reserve(to.size());
+        second.reserve(to.size());
+
         for (const auto& elem : to)
         {
             first.push_back(elem.first);
