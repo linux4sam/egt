@@ -100,7 +100,11 @@ bool FileDialog::list_files(const std::string& filepath)
 
 void FileDialog::list_item_selected(int index)
 {
-    auto fselect = dynamic_cast<StringItem*>(m_flist.item_at(index).get())->text();
+    auto item = dynamic_cast<StringItem*>(m_flist.item_at(index).get());
+    if (!item)
+        return;
+
+    auto fselect = item->text();
 
     EGTLOG_DEBUG("FileDialog : File Selected is : {}", fselect);
 
