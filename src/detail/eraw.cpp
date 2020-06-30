@@ -15,14 +15,12 @@ namespace detail
 
 shared_cairo_surface_t load_eraw(const std::string& filename)
 {
-    ErawImage e;
-    return e.load(filename);
+    return ErawImage::load(filename);
 }
 
 shared_cairo_surface_t load_eraw(const unsigned char* buf, size_t len)
 {
-    ErawImage e;
-    return e.load(buf, len);
+    return ErawImage::load(buf, len);
 }
 
 }

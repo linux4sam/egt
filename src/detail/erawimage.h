@@ -42,7 +42,6 @@ static_assert(endian::native == endian::little,
 class ErawImage
 {
 private:
-    static constexpr uint32_t egt_magic = 0x50502AA2;
 
 #ifdef __arm__
     static inline void memset32(uint32_t* data, uint32_t value, size_t count)
@@ -84,7 +83,12 @@ private:
 
 public:
 
-    shared_cairo_surface_t load(const std::string& filename)
+    static constexpr uint32_t egt_magic()
+    {
+        return 0x50502AA2;
+    }
+
+    static shared_cairo_surface_t load(const std::string& filename)
     {
         std::ifstream i(filename, std::ios_base::binary);
         if (!i)
@@ -94,7 +98,7 @@ public:
         alignas(4) uint32_t height = 0;
         alignas(4) uint32_t reserved = 0;
         i.read(reinterpret_cast<char*>(&magic), sizeof(magic));
-        if (magic != egt_magic)
+        if (magic != egt_magic())
             return nullptr;
         if (!i.read(reinterpret_cast<char*>(&width), sizeof(width)) ||
             !i.read(reinterpret_cast<char*>(&height), sizeof(height)) ||
@@ -141,7 +145,7 @@ public:
         return surface;
     }
 
-    shared_cairo_surface_t load(const unsigned char* buf, size_t len)
+    static shared_cairo_surface_t load(const unsigned char* buf, size_t len)
     {
         const auto buf_end = buf + len;
         alignas(4) uint32_t magic = 0;
@@ -151,7 +155,7 @@ public:
         buf = readw(buf, magic, buf_end);
         if (!buf)
             return nullptr;
-        if (magic != egt_magic)
+        if (magic != egt_magic())
             return nullptr;
         buf = readw(buf, width, buf_end);
         if (!buf)
@@ -201,7 +205,7 @@ public:
         return surface;
     }
 
-    static uint16_t next_diff_block(uint32_t* data, uint32_t* end)
+    static uint16_t next_diff_block(uint32_t* data, const uint32_t* end)
     {
         if (end - data > 0x7fff)
             end = data + 0x7fff;
@@ -217,7 +221,7 @@ public:
         return ptr - data;
     }
 
-    static uint16_t next_same_block(uint32_t* data, uint32_t* end, uint32_t& value)
+    static uint16_t next_same_block(uint32_t* data, const uint32_t* end, uint32_t& value)
     {
         if (end - data > 0x7fff)
             end = data + 0x7fff;
@@ -231,10 +235,11 @@ public:
         return 0;
     }
 
-    void save(const std::string& path, unsigned char* data, uint32_t width, uint32_t height)
+    static void save(const std::string& path, unsigned char* data, uint32_t width, uint32_t height)
     {
         std::ofstream o(path, std::ios_base::binary);
-        o.write(reinterpret_cast<const char*>(&egt_magic), sizeof(egt_magic));
+        const auto magic = egt_magic();
+        o.write(reinterpret_cast<const char*>(&magic), sizeof(magic));
         o.write(reinterpret_cast<const char*>(&width), sizeof(width));
         o.write(reinterpret_cast<const char*>(&height), sizeof(height));
         uint32_t reserved = 0;
@@ -273,8 +278,6 @@ public:
     }
 
 };
-
-constexpr uint32_t ErawImage::egt_magic;
 
 }
 }
