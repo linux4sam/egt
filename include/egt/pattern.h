@@ -23,6 +23,29 @@ namespace egt
 inline namespace v1
 {
 
+/*
+ * gcc < 7.2 with c++14 support contains a bug dealing with constexpr on some
+ * member functions.  clang seems to handle this correctly.
+ *
+ *     pattern.h:88:27: error: enclosing class of constexpr non-static member
+ *         function ‘egt::v1::Pattern::operator egt::v1::Color() const’ is not a literal type
+ *
+ * This is further explained here:  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=66297
+ *
+ * Conditionally use constexpr in this case.
+ */
+#if defined(__clang__)
+#  define EGT_PATTERN_CONSTEXPR constexpr
+#elif defined(__GNUC__)
+#  if (__GNUC__ < 7 || (__GNUC__ == 7 && __GNUC_MINOR__ < 2))
+#    define EGT_PATTERN_CONSTEXPR
+#  else
+#    define EGT_PATTERN_CONSTEXPR constexpr
+#  endif
+#else
+#  define EGT_PATTERN_CONSTEXPR constexpr
+#endif
+
 /**
  * A Pattern which can store one or more colors at different offsets (steps)
  * which can be used to create complex gradients.
@@ -76,7 +99,7 @@ public:
      * Get the first color of the pattern.
      */
     // NOLINTNEXTLINE(hicpp-explicit-conversions, google-explicit-constructor)
-    constexpr operator Color() const
+    EGT_PATTERN_CONSTEXPR operator Color() const
     {
         return color();
     }
@@ -84,7 +107,7 @@ public:
     /**
      * Get the first color of the pattern.
      */
-    constexpr Color color()
+    EGT_PATTERN_CONSTEXPR Color color()
     {
         return m_color;
     }
@@ -92,7 +115,7 @@ public:
     /**
      * Get the first color of the pattern.
      */
-    constexpr const Color& color() const
+    EGT_PATTERN_CONSTEXPR const Color& color() const
     {
         return m_color;
     }
