@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_DETAIL_PLPLOTIMPL_H
-#define EGT_DETAIL_PLPLOTIMPL_H
+#ifndef EGT_SRC_DETAIL_CHARTS_PLPLOTIMPL_H
+#define EGT_SRC_DETAIL_CHARTS_PLPLOTIMPL_H
 
 #include "egt/chart.h"
 #include "egt/painter.h"
@@ -79,7 +79,7 @@ protected:
     std::string m_ylabel;
     std::string m_title;
 
-    /**
+    /*
      * plenv
      * m_xmin and m_xmax cannot be same
      * m_ymin and m_ymax cannot be same

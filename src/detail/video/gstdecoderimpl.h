@@ -3,16 +3,16 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_DETAIL_VIDEO_GSTDECODERIMPL_H
-#define EGT_DETAIL_VIDEO_GSTDECODERIMPL_H
+#ifndef EGT_SRC_DETAIL_VIDEO_GSTDECODERIMPL_H
+#define EGT_SRC_DETAIL_VIDEO_GSTDECODERIMPL_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
-#include <egt/geometry.h>
-#include <egt/painter.h>
-#include <egt/video.h>
+#include "egt/geometry.h"
+#include "egt/painter.h"
+#include "egt/video.h"
 #include <gst/gst.h>
 
 #ifdef HAVE_GSTREAMER_PBUTILS

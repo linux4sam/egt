@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_DETAIL_ERAW_H
-#define EGT_DETAIL_ERAW_H
+#ifndef EGT_SRC_DETAIL_ERAW_H
+#define EGT_SRC_DETAIL_ERAW_H
 
 #include <egt/geometry.h>
 #include <egt/types.h>

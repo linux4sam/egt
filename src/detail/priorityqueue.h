@@ -8,8 +8,8 @@
  * Distributed under the Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
-#ifndef EGT_DETAIL_PRIORITYQUEUE_H
-#define EGT_DETAIL_PRIORITYQUEUE_H
+#ifndef EGT_SRC_DETAIL_PRIORITYQUEUE_H
+#define EGT_SRC_DETAIL_PRIORITYQUEUE_H
 
 #include <egt/asio.hpp>
 #include <functional>
@@ -36,7 +36,7 @@ public:
 
     void add(priorities priority, std::function<void()> function)
     {
-        m_handlers.push(queued_handler(priority, function));
+        m_handlers.push(queued_handler(priority, std::move(function)));
     }
 
     void execute_all()
@@ -92,7 +92,7 @@ private:
     {
     public:
         queued_handler(priorities p, std::function<void()> f)
-            : m_priority(p), m_function(f)
+            : m_priority(p), m_function(std::move(f))
         {
         }
 

@@ -3,16 +3,16 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_DETAIL_EGTLOG_H
-#define EGT_DETAIL_EGTLOG_H
+#ifndef EGT_SRC_DETAIL_EGTLOG_H
+#define EGT_SRC_DETAIL_EGTLOG_H
 
 /**
  * @file
  * @brief EGT logger interface.
  */
 
-#include "egt/detail/meta.h"
 #include "detail/fmt.h"
+#include "egt/detail/meta.h"
 #include <chrono>
 
 #define EGTLOG_LEVEL_TRACE 0

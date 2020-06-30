@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_DETAIL_ASIOALLOCATOR_H
-#define EGT_DETAIL_ASIOALLOCATOR_H
+#ifndef EGT_SRC_DETAIL_ASIOALLOCATOR_H
+#define EGT_SRC_DETAIL_ASIOALLOCATOR_H
 
 #include <array>
 #include <type_traits>
@@ -20,12 +20,12 @@ namespace detail
 // It contains a single block of memory which may be returned for allocation
 // requests. If the memory is in use when an allocation request is made, the
 // allocator delegates allocation to the global heap.
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init, hicpp-member-init)
 class HandlerAllocator
 {
 public:
-    HandlerAllocator()
-        : m_in_use(false)
-    {}
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init, hicpp-member-init)
+    HandlerAllocator() noexcept = default;
 
     void* allocate(std::size_t size)
     {
@@ -57,7 +57,7 @@ private:
     std::array<char, 1024> m_storage;
 
     // Whether the handler-based custom allocation storage has been used.
-    bool m_in_use;
+    bool m_in_use{false};
 };
 
 // Wrapper class template for handler objects to allow handler memory

@@ -14,7 +14,6 @@
 #include "egt/event.h"
 #include "egt/keycode.h"
 #include <array>
-#include <cassert>
 
 #ifdef HAVE_XKBCOMMON
 #include <xkbcommon/xkbcommon.h>

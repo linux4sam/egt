@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_DETAIL_BASICWINDOW_H
-#define EGT_DETAIL_BASICWINDOW_H
+#ifndef EGT_DETAIL_WINDOW_BASICWINDOW_H
+#define EGT_DETAIL_WINDOW_BASICWINDOW_H
 
 #include "detail/window/windowimpl.h"
 #include "egt/window.h"

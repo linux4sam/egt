@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_DETAIL_WINDOWIMPL_H
-#define EGT_DETAIL_WINDOWIMPL_H
+#ifndef EGT_DETAIL_WINDOW_WINDOWIMPL_H
+#define EGT_DETAIL_WINDOW_WINDOWIMPL_H
 
 #include <egt/geometry.h>
 

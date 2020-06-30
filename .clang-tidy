@@ -37,6 +37,7 @@ Checks: "*,\
 -hicpp-uppercase-literal-suffix,\
 -hicpp-vararg,\
 -llvm-namespace-comment,\
+-llvm-header-guard,\
 -misc-non-private-member-variables-in-classes,\
 -modernize-avoid-c-arrays,\
 -modernize-use-trailing-return-type,\
@@ -48,6 +49,7 @@ Checks: "*,\
 -readability-uppercase-literal-suffix,\
 "
 HeaderFilterRegex: '^.*include/egt/.*h$$'
+HeaderFilterRegex: '^.*src/.*h$$'
 AnalyzeTemporaryDtors: false
 ...
 #

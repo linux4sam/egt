@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_DETAIL_SPRITEIMPL_H
-#define EGT_DETAIL_SPRITEIMPL_H
+#ifndef EGT_SRC_DETAIL_SPRITEIMPL_H
+#define EGT_SRC_DETAIL_SPRITEIMPL_H
 
 #include <egt/geometry.h>
 #include <egt/image.h>
@@ -25,9 +25,9 @@ namespace detail
 class SpriteImpl
 {
 public:
-    SpriteImpl(const Image& image, const Size& frame_size,
+    SpriteImpl(Image image, const Size& frame_size,
                int framecount, const Point& frame_point)
-        : m_image(image),
+        : m_image(std::move(image)),
           m_frame(frame_size),
           m_index(0)
     {

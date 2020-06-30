@@ -84,7 +84,7 @@ static const int B64index[256] =
     41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51
 };
 
-std::string base64_decode(const void* data, const size_t len)
+std::string base64_decode(const void* data, size_t len)
 {
     auto p = static_cast<const unsigned char*>(data);
     int pad = len > 0 && (len % 4 || p[len - 1] == '=');

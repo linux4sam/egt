@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_DETAIL_BASE64_H
-#define EGT_DETAIL_BASE64_H
+#ifndef EGT_SRC_DETAIL_BASE64_H
+#define EGT_SRC_DETAIL_BASE64_H
 
 #include <string>
 
@@ -25,7 +25,7 @@ namespace detail
  */
 std::string base64_encode(const unsigned char* src, size_t len);
 
-std::string base64_decode(const void* data, const size_t len);
+std::string base64_decode(const void* data, size_t len);
 
 }
 }
