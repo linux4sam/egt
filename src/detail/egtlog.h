@@ -76,7 +76,7 @@ using basic_string_view_t = fmt::basic_string_view<T>;
 using string_view_t = basic_string_view_t<char>;
 
 template<typename... Args>
-inline void log(int level, const Args& ... args)
+void log(int level, const Args& ... args)
 {
     if (loglevel() <= level)
     {
@@ -101,9 +101,9 @@ constexpr const char* file_name(const char* path)
 }
 
 template<typename... Args>
-inline void log(int level, const char* file, int line,
-                const std::chrono::time_point<std::chrono::steady_clock>& t,
-                const Args& ... args)
+void log(int level, const char* file, int line,
+         const std::chrono::time_point<std::chrono::steady_clock>& t,
+         const Args& ... args)
 {
     if (loglevel() <= level)
     {
