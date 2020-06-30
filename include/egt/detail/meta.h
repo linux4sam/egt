@@ -20,23 +20,28 @@
 #include <type_traits>
 #include <utility>
 
-#define likely(x)       __builtin_expect((x), 1)
-#define unlikely(x)     __builtin_expect((x), 0)
+#ifdef egt_likely
+#  define egt_likely(x)       __builtin_expect((x), 1)
+#endif
+
+#ifndef egt_unlikely
+#  define egt_unlikely(x)     __builtin_expect((x), 0)
+#endif
 
 #if defined _WIN32 || defined __CYGWIN__
-#define EGT_HELPER_DLL_IMPORT __declspec(dllimport)
-#define EGT_HELPER_DLL_EXPORT __declspec(dllexport)
-#define EGT_HELPER_DLL_LOCAL
+#  define EGT_HELPER_DLL_IMPORT __declspec(dllimport)
+#  define EGT_HELPER_DLL_EXPORT __declspec(dllexport)
+#  define EGT_HELPER_DLL_LOCAL
 #else
-#if __GNUC__ >= 4
-#define EGT_HELPER_DLL_IMPORT __attribute__ ((visibility ("default")))
-#define EGT_HELPER_DLL_EXPORT __attribute__ ((visibility ("default")))
-#define EGT_HELPER_DLL_LOCAL  __attribute__ ((visibility ("hidden")))
-#else
-#define EGT_HELPER_DLL_IMPORT
-#define EGT_HELPER_DLL_EXPORT
-#define EGT_HELPER_DLL_LOCAL
-#endif
+#  if __GNUC__ >= 4
+#    define EGT_HELPER_DLL_IMPORT __attribute__ ((visibility ("default")))
+#    define EGT_HELPER_DLL_EXPORT __attribute__ ((visibility ("default")))
+#    define EGT_HELPER_DLL_LOCAL  __attribute__ ((visibility ("hidden")))
+#  else
+#    define EGT_HELPER_DLL_IMPORT
+#    define EGT_HELPER_DLL_EXPORT
+#    define EGT_HELPER_DLL_LOCAL
+#  endif
 #endif
 
 // Now we use the generic helper definitions above to define EGT_API and EGT_LOCAL.
@@ -44,41 +49,38 @@
 // EGT_LOCAL is used for non-api symbols.
 
 #ifndef EGT_STATIC
-#define EGT_DLL
+#  define EGT_DLL
 #endif
 
 #ifdef EGT_DLL // defined if EGT is compiled as a DLL
-#ifdef EGT_DLL_EXPORTS // defined if we are building the EGT DLL (instead of using it)
-#define EGT_API EGT_HELPER_DLL_EXPORT
-#else
-#define EGT_API EGT_HELPER_DLL_IMPORT
-#endif // EGT_DLL_EXPORTS
-#define EGT_LOCAL EGT_HELPER_DLL_LOCAL
+#  ifdef EGT_DLL_EXPORTS // defined if we are building the EGT DLL (instead of using it)
+#    define EGT_API EGT_HELPER_DLL_EXPORT
+#  else
+#    define EGT_API EGT_HELPER_DLL_IMPORT
+#  endif // EGT_DLL_EXPORTS
+#  define EGT_LOCAL EGT_HELPER_DLL_LOCAL
 #else // EGT_DLL is not defined: this means EGT is a static lib.
-#define EGT_API
-#define EGT_LOCAL
+#  define EGT_API
+#  define EGT_LOCAL
 #endif // EGT_DLL
 
 #ifndef SWIG
-#define EGT_DEPRECATED [[deprecated]]
-
-#ifdef __has_cpp_attribute
-#define EGT_HAVE_ATTRIBUTE(x) __has_cpp_attribute(x)
+#  define EGT_DEPRECATED [[deprecated]]
+#  ifdef __has_cpp_attribute
+#    define EGT_HAVE_ATTRIBUTE(x) __has_cpp_attribute(x)
+#  else
+#    define EGT_HAVE_ATTRIBUTE(x) 0
+#  endif
+#  if EGT_HAVE_ATTRIBUTE(nodiscard) && !defined(__clang__)
+#    define EGT_NODISCARD [[nodiscard]]
+#  elif EGT_HAVE_ATTRIBUTE(warn_unused_result)
+#    define EGT_NODISCARD __attribute__((warn_unused_result))
+#  else
+#    define EGT_NODISCARD
+#  endif
 #else
-#define EGT_HAVE_ATTRIBUTE(x) 0
-#endif
-
-#if EGT_HAVE_ATTRIBUTE(nodiscard) && !defined(__clang__)
-#define EGT_NODISCARD [[nodiscard]]
-#elif EGT_HAVE_ATTRIBUTE(warn_unused_result)
-#define EGT_NODISCARD __attribute__((warn_unused_result))
-#else
-#define EGT_NODISCARD
-#endif
-
-#else
-#define EGT_DEPRECATED
-#define EGT_NODISCARD
+#  define EGT_DEPRECATED
+#  define EGT_NODISCARD
 #endif
 
 namespace egt

@@ -327,7 +327,7 @@ void Widget::damage()
 
 void Widget::damage(const Rect& rect)
 {
-    if (unlikely(rect.empty()))
+    if (egt_unlikely(rect.empty()))
         return;
 
     // don't damage if not even visible

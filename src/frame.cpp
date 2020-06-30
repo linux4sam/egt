@@ -190,7 +190,7 @@ void Frame::add_damage(const Rect& rect)
     if (!has_screen())
         return;
 
-    if (unlikely(rect.empty()))
+    if (egt_unlikely(rect.empty()))
         return;
 
     // not allowed to damage() in draw()
@@ -210,7 +210,7 @@ void Frame::add_damage(const Rect& rect)
 
 void Frame::damage(const Rect& rect)
 {
-    if (unlikely(rect.empty()))
+    if (egt_unlikely(rect.empty()))
         return;
 
     // don't damage if not even visible

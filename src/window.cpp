@@ -162,7 +162,7 @@ void Window::do_draw()
 void Window::resize(const Size& size)
 {
     // cannot resize if we are screen
-    if (unlikely(Application::instance().m_main_window == this))
+    if (egt_unlikely(Application::instance().m_main_window == this))
         return;
 
     if (m_impl)
@@ -172,7 +172,7 @@ void Window::resize(const Size& size)
 void Window::scale(float hscale, float vscale)
 {
     // cannot resize if we are screen
-    if (unlikely(Application::instance().m_main_window == this))
+    if (egt_unlikely(Application::instance().m_main_window == this))
         return;
 
     if (m_impl)

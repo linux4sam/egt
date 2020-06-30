@@ -72,7 +72,7 @@ void InputTslib::handle_read(const asio::error_code& error)
     struct ts_sample_mt** samp_mt = m_impl->samp_mt;
 
     int ret = ts_read_mt(m_impl->ts, samp_mt, CHANNELS, SAMPLE_COUNT);
-    if (unlikely(ret < 0))
+    if (egt_unlikely(ret < 0))
     {
         detail::warn("ts_read_mt error");
         return;
@@ -85,10 +85,10 @@ void InputTslib::handle_read(const asio::error_code& error)
         for (int i = 0; i < CHANNELS; i++)
         {
 #ifdef TSLIB_MT_VALID
-            if (unlikely(!(samp_mt[j][i].valid & TSLIB_MT_VALID)))
+            if (egt_unlikely(!(samp_mt[j][i].valid & TSLIB_MT_VALID)))
                 continue;
 #else
-            if (unlikely(samp_mt[j][i].valid < 1))
+            if (egt_unlikely(samp_mt[j][i].valid < 1))
                 continue;
 #endif
 
@@ -108,7 +108,7 @@ void InputTslib::handle_read(const asio::error_code& error)
             const auto slot = samp_mt[j][i].slot;
             const auto pen_down = samp_mt[j][i].pen_down;
 
-            if (unlikely(x < 0 || y < 0))
+            if (egt_unlikely(x < 0 || y < 0))
                 continue;
 
             if (m_active[slot])
