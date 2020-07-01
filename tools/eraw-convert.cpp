@@ -23,10 +23,16 @@ int main(int argc, char** argv)
     options.parse_positional({"positional"});
     auto result = options.parse(argc, argv);
 
-    if (result.count("help") || result.count("positional") != 2)
+    if (result.count("help"))
     {
         std::cout << options.help() << std::endl;
         return 0;
+    }
+
+    if (result.count("positional") != 2)
+    {
+        std::cerr << options.help() << std::endl;
+        return 1;
     }
 
     auto& positional = result["positional"].as<std::vector<std::string>>();
@@ -49,14 +55,15 @@ int main(int argc, char** argv)
     }
     else
     {
-        std::cout << "unknown input-format " <<
+        std::cerr << "error: unknown input-format " <<
                   result["input-format"].as<std::string>() << std::endl;
         return 1;
     }
 
-    if (!surface)
+    if (!surface ||
+        cairo_surface_status(surface.get()) != CAIRO_STATUS_SUCCESS)
     {
-        std::cout << "unable to open input " << in << std::endl;
+        std::cerr << "error: unable to open input " << in << std::endl;
         return 1;
     }
 
@@ -73,16 +80,26 @@ int main(int argc, char** argv)
     {
         auto size = width * height  * sizeof(uint32_t);
         std::ofstream o(out, std::ios_base::binary);
+        if (!o.is_open())
+        {
+            std::cerr << "error: unable to write to file file " << out << std::endl;
+            return 1;
+        }
+
         o.write(reinterpret_cast<const char*>(data), size);
         o.close();
     }
     else if (result["output-format"].as<std::string>() == "png")
     {
-        cairo_surface_write_to_png(surface.get(), out.c_str());
+        if (cairo_surface_write_to_png(surface.get(), out.c_str()) != CAIRO_STATUS_SUCCESS)
+        {
+            std::cerr << "error: unable to write to file file " << out << std::endl;
+            return 1;
+        }
     }
     else
     {
-        std::cout << "unknown output-format " <<
+        std::cerr << "error: unknown output-format " <<
                   result["output-format"].as<std::string>() << std::endl;
         return 1;
     }
