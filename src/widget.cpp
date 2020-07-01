@@ -630,6 +630,8 @@ void Widget::serialize(Serializer& serializer) const
         serializer.add_property("borderflags", border_flags().to_string());
     if (!autoresize())
         serializer.add_property("autoresize", autoresize());
+    if (checked())
+        serializer.add_property("checked", checked());
     if (disabled())
         serializer.add_property("disabled", disabled());
     if (grab_mouse())
@@ -683,6 +685,9 @@ void Widget::deserialize(const std::string& name, const std::string& value,
         break;
     case detail::hash("autoresize"):
         autoresize(egt::detail::from_string(value));
+        break;
+    case detail::hash("checked"):
+        checked(egt::detail::from_string(value));
         break;
     case detail::hash("disabled"):
         disabled(egt::detail::from_string(value));
