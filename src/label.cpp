@@ -250,8 +250,8 @@ void ImageLabel::serialize(Serializer& serializer) const
     serializer.add_property("showlabel", show_label());
     if (!m_image.empty())
         m_image.serialize("image", serializer);
-
-    // TODO m_image_align
+    if (!image_align().empty())
+        serializer.add_property("image_align", image_align());
 }
 
 void ImageLabel::deserialize(const std::string& name, const std::string& value,
@@ -266,6 +266,9 @@ void ImageLabel::deserialize(const std::string& name, const std::string& value,
         break;
     case detail::hash("image"):
         m_image.deserialize(name, value, attrs);
+        break;
+    case detail::hash("image_align"):
+        image_align(AlignFlags(value));
         break;
     default:
         Label::deserialize(name, value, attrs);
