@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<egt>
+	<widgets>
+		<widget name="Window0" type="TopWindow">
+			<property name="width">800</property>
+			<property name="height">480</property>
+			<property name="fillflags">solid</property>
+			<widget name="StaticGrid1" type="StaticGrid">
+				<property name="grid_flags"/>
+				<property name="column_priority">false</property>
+				<property name="n_col">2</property>
+				<property name="n_row">1</property>
+				<property name="width">800</property>
+				<property name="height">480</property>
+				<property name="align">expand_horizontal|expand_vertical</property>
+				<property name="border">5</property>
+				<widget name="StaticGrid2" type="StaticGrid">
+					<property name="grid_flags"/>
+					<property name="column_priority">false</property>
+					<property name="n_col">1</property>
+					<property name="n_row">10</property>
+					<property name="x">4</property>
+					<property name="y">4</property>
+					<property name="width">392</property>
+					<property name="height">470</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
+					<property name="border">5</property>
+					<widget name="TextBox3" type="TextBox">
+						<property name="x">4</property>
+						<property name="y">4</property>
+						<property name="width">382</property>
+						<property name="height">41</property>
+						<property name="align">expand_horizontal|expand_vertical</property>
+						<property name="padding">5</property>
+						<property name="border">2</property>
+						<property name="fillflags">blend</property>
+						<property name="text">text 1</property>
+						<property name="text_align">expand_horizontal|expand_vertical</property>
+						<property name="text_flags">fit_to_width</property>
+						<property name="cursor">6</property>
+					</widget>
+					<widget name="TextBox4" type="TextBox">
+						<property name="x">4</property>
+						<property name="y">50</property>
+						<property name="width">382</property>
+						<property name="height">41</property>
+						<property name="align">expand_horizontal|expand_vertical</property>
+						<property name="disabled">true</property>
+						<property name="padding">5</property>
+						<property name="border">2</property>
+						<property name="fillflags">blend</property>
+						<property name="text">text 2 disabled</property>
+						<property name="text_align">expand_horizontal|expand_vertical</property>
+						<property name="cursor">15</property>
+					</widget>
+					<widget name="TextBox5" type="TextBox">
+						<property name="x">4</property>
+						<property name="y">96</property>
+						<property name="width">382</property>
+						<property name="height">41</property>
+						<property name="align">expand_horizontal|expand_vertical</property>
+						<property name="borderflags">top|bottom</property>
+						<property name="padding">5</property>
+						<property name="border">2</property>
+						<property name="fillflags">blend</property>
+						<property name="text">right aligned text</property>
+						<property name="text_align">right</property>
+						<property name="cursor">18</property>
+					</widget>
+					<widget name="TextBox6" type="TextBox">
+						<property name="x">4</property>
+						<property name="y">142</property>
+						<property name="width">382</property>
+						<property name="height">41</property>
+						<property name="align">expand_horizontal|expand_vertical</property>
+						<property name="borderflags">bottom</property>
+						<property name="disabled">true</property>
+						<property name="padding">5</property>
+						<property name="border">2</property>
+						<property name="fillflags">blend</property>
+						<property name="text">text 4</property>
+						<property name="text_align">expand_horizontal|expand_vertical</property>
+						<property name="cursor">6</property>
+					</widget>
+					<widget name="TextBox7" type="TextBox">
+						<property name="x">4</property>
+						<property name="y">188</property>
+						<property name="width">382</property>
+						<property name="height">41</property>
+						<property name="align">expand_horizontal|expand_vertical</property>
+						<property name="padding">5</property>
+						<property name="border">2</property>
+						<property name="fillflags">blend</property>
+						<property name="text">all characters allowed</property>
+						<property name="text_align">expand_horizontal|expand_vertical</property>
+						<property name="cursor">22</property>
+					</widget>
+					<widget name="TextBox8" type="TextBox">
+						<property name="x">4</property>
+						<property name="y">234</property>
+						<property name="width">382</property>
+						<property name="height">41</property>
+						<property name="align">expand_horizontal|expand_vertical</property>
+						<property name="padding">5</property>
+						<property name="border">2</property>
+						<property name="fillflags">blend</property>
+						<property name="text">abc123 only</property>
+						<property name="text_align">expand_horizontal|expand_vertical</property>
+						<property name="cursor">11</property>
+					</widget>
+				</widget>
+				<widget name="TextBox9" type="TextBox">
+					<property name="x">401</property>
+					<property name="y">4</property>
+					<property name="width">392</property>
+					<property name="height">470</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
+					<property name="padding">5</property>
+					<property name="border">2</property>
+					<property name="fillflags">blend</property>
+					<property name="text">The Ensemble Graphics Toolkit (EGT) is a free and open-source C++ GUI widget  toolkit for Microchip AT91/SAMA5 microprocessors.  It is used to develop graphical applications for Linux.  EGT provides modern and complete GUI functionality, look-and-feel, and performance.
+
+This multi-line TextBox fully supports UTF-8 encoding.  See: ←↑→↓</property>
+					<property name="text_align">expand_horizontal|expand_vertical</property>
+					<property name="text_flags">multiline|word_wrap</property>
+					<property name="cursor">336</property>
+					<property name="selection_start">4</property>
+					<property name="selection_length">25</property>
+				</widget>
+			</widget>
+		</widget>
+	</widgets>
+</egt>
+

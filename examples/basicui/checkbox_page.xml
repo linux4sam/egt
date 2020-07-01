@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<egt>
+	<widgets>
+		<widget name="Window0" type="TopWindow">
+			<property name="width">800</property>
+			<property name="height">480</property>
+			<property name="fillflags">solid</property>
+			<widget name="StaticGrid1" type="StaticGrid">
+				<property name="grid_flags"/>
+				<property name="column_priority">false</property>
+				<property name="n_col">3</property>
+				<property name="n_row">10</property>
+				<property name="width">800</property>
+				<property name="height">480</property>
+				<property name="align">expand_horizontal|expand_vertical</property>
+				<property name="border">5</property>
+				<widget name="ToggleBox2" type="ToggleBox">
+					<property name="x">4</property>
+					<property name="y">4</property>
+					<property name="width">260</property>
+					<property name="height">42</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
+					<property name="grab_mouse">true</property>
+					<property name="padding">5</property>
+					<property name="border">2</property>
+					<property name="fillflags">blend</property>
+					<property name="text_align">center_horizontal|center_vertical|left</property>
+					<property name="off_text">Off</property>
+					<property name="on_text">Off</property>
+					<property name="enable_disable">1</property>
+				</widget>
+				<widget name="ToggleBox3" type="ToggleBox">
+					<property name="x">269</property>
+					<property name="y">4</property>
+					<property name="width">260</property>
+					<property name="height">42</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
+					<property name="checked">true</property>
+					<property name="grab_mouse">true</property>
+					<property name="padding">5</property>
+					<property name="border">2</property>
+					<property name="fillflags">blend</property>
+					<property name="text_align">center_horizontal|center_vertical|left</property>
+					<property name="off_text"/>
+					<property name="on_text"/>
+					<property name="enable_disable">1</property>
+				</widget>
+				<widget name="ToggleBox4" type="ToggleBox">
+					<property name="x">534</property>
+					<property name="y">4</property>
+					<property name="width">260</property>
+					<property name="height">42</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
+					<property name="disabled">true</property>
+					<property name="grab_mouse">true</property>
+					<property name="padding">5</property>
+					<property name="border">2</property>
+					<property name="fillflags">blend</property>
+					<property name="text_align">center_horizontal|center_vertical|left</property>
+					<property name="off_text"/>
+					<property name="on_text"/>
+					<property name="enable_disable">1</property>
+				</widget>
+				<widget name="CheckBox5" type="CheckBox">
+					<property name="x">4</property>
+					<property name="y">51</property>
+					<property name="width">260</property>
+					<property name="height">42</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
+					<property name="grab_mouse">true</property>
+					<property name="padding">5</property>
+					<property name="text">checkbox 1</property>
+					<property name="text_align">center_horizontal|center_vertical|left</property>
+				</widget>
+				<widget name="CheckBox6" type="CheckBox">
+					<property name="x">269</property>
+					<property name="y">51</property>
+					<property name="width">260</property>
+					<property name="height">42</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
+					<property name="grab_mouse">true</property>
+					<property name="padding">5</property>
+					<property name="text">checkbox 2</property>
+					<property name="text_align">center_horizontal|center_vertical|left</property>
+				</widget>
+				<widget name="CheckBox7" type="CheckBox">
+					<property name="x">534</property>
+					<property name="y">51</property>
+					<property name="width">260</property>
+					<property name="height">42</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
+					<property name="grab_mouse">true</property>
+					<property name="padding">5</property>
+					<property name="text">checkbox 3</property>
+					<property name="text_align">center_horizontal|center_vertical|left</property>
+				</widget>
+				<widget name="CheckBox8" type="CheckBox">
+					<property name="x">4</property>
+					<property name="y">98</property>
+					<property name="width">260</property>
+					<property name="height">42</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
+					<property name="disabled">true</property>
+					<property name="grab_mouse">true</property>
+					<property name="padding">5</property>
+					<property name="text">Disabled</property>
+					<property name="text_align">center_horizontal|center_vertical|left</property>
+				</widget>
+				<widget name="RadioBox9" type="RadioBox">
+					<property name="x">269</property>
+					<property name="y">98</property>
+					<property name="width">260</property>
+					<property name="height">42</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
+					<property name="grab_mouse">true</property>
+					<property name="padding">5</property>
+					<property name="text">radiobox 1</property>
+					<property name="text_align">center_horizontal|center_vertical|left</property>
+				</widget>
+				<widget name="RadioBox10" type="RadioBox">
+					<property name="x">534</property>
+					<property name="y">98</property>
+					<property name="width">260</property>
+					<property name="height">42</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
+					<property name="checked">true</property>
+					<property name="grab_mouse">true</property>
+					<property name="padding">5</property>
+					<property name="text">radiobox 2</property>
+					<property name="text_align">center_horizontal|center_vertical|left</property>
+				</widget>
+				<widget name="RadioBox11" type="RadioBox">
+					<property name="x">4</property>
+					<property name="y">145</property>
+					<property name="width">260</property>
+					<property name="height">42</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
+					<property name="disabled">true</property>
+					<property name="grab_mouse">true</property>
+					<property name="padding">5</property>
+					<property name="text">Disabled</property>
+					<property name="text_align">center_horizontal|center_vertical|left</property>
+				</widget>
+			</widget>
+		</widget>
+	</widgets>
+</egt>
+
