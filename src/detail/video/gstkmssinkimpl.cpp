@@ -55,6 +55,8 @@ GstKmsSinkImpl::GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool de
         if (std::getenv("GST_PLUGIN_SYSTEM_PATH"))
         {
             path = std::getenv("GST_PLUGIN_SYSTEM_PATH");
+            if (!path.empty() && (path.back() != '/'))
+                path.back() = '/';
         }
         else if (detail::exists("/usr/lib/gstreamer-1.0/"))
         {

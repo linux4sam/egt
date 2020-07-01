@@ -12,6 +12,7 @@
 #include "detail/camera/gstcaptureimpl.h"
 #include "detail/video/gstmeta.h"
 #include "egt/app.h"
+#include "egt/detail/filesystem.h"
 #include "egt/detail/meta.h"
 #include "egt/types.h"
 #include <exception>
@@ -68,23 +69,39 @@ CaptureImpl::CaptureImpl(experimental::CameraCapture& interface,
 
         auto plugins =
         {
-            "/usr/lib/gstreamer-1.0/libgstcoreelements.so",
-            "/usr/lib/gstreamer-1.0/libgsttypefindfunctions.so",
-            "/usr/lib/gstreamer-1.0/libgstplayback.so",
-            "/usr/lib/gstreamer-1.0/libgstapp.so",
-            "/usr/lib/gstreamer-1.0/libgstvideo4linux2.so",
-            "/usr/lib/gstreamer-1.0/libgstvideoscale.so",
-            "/usr/lib/gstreamer-1.0/libgstvideoconvert.so",
-            "/usr/lib/gstreamer-1.0/libgstavi.so",
-            "/usr/lib/gstreamer-1.0/libgstmpegtsmux.so",
-            "/usr/lib/gstreamer-1.0/libgstlibav.so",
-            "/usr/lib/gstreamer-1.0/libgstvideoparsersbad.so",
+            "libgstcoreelements.so",
+            "libgsttypefindfunctions.so",
+            "libgstplayback.so",
+            "libgstapp.so",
+            "libgstvideo4linux2.so",
+            "libgstvideoscale.so",
+            "libgstvideoconvert.so",
+            "libgstavi.so",
+            "libgstmpegtsmux.so",
+            "libgstlibav.so",
+            "libgstvideoparsersbad.so",
         };
 
-        for (auto& plugin : plugins)
+        std::string path;
+        if (std::getenv("GST_PLUGIN_SYSTEM_PATH"))
+        {
+            path = std::getenv("GST_PLUGIN_SYSTEM_PATH");
+            if (!path.empty() && (path.back() != '/'))
+                path.back() = '/';
+        }
+        else if (detail::exists("/usr/lib/gstreamer-1.0/"))
+        {
+            path = "/usr/lib/gstreamer-1.0/";
+        }
+        else if (detail::exists("/usr/lib/x86_64-linux-gnu/gstreamer-1.0/"))
+        {
+            path = "/usr/lib/x86_64-linux-gnu/gstreamer-1.0/";
+        }
+
+        for (const auto& plugin : plugins)
         {
             GError* error = nullptr;
-            gst_plugin_load_file(plugin, &error);
+            gst_plugin_load_file(std::string(path + plugin).c_str(), &error);
             if (error)
             {
                 if (error->message)
