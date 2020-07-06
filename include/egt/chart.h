@@ -36,12 +36,7 @@ class EGT_API ChartBase: public Widget
 {
 public:
 
-    /**
-     * @param[in] rect Initial rectangle of the widget.
-     */
-    explicit ChartBase(const Rect& rect)
-        : Widget(rect)
-    {}
+    using Widget::Widget;
 
     /**
      * Flags used to control how a chart grid is drawn.
