@@ -61,17 +61,17 @@ public:
 
             color_label->on_event([this](egt::Event&)
             {
-                m_color = m_grid.get(m_grid.selected())->color(egt::Palette::ColorId::button_bg).color();
+                m_color = m_grid.get(m_grid.selected())->color(egt::Palette::ColorId::button_bg);
                 this->hide();
             }, egt::EventId::pointer_click);
         }
     }
 
-    const egt::Color& selected_color() const { return m_color; }
+    const egt::Pattern& selected_color() const { return m_color; }
 
 protected:
     egt::SelectableGrid m_grid;
-    egt::Color m_color{egt::Palette::red};
+    egt::Pattern m_color{egt::Palette::red};
 };
 
 class WidthPickerWindow : public egt::Popup
@@ -263,7 +263,7 @@ public:
 
     void draw(egt::Painter& painter, const egt::Rect& rect) override
     {
-        painter.set(color(egt::Palette::ColorId::bg).color());
+        painter.set(color(egt::Palette::ColorId::bg));
         painter.draw(rect);
         painter.fill();
 

@@ -37,7 +37,7 @@ int main(int argc, char** argv)
                             widget.text_align());
 
         // draw a shadow to an offset, but tint the real color and drop the alpha
-        auto color = widget.color(egt::Palette::ColorId::label_text).color();
+        auto color = widget.color(egt::Palette::ColorId::label_text).solid();
         auto shadow = color.tint(0.5);
         shadow.alphaf(0.3);
         painter.set(shadow);

@@ -182,6 +182,13 @@ void Pattern::radial(const Point& start, float start_radius,
     m_pattern.reset();
 }
 
+Color Pattern::first() const
+{
+    if (m_type != Type::solid && !m_impl->m_steps.empty())
+        return m_impl->m_steps[0].second;
+    return m_color;
+}
+
 Point Pattern::starting() const
 {
     if (m_impl)
@@ -266,10 +273,10 @@ void Pattern::create_pattern() const
     case Pattern::Type::solid:
     {
         m_pattern =
-            shared_cairo_pattern_t(cairo_pattern_create_rgba(color().redf(),
-                                   color().greenf(),
-                                   color().bluef(),
-                                   color().alphaf()),
+            shared_cairo_pattern_t(cairo_pattern_create_rgba(solid().redf(),
+                                   solid().greenf(),
+                                   solid().bluef(),
+                                   solid().alphaf()),
                                    cairo_pattern_destroy);
         break;
     }

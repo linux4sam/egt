@@ -120,7 +120,7 @@ public:
 
     void draw(egt::Painter& painter, const egt::Rect& rect) override
     {
-        painter.set(color(egt::Palette::ColorId::bg).color());
+        painter.set(color(egt::Palette::ColorId::bg));
         painter.draw(rect);
         painter.fill();
 

@@ -52,8 +52,8 @@ void Serializer::add_property(const std::string& name, double value,
 
 void Serializer::add_property(const std::string& name, const Pattern& value)
 {
-    // TODO: only works with a single color
-    auto color = value.color();
+    /// @todo This does not handle patterns properly.
+    auto color = value.solid();
     add_property(name, color.pixel32());
 }
 

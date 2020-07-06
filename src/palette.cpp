@@ -312,8 +312,9 @@ void Palette::serialize(const std::string& name, Serializer& serializer) const
                 {"group", detail::enum_to_string(x.first)},
             };
 
+            /// @todo This does not handle patterns properly.
             serializer.add_property(name,
-                                    y.second.color().hex(),
+                                    y.second.solid().hex(),
                                     attrs);
         }
     }

@@ -506,7 +506,7 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
 
     m_plstream->adv(0);
 
-    plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
+    plplot_color(m_interface.color(Palette::ColorId::button_bg).first());
 
     m_plstream->width(m_grid_width);
 
@@ -528,13 +528,13 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
         // set line width
         m_plstream->width(m_line_width);
 
-        plplot_color(m_interface.color(Palette::ColorId::button_fg).color());
+        plplot_color(m_interface.color(Palette::ColorId::button_fg).first());
 
         // plot
         m_plstream->line(m_xdata.size(), m_xdata.data(), m_ydata.data());
     }
 
-    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).color());
+    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).first());
 
 }
 
@@ -568,7 +568,7 @@ void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
 
     m_plstream->adv(0);
 
-    plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
+    plplot_color(m_interface.color(Palette::ColorId::button_bg).first());
 
     m_plstream->width(m_grid_width);
 
@@ -582,13 +582,13 @@ void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
 
     if (!m_xdata.empty() && !m_ydata.empty())
     {
-        plplot_color(m_interface.color(Palette::ColorId::button_fg).color());
+        plplot_color(m_interface.color(Palette::ColorId::button_fg).first());
 
         // draw points
         m_plstream->poin(m_xdata.size(), m_xdata.data(), m_ydata.data(), m_pointtype);
     }
 
-    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).color());
+    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).first());
 }
 
 PlPlotBarChart::PlPlotBarChart(BarChart& interface)
@@ -611,7 +611,7 @@ void PlPlotBarChart::plfbox(PLFLT x0, PLFLT y0)
     y[3] = 0.;
     m_plstream->fill(4, x, y);
     m_plstream->width(m_line_width);
-    plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
+    plplot_color(m_interface.color(Palette::ColorId::button_bg).first());
     m_plstream->lsty(1);
     m_plstream->line(4, x, y);
 }
@@ -642,7 +642,7 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
     m_plstream->adv(0);
 
     //set axis color.
-    plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
+    plplot_color(m_interface.color(Palette::ColorId::button_bg).first());
 
     m_plstream->width(m_grid_width);
 
@@ -679,7 +679,7 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
 
                 if (axis() >= 0)
                 {
-                    plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
+                    plplot_color(m_interface.color(Palette::ColorId::button_bg).first());
                     auto pos = static_cast<PLFLT>(i) / static_cast<PLFLT>(n);
                     m_plstream->mtex("b", 1.0, pos, 0, m_sdata.at(i).c_str());
                 }
@@ -691,7 +691,7 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
         }
     }
 
-    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).color());
+    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).first());
 }
 
 PlPlotHBarChart::PlPlotHBarChart(HorizontalBarChart& interface)
@@ -716,7 +716,7 @@ void PlPlotHBarChart::plfHbox(PLFLT x0, PLFLT y0)
 
     m_plstream->fill(4, x, y);
     m_plstream->width(m_line_width);
-    plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
+    plplot_color(m_interface.color(Palette::ColorId::button_bg).first());
     m_plstream->lsty(1);
     m_plstream->line(4, x, y);
 }
@@ -747,7 +747,7 @@ void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
     m_plstream->adv(0);
 
     //set axis color.
-    plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
+    plplot_color(m_interface.color(Palette::ColorId::button_bg).first());
 
     m_plstream->width(m_grid_width);
 
@@ -794,7 +794,7 @@ void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
         ++i;
     }
 
-    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).color());
+    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).first());
 }
 
 PlPlotPieChart::PlPlotPieChart(PieChart& interface)
@@ -831,7 +831,7 @@ void PlPlotPieChart::draw(Painter& painter, const Rect& rect)
     m_plstream->wind(0.1, 10.0, 0.1, 10.0);
 
     // get labels color & set title color
-    plplot_color(m_interface.color(Palette::ColorId::label_text).color());
+    plplot_color(m_interface.color(Palette::ColorId::label_text).first());
 
     if ((!m_ydata.empty()) && (!m_sdata.empty()))
     {
@@ -863,7 +863,7 @@ void PlPlotPieChart::draw(Painter& painter, const Rect& rect)
             //Draw pie border
             m_plstream->width(m_line_width);
             // get line color
-            plplot_color(m_interface.color(Palette::ColorId::button_bg).color());
+            plplot_color(m_interface.color(Palette::ColorId::button_bg).first());
             m_plstream->line(x.size(), x.data(), y.data());
 
             PLFLT just = (2. * M_PI / 500.) * (theta0 + theta1) / 2.;
@@ -876,7 +876,7 @@ void PlPlotPieChart::draw(Painter& painter, const Rect& rect)
                 just = 1.;
 
             // set pie label color
-            plplot_color(m_interface.color(Palette::ColorId::label_text).color());
+            plplot_color(m_interface.color(Palette::ColorId::label_text).first());
 
             //set pie label
             m_plstream->ptex((x[x.size() / 2] + dx), (y[y.size() / 2] + dy), 1.0, 0.0, just, m_sdata.at(i).c_str());
@@ -884,7 +884,7 @@ void PlPlotPieChart::draw(Painter& painter, const Rect& rect)
         }
     }
 
-    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).color());
+    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).first());
 
 }
 

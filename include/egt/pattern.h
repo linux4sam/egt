@@ -12,6 +12,7 @@
  */
 
 #include <cairo.h>
+#include <cassert>
 #include <egt/color.h>
 #include <egt/detail/meta.h>
 #include <egt/geometry.h>
@@ -83,12 +84,35 @@ public:
         : m_color(color)
     {}
 
+    /**
+     * Construct a pattern with the specified type and steps.
+     */
     explicit Pattern(Type type, const StepArray& steps = {});
 
+    /**
+     * Construct a linear pattern with the specified steps.
+     *
+     * A linear pattern is made between a starting point and an ending point.
+     *
+     * @param steps The steps of the gradient.
+     * @param start The starting point of the pattern.
+     * @param end The ending point of the pattern.
+     */
     Pattern(const StepArray& steps,
             const Point& start,
             const Point& end);
 
+    /**
+     * Construct a radial pattern with the specified steps.
+     *
+     * A radial pattern is made between a starting circle and an ending circle.
+     *
+     * @param steps The steps of the gradient.
+     * @param start The center of the starting circle.
+     * @param start_radius The starting radius of the pattern.
+     * @param end The center of the ending circle.
+     * @param end_radius The ending radius of the pattern.
+     */
     Pattern(const StepArray& steps,
             const Point& start,
             float start_radius,
@@ -101,24 +125,34 @@ public:
     // NOLINTNEXTLINE(hicpp-explicit-conversions, google-explicit-constructor)
     EGT_PATTERN_CONSTEXPR operator Color() const
     {
-        return color();
+        return solid();
     }
 
     /**
-     * Get the first color of the pattern.
+     * Get the solid color.
+     *
+     * Calling this when type() != Type::Solid will throw.
      */
-    EGT_PATTERN_CONSTEXPR Color color()
+    EGT_PATTERN_CONSTEXPR Color solid() const
     {
+        if (m_type != Type::solid)
+            throw std::runtime_error("requested solid color in pattern that is not a solid color");
         return m_color;
     }
 
     /**
      * Get the first color of the pattern.
+     * @deprecated
      */
-    EGT_PATTERN_CONSTEXPR const Color& color() const
+    EGT_NODISCARD EGT_DEPRECATED Color color() const
     {
-        return m_color;
+        return first();
     }
+
+    /**
+     * Get the first color of the pattern.
+     */
+    EGT_NODISCARD Color first() const;
 
     /**
      * Add a step to the gradient.
@@ -143,11 +177,11 @@ public:
 
     /// Get the starting point of the pattern.
     EGT_NODISCARD Point starting() const;
-    /// Set the starting point of the pattern.
+    /// Set the starting radius of the pattern.
     EGT_NODISCARD float starting_radius() const;
-    /// Get the ending  point of the pattern.
+    /// Get the ending point of the pattern.
     EGT_NODISCARD Point ending() const;
-    /// Set the ending  point of the pattern.
+    /// Set the ending radius of the pattern.
     EGT_NODISCARD float ending_radius() const;
 
     /// Get all of the steps of the pattern
