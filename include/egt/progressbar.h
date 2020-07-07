@@ -141,6 +141,11 @@ public:
      */
     EGT_NODISCARD bool show_label() const { return m_show_label; }
 
+    void serialize(Serializer& serializer) const override;
+
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs) override;
+
 protected:
     /**
      * When true, the label text is shown.
@@ -151,6 +156,24 @@ private:
     /// Default size.
     static Size m_default_size;
 };
+
+template <class T>
+void ProgressBarType<T>::serialize(Serializer& serializer) const
+{
+    ValueRangeWidget<T>::serialize(serializer);
+
+    serializer.add_property("show_label", detail::to_string(this->m_show_label));
+}
+
+template <class T>
+void ProgressBarType<T>::deserialize(const std::string& name, const std::string& value,
+                                     const Serializer::Attributes& attrs)
+{
+    if (name == "show_label")
+        m_show_label = detail::from_string(value);
+    else
+        ValueRangeWidget<T>::deserialize(name, value, attrs);
+}
 
 /**
  * This is a progess bar that can be used to display integer values.
