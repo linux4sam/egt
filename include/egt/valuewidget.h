@@ -204,6 +204,11 @@ public:
         return m_value;
     }
 
+    void serialize(Serializer& serializer) const override;
+
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs) override;
+
 protected:
 
     /// The start value.
@@ -215,6 +220,50 @@ protected:
     /// The current value.
     T m_value;
 };
+
+template <class T>
+void ValueRangeWidget<T>::serialize(Serializer& serializer) const
+{
+    Widget::serialize(serializer);
+
+    const Serializer::Attributes attrs =
+    {
+        {"starting", detail::to_string(starting())},
+        {"ending", detail::to_string(ending())},
+    };
+
+    serializer.add_property("value", this->value(), attrs);
+}
+
+template <class T>
+void ValueRangeWidget<T>::deserialize(const std::string& name, const std::string& value,
+                                      const Serializer::Attributes& attrs)
+{
+    if (name == "value")
+    {
+        float starting_value = 0, ending_value = 100;
+
+        for (auto& a : attrs)
+        {
+            switch (detail::hash(a.first))
+            {
+            case detail::hash("starting"):
+                starting_value = std::stof(a.second);
+                break;
+            case detail::hash("ending"):
+                ending_value = std::stof(a.second);
+                break;
+            }
+        }
+
+        this->ending(ending_value);
+        this->starting(starting_value);
+        this->value(std::stof(value));
+
+    }
+    else
+        Widget::deserialize(name, value, attrs);
+}
 
 }
 }
