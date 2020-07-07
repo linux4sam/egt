@@ -153,18 +153,36 @@ private:
 };
 
 /**
- * Helper type alias.
- * @copybrief ProgressBarType
+ * This is a progess bar that can be used to display integer values.
+ *
  * @ingroup controls
  */
-using ProgressBar = ProgressBarType<int>;
+class EGT_API ProgressBar : public ProgressBarType<int>
+{
+public:
+    using ProgressBarType<int>::ProgressBarType;
+
+    EGT_NODISCARD std::string type() const override
+    {
+        return "ProgressBar";
+    }
+};
 
 /**
- * Helper type alias.
- * @copybrief ProgressBarType
+ * This is a progress bar that can be used to display floating values.
+ *
  * @ingroup controls
  */
-using ProgressBarF = ProgressBarType<float>;
+class EGT_API ProgressBarF : public ProgressBarType<float>
+{
+public:
+    using ProgressBarType<float>::ProgressBarType;
+
+    EGT_NODISCARD std::string type() const override
+    {
+        return "ProgressBarF";
+    }
+};
 
 template <class T>
 Size ProgressBarType<T>::m_default_size{200, 30};
