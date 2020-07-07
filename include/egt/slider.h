@@ -674,7 +674,7 @@ void SliderType<T>::deserialize(const std::string& name, const std::string& valu
     else if (name == "ending")
         this->ending(std::stoi(value));
     else if (name == "value")
-        this->value(std::stoi(value));
+        this->value(std::stof(value));
     else
         ValueRangeWidget<T>::deserialize(name, value, attrs);
 }
