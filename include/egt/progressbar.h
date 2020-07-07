@@ -699,18 +699,36 @@ private:
 };
 
 /**
- * Helper type alias.
- * @copybrief AnalogMeterType
+ * This is a level meter that can be used to display integer values.
+ *
  * @ingroup controls
  */
-using AnalogMeter = AnalogMeterType<int>;
+class EGT_API AnalogMeter : public AnalogMeterType<int>
+{
+public:
+    using AnalogMeterType<int>::AnalogMeterType;
+
+    EGT_NODISCARD std::string type() const override
+    {
+        return "AnalogMeter";
+    }
+};
 
 /**
- * Helper type alias.
- * @copybrief AnalogMeterType
+ * This is a level meter that can be used to display floating values.
+ *
  * @ingroup controls
  */
-using AnalogMeterF = AnalogMeterType<float>;
+class EGT_API AnalogMeterF : public AnalogMeterType<float>
+{
+public:
+    using AnalogMeterType<float>::AnalogMeterType;
+
+    EGT_NODISCARD std::string type() const override
+    {
+        return "AnalogMeterF";
+    }
+};
 
 template <class T>
 Size AnalogMeterType<T>::m_default_size{200, 100};
