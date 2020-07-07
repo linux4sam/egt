@@ -518,18 +518,36 @@ private:
 };
 
 /**
- * Helper type alias.
- * @copybrief LevelMeterType
+ * This is a level meter that can be used to display integer values.
+ *
  * @ingroup controls
  */
-using LevelMeter = LevelMeterType<int>;
+class EGT_API LevelMeter : public LevelMeterType<int>
+{
+public:
+    using LevelMeterType<int>::LevelMeterType;
+
+    EGT_NODISCARD std::string type() const override
+    {
+        return "LevelMeter";
+    }
+};
 
 /**
- * Helper type alias.
- * @copybrief LevelMeterType
+ * This is a level meter that can be used to display floating values.
+ *
  * @ingroup controls
  */
-using LevelMeterF = LevelMeterType<float>;
+class EGT_API LevelMeterF : public LevelMeterType<float>
+{
+public:
+    using LevelMeterType<float>::LevelMeterType;
+
+    EGT_NODISCARD std::string type() const override
+    {
+        return "LevelMeterF";
+    }
+};
 
 template <class T>
 Size LevelMeterType<T>::m_default_size{40, 100};
