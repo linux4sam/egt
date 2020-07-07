@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<egt>
+	<widgets>
+		<widget name="Window0" type="TopWindow">
+			<property name="width">800</property>
+			<property name="height">480</property>
+			<property name="fillflags">solid</property>
+			<widget name="StaticGrid1" type="StaticGrid">
+				<property name="grid_flags"/>
+				<property name="column_priority">false</property>
+				<property name="n_col">2</property>
+				<property name="n_row">2</property>
+				<property name="width">800</property>
+				<property name="height">480</property>
+				<property name="align">expand_horizontal|expand_vertical</property>
+				<property name="border">10</property>
+				<widget name="LevelMeter2" type="LevelMeter">
+					<property name="x">10</property>
+					<property name="y">10</property>
+					<property name="width">385</property>
+					<property name="height">225</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
+					<property name="padding">2</property>
+					<property name="fillflags">blend</property>
+					<property name="value" starting="0" ending="100">0</property>
+					<property name="num_bars">10</property>
+				</widget>
+				<widget name="AnalogMeter3" type="AnalogMeter">
+					<property name="x">405</property>
+					<property name="y">10</property>
+					<property name="width">385</property>
+					<property name="height">225</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
+					<property name="fillflags">blend</property>
+					<property name="value" starting="0" ending="100">0</property>
+				</widget>
+			</widget>
+		</widget>
+	</widgets>
+</egt>
+

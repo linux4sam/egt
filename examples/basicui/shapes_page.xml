@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<egt>
+	<widgets>
+		<widget name="Window0" type="TopWindow">
+			<property name="width">800</property>
+			<property name="height">480</property>
+			<property name="fillflags">solid</property>
+			<widget name="BoxSizer1" type="BoxSizer">
+				<property name="orient">flex</property>
+				<property name="justify">middle</property>
+				<property name="width">800</property>
+				<property name="height">480</property>
+				<property name="align">expand_horizontal|expand_vertical</property>
+				<widget name="CircleWidget2" type="CircleWidget">
+					<property name="x">200</property>
+					<property name="width">100</property>
+					<property name="height">100</property>
+					<property name="margin">10</property>
+					<property name="fillflags">blend</property>
+				</widget>
+				<widget name="LineWidget3" type="LineWidget">
+					<property name="x">300</property>
+					<property name="width">100</property>
+					<property name="height">100</property>
+					<property name="margin">10</property>
+				</widget>
+				<widget name="LineWidget4" type="LineWidget">
+					<property name="x">400</property>
+					<property name="width">100</property>
+					<property name="height">100</property>
+					<property name="margin">10</property>
+					<property name="horizontal">false</property>
+				</widget>
+				<widget name="RectangleWidget5" type="RectangleWidget">
+					<property name="x">500</property>
+					<property name="width">100</property>
+					<property name="height">100</property>
+					<property name="margin">10</property>
+					<property name="fillflags">blend</property>
+				</widget>
+			</widget>
+		</widget>
+	</widgets>
+</egt>
+

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<egt>
+	<widgets>
+		<widget name="Window0" type="TopWindow">
+			<property name="width">800</property>
+			<property name="height">480</property>
+			<property name="fillflags">solid</property>
+			<widget name="StaticGrid1" type="StaticGrid">
+				<property name="grid_flags"/>
+				<property name="column_priority">false</property>
+				<property name="n_col">2</property>
+				<property name="n_row">8</property>
+				<property name="width">800</property>
+				<property name="height">480</property>
+				<property name="align">expand_horizontal|expand_vertical</property>
+				<property name="border">5</property>
+				<widget name="SpinProgress2" type="SpinProgress">
+					<property name="x">4</property>
+					<property name="y">4</property>
+					<property name="width">392</property>
+					<property name="height">54</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
+					<property name="fillflags">blend</property>
+					<property name="value" starting="0" ending="100">50</property>
+					<property name="show_label">true</property>
+				</widget>
+				<widget name="ProgressBar3" type="ProgressBarF">
+					<property name="x">401</property>
+					<property name="y">4</property>
+					<property name="width">392</property>
+					<property name="height">54</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
+					<property name="border">2</property>
+					<property name="fillflags">blend</property>
+					<property name="value" starting="0" ending="100">50.000000</property>
+					<property name="show_label">true</property>
+				</widget>
+				<widget name="ProgressBar4" type="ProgressBar">
+					<property name="x">4</property>
+					<property name="y">63</property>
+					<property name="width">392</property>
+					<property name="height">54</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
+					<property name="border">2</property>
+					<property name="fillflags">blend</property>
+					<property name="value" starting="0" ending="100">50</property>
+					<property name="show_label">false</property>
+				</widget>
+			</widget>
+		</widget>
+	</widgets>
+</egt>
+
