@@ -144,7 +144,7 @@ public:
      * Get the first color of the pattern.
      * @deprecated
      */
-    EGT_NODISCARD EGT_DEPRECATED Color color() const
+    EGT_DEPRECATED EGT_NODISCARD Color color() const
     {
         return first();
     }
