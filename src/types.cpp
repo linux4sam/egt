@@ -16,10 +16,13 @@
 #include <drm_fourcc.h>
 #endif
 
-#ifdef __GNUG__
+#ifdef HAVE_CXXABI_H
 #include <cstdlib>
 #include <cxxabi.h>
 #include <memory>
+#elif defined(HAVE_CXA_DEMANGLE)
+extern "C" char*
+__cxa_demangle(const char* mangled_name, char* buf, size_t* n, int* status);
 #endif
 
 namespace egt
@@ -144,21 +147,20 @@ std::string gstreamer_format(PixelFormat format)
     return {};
 }
 
-#ifdef __GNUG__
 std::string demangle(const char* name)
 {
     int status = -4;
 
-    std::unique_ptr<char, void(*)(void*)> res{abi::__cxa_demangle(name, nullptr, nullptr, &status), std::free};
+#ifdef HAVE_CXXABI_H
+    std::unique_ptr<char, void(*)(void*)> res {abi::__cxa_demangle(name, nullptr, nullptr, &status), std::free};
     return (status == 0) ? res.get() : name;
-}
-#else
-// does nothing if not g++
-std::string demangle(const char* name)
-{
+#elif defined(HAVE_CXA_DEMANGLE)
+    std::unique_ptr<char, void(*)(void*)> res {__cxa_demangle(name, nullptr, nullptr, &status), std::free};
+    return (status == 0) ? res.get() : name;
+#endif
+
     return name;
 }
-#endif
 
 }
 

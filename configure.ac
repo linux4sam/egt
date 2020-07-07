@@ -128,6 +128,12 @@ AC_CHECK_HEADERS([fcntl.h float.h inttypes.h libintl.h locale.h stdint.h])
 AC_CHECK_HEADERS([stdlib.h string.h sys/ioctl.h sys/socket.h sys/time.h])
 AC_CHECK_HEADERS([unistd.h glob.h])
 
+AC_CHECK_HEADERS([cxxabi.h])
+AC_SEARCH_LIBS([__cxa_demangle], [], [have_cxa_demangle=yes], [have_cxa_demangle=no])
+if test "x${have_cxa_demangle}" = xyes; then
+   AC_DEFINE(HAVE_CXA_DEMANGLE, 1, [Have __cxa_demangle])
+fi
+
 AC_CHECK_HEADERS([linux/gpio.h],[have_linux_gpio_h=yes],[])
 AM_CONDITIONAL([HAVE_LINUX_GPIO_H], [test "x${have_linux_gpio_h}" = xyes])
 
