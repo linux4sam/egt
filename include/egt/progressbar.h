@@ -331,18 +331,36 @@ private:
 };
 
 /**
- * Helper type alias.
- * @copybrief SpinProgressType
+ * This is a spinning progress meter that can be used to display integer values.
+ *
  * @ingroup controls
  */
-using SpinProgress = SpinProgressType<int>;
+class EGT_API SpinProgress : public SpinProgressType<int>
+{
+public:
+    using SpinProgressType<int>::SpinProgressType;
+
+    EGT_NODISCARD std::string type() const override
+    {
+        return "SpinProgress";
+    }
+};
 
 /**
- * Helper type alias.
- * @copybrief SpinProgressType
+ * This is a spinning progress meter that can be used to display floating values.
+ *
  * @ingroup controls
  */
-using SpinProgressF = SpinProgressType<float>;
+class EGT_API SpinProgressF : public SpinProgressType<float>
+{
+public:
+    using SpinProgressType<float>::SpinProgressType;
+
+    EGT_NODISCARD std::string type() const override
+    {
+        return "SpinProgressF";
+    }
+};
 
 template <class T>
 Size SpinProgressType<T>::m_default_size{100, 100};
