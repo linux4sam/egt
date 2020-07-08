@@ -18,11 +18,9 @@
 					<property name="height">80</property>
 					<property name="grab_mouse">true</property>
 					<property name="fillflags">blend</property>
+					<property name="value" starting="0" ending="100">50</property>
 					<property name="sliderflags">rectangle_handle</property>
 					<property name="orient">horizontal</property>
-					<property name="ending">100</property>
-					<property name="starting">0</property>
-					<property name="value">50</property>
 				</widget>
 				<widget name="Slider3" type="Slider">
 					<property name="x">280</property>
@@ -30,11 +28,9 @@
 					<property name="height">200</property>
 					<property name="grab_mouse">true</property>
 					<property name="fillflags">blend</property>
+					<property name="value" starting="0" ending="100">75</property>
 					<property name="sliderflags">rectangle_handle</property>
 					<property name="orient">vertical</property>
-					<property name="ending">100</property>
-					<property name="starting">0</property>
-					<property name="value">75</property>
 				</widget>
 				<widget name="Slider4" type="SliderF">
 					<property name="x">360</property>
@@ -43,11 +39,9 @@
 					<property name="height">80</property>
 					<property name="grab_mouse">true</property>
 					<property name="fillflags">blend</property>
+					<property name="value" starting="0" ending="100">50.000000</property>
 					<property name="sliderflags">rectangle_handle|round_handle|show_label</property>
 					<property name="orient">horizontal</property>
-					<property name="ending">100.000000</property>
-					<property name="starting">0.000000</property>
-					<property name="value">50.000000</property>
 				</widget>
 				<widget name="Slider5" type="Slider">
 					<property name="x">560</property>
@@ -56,11 +50,9 @@
 					<property name="disabled">true</property>
 					<property name="grab_mouse">true</property>
 					<property name="fillflags">blend</property>
+					<property name="value" starting="0" ending="100">75</property>
 					<property name="sliderflags">rectangle_handle|round_handle</property>
 					<property name="orient">vertical</property>
-					<property name="ending">100</property>
-					<property name="starting">0</property>
-					<property name="value">75</property>
 				</widget>
 				<widget name="Slider6" type="Slider">
 					<property name="x">640</property>
@@ -68,11 +60,9 @@
 					<property name="height">200</property>
 					<property name="grab_mouse">true</property>
 					<property name="fillflags">blend</property>
+					<property name="value" starting="100" ending="200">180</property>
 					<property name="sliderflags">rectangle_handle|square_handle|show_labels</property>
 					<property name="orient">vertical</property>
-					<property name="ending">200</property>
-					<property name="starting">100</property>
-					<property name="value">180</property>
 				</widget>
 				<widget name="Slider7" type="Slider">
 					<property name="x">220</property>
@@ -81,11 +71,9 @@
 					<property name="height">80</property>
 					<property name="grab_mouse">true</property>
 					<property name="fillflags">blend</property>
+					<property name="value" starting="100" ending="200">150</property>
 					<property name="sliderflags">rectangle_handle|show_labels</property>
 					<property name="orient">horizontal</property>
-					<property name="ending">200</property>
-					<property name="starting">100</property>
-					<property name="value">150</property>
 				</widget>
 				<widget name="Slider8" type="Slider">
 					<property name="x">420</property>
@@ -94,11 +82,9 @@
 					<property name="height">200</property>
 					<property name="grab_mouse">true</property>
 					<property name="fillflags">blend</property>
+					<property name="value" starting="0" ending="100">0</property>
 					<property name="sliderflags">rectangle_handle</property>
 					<property name="orient">vertical</property>
-					<property name="ending">100</property>
-					<property name="starting">0</property>
-					<property name="value">0</property>
 				</widget>
 				<widget name="Slider9" type="Slider">
 					<property name="x">500</property>
@@ -107,11 +93,9 @@
 					<property name="height">200</property>
 					<property name="grab_mouse">true</property>
 					<property name="fillflags">blend</property>
+					<property name="value" starting="0" ending="100">0</property>
 					<property name="sliderflags">rectangle_handle</property>
 					<property name="orient">vertical</property>
-					<property name="ending">100</property>
-					<property name="starting">0</property>
-					<property name="value">0</property>
 				</widget>
 			</widget>
 		</widget>
