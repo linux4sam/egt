@@ -97,7 +97,7 @@ libjpeg              | Recommended       | Support for JPEG content.
 libmagic             | Recommended       | Support for automatically detecting mime types of content.
 zlib                 | Recommended       | Support for zlib compression.
 libpng               | Recommended       | Support for PNG content.
-fontconfig           | Optional          | Support for system level font configuration.
+fontconfig           | Recommended       | Support for system level font configuration.
 lua >= 5.3.1         | Optional          | Support for lua bindings and built in lua interpreter.
 xkbcommon            | Optional          | Support for system configured key mappings.
 tslib >= 1.15        | Optional          | Support for some touchscreen events.
