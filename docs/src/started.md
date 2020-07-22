@@ -173,7 +173,7 @@ instructions found in that project's
 
 @section started_windows Building for Windows
 
-The EGT examples can be built for 32 bit or 54 bit Windows on Linux using the
+The EGT examples can be built for 32 bit or 64 bit Windows on Linux using the
 [mxe project](https://mxe.cc/).
 
 For example, to build 64 bit static binaries, this can be done with the
