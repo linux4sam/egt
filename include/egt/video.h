@@ -26,6 +26,8 @@ namespace detail
 bool is_target_sama5d4();
 /// @private
 bool audio_device();
+/// @private
+WindowHint check_windowhint(WindowHint& hint);
 class GstDecoderImpl;
 class GstKmsSinkImpl;
 class GstAppSinkImpl;

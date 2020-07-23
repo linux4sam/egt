@@ -22,7 +22,7 @@ CameraWindow::CameraWindow(const Rect& rect,
                            const std::string& device,
                            PixelFormat format_hint,
                            WindowHint hint)
-    : Window(rect, format_hint, hint),
+    : Window(rect, format_hint, detail::check_windowhint(hint)),
       m_camera_impl(std::make_unique<detail::CameraImpl>(*this, rect, device))
 {}
 

@@ -73,10 +73,21 @@ bool audio_device()
     return false;
 }
 
+WindowHint check_windowhint(WindowHint& hint)
+{
+    if (hint == WindowHint::cursor_overlay)
+    {
+        throw std::runtime_error("Cannot create Videowindow with cursor_overlay hint");
+    }
+    return hint;
+}
+
 } // End of detail.
 
 VideoWindow::VideoWindow(const Rect& rect, PixelFormat format, WindowHint hint)
-    : Window(rect, (detail::is_target_sama5d4() ? PixelFormat::xrgb8888 : format), hint)
+    : Window(rect,
+             (detail::is_target_sama5d4() ? PixelFormat::xrgb8888 : format),
+             detail::check_windowhint(hint))
 {
     fill_flags().clear();
 
