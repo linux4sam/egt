@@ -24,25 +24,7 @@ GstDecoderImpl::GstDecoderImpl(VideoWindow& interface, const Size& size)
     : m_interface(interface),
       m_size(size),
       m_audiodevice(detail::audio_device())
-{
-    GError* err = nullptr;
-    if (!gst_init_check(nullptr, nullptr, &err))
-    {
-        std::ostringstream ss;
-        ss << "failed to initialize gstreamer: ";
-        if (err && err->message)
-        {
-            ss << err->message;
-            g_error_free(err);
-        }
-        else
-        {
-            ss << "unknown error";
-        }
-
-        throw std::runtime_error(ss.str());
-    }
-}
+{}
 
 bool GstDecoderImpl::playing() const
 {

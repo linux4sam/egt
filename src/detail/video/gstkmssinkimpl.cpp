@@ -7,7 +7,6 @@
 #include "detail/video/gstkmssinkimpl.h"
 #include "detail/video/gstmeta.h"
 #include "egt/app.h"
-#include "egt/detail/filesystem.h"
 #include "egt/detail/screen/kmsoverlay.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/types.h"
@@ -24,61 +23,29 @@ GstKmsSinkImpl::GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool de
     : GstDecoderImpl(interface, size),
       m_hwdecoder(decodertype)
 {
-    /**
-     * check for cache file by finding a playback plugin.
-     * if gst_registry_find_plugin returns NULL, then no
-     * cache file present and assume GSTREAMER1_PLUGIN_REGISTRY
-     * is disabled in gstreamer package.
-     */
-    if (!gst_registry_find_plugin(gst_registry_get(), "playback"))
+    static constexpr auto plugins =
     {
-        static constexpr auto plugins =
-        {
-            "libgsttypefindfunctions.so",
-            "libgstcoreelements.so",
-            "libgstplayback.so",
-            "libgstavi.so",
-            "libgstisomp4.so",
-            "libgstmpeg2dec.so",
-            "libgstlibav.so",
-            "libgstvideoparsersbad.so",
-            "libgstg1.so",
-            "libgstg1kmssink.so",
-            "libgstaudioconvert.so",
-            "libgstvolume.so",
-            "libgstalsa.so",
-            "libgstvideoscale.so",
-            "libgstvideoconvert.so",
-        };
-
-        std::string path;
-        if (std::getenv("GST_PLUGIN_SYSTEM_PATH"))
-        {
-            path = std::getenv("GST_PLUGIN_SYSTEM_PATH");
-            if (!path.empty() && (path.back() != '/'))
-                path.back() = '/';
-        }
-        else if (detail::exists("/usr/lib/gstreamer-1.0/"))
-        {
-            path = "/usr/lib/gstreamer-1.0/";
-        }
-        else if (detail::exists("/usr/lib/x86_64-linux-gnu/gstreamer-1.0/"))
-        {
-            path = "/usr/lib/x86_64-linux-gnu/gstreamer-1.0/";
-        }
-
-        for (const auto& plugin : plugins)
-        {
-            GError* error = nullptr;
-            gst_plugin_load_file(std::string(path + plugin).c_str(), &error);
-            if (error)
-            {
-                if (error->message)
-                    detail::error("load plugin error: {}", error->message);
-                g_error_free(error);
-            }
-        }
-    }
+        "libgsttypefindfunctions.so",
+        "libgstcoreelements.so",
+        "libgstplayback.so",
+        "libgstavi.so",
+        "libgstisomp4.so",
+        "libgstmpeg2dec.so",
+        "libgstlibav.so",
+        "libgstvideoparsersbad.so",
+        "libgstg1.so",
+        "libgstg1kmssink.so",
+        "libgstaudioparsers.so",
+        "libgstaudiorate.so",
+        "libgstaudioconvert.so",
+        "libgstaudioresample.so",
+        "libgstautodetect.so",
+        "libgstvolume.so",
+        "libgstalsa.so",
+        "libgstvideoscale.so",
+        "libgstvideoconvert.so",
+    };
+    detail::gst_init_plugins(plugins);
 
     auto s = reinterpret_cast<detail::KMSOverlay*>(interface.screen());
     assert(s);

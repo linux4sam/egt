@@ -221,23 +221,21 @@ AudioPlayer::AudioPlayer()
     if (!detail::audio_device())
         throw std::runtime_error("no sound cards");
 
-    GError* err = nullptr;
-    if (!gst_init_check(nullptr, nullptr, &err))
+    static constexpr auto plugins =
     {
-        std::ostringstream ss;
-        ss << "failed to initialize gstreamer: ";
-        if (err && err->message)
-        {
-            ss << err->message;
-            g_error_free(err);
-        }
-        else
-        {
-            ss << "unknown error";
-        }
-
-        throw std::runtime_error(ss.str());
-    }
+        "libgstcoreelements.so",
+        "libgsttypefindfunctions.so",
+        "libgstplayback.so",
+        "libgstvolume.so",
+        "libgstaudioparsers.so",
+        "libgstaudiorate.so",
+        "libgstaudioconvert.so",
+        "libgstaudioresample.so",
+        "libgstautodetect.so",
+        "libgstalsa.so",
+        "libgstlibav.so",
+    };
+    detail::gst_init_plugins(plugins);
 }
 
 AudioPlayer::AudioPlayer(const std::string& uri)

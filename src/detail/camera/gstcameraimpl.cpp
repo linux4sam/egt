@@ -11,7 +11,6 @@
 #include "detail/egtlog.h"
 #include "detail/video/gstmeta.h"
 #include "egt/app.h"
-#include "egt/detail/filesystem.h"
 #ifdef HAVE_LIBPLANES
 #include "egt/detail/screen/kmsoverlay.h"
 #include "egt/detail/screen/kmsscreen.h"
@@ -35,77 +34,27 @@ CameraImpl::CameraImpl(CameraWindow& interface, const Rect& rect,
       m_devnode(device),
       m_rect(rect)
 {
-    GError* err = nullptr;
-    if (!gst_init_check(nullptr, nullptr, &err))
+    static constexpr auto plugins =
     {
-        std::ostringstream ss;
-        ss << "failed to initialize gstreamer: ";
-        if (err && err->message)
-        {
-            ss << err->message;
-            g_error_free(err);
-        }
-        else
-        {
-            ss << "unknown error";
-        }
-
-        throw std::runtime_error(ss.str());
-    }
-    /**
-     * check for cache file by finding a playback plugin.
-     * if gst_registry_find_plugin returns NULL, then no
-     * cache file present and assume GSTREAMER1_PLUGIN_REGISTRY
-     * is disabled in gstreamer package.
-     */
-    if (!gst_registry_find_plugin(gst_registry_get(), "playback"))
-    {
-        EGTLOG_DEBUG("manually loading gstreamer plugins");
-        auto plugins =
-        {
-            "libgstcoreelements.so",
-            "libgsttypefindfunctions.so",
-            "libgstplayback.so",
-            "libgstapp.so",
-            "libgstvideo4linux2.so",
-            "libgstvideoscale.so",
-            "libgstvideoconvert.so",
-            "libgstlibav.so",
-            "libgstvideoparsersbad.so",
-        };
-
-        std::string path;
-        if (std::getenv("GST_PLUGIN_SYSTEM_PATH"))
-        {
-            path = std::getenv("GST_PLUGIN_SYSTEM_PATH");
-            if (!path.empty() && (path.back() != '/'))
-                path.back() = '/';
-        }
-        else if (detail::exists("/usr/lib/gstreamer-1.0/"))
-        {
-            path = "/usr/lib/gstreamer-1.0/";
-        }
-        else if (detail::exists("/usr/lib/x86_64-linux-gnu/gstreamer-1.0/"))
-        {
-            path = "/usr/lib/x86_64-linux-gnu/gstreamer-1.0/";
-        }
-
-        for (const auto& plugin : plugins)
-        {
-            GError* error = nullptr;
-            gst_plugin_load_file(std::string(path + plugin).c_str(), &error);
-            if (error)
-            {
-                if (error->message)
-                    detail::error("load plugin error: {}", error->message);
-                g_error_free(error);
-            }
-        }
-    }
+        "libgstcoreelements.so",
+        "libgsttypefindfunctions.so",
+        "libgstplayback.so",
+        "libgstapp.so",
+        "libgstvideo4linux2.so",
+        "libgstvideoscale.so",
+        "libgstvideoconvert.so",
+        "libgstlibav.so",
+        "libgstvideoparsersbad.so",
+        "libgstaudioparsers.so",
+        "libgstaudiorate.so",
+        "libgstaudioconvert.so",
+        "libgstaudioresample.so",
+        "libgstautodetect.so",
+    };
+    detail::gst_init_plugins(plugins);
 
     m_gmain_loop = g_main_loop_new(nullptr, FALSE);
     m_gmain_thread = std::thread(g_main_loop_run, m_gmain_loop);
-
 }
 
 gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer data)
