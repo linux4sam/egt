@@ -435,6 +435,7 @@ fi
 AC_CHECK_DECL([CAIRO_HAS_FT_FONT], [], [
     AC_MSG_FAILURE([cairo is not compiled with freetype support and it is required.])
    ], [[#include <cairo/cairo-features.h>]])
+LIBEGT_EXTRA_LDFLAGS="-lfreetype ${LIBEGT_EXTRA_LDFLAGS}"
 
 AC_ARG_WITH([fontconfig],
     AS_HELP_STRING([--without-fontconfig], [Ignore presence of fontconfig and disable it]),
@@ -445,6 +446,7 @@ AS_IF([test "x$with_fontconfig" != "xno"],[
    AC_CHECK_DECL([CAIRO_HAS_FC_FONT], [have_fontconfig=yes], [have_fontconfig=no], [[#include <cairo/cairo-features.h>]])
    if test "x${have_fontconfig}" = xyes; then
       AC_DEFINE(HAVE_FONTCONFIG, 1, [Have fontconfig support])
+      LIBEGT_EXTRA_LDFLAGS="-lfontconfig ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
 if test "x$with_fontconfig" = xyes && test "x${have_fontconfig}" != xyes; then
