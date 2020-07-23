@@ -160,16 +160,17 @@ int main(int argc, char** argv)
     fullscreenbtn.fill_flags().clear();
     hpos.add(fullscreenbtn);
 
-    const auto vscale
-        = static_cast<float>(egt::Application::instance().screen()->size().width()) / size.width();
+    const auto ssize = egt::Application::instance().screen()->size();
 
-    fullscreenbtn.on_click([&fullscreenbtn, &player, vscale, &win](egt::Event&)
+    fullscreenbtn.on_click([&fullscreenbtn, &player, &ssize, &win](egt::Event&)
     {
         static bool scaled = true;
         if (scaled)
         {
+            auto wscale = static_cast<float>(ssize.width()) / player.width();
+            auto hscale = static_cast<float>(ssize.height()) / player.height();
             player.move(egt::Point(0, 0));
-            player.scale(vscale, vscale);
+            player.scale(wscale, hscale);
             fullscreenbtn.image(egt::Image("res:fullscreen_exit_png"));
             scaled = false;
         }
@@ -247,7 +248,7 @@ int main(int argc, char** argv)
         errlabel.text(line_break(err));
     });
 
-    player.on_event([&player, &win, vscale, size](egt::Event & event)
+    player.on_event([&player, &win, &ssize](egt::Event & event)
     {
         static egt::Point drag_start_point;
         switch (event.id())
@@ -259,12 +260,13 @@ int main(int argc, char** argv)
         }
         case egt::EventId::pointer_drag:
         {
-            if (!(egt::detail::float_equal(player.hscale(), vscale)))
+            auto wscale = static_cast<float>(ssize.width()) / player.width();
+            if (!(egt::detail::float_equal(player.hscale(), wscale)))
             {
                 auto diff = event.pointer().drag_start - event.pointer().point;
                 auto p = drag_start_point - egt::Point(diff.x(), diff.y());
-                auto max_x = win.width() - size.width();
-                auto max_y = win.height() - size.height();
+                auto max_x = win.width() - player.width();
+                auto max_y = win.height() - player.height();
                 if (p.x() >= max_x)
                     p.x(max_x);
                 if (p.x() < 0)
