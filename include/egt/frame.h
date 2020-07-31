@@ -490,9 +490,6 @@ protected:
     /// Status for whether this frame is currently drawing.
     bool m_in_draw{false};
 
-    /// Status for whether this frame is currently performing layout.
-    bool m_in_layout{false};
-
 private:
 
     void remove_all_basic();

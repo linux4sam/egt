@@ -1360,6 +1360,11 @@ protected:
      */
     Size m_min_size;
 
+    /**
+     * Status for whether this widget is currently performing layout.
+     */
+    bool m_in_layout{false};
+
 private:
 
     /**
