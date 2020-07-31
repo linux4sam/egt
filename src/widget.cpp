@@ -58,6 +58,7 @@ static Widget::WidgetId global_widget_id{0};
 // NOLINTNEXTLINE(modernize-pass-by-value)
 Widget::Widget(const Rect& rect, const Widget::Flags& flags) noexcept
     : m_box(rect),
+      m_user_requested_box(rect),
       m_widgetid(global_widget_id++),
       m_widget_flags(flags)
 {
@@ -136,6 +137,10 @@ void Widget::resize(const Size& size)
         m_box.size(size);
         damage();
 
+        // If resize comes from the user
+        if (!parent_in_layout() && !in_layout())
+            m_user_requested_box.size(size);
+
         parent_layout();
     }
 }
@@ -154,6 +159,10 @@ void Widget::move(const Point& point)
         damage();
         m_box.point(point);
         damage();
+
+        // If move comes from the user
+        if (!parent_in_layout())
+            m_user_requested_box.point(point);
 
         parent_layout();
     }

@@ -288,14 +288,30 @@ public:
      *
      * @param[in] w The new width of the Widget.
      */
-    void width(DefaultDim w) { resize(Size(w, height())); }
+    void width(DefaultDim w)
+    {
+        if (!parent_in_layout() && !in_layout())
+            m_user_requested_box.width(w);
+
+        m_in_layout = true;
+        auto reset = detail::on_scope_exit([this]() { m_in_layout = false; });
+        resize(Size(w, height()));
+    }
 
     /**
      * Change the height.
      *
      * @param[in] h The new height of the Widget.
      */
-    void height(DefaultDim h) { resize(Size(width(), h)); }
+    void height(DefaultDim h)
+    {
+        if (!parent_in_layout() && !in_layout())
+            m_user_requested_box.height(h);
+
+        m_in_layout = true;
+        auto reset = detail::on_scope_exit([this]() { m_in_layout = false; });
+        resize(Size(width(), h));
+    }
 
     /**
      * Move the Widget to a new position.
@@ -312,14 +328,31 @@ public:
      *
      * @param[in] x The new origin X value for the widget relative to its parent.
      */
-    void x(DefaultDim x) { move(Point(x, y())); }
+    void x(DefaultDim x)
+    {
+        if (!parent_in_layout() && !in_layout())
+            m_user_requested_box.x(x);
+
+        m_in_layout = true;
+        auto reset = detail::on_scope_exit([this]() { m_in_layout = false; });
+        move(Point(x, y()));
+    }
 
     /**
      * Set the Y coordinate of the box.
      *
      * @param[in] y The new origin Y value for the widget relative to its parent.
      */
-    void y(DefaultDim y) { move(Point(x(), y)); }
+    void y(DefaultDim y)
+    {
+        if (!parent_in_layout() && !in_layout())
+            m_user_requested_box.y(y);
+
+        m_in_layout = true;
+        auto reset = detail::on_scope_exit([this]() { m_in_layout = false; });
+
+        move(Point(x(), y));
+    }
 
     /**
      * Move the widget to the specified center point.
@@ -610,6 +643,14 @@ public:
      * @see @ref layout_box
      */
     void box(const Rect& rect);
+
+    /**
+     * Get the box corresponding to the user requested one, not the actual one.
+     */
+    EGT_NODISCARD const Rect& user_requested_box() const
+    {
+        return m_user_requested_box;
+    }
 
     /**
      * Get the size of the widget's box().
@@ -1345,6 +1386,11 @@ protected:
      * Bounding box.
      */
     Rect m_box;
+
+    /**
+     * Keep track of the box requested by the user.
+     */
+    Rect m_user_requested_box;
 
     /**
      * Pointer to this widget's parent.
