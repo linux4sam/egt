@@ -57,13 +57,43 @@ void BoxSizer::layout()
     m_in_layout = true;
     auto reset = detail::on_scope_exit([this]() { m_in_layout = false; });
 
-    resize(super_rect());
+    auto rect = super_rect();
+
+    // The purpose of the flex orientation is to automatically position
+    // the widgets in two dimensions within a given box. Don't expand it now.
+    // Let the flex algorithm position the widgets. If the box is too small then
+    // it will be expanded. If the user didn't specify a size, let assume he
+    // wishes the sizer grow as much as possible. If this case is not taken into
+    // account, the sizer will be resized to the size of the first widget added
+    // and next widgets will be shrunk to this size.
+    if (orient() == Orientation::flex && !user_requested_box().empty())
+    {
+        if (rect.width() > width())
+            rect.width(width());
+
+        if (rect.height() > height())
+            rect.height(height());
+    }
+
+    // Layout is performed several times before the sizer has its final size.
+    // Never shrink the sizer to avoid corruption related to intermediate
+    // steps.
+    if (rect.width() < user_requested_box().width())
+        rect.width(user_requested_box().width());
+    if (rect.height() < user_requested_box().height())
+        rect.height(user_requested_box().height());
+
+    resize(rect);
 
     std::vector<detail::LayoutRect> rects;
 
     for (auto& child : m_children)
     {
         auto min = child->box();
+        // Use the user requested box. The intermediate steps where the sizer
+        // doesn't have its final size may have corrupt the child's box.
+        if (!child->user_requested_box().empty())
+            min = child->user_requested_box();
 
         if (child->autoresize())
         {
@@ -72,6 +102,8 @@ void BoxSizer::layout()
             if (min.height() < child->min_size_hint().height())
                 min.height(child->min_size_hint().height());
         }
+
+        child->layout();
 
         uint32_t behave = 0;
 
@@ -101,7 +133,15 @@ void BoxSizer::layout()
         child++;
     }
 
-    resize(super_rect());
+    // Same as before, never shrink the sizer to avoid corruption related to
+    // intermediate steps.
+    rect = super_rect();
+    if (rect.width() < user_requested_box().width())
+        rect.width(user_requested_box().width());
+    if (rect.height() < user_requested_box().height())
+        rect.height(user_requested_box().height());
+
+    resize(rect);
 }
 
 void BoxSizer::serialize(Serializer& serializer) const
