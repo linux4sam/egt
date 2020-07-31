@@ -1164,6 +1164,14 @@ public:
     EGT_NODISCARD virtual Rect content_area() const;
 
     /**
+     * Indicate if the Widget is computing the layout or not.
+     */
+    EGT_NODISCARD bool in_layout() const
+    {
+        return m_in_layout;
+    }
+
+    /**
      * Perform layout of the Widget.
      *
      * This will cause the widget to layout itself and any of its children.
