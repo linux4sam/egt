@@ -24,6 +24,7 @@ widgets/combobox.cpp \
 widgets/form.cpp \
 widgets/frame.cpp \
 widgets/grid.cpp \
+widgets/layout.cpp  \
 widgets/listbox.cpp  \
 widgets/notebook.cpp \
 widgets/scrollwheel.cpp \
