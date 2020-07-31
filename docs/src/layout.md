@@ -85,3 +85,36 @@ programmer does not set the start-up size of a widget, the widget will rather be
 assigned as a child to a sizer and this sizer will set the recommended size of
 the widget. This sizer in turn will query its children (which can be other
 widgets or even sizers) so that a hierarchy of sizers can be constructed.
+
+### Sizers
+
+The purpose of sizers is to help position widgets. They have a set of rules to
+accomplish this and they are able to grow if needed. There are three types of
+sizers with slightly different behaviors: the horizontal box sizer, the
+vertical one, and the flex one. As a sizer will grow to contain all the child
+widgets, you are responsible for it. It means there is no constraint for the
+maximum size. Resizing of children only happen if you set some expand align
+flags. Children will never be shrunk except in specific circumstances when
+using the flex variant.
+
+The horizontal and vertical box sizers behave in the same way but in different
+directions. They grow automatically in the direction set as you add widgets.
+Note that some logic doesn't make sense:
+- Expanding a child if the sizer as a null size. Expanding allows to use the
+space available, if the sizer as an empty size, there is no extra space
+available.
+- Setting the width of a horizontal box sizer or the height of a vertical box
+sizer is useless as they grow automatically. It can be useful only if the
+sizer needs to have a minimal size.
+The children won't be resized except if you use the alignment expand flags.
+Keep in mind that it doesn't make sense to expand a child if the sizer's size
+is empty. It makes no sense to set the width of a horizontal box sizer or the
+height of a vertical box sizer as they will grow to contain all the widgets.
+
+The flex box sizer will try to position the widgets, on both horizontal and
+vertical directions, within its current box. If the resulting layout is bigger
+than the box, then it will grow as much as  needed. There is one case widgets
+can be shrunk: if the width or the height of the widget is bigger than the ones
+of the sizer, they will be resized to fit into the sizer.  When there is not
+enough space in the sizer, the default behavior is to behave as a vertical box
+sizer i.e. expanding the sizer in the vertical direction.
