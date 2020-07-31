@@ -768,6 +768,14 @@ void Widget::set_parent(Frame* parent)
     damage();
 }
 
+bool Widget::parent_in_layout()
+{
+    if (parent())
+        return parent()->in_layout();
+    else
+        return false;
+}
+
 void Widget::parent_layout()
 {
     if (!visible())

@@ -1359,6 +1359,11 @@ protected:
     WidgetId m_widgetid{0};
 
     /**
+     * Indicate if our parent is computing the layout.
+     */
+    EGT_NODISCARD bool parent_in_layout();
+
+    /**
      * Call our parent to do a layout.
      */
     void parent_layout();
