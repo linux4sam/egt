@@ -149,6 +149,11 @@ public:
      */
     EGT_NODISCARD PixelFormat format() const { return m_format; };
 
+    /**
+     * Returns true if the screen supports planes.
+     */
+    EGT_NODISCARD virtual bool have_planes() const { return false; }
+
     virtual ~Screen() noexcept = default;
 
 protected:

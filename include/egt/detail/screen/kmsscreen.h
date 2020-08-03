@@ -96,6 +96,8 @@ public:
     /// Deallocate an overlay plane.
     void deallocate_overlay(plane_data* plane);
 
+    EGT_NODISCARD bool have_planes() const override { return true; }
+
 protected:
     /// Allocate an overlay plane.
     plane_data* overlay_plane_create(const Size& size,

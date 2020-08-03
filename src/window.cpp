@@ -209,8 +209,11 @@ void Window::create_impl(const Rect& rect,
             case WindowHint::heo_overlay:
             case WindowHint::cursor_overlay:
 #ifdef HAVE_LIBPLANES
-                m_impl = std::make_unique<detail::PlaneWindow>(this, format_hint, hint);
-                flags().set(Widget::Flag::plane_window);
+                if (Application::instance().screen()->have_planes())
+                {
+                    m_impl = std::make_unique<detail::PlaneWindow>(this, format_hint, hint);
+                    flags().set(Widget::Flag::plane_window);
+                }
 #endif
                 break;
             default:
@@ -225,20 +228,28 @@ void Window::create_impl(const Rect& rect,
         if (!m_impl)
         {
 #ifdef HAVE_LIBPLANES
-            try
+            if (Application::instance().screen()->have_planes())
             {
-                m_impl = std::make_unique<detail::PlaneWindow>(this, format_hint, hint);
-                flags().set(Widget::Flag::plane_window);
+                try
+                {
+                    m_impl = std::make_unique<detail::PlaneWindow>(this, format_hint, hint);
+                    flags().set(Widget::Flag::plane_window);
+                }
+                catch (std::invalid_argument& e)
+                {
+                    throw;
+                }
+                catch (std::exception& e)
+                {
+                    EGTLOG_DEBUG("non-fatal exception: {}", e.what());
+                    m_impl = std::make_unique<detail::BasicWindow>(this);
+                }
             }
-            catch (std::exception& e)
-            {
-                EGTLOG_DEBUG("non-fatal exception: {}", e.what());
+            else
 #endif
-
+            {
                 m_impl = std::make_unique<detail::BasicWindow>(this);
-#ifdef HAVE_LIBPLANES
             }
-#endif
         }
     }
 
