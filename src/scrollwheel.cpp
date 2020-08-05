@@ -282,5 +282,58 @@ void Scrollwheel::image_up(const Image& image)
     m_button_up.image(image);
 }
 
+void Scrollwheel::serialize(Serializer& serializer) const
+{
+    Widget::serialize(serializer);
+
+    serializer.add_property("image_up", m_button_up.image().uri());
+    serializer.add_property("image_down", m_button_down.image().uri());
+    if (reversed())
+        serializer.add_property("reversed", reversed());
+    serializer.add_property("orient", std::string(detail::enum_to_string(m_orient)));
+
+    size_t index = 0;
+    for (const auto& item : m_items)
+    {
+        if (index == selected())
+            serializer.add_property("item", item, {{"selected", "true"}});
+        else
+            serializer.add_property("item", item);
+
+        ++index;
+    }
+}
+
+void Scrollwheel::deserialize(const std::string& name, const std::string& value,
+                              const Serializer::Attributes& attrs)
+{
+    switch (detail::hash(name))
+    {
+    case detail::hash("image_up"):
+        image_up(Image(value));
+        break;
+    case detail::hash("image_down"):
+        image_down(Image(value));
+        break;
+    case detail::hash("reversed"):
+        reversed(detail::from_string(value));
+        break;
+    case detail::hash("orient"):
+        orient(detail::enum_from_string<Orientation>(value));
+        break;
+    case detail::hash("item"):
+        add_item(value);
+        for (const auto& i : attrs)
+        {
+            if (i.first == "selected" && detail::from_string(i.second))
+                selected(item_count() - 1);
+        }
+        break;
+    default:
+        Widget::deserialize(name, value, attrs);
+        break;
+    }
+}
+
 }
 }
