@@ -137,7 +137,7 @@ public:
     /** @} */
 
     /// Item array type
-    using ItemArray = std::vector<std::shared_ptr<Widget>>;
+    using ItemArray = std::vector<std::shared_ptr<StringItem>>;
 
     /**
      * @param[in] items Array of items to insert into the list.
@@ -198,17 +198,17 @@ public:
     /**
      * Add a new item to the end of the list.
      */
-    void add_item(const std::shared_ptr<Widget>& widget);
+    void add_item(const std::shared_ptr<StringItem>& widget);
 
     /**
      * Get the currently selected index item from list.
      */
-    EGT_NODISCARD std::shared_ptr<Widget> item_at(size_t index) const;
+    EGT_NODISCARD std::shared_ptr<StringItem> item_at(size_t index) const;
 
     /**
      * Remove an item from the list.
      */
-    void remove_item(Widget* widget);
+    void remove_item(StringItem* item);
 
     /**
      * Remove all items from the list.
@@ -235,7 +235,7 @@ protected:
 
 private:
 
-    void add_item_private(const std::shared_ptr<Widget>& widget);
+    void add_item_private(const std::shared_ptr<StringItem>& item);
 };
 
 }

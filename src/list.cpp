@@ -53,16 +53,16 @@ ListBox::ListBox(Frame& parent, const ItemArray& items, const Rect& rect) noexce
     parent.add(*this);
 }
 
-void ListBox::add_item(const std::shared_ptr<Widget>& widget)
+void ListBox::add_item(const std::shared_ptr<StringItem>& item)
 {
-    add_item_private(widget);
+    add_item_private(item);
 }
 
-void ListBox::add_item_private(const std::shared_ptr<Widget>& widget)
+void ListBox::add_item_private(const std::shared_ptr<StringItem>& item)
 {
-    widget->align(AlignFlag::expand_horizontal);
+    item->align(AlignFlag::expand_horizontal);
 
-    m_sizer.add(widget);
+    m_sizer.add(item);
 
     // automatically select the first item
     if (m_sizer.count_children() == 1)
@@ -73,18 +73,20 @@ void ListBox::add_item_private(const std::shared_ptr<Widget>& widget)
     on_items_changed.invoke();
 }
 
-std::shared_ptr<Widget> ListBox::item_at(size_t index) const
+std::shared_ptr<StringItem> ListBox::item_at(size_t index) const
 {
-    return m_sizer.child_at(index);
+    std::shared_ptr<StringItem> item =
+        std::dynamic_pointer_cast<StringItem>(m_sizer.child_at(index));
+    return item;
 }
 
-void ListBox::remove_item(Widget* widget)
+void ListBox::remove_item(StringItem* item)
 {
-    if (m_sizer.is_child(widget))
+    if (m_sizer.is_child(item))
     {
-        const auto checked = widget->checked();
+        const auto checked = item->checked();
 
-        m_sizer.remove(widget);
+        m_sizer.remove(item);
 
         on_items_changed.invoke();
 
