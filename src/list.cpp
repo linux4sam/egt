@@ -187,5 +187,57 @@ void ListBox::scroll_bottom()
     m_view.offset(Point(m_view.offset().x(), m_view.offset_max().y()));
 }
 
+void ListBox::serialize(Serializer& serializer) const
+{
+    Widget::serialize(serializer);
+
+    for (size_t i = 0; i < m_sizer.count_children(); i++)
+    {
+        Serializer::Attributes attrs;
+        StringItem* item = dynamic_cast<StringItem*>(m_sizer.child_at(i).get());
+        if (item)
+        {
+            if (!item->image().empty())
+                attrs.push_back({"image", item->image().uri()});
+
+            if (!item->text().empty())
+                attrs.push_back({"text_align", item->text_align().to_string()});
+
+            if (static_cast<ssize_t>(i) == selected())
+                attrs.push_back({"selected", "true"});
+
+            serializer.add_property("item", item->text(), attrs);
+        }
+    }
+}
+
+void ListBox::deserialize(const std::string& name, const std::string& value,
+                          const Serializer::Attributes& attrs)
+{
+
+    if (name == "item")
+    {
+        std::string text;
+        Image image;
+        AlignFlags text_align;
+
+        for (const auto& i : attrs)
+        {
+            if (i.first == "image")
+                image = Image(i.second);
+
+            if (i.first == "text_align")
+                text_align = AlignFlags(i.second);
+
+            if (i.first == "selected" && detail::from_string(i.second))
+                selected(item_count() - 1);
+        }
+
+        add_item(std::make_shared<StringItem>(value, image, Rect(), text_align));
+    }
+    else
+        Widget::deserialize(name, value, attrs);
+}
+
 }
 }
