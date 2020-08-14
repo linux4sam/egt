@@ -100,22 +100,19 @@ void PlaneWindow::begin_draw()
 {
     if (!m_interface->box().size().empty())
     {
-        if (m_interface->visible())
+        if (m_dirty)
         {
-            if (m_dirty)
+            allocate_screen();
+
+            if (m_overlay)
             {
-                allocate_screen();
-
-                if (m_overlay)
-                {
-                    m_overlay->position(m_interface->local_to_display(Point()));
-                    m_overlay->apply();
-                    m_dirty = false;
-                }
+                m_overlay->position(m_interface->local_to_display(Point()));
+                m_overlay->apply();
+                m_dirty = false;
             }
-
-            m_interface->do_draw();
         }
+
+        m_interface->do_draw();
     }
 }
 
