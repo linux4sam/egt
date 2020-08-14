@@ -125,6 +125,9 @@ void ComboBoxPopup::handle(Event& event)
     {
     case EventId::pointer_click:
     {
+        /// Force a redraw to avoid a glitch in some circumstances when showing
+        /// the popup again.
+        begin_draw();
         // if any mouse click happens, hide
         hide();
         break;
