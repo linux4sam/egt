@@ -69,13 +69,6 @@ TEST_P(ListBoxWidgetTest, TestWidget)
     widget->selected(4);
     EXPECT_EQ(widget->selected(), 4);
     EXPECT_TRUE(state);
-
-    auto btn3 = std::make_shared<egt::Button>("Disabled1");
-    widget->add_item(egt::expand(btn3));
-    EXPECT_EQ(static_cast<int>(widget->item_count()), 7);
-
-    EXPECT_NO_THROW(widget->remove_item(btn3.get()));
-    EXPECT_EQ(static_cast<int>(widget->item_count()), 6);
 }
 
 INSTANTIATE_TEST_SUITE_P(ListBoxWidgetTestGroup, ListBoxWidgetTest, Range(0, 4));
