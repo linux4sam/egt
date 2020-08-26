@@ -164,6 +164,15 @@ make docset
 ```
 
 Generate PDF:
+
+PDF generation depends on several latex commands, packages and fonts to be
+present on the system.  They can be installed using your distribution package
+manager (adapt to your distribution of choice):
+```sh
+sudo apt install texlive-latex-extra texlive-fonts-extra
+```
+
+Then run the following commands:
 ```sh
 make docs
 cd docs/latex && make
