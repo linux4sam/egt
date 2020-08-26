@@ -21,7 +21,7 @@ Development of EGT requires a Linux machine.  There are some extra tools that
 you can install with your distribution package manager.
 
 ```sh
-sudo apt install cloc doxygen graphviz clang clang-tidy aspell imagemagick
+sudo apt install cloc doxygen graphviz clang clang-tidy aspell astyle imagemagick
 ```
 
 ## Extra Development Tools
