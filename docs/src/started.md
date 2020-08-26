@@ -62,12 +62,12 @@ of plplot-driver-cairo.
 Then, clone the source and initialize Autotools.  Typically Autotools only needs
 to be initialized once and it will automatically pick up most changes.  However,
 when making changes to the configure scripts, the environment, or makefiles
-re-running autogen.txt, or more simply `autoreconf -fvi`, is necessary.
+re-running autogen.sh, or more simply `autoreconf -fvi`, is necessary.
 
 @code{.unparsed}
 git clone --recursive https://github.com/linux4sam/egt.git
 cd egt
-./autogen.txt
+./autogen.sh
 @endcode
 
 Then, configure and build.
@@ -104,7 +104,7 @@ PATH and follow the standard instructions.
 should come before any existing system paths.
 
 @code{.unparsed}
-./autogen.txt
+./autogen.sh
 ./configure --prefix=/nfsroot/root/egt/ --host=arm-buildroot-linux-gnueabi
 make
 @endcode
