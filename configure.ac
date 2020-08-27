@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([libegt],[1.0])
+AC_INIT([libegt],[1.0.1-alpha])
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([Makefile.am])
