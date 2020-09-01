@@ -46,7 +46,16 @@ void Screen::flip(const DamageArray& damage)
         detail::code_timer(false, "copy_to_buffer: ", [&]()
         {
             ScreenBuffer& buffer = m_buffers[index()];
-            copy_to_buffer(buffer);
+            if ((m_format == PixelFormat::rgb565) ||
+                (m_format == PixelFormat::argb8888) ||
+                (m_format == PixelFormat::xrgb8888))
+            {
+                copy_to_buffer(buffer);
+            }
+            else
+            {
+                throw std::runtime_error("invalid pixelformat: cario supports only RGB formats");
+            }
             // delete all damage from current buffer
             buffer.damage.clear();
         });
