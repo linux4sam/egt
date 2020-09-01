@@ -39,7 +39,7 @@ the EGT Programmer's Manual.
 To build for a PC, first install required dependencies:
 
 ```sh
-sudo apt install build-essential automake autoconf libtool pkg-config \
+sudo apt install git build-essential automake autoconf libtool pkg-config \
     libdrm-dev libinput-dev libcairo-dev libjpeg-dev libmagic-dev gettext
 ```
 

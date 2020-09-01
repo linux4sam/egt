@@ -19,6 +19,13 @@ file in the root of the EGT repository.
 
 @section started_fetching Fetching Source
 
+Source code for EGT is available through the [git revision control
+system](https://git-scm.com/). You would need it installed on your system:
+
+@code{.unparsed}
+sudo apt install git
+@endcode
+
 Fetch the source:
 
 @code{.unparsed}
