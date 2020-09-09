@@ -36,7 +36,7 @@ static std::shared_ptr<egt::ComboBox> create_grid_combo(const std::shared_ptr<eg
 
     auto combo = std::make_shared<egt::ComboBox>();
     for (auto& i : combo_items)
-        combo->add_item(i.first);
+        combo->add_item(std::make_shared<egt::StringItem>(i.first));
     combo->margin(5);
 
     combo->on_selected_changed([combo, chart]()
@@ -44,7 +44,7 @@ static std::shared_ptr<egt::ComboBox> create_grid_combo(const std::shared_ptr<eg
         auto s = combo->item_at(combo->selected());
         for (auto& i : combo_items)
         {
-            if (s == i.first)
+            if (s->text() == i.first)
             {
                 chart->grid_style(i.second);
                 break;
@@ -134,7 +134,7 @@ struct Points : public egt::NotebookTab
 
         auto combo = std::make_shared<egt::ComboBox>();
         for (auto& i : point_items)
-            combo->add_item(i.first);
+            combo->add_item(std::make_shared<egt::StringItem>(i.first));
         combo->margin(5);
         csizer->add(combo);
 
@@ -143,7 +143,7 @@ struct Points : public egt::NotebookTab
             auto s = combo->item_at(combo->selected());
             for (auto& i : point_items)
             {
-                if (s == i.first)
+                if (s->text() == i.first)
                 {
                     line->point_type(i.second);
                     break;
@@ -189,7 +189,7 @@ static std::shared_ptr<egt::ComboBox> create_bar_pattern(const std::shared_ptr<e
 
     auto combo = std::make_shared<egt::ComboBox>();
     for (auto& i : bar_pattern)
-        combo->add_item(i.first);
+        combo->add_item(std::make_shared<egt::StringItem>(i.first));
     combo->margin(5);
 
     combo->on_selected_changed([combo, chart]()
@@ -197,7 +197,7 @@ static std::shared_ptr<egt::ComboBox> create_bar_pattern(const std::shared_ptr<e
         auto s = combo->item_at(combo->selected());
         for (auto& i : bar_pattern)
         {
-            if (s == i.first)
+            if (s->text() == i.first)
             {
                 chart->bar_style(i.second);
                 break;
@@ -371,7 +371,7 @@ static std::shared_ptr<egt::HorizontalBoxSizer> create_line_combo(const std::sha
 
     auto pattern = std::make_shared<egt::ComboBox>();
     for (auto& i : line_patterns)
-        pattern->add_item(i.first);
+        pattern->add_item(std::make_shared<egt::StringItem>(i.first));
     pattern->margin(5);
     hsizer->add(pattern);
 
@@ -380,7 +380,7 @@ static std::shared_ptr<egt::HorizontalBoxSizer> create_line_combo(const std::sha
         auto s = pattern->item_at(pattern->selected());
         for (auto& i : line_patterns)
         {
-            if (s == i.first)
+            if (s->text() == i.first)
             {
                 chart->line_style(i.second);
                 break;
@@ -392,7 +392,7 @@ static std::shared_ptr<egt::HorizontalBoxSizer> create_line_combo(const std::sha
     auto line_width = std::make_shared<egt::ComboBox>();
     for (int i = 1; i < 10; i++)
     {
-        line_width->add_item("LineWidth: " + std::to_string(i));
+        line_width->add_item(std::make_shared<egt::StringItem>("LineWidth: " + std::to_string(i)));
     }
     line_width->margin(5);
     hsizer->add(line_width);
@@ -400,7 +400,7 @@ static std::shared_ptr<egt::HorizontalBoxSizer> create_line_combo(const std::sha
     line_width->on_selected_changed([line_width, chart]()
     {
         auto s = line_width->item_at(line_width->selected());
-        chart->line_width(strtoul(s.substr(11, 1).c_str(), nullptr, 10));
+        chart->line_width(strtoul(s->text().substr(11, 1).c_str(), nullptr, 10));
     });
     line_width->selected(0);
 
@@ -517,7 +517,7 @@ int main(int argc, char** argv)
 
     auto combo = std::make_shared<egt::ComboBox>();
     for (auto& i : combo_items)
-        combo->add_item(i.first);
+        combo->add_item(std::make_shared<egt::StringItem>(i.first));
     combo->align(egt::AlignFlag::center_vertical | egt::AlignFlag::right);
     combo->margin(5);
     frame->add(combo);
@@ -527,11 +527,11 @@ int main(int argc, char** argv)
         auto s = combo->item_at(combo->selected());
         for (auto& i : combo_items)
         {
-            if (s == i.first)
+            if (s->text() == i.first)
             {
                 egt::global_theme(i.second());
 
-                if ((s == "Midnight") || (s == "Lapis"))
+                if ((s->text() == "Midnight") || (s->text() == "Lapis"))
                     logo->image(egt::Image("icon:egt_logo_white.png;128"));
                 else
                     logo->image(egt::Image("icon:egt_logo_black.png;128"));
@@ -557,7 +557,7 @@ int main(int argc, char** argv)
 
     auto chart = std::make_shared<egt::ComboBox>();
     for (auto& i : charts_items)
-        chart->add_item(i.first);
+        chart->add_item(std::make_shared<egt::StringItem>(i.first));
     chart->align(egt::AlignFlag::center_vertical | egt::AlignFlag::center);
     chart->margin(5);
     frame->add(chart);
@@ -572,7 +572,7 @@ int main(int argc, char** argv)
         auto s = chart->item_at(chart->selected());
         for (auto& i : charts_items)
         {
-            if (s == i.first)
+            if (s->text() == i.first)
             {
                 hsizer.add(expand(i.second()));
             }

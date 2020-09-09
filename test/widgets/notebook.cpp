@@ -360,11 +360,16 @@ struct ComboPage : public egt::NotebookTab
         {
             egt::ComboBox::ItemArray combo_items;
             for (auto x = 0; x < 5; x++)
-                combo_items.push_back("item " + std::to_string(x));
+                combo_items.push_back(std::make_shared<egt::StringItem>("item " + std::to_string(x)));
             auto combo1 = std::make_shared<egt::ComboBox>(combo_items);
             combo1->margin(10);
             vsizer->add(combo1);
+        }
 
+        {
+            egt::ComboBox::ItemArray combo_items;
+            for (auto x = 0; x < 5; x++)
+                combo_items.push_back(std::make_shared<egt::StringItem>("item " + std::to_string(x)));
             auto combo2 = std::make_shared<egt::ComboBox>(combo_items);
             combo2->margin(10);
             combo2->disable();
@@ -374,7 +379,7 @@ struct ComboPage : public egt::NotebookTab
         {
             egt::ComboBox::ItemArray combo_items;
             for (auto x = 0; x < 25; x++)
-                combo_items.push_back("item " + std::to_string(x));
+                combo_items.push_back(std::make_shared<egt::StringItem>("item " + std::to_string(x)));
             auto combo3 = std::make_shared<egt::ComboBox>(combo_items);
             combo3->margin(10);
             vsizer->add(combo3);

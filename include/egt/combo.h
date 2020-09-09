@@ -15,6 +15,7 @@
 #include <egt/list.h>
 #include <egt/popup.h>
 #include <egt/signal.h>
+#include <egt/string.h>
 #include <egt/widget.h>
 #include <memory>
 #include <string>
@@ -55,12 +56,12 @@ public:
     /** @} */
 
     /// Item array type
-    using ItemArray = std::vector<std::string>;
+    using ItemArray = std::vector<std::shared_ptr<StringItem>>;
 
     /**
      * @param[in] items Array of items to insert into the list.
      */
-    explicit ComboBox(const ItemArray& items = {}) noexcept;
+    explicit ComboBox(const ItemArray& items = ItemArray()) noexcept;
 
     /**
      * @param[in] rect Rectangle for the widget.
@@ -71,7 +72,7 @@ public:
      * @param[in] items Array of items to insert into the list.
      * @param[in] rect Rectangle for the widget.
      */
-    ComboBox(ItemArray items, const Rect& rect) noexcept;
+    ComboBox(const ItemArray& items, const Rect& rect) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
@@ -107,51 +108,38 @@ public:
     /**
      * Get the index of the selected item.
      */
-    EGT_NODISCARD ssize_t selected() const { return m_selected; }
+    EGT_NODISCARD ssize_t selected() const { return m_list.selected(); }
 
     /**
      * Append a new item to the ComboBox.
      */
-    void add_item(const std::string& item);
+    void add_item(const std::shared_ptr<StringItem>& item);
 
     /**
-     * Remove a item from a ComboBox.
+     * Remove an item from a ComboBox.
      */
-    bool remove_item(const std::string& item);
+    void remove_item(StringItem* item);
 
     /**
      * Get an item at the specified index.
      */
-    EGT_NODISCARD std::string item_at(size_t index) const { return m_items.at(index); }
+    EGT_NODISCARD std::shared_ptr<StringItem> item_at(size_t index) const
+    {
+        return m_list.item_at(index);
+    }
 
     /**
      * Return the number of items in the list.
      */
     EGT_NODISCARD size_t item_count() const
     {
-        return m_items.size();
+        return m_list.item_count();
     }
 
     /**
      * Remove all items from the list.
      */
     void clear();
-
-    /**
-     * Set the text alignment within the Label.
-     *
-     * @param[in] align Alignment for the text.
-     */
-    void text_align(const AlignFlags& align)
-    {
-        if (detail::change_if_diff<>(m_text_align, align))
-            damage();
-    }
-
-    /**
-     * Get the text alignment within the Label.
-     */
-    EGT_NODISCARD AlignFlags text_align() const { return m_text_align; }
 
     void serialize(Serializer& serializer) const override;
 
@@ -162,17 +150,11 @@ protected:
 
     void set_parent(Frame* parent) override;
 
-    /// Item array.
-    ItemArray m_items;
-
-    /// Currently selected index.
-    ssize_t m_selected{-1};
+    /// Internal list.
+    ListBox m_list;
 
     /// Popup associated with the ComboBox.
     std::shared_ptr<detail::ComboBoxPopup> m_popup;
-
-    /// Alignment of the text.
-    AlignFlags m_text_align{AlignFlag::left | AlignFlag::center};
 
     friend class detail::ComboBoxPopup;
 };

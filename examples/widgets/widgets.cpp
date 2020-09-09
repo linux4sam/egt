@@ -380,11 +380,16 @@ struct ComboPage : public egt::NotebookTab
         {
             egt::ComboBox::ItemArray combo_items;
             for (auto x = 0; x < 5; x++)
-                combo_items.push_back("item " + std::to_string(x));
+                combo_items.push_back(std::make_shared<egt::StringItem>("item " + std::to_string(x)));
             auto combo1 = std::make_shared<egt::ComboBox>(combo_items);
             combo1->margin(10);
             vsizer->add(combo1);
+        }
 
+        {
+            egt::ComboBox::ItemArray combo_items;
+            for (auto x = 0; x < 5; x++)
+                combo_items.push_back(std::make_shared<egt::StringItem>("item " + std::to_string(x)));
             auto combo2 = std::make_shared<egt::ComboBox>(combo_items);
             combo2->margin(10);
             combo2->disable();
@@ -394,7 +399,7 @@ struct ComboPage : public egt::NotebookTab
         {
             egt::ComboBox::ItemArray combo_items;
             for (auto x = 0; x < 25; x++)
-                combo_items.push_back("item " + std::to_string(x));
+                combo_items.push_back(std::make_shared<egt::StringItem>("item " + std::to_string(x)));
             auto combo3 = std::make_shared<egt::ComboBox>(combo_items);
             combo3->margin(10);
             vsizer->add(combo3);
@@ -590,7 +595,7 @@ int main(int argc, char** argv)
 
     egt::ComboBox combo;
     for (const auto& i : combo_items)
-        combo.add_item(i.first);
+        combo.add_item(std::make_shared<egt::StringItem>(i.first));
     combo.align(egt::AlignFlag::center_vertical | egt::AlignFlag::right);
     combo.margin(5);
     frame.add(combo);
@@ -602,7 +607,7 @@ int main(int argc, char** argv)
                                     end(combo_items),
                                     [&s](const auto & element)
         {
-            return s == element.first;
+            return s->text() == element.first;
         });
         if (i != end(combo_items))
             global_theme(i->second());

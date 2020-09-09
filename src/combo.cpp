@@ -8,6 +8,7 @@
 #include "egt/frame.h"
 #include "egt/image.h"
 #include "egt/painter.h"
+#include "egt/string.h"
 #include "egt/window.h"
 #include <memory>
 
@@ -42,9 +43,6 @@ protected:
     /// Position algorithm.
     void smart_pos();
 
-    /// ListBox of ComboBox items.
-    std::shared_ptr<ListBox> m_list;
-
     /// Parent ComboBox.
     ComboBox& m_parent;
 
@@ -53,7 +51,6 @@ protected:
 
 ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
     : Popup(Size(parent.size().width(), 40)),
-      m_list(std::make_shared<ListBox>()),
       m_parent(parent)
 {
     name("ComboBoxPopup" + std::to_string(m_widgetid));
@@ -64,17 +61,6 @@ ComboBoxPopup::ComboBoxPopup(ComboBox& parent)
     auto black = Palette::gray;
     black.alpha(0x30);
     color(egt::Palette::ColorId::border, black);
-
-    m_list->align(AlignFlag::expand);
-
-    add(m_list);
-
-    m_list->on_selected_changed([this]()
-    {
-        // ?? how to stop event
-        //event.stop();
-        m_parent.selected(m_list->selected());
-    });
 }
 
 void ComboBoxPopup::smart_pos()
@@ -84,7 +70,7 @@ void ComboBoxPopup::smart_pos()
         const auto ss = Application::instance().screen()->size();
         auto height =
             std::min(static_cast<DefaultDim>(ss.height() / 40),
-                     static_cast<DefaultDim>(m_list->item_count())) * 40;
+                     static_cast<DefaultDim>(m_parent.m_list.item_count())) * 40;
 
         // hack because list child area is smaller by this much
         height += 2.0 * 3.0;
@@ -102,16 +88,6 @@ void ComboBoxPopup::smart_pos()
 
 void ComboBoxPopup::show()
 {
-    m_list->clear();
-    for (const auto& item : m_parent.m_items)
-    {
-        auto p = std::make_shared<StringItem>(item);
-        m_list->add_item(p);
-    }
-
-    if (!m_parent.m_items.empty())
-        m_list->selected(m_parent.selected());
-
     smart_pos();
     Popup::show();
 }
@@ -155,10 +131,9 @@ ComboBox::ComboBox(const Rect& rect) noexcept
  * happens in constructor.
  */
 
-ComboBox::ComboBox(ItemArray items,
+ComboBox::ComboBox(const ItemArray& items,
                    const Rect& rect) noexcept
     : Widget(rect),
-      m_items(std::move(items)),
       m_popup(std::make_shared<detail::ComboBoxPopup>(*this))
 {
     name("ComboBox" + std::to_string(m_widgetid));
@@ -170,9 +145,24 @@ ComboBox::ComboBox(ItemArray items,
 
     grab_mouse(true);
 
+    m_popup->add(m_list);
+
+    m_list.align(AlignFlag::expand);
+
+    for (auto& i : items)
+    {
+        m_list.add_item(i);
+    }
+
     // automatically select the first item
-    if (!m_items.empty())
-        m_selected = 0;
+    if (m_list.item_count())
+        m_list.selected(0);
+
+    m_list.on_selected_changed([this]()
+    {
+        damage();
+        on_selected_changed.invoke();
+    });
 }
 
 ComboBox::ComboBox(Frame& parent, const ItemArray& items, const Rect& rect) noexcept
@@ -181,33 +171,26 @@ ComboBox::ComboBox(Frame& parent, const ItemArray& items, const Rect& rect) noex
     parent.add(*this);
 }
 
-void ComboBox::add_item(const std::string& item)
+void ComboBox::add_item(const std::shared_ptr<StringItem>& item)
 {
-    m_items.push_back(item);
+    m_list.add_item(item);
 
-    if (m_items.size() == 1)
-        m_selected = 0;
+    if (m_list.item_count() == 1)
+        m_list.selected(0);
 
     damage();
 }
 
-bool ComboBox::remove_item(const std::string& item)
+void ComboBox::remove_item(StringItem* item)
 {
-    const auto it = std::find(m_items.begin(), m_items.end(), item);
-    if (it != m_items.end())
-    {
-        m_items.erase(it);
-        damage();
-        return true;
-    }
-    return false;
+    return m_list.remove_item(item);
 }
 
 void ComboBox::clear()
 {
-    if (!m_items.empty())
+    if (m_list.item_count())
     {
-        m_items.clear();
+        m_list.clear();
         damage();
     }
 }
@@ -247,15 +230,7 @@ void ComboBox::handle(Event& event)
 
 void ComboBox::selected(size_t index)
 {
-    if (m_selected != static_cast<ssize_t>(index))
-    {
-        if (index < m_items.size())
-        {
-            m_selected = index;
-            damage();
-            on_selected_changed.invoke();
-        }
-    }
+    m_list.selected(index);
 }
 
 void ComboBox::resize(const Size& s)
@@ -307,17 +282,18 @@ void ComboBox::default_draw(ComboBox& widget, Painter& painter, const Rect& /*re
     painter.line_width(widget.theme().default_border());
     painter.stroke();
 
-    if (widget.selected() >= 0 && widget.selected() < static_cast<ssize_t>(widget.item_count()))
+    if (widget.m_list.selected() >= 0 && widget.m_list.selected() < static_cast<ssize_t>(widget.m_list.item_count()))
     {
         // text
         painter.set(widget.color(Palette::ColorId::text));
         painter.set(widget.font());
-        const auto size = painter.text_size(widget.item_at(widget.selected()));
+        const auto item = widget.m_list.item_at(widget.m_list.selected());
+        const auto size = painter.text_size(item->text());
         const auto target = detail::align_algorithm(size,
                             text,
-                            widget.text_align());
+                            item->text_align());
         painter.draw(target.point());
-        painter.draw(widget.item_at(widget.selected()));
+        painter.draw(item->text());
     }
 }
 
@@ -325,15 +301,23 @@ void ComboBox::serialize(Serializer& serializer) const
 {
     Widget::serialize(serializer);
 
-    auto index = 0;
-    for (const auto& item : m_items)
+    for (size_t i = 0; i < m_list.item_count(); i++)
     {
-        if (index == selected())
-            serializer.add_property("item", item, {{"selected", "true"}});
-        else
-            serializer.add_property("item", item);
+        Serializer::Attributes attrs;
+        auto item = m_list.item_at(i);
+        if (item)
+        {
+            if (!item->image().empty())
+                attrs.push_back({"image", item->image().uri()});
 
-        ++index;
+            if (!item->text().empty())
+                attrs.push_back({"text_align", item->text_align().to_string()});
+
+            if (static_cast<ssize_t>(i) == selected())
+                attrs.push_back({"selected", "true"});
+
+            serializer.add_property("item", item->text(), attrs);
+        }
     }
 }
 
@@ -342,12 +326,23 @@ void ComboBox::deserialize(const std::string& name, const std::string& value,
 {
     if (name == "item")
     {
-        add_item(value);
+        std::string text;
+        Image image;
+        AlignFlags text_align;
+
         for (const auto& i : attrs)
         {
+            if (i.first == "image")
+                image = Image(i.second);
+
+            if (i.first == "text_align")
+                text_align = AlignFlags(i.second);
+
             if (i.first == "selected" && detail::from_string(i.second))
                 selected(item_count() - 1);
         }
+
+        add_item(std::make_shared<StringItem>(value, image, Rect(), text_align));
     }
     else
         Widget::deserialize(name, value, attrs);
