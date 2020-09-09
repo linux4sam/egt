@@ -191,7 +191,7 @@ void ComboBox::add_item(const std::string& item)
     damage();
 }
 
-bool ComboBox::remove(const std::string& item)
+bool ComboBox::remove_item(const std::string& item)
 {
     const auto it = std::find(m_items.begin(), m_items.end(), item);
     if (it != m_items.end())

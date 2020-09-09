@@ -117,7 +117,7 @@ public:
     /**
      * Remove a item from a ComboBox.
      */
-    bool remove(const std::string& item);
+    bool remove_item(const std::string& item);
 
     /**
      * Get an item at the specified index.
