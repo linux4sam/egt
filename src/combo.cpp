@@ -257,6 +257,16 @@ Size ComboBox::min_size_hint() const
     return DEFAULT_COMBOBOX_SIZE + Widget::min_size_hint();
 }
 
+void ComboBox::show_popup() const
+{
+    m_popup->show_modal();
+}
+
+void ComboBox::hide_popup() const
+{
+    m_popup->hide();
+}
+
 void ComboBox::draw(Painter& painter, const Rect& rect)
 {
     Drawer<ComboBox>::draw(*this, painter, rect);

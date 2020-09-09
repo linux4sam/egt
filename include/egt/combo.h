@@ -137,6 +137,16 @@ public:
     }
 
     /**
+     * Show the ComboBox popup.
+     */
+    void show_popup() const;
+
+    /**
+     * Hide the ComboBox popup.
+     */
+    void hide_popup() const;
+
+    /**
      * Remove all items from the list.
      */
     void clear();
