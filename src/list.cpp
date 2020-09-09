@@ -8,6 +8,7 @@
 #include "egt/input.h"
 #include "egt/list.h"
 #include "egt/painter.h"
+#include "egt/string.h"
 
 namespace egt
 {

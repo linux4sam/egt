@@ -221,6 +221,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/sizer.h \
 ../include/egt/slider.h \
 ../include/egt/sprite.h \
+../include/egt/string.h \
 ../include/egt/text.h \
 ../include/egt/textwidget.h \
 ../include/egt/theme.h \
