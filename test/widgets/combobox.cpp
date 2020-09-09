@@ -57,7 +57,7 @@ TEST_P(ComboBoxWidgetTest, TestWidget)
 
     EXPECT_TRUE(widget->item_at(5) == "Testitem 5");
 
-    EXPECT_TRUE(widget->remove("Testitem 5"));
+    EXPECT_TRUE(widget->remove_item("Testitem 5"));
     item_count -= 1;
     EXPECT_EQ(static_cast<int>(widget->item_count()), item_count);
 
@@ -76,7 +76,7 @@ TEST_P(ComboBoxWidgetTest, TestWidget)
     EXPECT_EQ(static_cast<int>(widget->item_count()), item_count);
 
     for (auto x = 0; x < 3; x++)
-        widget->remove("Testitem " + std::to_string(x));
+        widget->remove_item("Testitem " + std::to_string(x));
     item_count -= 3;
     EXPECT_EQ(static_cast<int>(widget->item_count()), item_count);
 }

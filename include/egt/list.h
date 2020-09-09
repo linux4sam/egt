@@ -198,7 +198,7 @@ public:
     /**
      * Add a new item to the end of the list.
      */
-    void add_item(const std::shared_ptr<StringItem>& widget);
+    void add_item(const std::shared_ptr<StringItem>& item);
 
     /**
      * Get the currently selected index item from list.
