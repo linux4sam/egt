@@ -392,21 +392,17 @@ public:
         return true;
     }
 
-    /**
-     * Reset the animation sequence back to the beginning.
-     */
-    virtual void reset()
-    {
-        stop();
-        m_current = 0;
-    }
-
     void start() override
     {
         // TODO: this does not handle an already running sequence
-
+        // Prevent case when sequence is started without any animation added.
         if (m_current >= m_animations.size())
             return;
+
+        if (running())
+            stop();
+
+        m_current = 0;
 
         m_animations[m_current]->start();
 

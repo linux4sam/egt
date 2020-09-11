@@ -65,7 +65,7 @@ public:
 
         list1->on_selected_changed([this, list1]()
         {
-            m_seq.reset();
+            m_seq.stop();
             m_animation.easing_func(easing_functions[list1->selected()].first);
             m_seq.start();
 

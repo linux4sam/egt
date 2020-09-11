@@ -57,7 +57,7 @@ public:
         switch (event.id())
         {
         case egt::EventId::pointer_drag_start:
-            m_seq.reset();
+            m_seq.stop();
             if (!m_boxes.empty())
                 m_start = m_boxes.front()->x();
             break;
