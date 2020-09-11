@@ -246,6 +246,9 @@ protected:
     /// Ending value.
     EasingScalar m_end{0};
 
+    /// Keep track of the progress of the animation.
+    EasingScalar m_elapsed{0};
+
     /// Easing function.
     EasingFunc m_easing{easing_linear};
 
@@ -255,11 +258,8 @@ protected:
     /// Duration of the animation.
     std::chrono::milliseconds m_duration{};
 
-    /// Absolute time when the animation was started.
-    std::chrono::time_point<std::chrono::steady_clock> m_start_time;
-
-    /// Absolute time when the animation will end.
-    std::chrono::time_point<std::chrono::steady_clock> m_stop_time;
+    /// Absolute time used to track the animation time elapsed.
+    std::chrono::time_point<std::chrono::steady_clock> m_intermediate_time;
 
     /// Is the animation running in reverse.
     bool m_reverse{false};

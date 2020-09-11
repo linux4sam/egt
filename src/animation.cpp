@@ -30,8 +30,8 @@ Animation::Animation(EasingScalar start, EasingScalar end,
 
 void Animation::start()
 {
-    m_start_time = std::chrono::steady_clock::now();
-    m_stop_time = m_start_time + m_duration;
+    m_elapsed = 0;
+    m_intermediate_time = std::chrono::steady_clock::now();
     m_running = true;
     m_current = m_start;
     if (m_round)
@@ -46,7 +46,12 @@ bool Animation::next()
         return false;
 
     auto now = std::chrono::steady_clock::now();
-    if (now >= m_stop_time)
+    m_elapsed += std::chrono::duration<EasingScalar, std::milli>(now - m_intermediate_time).count();
+    m_intermediate_time = now;
+
+    auto percent = m_elapsed / m_duration.count();
+
+    if (percent >= 1)
     {
         m_running = false;
         m_current = m_end;
@@ -57,8 +62,6 @@ bool Animation::next()
     }
     else
     {
-        auto percent = std::chrono::duration<EasingScalar, std::milli>(now - m_start_time).count() /
-                       std::chrono::duration<EasingScalar, std::milli>(m_stop_time - m_start_time).count();
         auto result = detail::interpolate(m_easing, percent, m_start, m_end, m_reverse);
 
         if (m_round)
