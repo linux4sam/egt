@@ -259,8 +259,11 @@ struct ProgressPage : public egt::NotebookTab
 {
     ProgressPage()
     {
+        auto vsizer = std::make_shared<egt::VerticalBoxSizer>();
+        add(egt::expand(vsizer));
+
         auto grid0 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(2, 8), 5);
-        add(egt::expand(grid0));
+        vsizer->add(egt::expand(grid0));
 
         auto spinprogress = std::make_shared<egt::SpinProgress>();
         grid0->add(egt::expand(spinprogress));
@@ -271,6 +274,33 @@ struct ProgressPage : public egt::NotebookTab
         auto progressbar1 = std::make_shared<egt::ProgressBar>();
         progressbar1->show_label(false);
         grid0->add(egt::expand(progressbar1));
+
+        auto hsizer = std::make_shared<egt::HorizontalBoxSizer>();
+        vsizer->add(egt::expand_horizontal(hsizer));
+
+        auto start = std::make_shared<egt::Button>("Start");
+        hsizer->add(start);
+        start->on_click([this](egt::Event&)
+        {
+            for (auto& animator : m_animators)
+                animator->start();
+        });
+
+        auto stop = std::make_shared<egt::Button>("Stop");
+        hsizer->add(stop);
+        stop->on_click([this](egt::Event&)
+        {
+            for (auto& animator : m_animators)
+                animator->stop();
+        });
+
+        auto resume = std::make_shared<egt::Button>("Resume");
+        hsizer->add(resume);
+        resume->on_click([this](egt::Event&)
+        {
+            for (auto& animator : m_animators)
+                animator->resume();
+        });
 
         m_animators.push_back(demo_up_down_animator(spinprogress));
         m_animators.push_back(demo_up_down_animator(progressbar));
