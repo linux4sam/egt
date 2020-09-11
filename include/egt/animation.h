@@ -100,6 +100,11 @@ public:
     virtual void stop() = 0;
 
     /**
+     * Resume the animation.
+     */
+    virtual void resume() = 0;
+
+    /**
      * Returns true if the animation is currently running.
      */
     EGT_NODISCARD virtual bool running() const { return m_running; }
@@ -224,6 +229,9 @@ public:
 
     /// Stop the animation.
     void stop() override;
+
+    /// Resume the animation.
+    void resume() override;
 
     /// Get the current value.
     EGT_NODISCARD EasingScalar current() const { return m_current; }
@@ -394,7 +402,6 @@ public:
 
     void start() override
     {
-        // TODO: this does not handle an already running sequence
         // Prevent case when sequence is started without any animation added.
         if (m_current >= m_animations.size())
             return;
@@ -444,6 +451,19 @@ public:
         m_animations[m_current]->stop();
 
         m_running = false;
+    }
+
+    void resume() override
+    {
+        if (m_current >= m_animations.size())
+            return;
+
+        if (running())
+            return;
+
+        m_animations[m_current]->resume();
+
+        m_running = true;
     }
 
 protected:
@@ -498,6 +518,7 @@ public:
 
     void start() override;
     void stop() override;
+    void resume() override;
 
     /**
      * Change the interval of the internal timer.
@@ -656,6 +677,11 @@ public:
     void stop() override
     {
         m_timer.cancel();
+    }
+
+    void resume() override
+    {
+        m_timer.start();
     }
 
 protected:

@@ -89,6 +89,16 @@ void Animation::stop()
     m_running = false;
 }
 
+void Animation::resume()
+{
+    if (running())
+        return;
+
+    m_intermediate_time = std::chrono::steady_clock::now();
+    m_running = true;
+    next();
+}
+
 AutoAnimation::AutoAnimation(EasingScalar start, EasingScalar end,
                              std::chrono::milliseconds duration,
                              const EasingFunc& func,
@@ -121,6 +131,12 @@ void AutoAnimation::stop()
 {
     m_timer.cancel();
     Animation::stop();
+}
+
+void AutoAnimation::resume()
+{
+    Animation::resume();
+    m_timer.start();
 }
 
 void AutoAnimation::interval(std::chrono::milliseconds duration)
