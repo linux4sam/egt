@@ -216,7 +216,7 @@ public:
      */
     void reverse(bool rev) { m_reverse = rev; }
 
-    /// Start the animation.
+    /// Start the animation from its start value.
     void start() override;
 
     /**
@@ -230,7 +230,7 @@ public:
     /// Stop the animation.
     void stop() override;
 
-    /// Resume the animation.
+    /// Resume the animation from its current value.
     void resume() override;
 
     /// Get the current value.
