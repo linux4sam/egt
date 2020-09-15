@@ -126,7 +126,7 @@ PixelFormat egt_format(cairo_format_t format)
 
 static constexpr std::pair<PixelFormat, const char*> gstreamer_formats[] =
 {
-    {PixelFormat::argb8888, "BGRx"},
+    {PixelFormat::argb8888, "BGRA"},
     {PixelFormat::xrgb8888, "BGRx"},
     {PixelFormat::rgb565, "RGB16"},
     {PixelFormat::yuv420, "I420"},
