@@ -7,6 +7,7 @@
 #include <cxxopts.hpp>
 #include <egt/detail/string.h>
 #include <egt/ui>
+#include <fstream>
 #include <iostream>
 #include <sstream>
 
@@ -44,6 +45,25 @@ static inline T ns2ms(T n)
     return n / 1000000UL;
 }
 
+static bool is_target_sama5d4()
+{
+    std::ifstream infile("/proc/device-tree/model");
+    if (infile.is_open())
+    {
+        std::string line;
+        while (getline(infile, line))
+        {
+            if (line.find("SAMA5D4") != std::string::npos)
+            {
+                infile.close();
+                return true;
+            }
+        }
+        infile.close();
+    }
+    return false;
+}
+
 int main(int argc, char** argv)
 {
     cxxopts::Options options(argv[0], "play video file");
@@ -52,7 +72,7 @@ int main(int argc, char** argv)
     ("i,input", "URI to video file", cxxopts::value<std::string>())
     ("width", "Width of the stream", cxxopts::value<int>()->default_value("320"))
     ("height", "Height of the stream", cxxopts::value<int>()->default_value("192"))
-    ("f,format", "Pixel format", cxxopts::value<std::string>()->default_value("yuv420"), "[egt::PixelFormat]");
+    ("f,format", "Pixel format", cxxopts::value<std::string>()->default_value(is_target_sama5d4() ? "xrgb8888" : "yuv420"), "[egt::PixelFormat]");
     auto args = options.parse(argc, argv);
 
     if (args.count("help") ||

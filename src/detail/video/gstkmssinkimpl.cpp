@@ -46,25 +46,19 @@ GstKmsSinkImpl::GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool de
         "libgstvideoconvert.so",
     };
     detail::gst_init_plugins(plugins);
-
-    auto s = reinterpret_cast<detail::KMSOverlay*>(interface.screen());
-    assert(s);
-    auto format = detail::egt_format(s->get_plane_format());
-    if ((format != PixelFormat::yuyv) && (format != PixelFormat::xrgb8888))
-    {
-        throw std::runtime_error("Error: Invalid format: supported formats are xrgb8888 & yuyv for sama5d4");
-    }
 }
 
 std::string GstKmsSinkImpl::create_pipeline()
 {
     std::string format = "BGRx";
+    PixelFormat pf;
     if (m_interface.plane_window())
     {
         auto s = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
         assert(s);
         m_gem = s->gem();
-        format = detail::gstreamer_format(detail::egt_format(s->get_plane_format()));
+        pf = detail::egt_format(s->get_plane_format());
+        format = detail::gstreamer_format(pf);
         EGTLOG_DEBUG("egt_format = {}", format);
     }
 
@@ -111,7 +105,21 @@ std::string GstKmsSinkImpl::create_pipeline()
             }
         }
 
-        v_pipe = fmt::format(" ! video/x-raw,width={},height={},format={}", m_size.width(), m_size.height(), format);
+        /**
+         * sama5d4 post processing module supports only below pixel formats
+         * if planewindow is created with other pixel format, then throw an exception
+         */
+        if ((pf == PixelFormat::rgb565) || (pf == PixelFormat::xrgb8888) ||
+            (pf == PixelFormat::yuyv) || (pf == PixelFormat::yvyu) ||
+            (pf == PixelFormat::yuy2) || (pf == PixelFormat::yuy2) ||
+            (pf == PixelFormat::uyvy))
+        {
+            v_pipe = fmt::format(" ! video/x-raw,width={},height={},format={}", m_size.width(), m_size.height(), format);
+        }
+        else
+        {
+            throw std::runtime_error(fmt::format("sama5d4 g1-decoder does not support {} pixel format", pf));
+        }
     }
     else
     {
