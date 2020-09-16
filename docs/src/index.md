@@ -22,6 +22,7 @@ modern GUI functionality, look-and-feel, and maximizes performance.
 @li @ref debug
 @li @ref custom
 @li @ref eclipse
+@li @ref api_changes
 
 @section index_contact Contact and Support
 

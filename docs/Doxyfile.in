@@ -838,6 +838,7 @@ INPUT                  = @top_srcdir@/docs/src/index.md \
                          @top_srcdir@/docs/src/debugging.md \
                          @top_srcdir@/docs/src/custom.md \
                          @top_srcdir@/docs/src/eclipse.md \
+                         @top_srcdir@/docs/src/api_changes.md \
                          @top_srcdir@/include
 
 # This tag can be used to specify the character encoding of the source files
