@@ -21,13 +21,8 @@ int main(int argc, char** argv)
     auto layout = std::make_shared<egt::VerticalBoxSizer>();
     win.add(expand(layout));
 
-    auto grid = std::make_shared<egt::StaticGrid>(egt::Size(3, 1));
-    grid->height(50);
-    grid->color(egt::Palette::ColorId::bg, egt::Palette::gray);
-    layout->add(expand_horizontal(grid));
-
     auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_black.png;128"));
-    grid->add(center(logo), 1, 0);
+    layout->add(logo);
 
     auto vsizer = std::make_shared<egt::VerticalBoxSizer>();
     layout->add(expand(vsizer));
