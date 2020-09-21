@@ -34,7 +34,7 @@ int main(int argc, char** argv)
 
     std::string root_dir = fs::current_path().string();
 
-    auto fileopen_dialog = std::make_shared<egt::FileOpenDialog>(root_dir, dialog_size);
+    auto fileopen_dialog = std::make_shared<egt::FileOpenDialog>(root_dir);
     fileopen_dialog->on_selected([fileopen_dialog, dialog_result]()
     {
         dialog_result->text("File OpenDialog: " + fileopen_dialog->selected() + " Selected");
@@ -68,7 +68,7 @@ int main(int argc, char** argv)
         filesave_dialog->show_modal(true);
     });
 
-    auto message_dialog = std::make_shared<egt::Dialog>(dialog_size);
+    auto message_dialog = std::make_shared<egt::Dialog>(egt::Rect(0, 0, 400, 200));
     message_dialog->title("Message Dialog Example");
     auto text = std::make_shared<egt::TextBox>("This is an Example of the Ensemble Graphics "
                 "Toolkit Dialog with two buttons");
@@ -97,7 +97,7 @@ int main(int argc, char** argv)
         message_dialog->show_modal(true);
     });
 
-    auto list_dialog = std::make_shared<egt::Dialog>(dialog_size);
+    auto list_dialog = std::make_shared<egt::Dialog>();
     list_dialog->title("List Dialog Box Example");
     list_dialog->button(egt::Dialog::ButtonId::button1, "OK");
     list_dialog->button(egt::Dialog::ButtonId::button2, "Cancel");
@@ -128,11 +128,11 @@ int main(int argc, char** argv)
         list_dialog->show_modal(true);
     });
 
-    auto slider_dialog = std::make_shared<egt::Dialog>(dialog_size);
+    auto slider_dialog = std::make_shared<egt::Dialog>();
     slider_dialog->title("Slider Dialog Example");
     slider_dialog->button(egt::Dialog::ButtonId::button1, "OK");
     slider_dialog->button(egt::Dialog::ButtonId::button2, "Cancel");
-    win.add(slider_dialog);
+    win.add(expand(slider_dialog));
 
     auto slider1 = std::make_shared<egt::Slider>();
     slider1->slider_flags().set({egt::Slider::SliderFlag::round_handle, egt::Slider::SliderFlag::show_label});
