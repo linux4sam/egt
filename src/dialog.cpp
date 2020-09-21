@@ -100,5 +100,36 @@ void Dialog::widget(const std::shared_ptr<Widget>& widget)
     m_content.add(widget);
 }
 
+Size Dialog::min_size_hint() const
+{
+    auto min_height = std::max(m_button1.min_size_hint().height(),
+                               m_button2.min_size_hint().height()) / 0.15;
+
+    if (min_height > Application::instance().screen()->size().height())
+        min_height = Application::instance().screen()->size().height();
+
+    auto min_width = std::max(m_button1.min_size_hint().width(),
+                              m_button2.min_size_hint().width()) * 2;
+
+    if (min_width > Application::instance().screen()->size().width())
+        min_width = Application::instance().screen()->size().width();
+
+    return Size(min_width, min_height);
+}
+
+void Dialog::resize(const Size& size)
+{
+    Popup::resize(size);
+    m_grid->resize(Size(size.width(), size.height() * 0.15));
+}
+
+
+void Dialog::layout()
+{
+    // Resize to min_size_hint if needed and allowed.
+    Widget::layout();
+    Popup::layout();
+}
+
 }
 }

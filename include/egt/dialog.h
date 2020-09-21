@@ -97,6 +97,25 @@ public:
      */
     void widget(const std::shared_ptr<Widget>& widget);
 
+    /**
+     * Get a minimum size hint of the Dialog Widget.
+     */
+    Size min_size_hint() const override;
+
+    /**
+     * Perform layout on dialog Widget.
+     */
+    void layout() override;
+
+    /**
+     * Resize the Dialog Widget.
+     *
+     * Changes the width and height of the Widget.
+     *
+     * @param[in] size The new size of the Widget.
+     */
+    void resize(const Size& size) override;
+
 protected:
 
     /// Layout sizer.
