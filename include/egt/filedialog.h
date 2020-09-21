@@ -13,6 +13,7 @@
 
 #include <egt/button.h>
 #include <egt/detail/meta.h>
+#include <egt/dialog.h>
 #include <egt/grid.h>
 #include <egt/label.h>
 #include <egt/list.h>
@@ -37,7 +38,7 @@ inline namespace v1
  * @note FileDialog widget is using a std::experimental::filesystem
  * library
  */
-class EGT_API FileDialog : public Popup
+class EGT_API FileDialog : public Dialog
 {
 public:
 
@@ -71,16 +72,18 @@ public:
      */
     explicit FileDialog(const std::string& filepath, const Rect& rect = {}) noexcept;
 
+    /**
+     * Show the Widget.
+     *
+     * This changes the visible() state of the Widget.
+     */
+    void show() override;
+
+    void show_centered() override;
+
 protected:
-
-    /// Vertical BoxSizer
-    BoxSizer m_vsizer;
-
-    /// Title of a FileDialog.
-    ImageLabel m_title;
-
     /// List Box for file listing.
-    ListBox m_flist;
+    std::shared_ptr<ListBox> m_flist;
 
     /// File path of a directory.
     std::string m_filepath;
@@ -130,15 +133,6 @@ public:
     explicit FileOpenDialog(const std::string& filepath, const Rect& rect = {}) noexcept;
 
     /**
-     * Show the Widget.
-     *
-     * This changes the visible() state of the Widget.
-     */
-    void show() override;
-
-    void show_centered() override;
-
-    /**
      * Return file selected in file open dialog window.
      *
      * @return full path of the selected file.
@@ -146,15 +140,6 @@ public:
     EGT_NODISCARD std::string selected() const;
 
 protected:
-    /// Grid for organizing okay & cancel Buttons.
-    StaticGrid m_grid;
-
-    /// Okay Button.
-    Button m_okay;
-
-    /// Cancel button.
-    Button m_cancel;
-
     /// File path of a selected file.
     std::string m_fselected;
 
@@ -216,15 +201,6 @@ protected:
 
     /// Input a filename or file path.
     TextBox m_fsave_box;
-
-    /// Grid for organizing okay & cancel Buttons.
-    StaticGrid m_grid;
-
-    /// Okay Button.
-    Button m_okay;
-
-    /// Cancel Button.
-    Button m_cancel;
 
     /// File path of a file save location.
     std::string m_fsave;

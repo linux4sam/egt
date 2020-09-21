@@ -20,24 +20,17 @@ inline namespace v1
 {
 
 FileDialog::FileDialog(const std::string& filepath, const Rect& rect) noexcept
-    : Popup(rect.size(), rect.point()),
-      m_vsizer(Orientation::vertical),
-      m_title(Image("res:internal_folder"), filepath),
+    : Dialog(rect),
+      m_flist(std::make_shared<egt::ListBox>()),
       m_filepath(filepath)
 {
     name("FileDialog" + std::to_string(m_widgetid));
 
-    border(theme().default_border());
-    padding(5);
+    title(Image("res:internal_folder"), filepath),
 
-    add(expand(m_vsizer));
+          widget(expand(m_flist));
 
-    m_title.text_align(AlignFlag::left | AlignFlag::center);
-    m_vsizer.add(expand_horizontal(m_title));
-
-    m_vsizer.add(expand(m_flist));
-
-    m_flist.on_selected([this](size_t index)
+    m_flist->on_selected([this](size_t index)
     {
         list_item_selected(index);
     });
@@ -71,20 +64,20 @@ bool FileDialog::list_files(const std::string& filepath)
 
     EGTLOG_DEBUG("FileDialog : file path is {}", m_filepath);
 
-    m_flist.clear();
+    m_flist->clear();
 
     if (filepath != "/")
     {
-        m_flist.add_item(std::make_shared<StringItem>("./", Rect(), AlignFlag::left | AlignFlag::center));
+        m_flist->add_item(std::make_shared<StringItem>("./", Rect(), AlignFlag::left | AlignFlag::center));
 
-        m_flist.add_item(std::make_shared<StringItem>("../", Rect(), AlignFlag::left | AlignFlag::center));
+        m_flist->add_item(std::make_shared<StringItem>("../", Rect(), AlignFlag::left | AlignFlag::center));
     }
 
     try
     {
         for (auto& dir : fs::directory_iterator(m_filepath))
         {
-            m_flist.add_item(std::make_shared<StringItem>(dir.path().filename().string(), Rect(), AlignFlag::left | AlignFlag::center));
+            m_flist->add_item(std::make_shared<StringItem>(dir.path().filename().string(), Rect(), AlignFlag::left | AlignFlag::center));
         }
     }
     catch (const fs::filesystem_error& ex)
@@ -100,7 +93,7 @@ bool FileDialog::list_files(const std::string& filepath)
 
 void FileDialog::list_item_selected(int index)
 {
-    auto item = dynamic_cast<StringItem*>(m_flist.item_at(index).get());
+    auto item = dynamic_cast<StringItem*>(m_flist->item_at(index).get());
     if (!item)
         return;
 
@@ -137,46 +130,40 @@ void FileDialog::list_item_selected(int index)
     }
 }
 
+void FileDialog::show()
+{
+    list_files(m_filepath);
+    Popup::show();
+}
+
+void FileDialog::show_centered()
+{
+    list_files(m_filepath);
+    Popup::show_centered();
+}
+
 FileOpenDialog::FileOpenDialog(const std::string& filepath, const Rect& rect) noexcept
-    : FileDialog(filepath, rect),
-      m_grid(Size(0, (rect.height() * 0.15)), StaticGrid::GridSize(2, 1), 5),
-      m_okay("OK"),
-      m_cancel("Cancel")
+    : FileDialog(filepath, rect)
 {
     name("FileOpenDialog" + std::to_string(m_widgetid));
 
-    m_vsizer.add(expand_horizontal(m_grid));
-    m_grid.add(expand(m_okay));
-    m_grid.add(expand(m_cancel));
-
-    m_okay.on_event([this](Event&)
+    on_button1_click([this]()
     {
-        list_item_selected(this->m_flist.selected());
-    }, {EventId::pointer_click});
+        this->list_item_selected(this->m_flist->selected());
+    });
 
-    m_cancel.on_event([this](Event&)
+    on_button2_click([this]()
     {
         this->m_fselected = std::string();
-        this->m_flist.clear();
+        this->m_flist->clear();
         this->hide();
-    }, {EventId::pointer_click});
+    });
 }
 
 FileOpenDialog::FileOpenDialog(const Rect& rect) noexcept
     : FileOpenDialog( {}, rect)
 {}
 
-void FileOpenDialog::show()
-{
-    list_files(m_filepath);
-    Popup::show();
-}
-
-void FileOpenDialog::show_centered()
-{
-    list_files(m_filepath);
-    Popup::show_centered();
-}
 
 void FileOpenDialog::selected(const std::string& fselect)
 {
@@ -192,22 +179,21 @@ std::string FileOpenDialog::selected() const
 
 FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect) noexcept
     : FileDialog(filepath, rect),
-      m_fsave_box("", Size(0, rect.height() * 0.15)),
-      m_grid(Size(rect.width() * 0.30, rect.height() * 0.15), StaticGrid::GridSize(2, 1), 5),
-      m_okay("OK"),
-      m_cancel("Cancel")
+      m_fsave_box("", Size(rect.width() * 0.50, rect.height() * 0.15))
 {
-    auto hpositioner = std::make_shared<HorizontalBoxSizer>();
-    m_vsizer.add(expand_horizontal(hpositioner));
+    m_grid->remove_all();
+    m_layout.remove(m_grid.get());
+
+    m_grid.reset(new StaticGrid(Size(rect.width(), (rect.height() * 0.15)), StaticGrid::GridSize(3, 1), 5));
+    m_layout.add(expand_horizontal(m_grid));
 
     m_fsave_box.margin(5);
-    hpositioner->add(expand_horizontal(m_fsave_box));
-    hpositioner->add(m_grid);
+    m_grid->add(expand(m_fsave_box));
 
-    m_grid.add(expand(m_okay));
-    m_grid.add(expand(m_cancel));
+    m_grid->add(expand(m_button1));
+    m_grid->add(expand(m_button2));
 
-    m_okay.on_event([this](Event&)
+    on_button1_click([this]()
     {
         if (!m_fsave.empty())
         {
@@ -218,35 +204,32 @@ FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect) no
             m_fsave = m_fsave_box.text();
             on_selected.invoke();
         }
-    }, {EventId::pointer_click});
+    });
 
-    m_cancel.on_event([this](Event&)
+    on_button2_click([this]()
     {
         this->m_fsave = std::string();
-        this->m_flist.clear();
+        this->m_flist->clear();
         this->m_fsave_box.text(std::string());
         this->hide();
-    }, {EventId::pointer_click});
+    });
 }
 
 FileSaveDialog::FileSaveDialog(const Rect& rect) noexcept
     : FileSaveDialog(std::string(), rect)
 {
-
 }
 
 void FileSaveDialog::show()
 {
     m_fsave_box.text("");
-    list_files(m_filepath);
-    Popup::show();
+    FileDialog::show();
 }
 
 void FileSaveDialog::show_centered()
 {
     m_fsave_box.text("");
-    list_files(m_filepath);
-    Popup::show_centered();
+    FileDialog::show_centered();
 }
 
 void FileSaveDialog::selected(const std::string& fselect)
