@@ -108,6 +108,9 @@ protected:
     /// Dialog title.
     ImageLabel m_title;
 
+    /// Grid for organizing okay & cancel Buttons.
+    std::shared_ptr<StaticGrid> m_grid;
+
     /// Button for okay or cancel.
     Button m_button1;
 

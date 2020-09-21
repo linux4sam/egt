@@ -13,6 +13,7 @@ inline namespace v1
 
 Dialog::Dialog(const Rect& rect) noexcept
     : Popup(rect.size(), rect.point()),
+      m_grid(std::make_shared<egt::StaticGrid>(Size(0, (rect.height() * 0.15)), StaticGrid::GridSize(2, 1), 5)),
       m_button1("OK"),
       m_button2("Cancel")
 {
@@ -29,15 +30,14 @@ Dialog::Dialog(const Rect& rect) noexcept
 
     m_layout.add(expand(m_content));
 
-    auto grid = std::make_shared<StaticGrid>(Rect(0, 0, 0, (rect.height() * 0.15)), StaticGrid::GridSize(2, 1), 5);
-    grid->align(AlignFlag::bottom | AlignFlag::expand_horizontal);
-    m_layout.add(grid);
+    m_grid->align(AlignFlag::bottom | AlignFlag::expand_horizontal);
+    m_layout.add(m_grid);
 
     m_button1.align(AlignFlag::center);
-    grid->add(expand(m_button1));
+    m_grid->add(expand(m_button1));
 
     m_button2.align(AlignFlag::center);
-    grid->add(expand(m_button2));
+    m_grid->add(expand(m_button2));
 
     m_button1.on_event([this](Event & event)
     {
