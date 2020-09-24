@@ -337,9 +337,18 @@ AC_ARG_WITH([gstreamer],
 AS_IF([test "x$with_gstreamer" != "xno"],[
    AX_PKG_CHECK_MODULES2(gstreamer, [], [gstreamer-1.0 >= 1.8], [have_gstreamer=yes], [have_gstreamer=no])
    if test "x${have_gstreamer}" = xyes; then
-      AC_DEFINE(HAVE_GSTREAMER, 1, [Have gstreamer support])
-      LIBEGT_EXTRA_CXXFLAGS="${gstreamer_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-      LIBEGT_EXTRA_LDFLAGS="${gstreamer_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+      AX_PKG_CHECK_MODULES2(gstreamer_plugins_base_dev, [], [gstreamer-app-1.0 >= 1.8], [have_gst_pbdev=yes], [have_gst_pbdev=no])
+      if test "x${have_gst_pbdev}" = xyes; then
+         AC_DEFINE(HAVE_GSTREAMER, 1, [Have gstreamer support])
+         LIBEGT_EXTRA_CXXFLAGS="${gstreamer_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+         LIBEGT_EXTRA_LDFLAGS="${gstreamer_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+
+         AC_DEFINE(HAVE_GSTREAMER_PBDEV, 1, [Have gstreamer-plugin-base1.0-dev support])
+         LIBEGT_EXTRA_CXXFLAGS="${gstreamer_plugins_base_dev_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+         LIBEGT_EXTRA_LDFLAGS="${gstreamer_plugins_base_dev_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
+      else
+	 have_gstreamer=no
+      fi
 
       AX_PKG_CHECK_MODULES2(gstreamer_pbutils, [], [gstreamer-pbutils-1.0 >= 1.8], [have_gst_pbutils=yes], [have_gst_pbutils=no])
       if test "x${have_gst_pbutils}" = xyes; then
@@ -350,10 +359,11 @@ AS_IF([test "x$with_gstreamer" != "xno"],[
    fi
 ])
 if test "x$with_gstreamer" = xyes && test "x${have_gstreamer}" != xyes; then
-   AC_MSG_FAILURE([--with-gstreamer was given, but gstreamer not found])
+   AC_MSG_FAILURE([--with-gstreamer was given, but gstreamer & its dependency packages not found])
 fi
 AM_CONDITIONAL([HAVE_GSTREAMER], [test "x${have_gstreamer}" = xyes])
 AM_CONDITIONAL([HAVE_GSTREAMER_PBUTILS], [test "x${have_gst_pbutils}" = xyes])
+AM_CONDITIONAL([HAVE_GSTREAMER_PBDEV], [test "x${have_gst_pbdev}" = xyes])
 
 AC_ARG_WITH([lua],
     AS_HELP_STRING([--without-lua], [Ignore presence of lua and disable it]),
