@@ -31,7 +31,8 @@ widgets/scrollwheel.cpp \
 widgets/sizer.cpp \
 widgets/slider.cpp \
 widgets/valuerange.cpp \
-widgets/view.cpp
+widgets/view.cpp \
+widgets/window.cpp
 
 if HAVE_GSTREAMER
 test_SOURCES += \

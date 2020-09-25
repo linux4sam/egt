@@ -154,37 +154,4 @@ static const std::string videofiles[] =
 };
 INSTANTIATE_TEST_SUITE_P(DISABLED_VideoWindowTestGroup, VideoWidgetTest, testing::ValuesIn(videofiles));
 
-class CreateVideoWindowTest : public testing::TestWithParam<::testing::tuple<int, int>>
-{
-};
 
-TEST_P(CreateVideoWindowTest, DefaultVideoWindow)
-{
-    egt::Application app;
-    egt::TopWindow win;
-    std::shared_ptr<egt::VideoWindow> m_player;
-
-    egt::PixelFormat format = static_cast<egt::PixelFormat>(::testing::get<0>(GetParam()));
-    egt::WindowHint hint = static_cast<egt::WindowHint>(::testing::get<1>(GetParam()));
-
-    EXPECT_NO_THROW(m_player.reset(new egt::VideoWindow(egt::Size(320, 240), format, hint)));
-
-    if (m_player)
-    {
-        EXPECT_NO_THROW(win.add(m_player));
-
-        bool res = false;
-        std::string file;
-        file = "file:microchip_corporate_mpeg2.avi";
-        EXPECT_EQ(res = m_player->media(file), true);
-        if (res)
-        {
-            EXPECT_TRUE(res = m_player->play());
-            EXPECT_EQ(m_player->format(), format);
-            EXPECT_NO_THROW(m_player->show());
-            EXPECT_NO_THROW(win.show());
-        }
-    }
-}
-
-INSTANTIATE_TEST_SUITE_P(DISABLED_CreateVideoWindowGroup, CreateVideoWindowTest, Combine(Range(1, 11), Values(1, 2, 4, 8, 16)));
