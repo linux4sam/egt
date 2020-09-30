@@ -16,12 +16,10 @@ namespace egt
 inline namespace v1
 {
 
-StaticGrid::StaticGrid(const Rect& rect, const GridSize& size,
-                       DefaultDim border)
+StaticGrid::StaticGrid(const Rect& rect, const GridSize& size)
     : Frame(rect)
 {
     name("StaticGrid" + std::to_string(m_widgetid));
-    this->border(border);
 
     reallocate(size);
 }
@@ -74,20 +72,19 @@ void StaticGrid::reallocate(const GridSize& size)
         x.resize(size.height(), {});
 }
 
-StaticGrid::StaticGrid(const GridSize& size, DefaultDim border)
-    : StaticGrid(Rect(), size, border)
+StaticGrid::StaticGrid(const GridSize& size)
+    : StaticGrid(Rect(), size)
 {
 }
 
-StaticGrid::StaticGrid(Frame& parent, const Rect& rect,
-                       const GridSize& size, DefaultDim border)
-    : StaticGrid(rect, size, border)
+StaticGrid::StaticGrid(Frame& parent, const Rect& rect, const GridSize& size)
+    : StaticGrid(rect, size)
 {
     parent.add(*this);
 }
 
-StaticGrid::StaticGrid(Frame& parent, const GridSize& size, DefaultDim border)
-    : StaticGrid(size, border)
+StaticGrid::StaticGrid(Frame& parent, const GridSize& size)
+    : StaticGrid(size)
 {
     parent.add(*this);
 }
@@ -101,59 +98,37 @@ static constexpr DefaultDim round(DefaultDim x, DefaultDim y)
 }
 
 /*
- * Calculates the rectangle for a cell. This calculates the rectangle right
- * down the center of any border_width if one exists.
+ * Calculates the rectangle for a cell taking into account grid spaces.
  */
-static constexpr Rect cell_rect(int columns, int rows, DefaultDim width, DefaultDim height,
-                                int column, int row, int border_width = 0, int padding = 0)
+static constexpr Rect cell_rect(int columns, int rows,
+                                DefaultDim width, DefaultDim height,
+                                int column, int row,
+                                DefaultDim h_space, DefaultDim v_space)
 {
-    const auto inner_width = detail::round((width - ((columns + 1) * border_width)), columns);
-    const auto inner_height = detail::round((height - ((rows + 1) * border_width)), rows);
+    auto cell_width = detail::round(width - (columns - 1) * v_space, columns);
+    auto cell_height = detail::round(height - (rows - 1) * h_space, rows);
+    auto cell_x = column * (cell_width + v_space);
+    auto cell_y = row * (cell_height + h_space);
 
-    auto ix = (column * border_width) + (column * inner_width) + detail::round(border_width, 2);
-    auto iy = (row * border_width) + (row * inner_height) + detail::round(border_width, 2);
-    auto iw = inner_width + border_width;
-    auto ih = inner_height + border_width;
-
-    ix += padding;
-    iy += padding;
-    iw -= 2. * padding;
-    ih -= 2. * padding;
-
-    if (iw < 0)
-        iw = 0;
-
-    if (ih < 0)
-        ih = 0;
-
-    return {ix, iy, iw, ih};
-}
-
-void StaticGrid::draw(Painter& painter, const Rect& rect)
-{
-    if (grid_flags().is_set(GridFlag::show_border) && border() > 0)
+    /*
+     * If there are errors due to rounding, use the latest column and row to
+     * counterbalance them.
+     */
+    if (column == (columns - 1))
     {
-        const auto b = content_area();
-
-        painter.set(color(Palette::ColorId::border));
-        painter.line_width(border());
-
-        const auto columns = m_cells.size();
-        for (size_t column = 0; column < columns; column++)
-        {
-            const auto rows = m_cells[column].size();
-            for (size_t row = 0; row < rows; row++)
-            {
-                auto r = cell_rect(columns, rows, b.width(), b.height(), column, row, border());
-                r += b.point();
-                painter.draw(r);
-            }
-        }
-
-        painter.stroke();
+        auto error = width - cell_x - cell_width;
+        if (error)
+            cell_width += error;
     }
 
-    Frame::draw(painter, rect);
+    if (row == (rows - 1))
+    {
+        auto error = height - cell_y - cell_height;
+        if (error)
+            cell_height += error;
+    }
+
+    return {cell_x, cell_y, cell_width, cell_height};
 }
 
 void StaticGrid::add(const std::shared_ptr<Widget>& widget)
@@ -298,14 +273,9 @@ void StaticGrid::reposition()
             auto widget = m_cells[column][row].lock();
             if (widget)
             {
-                auto bounding = cell_rect(columns, rows, b.width(), b.height(), column, row, border(), padding());
+                auto bounding = cell_rect(columns, rows, b.width(), b.height(), column, row,
+                                          horizontal_space(), vertical_space());
                 bounding += b.point() - point();
-
-                if (border())
-                {
-                    bounding += Point(detail::round(border(), 2), detail::round(border(), 2));
-                    bounding -= Size(border(), border());
-                }
 
                 if (bounding.size().empty())
                     continue;
@@ -358,18 +328,13 @@ void StaticGrid::layout()
     reposition();
 }
 
-template<>
-const std::pair<StaticGrid::GridFlag, char const*> detail::EnumStrings<StaticGrid::GridFlag>::data[] =
-{
-    {StaticGrid::GridFlag::show_border, "show_border"},
-};
-
 void StaticGrid::serialize(Serializer& serializer) const
 {
-    serializer.add_property("grid_flags", m_grid_flags.to_string());
     serializer.add_property("column_priority", m_column_priority);
     serializer.add_property("n_col", static_cast<unsigned int>(n_col()));
     serializer.add_property("n_row", static_cast<unsigned int>(n_row()));
+    serializer.add_property("horizontal_space", horizontal_space());
+    serializer.add_property("vertical_space", vertical_space());
 
     Frame::serialize(serializer);
 }
@@ -377,14 +342,16 @@ void StaticGrid::serialize(Serializer& serializer) const
 void StaticGrid::deserialize(const std::string& name, const std::string& value,
                              const Serializer::Attributes& attrs)
 {
-    if (name == "grid_flags")
-        m_grid_flags.from_string(value);
-    else if (name == "column_priority")
+    if (name == "column_priority")
         m_column_priority = detail::from_string(value);
     else if (name == "n_col")
         reallocate(GridSize(std::stoi(value), n_row()));
     else if (name == "n_row")
         reallocate(GridSize(n_col(), std::stoi(value)));
+    else if (name == "horizontal_space")
+        horizontal_space(std::stoi(value));
+    else if (name == "vertical_space")
+        vertical_space(std::stoi(value));
     else
         Frame::deserialize(name, value, attrs);
 }
@@ -404,13 +371,10 @@ void SelectableGrid::handle(Event& event)
             auto rows = m_cells[column].size();
             for (size_t row = 0; row < rows; row++)
             {
-                auto bounding = cell_rect(columns, rows, b.width(), b.height(), column, row, border(), padding());
-
-                if (border())
-                {
-                    bounding += Point(detail::round(border(), 2), detail::round(border(), 2));
-                    bounding -= Size(border(), border());
-                }
+                // Include the padding region
+                auto bounding = cell_rect(columns, rows, b.width(), b.height(), column, row,
+                                          horizontal_space(), vertical_space());
+                bounding += content_area().point();
 
                 assert(!bounding.size().empty());
                 if (bounding.size().empty())
@@ -428,13 +392,13 @@ void SelectableGrid::handle(Event& event)
 
 void SelectableGrid::draw(Painter& painter, const Rect& rect)
 {
-    if (border() > 0)
+    StaticGrid::draw(painter, rect);
+
+    // Draw the selection highlight
+    if (selection_highlight() > 0)
     {
         painter.set(color(Palette::ColorId::border));
-        auto line_width = border() / 2;
-        if (line_width <= 0)
-            line_width = border();
-        painter.line_width(line_width);
+        painter.line_width(selection_highlight());
 
         size_t column = m_selected_column;
         size_t row = m_selected_row;
@@ -443,15 +407,17 @@ void SelectableGrid::draw(Painter& painter, const Rect& rect)
 
         auto b = content_area();
 
-        auto r = cell_rect(columns, rows, b.width(), b.height(), column, row, border(), padding());
-        r += b.point();
+        auto cell = cell_rect(columns, rows, b.width(), b.height(), column, row,
+                              horizontal_space(), vertical_space());
 
-        painter.draw(r);
+        auto hx = b.x() + cell.x() + selection_highlight() / 2;
+        auto hy = b.y() + cell.y() + selection_highlight() / 2;
+        auto hwidth = cell.width() - selection_highlight();
+        auto hheight = cell.height() - selection_highlight();
+
+        painter.draw(Rect(Point(hx, hy), Size(hwidth, hheight)));
         painter.stroke();
     }
-
-    // NOLINTNEXTLINE(bugprone-parent-virtual-call)
-    Frame::draw(painter, rect);
 }
 
 void SelectableGrid::selected(size_t column, size_t row)
@@ -478,6 +444,7 @@ void SelectableGrid::serialize(Serializer& serializer) const
 
     serializer.add_property("selected_column", static_cast<int>(m_selected_column));
     serializer.add_property("selected_row", static_cast<int>(m_selected_row));
+    serializer.add_property("selection_highlight", selection_highlight());
 }
 
 void SelectableGrid::deserialize(const std::string& name, const std::string& value,
@@ -487,6 +454,8 @@ void SelectableGrid::deserialize(const std::string& name, const std::string& val
         m_selected_column = std::stoul(value);
     else if (name == "selected_row")
         m_selected_row = std::stoul(value);
+    else if (name == "selection_highlight")
+        selection_highlight(std::stoi(value));
     else
         StaticGrid::deserialize(name, value, attrs);
 }

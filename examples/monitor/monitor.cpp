@@ -45,7 +45,7 @@ int main(int argc, char** argv)
     line1.color(egt::Palette::ColorId::label_text, egt::Palette::white);
     line1.color(egt::Palette::ColorId::button_bg, egt::Palette::gray);
     line1.color(egt::Palette::ColorId::button_fg, egt::Color(0xf3c626ff));
-    line1.border(2);
+    line1.margin(2);
     sizer2.add(expand(line1));
 
     egt::Label label3("000");

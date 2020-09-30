@@ -26,7 +26,7 @@ Scrollwheel::Scrollwheel(const ItemArray& items) noexcept
 {}
 
 Scrollwheel::Scrollwheel(const Rect& rect, ItemArray items) noexcept
-    : StaticGrid(rect, StaticGrid::GridSize(1, 3), 1),
+    : StaticGrid(rect, StaticGrid::GridSize(1, 3)),
       m_items(std::move(items)),
       m_button_up(Image("res:internal_arrow_up")),
       m_button_down(Image("res:internal_arrow_down"))
@@ -97,7 +97,7 @@ Scrollwheel::Scrollwheel(Frame& parent, const Rect& rect, const ItemArray& items
 }
 
 Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step) noexcept
-    : StaticGrid(rect, StaticGrid::GridSize(1, 3), 1),
+    : StaticGrid(rect, StaticGrid::GridSize(1, 3)),
       m_button_up(Image("res:internal_arrow_up")),
       m_button_down(Image("res:internal_arrow_down"))
 {
@@ -176,6 +176,9 @@ void Scrollwheel::orient(Orientation orient)
 void Scrollwheel::init()
 {
     name("Scrollwheel" + std::to_string(m_widgetid));
+
+    horizontal_space(1);
+    vertical_space(1);
 
     m_button_up.fill_flags().clear();
     m_button_down.fill_flags().clear();

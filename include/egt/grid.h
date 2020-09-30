@@ -58,40 +58,30 @@ public:
 
     /**
      * @param[in] size Rows and columns.
-     * @param[in] border Border width. @see Widget::border().
      */
-    explicit StaticGrid(const GridSize& size = GridSize(1, 1),
-                        DefaultDim border = 0);
+    explicit StaticGrid(const GridSize& size = GridSize(1, 1));
 
     /**
      * @param[in] rect Initial rectangle of the widget.
      * @param[in] size Rows and columns.
-     * @param[in] border Border width. @see Widget::border().
      */
     explicit StaticGrid(const Rect& rect,
-                        const GridSize& size = GridSize(1, 1),
-                        DefaultDim border = 0);
+                        const GridSize& size = GridSize(1, 1));
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] rect Initial rectangle of the widget.
      * @param[in] size Rows and columns.
-     * @param[in] border Border width. @see Widget::border().
      */
     StaticGrid(Frame& parent, const Rect& rect,
-               const GridSize& size = GridSize(1, 1),
-               DefaultDim border = 0);
+               const GridSize& size = GridSize(1, 1));
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] size Rows and columns.
-     * @param[in] border Border width. @see Widget::border().
      */
     explicit StaticGrid(Frame& parent,
-                        const GridSize& size = GridSize(1, 1),
-                        DefaultDim border = 0);
-
-    void draw(Painter& painter, const Rect& rect) override;
+                        const GridSize& size = GridSize(1, 1));
 
     using Frame::add;
 
@@ -195,26 +185,6 @@ public:
         return m_last_add_row;
     }
 
-    EGT_NODISCARD Rect content_area() const override
-    {
-        // we don't include border, grid handles that itself
-        auto moat = margin() + padding();
-        auto b = box();
-        b += Point(moat, moat);
-        b -= Size(2. * moat, 2. * moat);
-        return b;
-    }
-
-    /**
-     * Get a const ref of the flags.
-     */
-    EGT_NODISCARD const GridFlags& grid_flags() const { return m_grid_flags; }
-
-    /**
-     * Get a modifiable ref of the flags.
-     */
-    GridFlags& grid_flags() { return m_grid_flags; }
-
     /**
      * Get the column priority status.
      */
@@ -242,6 +212,46 @@ public:
     EGT_NODISCARD size_t n_row() const
     {
         return m_grid_size.height();
+    }
+
+    /**
+     * Set the horizontal space i.e. the space between rows.
+     */
+    void horizontal_space(DefaultDim space)
+    {
+        if (detail::change_if_diff<>(m_horizontal_space, space))
+        {
+            layout();
+            damage();
+        }
+    }
+
+    /**
+     * Get the horizontal space.
+     */
+    EGT_NODISCARD DefaultDim horizontal_space() const
+    {
+        return m_horizontal_space;
+    }
+
+    /**
+     * Set the vertical space i.e. the space between columns.
+     */
+    void vertical_space(DefaultDim space)
+    {
+        if (detail::change_if_diff<>(m_vertical_space, space))
+        {
+            layout();
+            damage();
+        }
+    }
+
+    /**
+     * Get the vertical space.
+     */
+    EGT_NODISCARD DefaultDim vertical_space() const
+    {
+        return m_vertical_space;
     }
 
     void serialize(Serializer& serializer) const override;
@@ -274,10 +284,12 @@ protected:
     int m_last_add_row{-1};
     /// Column priority when expanding the grid automatically.
     bool m_column_priority{false};
-    /// Grid flags.
-    GridFlags m_grid_flags{};
     /// Grid size.
     GridSize m_grid_size{};
+    /// Space between rows.
+    DefaultDim m_horizontal_space{};
+    /// Space betwwen columns.
+    DefaultDim m_vertical_space{};
 };
 
 /**
@@ -285,6 +297,10 @@ protected:
  *
  * A StaticGrid where each item is visually selectable with a highlighted
  * border.
+ *
+ * @note The highlighted border for the item selected is drawn within the
+ * cell. It means the border will be drawn on top of your cell widgets. To avoid
+ * this, you can set a margin for the cell widgets.
  *
  * @ingroup sizers
  */
@@ -321,6 +337,26 @@ public:
      */
     void selected(size_t column, size_t row);
 
+    /**
+     * Set the dimension of the selection highlight.
+     */
+    void selection_highlight(DefaultDim highlight)
+    {
+        if (detail::change_if_diff<>(m_selection_highlight, highlight))
+        {
+            layout();
+            damage();
+        }
+    }
+
+    /**
+     * Get the dimension of the selection highlight.
+     */
+    EGT_NODISCARD DefaultDim selection_highlight() const
+    {
+        return m_selection_highlight;
+    }
+
     void serialize(Serializer& serializer) const override;
 
     void deserialize(const std::string& name, const std::string& value,
@@ -331,6 +367,8 @@ protected:
     size_t m_selected_column{0};
     /// Currently selected row.
     size_t m_selected_row{0};
+    /// Dimension of the highlight border.
+    DefaultDim m_selection_highlight{5};
 };
 
 }

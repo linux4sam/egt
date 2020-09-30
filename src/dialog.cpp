@@ -13,11 +13,15 @@ inline namespace v1
 
 Dialog::Dialog(const Rect& rect) noexcept
     : Popup(rect.size(), rect.point()),
-      m_grid(std::make_shared<egt::StaticGrid>(Size(0, (rect.height() * 0.15)), StaticGrid::GridSize(2, 1), 5)),
+      m_grid(std::make_shared<egt::StaticGrid>(Size(0, (rect.height() * 0.15)), StaticGrid::GridSize(2, 1))),
       m_button1("OK"),
       m_button2("Cancel")
 {
     name("Dialog" + std::to_string(m_widgetid));
+
+    m_grid->margin(5);
+    m_grid->horizontal_space(5);
+    m_grid->vertical_space(5);
 
     border(theme().default_border());
     padding(5);

@@ -184,7 +184,10 @@ FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect) no
     m_grid->remove_all();
     m_layout.remove(m_grid.get());
 
-    m_grid.reset(new StaticGrid(Size(rect.width(), (rect.height() * 0.15)), StaticGrid::GridSize(3, 1), 5));
+    m_grid.reset(new StaticGrid(Size(rect.width(), (rect.height() * 0.15)), StaticGrid::GridSize(3, 1)));
+    m_grid->margin(5);
+    m_grid->horizontal_space(5);
+    m_grid->vertical_space(5);
     m_layout.add(expand_horizontal(m_grid));
 
     m_fsave_box.margin(5);

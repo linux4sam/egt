@@ -16,10 +16,14 @@ public:
 
     explicit ColorPickerWindow(const egt::Color& color)
         : egt::Popup(egt::Application::instance().screen()->size() / 2),
-          m_grid(egt::SelectableGrid::GridSize(4, 5), 10),
+          m_grid(egt::SelectableGrid::GridSize(4, 5)),
           m_color(color)
     {
         expand(m_grid);
+        m_grid.margin(10);
+        m_grid.horizontal_space(10);
+        m_grid.vertical_space(10);
+        m_grid.selection_highlight(5);
         egt::Popup::color(egt::Palette::ColorId::bg, egt::Palette::black);
         add(m_grid);
 
@@ -80,10 +84,14 @@ public:
 
     explicit WidthPickerWindow(int width)
         : egt::Popup(egt::Application::instance().screen()->size() / 4),
-          m_grid(egt::SelectableGrid::GridSize(4, 1), 10),
+          m_grid(egt::SelectableGrid::GridSize(4, 1)),
           m_width(width)
     {
         expand(m_grid);
+        m_grid.margin(10);
+        m_grid.horizontal_space(10);
+        m_grid.vertical_space(10);
+        m_grid.selection_highlight(5);
         color(egt::Palette::ColorId::bg, egt::Palette::black);
         add(m_grid);
 
