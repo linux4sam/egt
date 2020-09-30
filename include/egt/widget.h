@@ -1051,9 +1051,8 @@ public:
      * for a widget. This provides a level of customization that is primarily
      * for performance optimizations.
      *
-     * Setting a fill type of empty means that no background will be drawn and
-     * no border will be drawn no matter what the border width or background
-     * color of the widget is.
+     * Setting a fill type of empty means that no background will be drawn no
+     * matter what the background color of the widget is.
      *
      * @see Theme::FillFlag
      */

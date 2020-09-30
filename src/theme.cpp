@@ -164,7 +164,7 @@ void Theme::draw_box(Painter& painter, const Widget& widget,
 {
     const auto& type = widget.fill_flags();
 
-    if (type.empty())
+    if (type.empty() && !widget.border())
         return;
 
     Palette::GroupId group = Palette::GroupId::normal;
@@ -196,7 +196,7 @@ void Theme::draw_box(Painter& painter,
                      float border_radius,
                      const BorderFlags& border_flags) const
 {
-    if (type.empty())
+    if (type.empty() && !border_width)
         return;
 
     auto box = rect;
