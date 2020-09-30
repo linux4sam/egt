@@ -391,7 +391,7 @@ void Frame::draw(Painter& painter, const Rect& rect)
     // draw our frame box, but now that the physical origin has possibly changed
     // and our box() is relative to our parent, we have to adjust to our local
     // origin
-    if (!fill_flags().empty())
+    if (!fill_flags().empty() || border())
     {
         Palette::GroupId group = Palette::GroupId::normal;
         if (disabled())
