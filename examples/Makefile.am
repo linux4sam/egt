@@ -40,6 +40,7 @@ colors/colors \
 drag/drag \
 floating/floating \
 frames/frames \
+grid/grid \
 imagestack/imagestack \
 keys/keys \
 press/press \
@@ -238,6 +239,12 @@ gpio_gpio_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 gpio_gpio_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 gpio_gpiodir = $(prefix)/share/egt/examples/gpio
 gpio_gpio_LDFLAGS = $(AM_LDFLAGS)
+
+grid_grid_SOURCES = grid/grid.cpp
+grid_grid_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+grid_grid_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
+grid_griddir = $(prefix)/share/egt/examples/grid
+grid_grid_LDFLAGS = $(AM_LDFLAGS)
 
 imagestack_imagestack_SOURCES = imagestack/imagestack.cpp
 imagestack_imagestack_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
