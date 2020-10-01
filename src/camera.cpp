@@ -51,6 +51,7 @@ void CameraWindow::scale(float hscale, float vscale)
         }
         else
         {
+            m_box.size(Size(m_rect.width() * m_hscale, m_rect.height() * m_vscale));
             Window::scale(m_hscale, m_vscale);
         }
     }
