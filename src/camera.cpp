@@ -23,6 +23,7 @@ CameraWindow::CameraWindow(const Rect& rect,
                            PixelFormat format_hint,
                            WindowHint hint)
     : Window(rect, format_hint, detail::check_windowhint(hint)),
+      m_rect(rect),
       m_camera_impl(std::make_unique<detail::CameraImpl>(*this, rect, device))
 {}
 
@@ -52,6 +53,33 @@ void CameraWindow::scale(float hscale, float vscale)
         {
             Window::scale(m_hscale, m_vscale);
         }
+    }
+}
+
+void CameraWindow::handle(Event& event)
+{
+    switch (event.id())
+    {
+    case egt::EventId::pointer_drag_start:
+    {
+        m_start_offset = box().point();
+        break;
+    }
+    case egt::EventId::pointer_drag:
+    case egt::EventId::pointer_drag_stop:
+    {
+        auto diff = event.pointer().drag_start - event.pointer().point;
+        auto p = m_start_offset - egt::Point(diff.x(), diff.y());
+        move(p);
+        break;
+    }
+    case EventId::pointer_click:
+    {
+        on_click.invoke();
+        break;
+    }
+    default:
+        break;
     }
 }
 

@@ -38,6 +38,27 @@ static std::string line_break(const std::string& in, size_t width = 50)
     return out + tmp;
 }
 
+static void scale_camera_window(egt::ImageButton& fullscreen, egt::CameraWindow& player, const egt::Size& ssize)
+{
+    static bool scaled = true;
+    if (scaled)
+    {
+        const auto wscale = static_cast<float>(ssize.width()) / player.width();
+        const auto hscale = static_cast<float>(ssize.height()) / player.height();
+        player.move(egt::Point(0, 0));
+        player.scale(wscale, hscale);
+        fullscreen.image(egt::Image("res:fullscreen_exit_png"));
+        scaled = false;
+    }
+    else
+    {
+        player.scale(1.0, 1.0);
+        player.move_to_center();
+        fullscreen.image(egt::Image("res:fullscreen_png"));
+        scaled = true;
+    }
+}
+
 int main(int argc, char** argv)
 {
     cxxopts::Options options(argv[0], "display camera video stream");
@@ -102,43 +123,6 @@ int main(int argc, char** argv)
         player.stop();
     });
 
-    const auto wscale = static_cast<float>(egt::Application::instance().screen()->size().width()) / size.width();
-    const auto hscale = static_cast<float>(egt::Application::instance().screen()->size().height()) / size.height();
-
-    player.on_event([&player, &win, &size, wscale](egt::Event & event)
-    {
-        static egt::Point drag_start_point;
-        switch (event.id())
-        {
-        case egt::EventId::pointer_drag_start:
-        {
-            drag_start_point = player.box().point();
-            break;
-        }
-        case egt::EventId::pointer_drag:
-        {
-            if (!(egt::detail::float_equal(player.hscale(), wscale)))
-            {
-                auto diff = event.pointer().drag_start - event.pointer().point;
-                auto p = drag_start_point - egt::Point(diff.x(), diff.y());
-                auto max_x = win.width() - size.width();
-                auto max_y = win.height() - size.height();
-                if (p.x() >= max_x)
-                    p.x(max_x);
-                if (p.x() < 0)
-                    p.x(0);
-                if (p.y() >= max_y)
-                    p.y(max_y);
-                if (p.y() < 0)
-                    p.y(0);
-                player.move(p);
-            }
-        }
-        default:
-            break;
-        }
-    });
-
     egt::Window ctrlwindow(egt::Size(win.width(), 72), egt::PixelFormat::argb8888);
     ctrlwindow.align(egt::AlignFlag::bottom | egt::AlignFlag::center);
     ctrlwindow.color(egt::Palette::ColorId::bg, egt::Palette::transparent);
@@ -158,24 +142,17 @@ int main(int argc, char** argv)
     fullscreen.fill_flags().clear();
     hpos.add(fullscreen);
 
-    fullscreen.on_event([&fullscreen, &player, wscale, hscale](egt::Event&)
+    const auto ssize = egt::Application::instance().screen()->size();
+
+    fullscreen.on_click([&fullscreen, &player, &ssize](egt::Event&)
     {
-        static bool scaled = true;
-        if (scaled)
-        {
-            player.move(egt::Point(0, 0));
-            player.scale(wscale, hscale);
-            fullscreen.image(egt::Image("res:fullscreen_exit_png"));
-            scaled = false;
-        }
-        else
-        {
-            player.move(egt::Point(240, 120));
-            player.scale(1.0, 1.0);
-            fullscreen.image(egt::Image("res:fullscreen_png"));
-            scaled = true;
-        }
-    }, {egt::EventId::pointer_click});
+        scale_camera_window(fullscreen, player, ssize);
+    });
+
+    player.on_click([&fullscreen, &player, &ssize]()
+    {
+        scale_camera_window(fullscreen, player, ssize);
+    });
 
     egt::Label cpulabel("CPU: 0%", egt::Size(100, 40));
     cpulabel.margin(5);

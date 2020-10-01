@@ -116,6 +116,8 @@ public:
 
     void draw(Painter& painter, const Rect& rect) override;
 
+    void handle(Event& event) override;
+
     /**
      * Initialize camera pipeline to capture image feed from the camera
      * sensor and render to Window.
@@ -152,12 +154,17 @@ public:
     ~CameraWindow() noexcept override;
 
 protected:
+    /// Rect Size
+    Rect m_rect;
 
     /// Horizontal scale value.
     float m_hscale{1.0};
 
     /// Vertical scale value.
     float m_vscale{1.0};
+
+    /// Starting offset for the drag.
+    Point m_start_offset;
 
     /// @private
     std::unique_ptr<detail::CameraImpl> m_camera_impl;
