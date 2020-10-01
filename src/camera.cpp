@@ -69,9 +69,12 @@ void CameraWindow::handle(Event& event)
     case egt::EventId::pointer_drag:
     case egt::EventId::pointer_drag_stop:
     {
-        auto diff = event.pointer().drag_start - event.pointer().point;
-        auto p = m_start_offset - egt::Point(diff.x(), diff.y());
-        move(p);
+        if (m_move_on_drag)
+        {
+            auto diff = event.pointer().drag_start - event.pointer().point;
+            auto p = m_start_offset - egt::Point(diff.x(), diff.y());
+            move(p);
+        }
         break;
     }
     case EventId::pointer_click:
