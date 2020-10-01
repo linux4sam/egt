@@ -255,6 +255,8 @@ int main(int argc, char** argv)
         }
 
         player.play();
+
+        player.move_on_drag(true);
     });
 
     player.on_position_changed([&player, &position](int64_t pos)
