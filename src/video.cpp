@@ -85,7 +85,8 @@ WindowHint check_windowhint(WindowHint& hint)
 } // End of detail.
 
 VideoWindow::VideoWindow(const Rect& rect, PixelFormat format, WindowHint hint)
-    : Window(rect, format, detail::check_windowhint(hint))
+    : Window(rect, format, detail::check_windowhint(hint)),
+      m_rect(rect)
 {
     fill_flags().clear();
 
@@ -209,6 +210,33 @@ void VideoWindow::scale(float hscale, float vscale)
 bool VideoWindow::has_audio() const
 {
     return m_video_impl->has_audio();
+}
+
+void VideoWindow::handle(Event& event)
+{
+    switch (event.id())
+    {
+    case egt::EventId::pointer_drag_start:
+    {
+        m_start_offset = box().point();
+        break;
+    }
+    case EventId::pointer_drag:
+    case EventId::pointer_drag_stop:
+    {
+        auto diff = event.pointer().drag_start - event.pointer().point;
+        auto p = m_start_offset - egt::Point(diff.x(), diff.y());
+        move(p);
+        break;
+    }
+    case EventId::pointer_click:
+    {
+        on_click.invoke();
+        break;
+    }
+    default:
+        break;
+    }
 }
 
 VideoWindow::VideoWindow(VideoWindow&&) noexcept = default;
