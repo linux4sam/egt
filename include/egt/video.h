@@ -114,6 +114,9 @@ public:
 
     void handle(Event& event) override;
 
+    using Window::resize;
+    void resize(const Size& size) override;
+
     /**
      * Initialize gstreamer pipeline for specified media file.
      *

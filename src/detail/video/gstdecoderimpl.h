@@ -47,7 +47,7 @@ public:
 
     virtual std::string create_pipeline() = 0;
 
-    virtual void scale(float scalex, float scaley) = 0;
+    virtual void resize(const Size& size) = 0;
 
     virtual bool play();
 
@@ -92,7 +92,7 @@ protected:
     std::string m_acodec;
     bool m_audiotrack{false};
     std::string m_container;
-
+    GstElement* m_vcapsfilter{nullptr};
 
     static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data);
 
