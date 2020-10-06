@@ -113,7 +113,7 @@ static Point point_calc(const Point& center, const Point& corner, float angle)
     const auto dx1 = corner.x() - center.x();
     const auto dy1 = corner.y() - center.y();
     return {static_cast<Size::DimType>((center.x() + dx1 * std::cos(angle)) - (dy1 * std::sin(angle))),
-            static_cast<Size::DimType>((center.y() - dx1 * std::sin(angle)) + (dy1 * std::cos(angle)))};
+            static_cast<Size::DimType>((center.y() + dx1 * std::sin(angle)) + (dy1 * std::cos(angle)))};
 }
 
 /**
@@ -123,7 +123,7 @@ static Point point_calc(const Point& center, const Point& corner, float angle)
 Rect NeedleLayer::rectangle_of_rotated()
 {
     const auto rect = Rect(Point(0, 0), m_image.size());
-    const auto angle = detail::to_radians(0.0f, -detail::normalize_to_angle(m_value, m_min, m_max,
+    const auto angle = detail::to_radians(0.0f, detail::normalize_to_angle(m_value, m_min, m_max,
                                           m_angle_start, m_angle_stop,
                                           m_clockwise));
     const auto center = Point(m_center.x(), m_center.y());
