@@ -6,17 +6,18 @@
 			<property name="height">480</property>
 			<property name="fillflags">solid</property>
 			<widget name="StaticGrid1" type="StaticGrid">
-				<property name="grid_flags"/>
 				<property name="column_priority">false</property>
 				<property name="n_col">3</property>
 				<property name="n_row">5</property>
+				<property name="horizontal_space">5</property>
+				<property name="vertical_space">5</property>
 				<property name="width">800</property>
 				<property name="height">480</property>
 				<property name="align">expand_horizontal|expand_vertical</property>
-				<property name="border">5</property>
+				<property name="margin">5</property>
 				<widget name="Label2" type="Label">
-					<property name="x">4</property>
-					<property name="y">4</property>
+					<property name="x">5</property>
+					<property name="y">5</property>
 					<property name="width">260</property>
 					<property name="height">90</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -24,8 +25,8 @@
 					<property name="text_align">center_horizontal|center_vertical|left</property>
 				</widget>
 				<widget name="Label3" type="Label">
-					<property name="x">269</property>
-					<property name="y">4</property>
+					<property name="x">270</property>
+					<property name="y">5</property>
 					<property name="width">260</property>
 					<property name="height">90</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -33,8 +34,8 @@
 					<property name="text_align">center_horizontal|center_vertical|right</property>
 				</widget>
 				<widget name="Label4" type="Label">
-					<property name="x">534</property>
-					<property name="y">4</property>
+					<property name="x">535</property>
+					<property name="y">5</property>
 					<property name="width">260</property>
 					<property name="height">90</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -42,8 +43,8 @@
 					<property name="text_align">center_horizontal|center_vertical|top</property>
 				</widget>
 				<widget name="Label5" type="Label">
-					<property name="x">4</property>
-					<property name="y">99</property>
+					<property name="x">5</property>
+					<property name="y">100</property>
 					<property name="width">260</property>
 					<property name="height">90</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -51,8 +52,8 @@
 					<property name="text_align">center_horizontal|center_vertical|bottom</property>
 				</widget>
 				<widget name="Label6" type="Label">
-					<property name="x">269</property>
-					<property name="y">99</property>
+					<property name="x">270</property>
+					<property name="y">100</property>
 					<property name="width">260</property>
 					<property name="height">90</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -61,8 +62,8 @@ Label Text</property>
 					<property name="text_align">center_horizontal|center_vertical</property>
 				</widget>
 				<widget name="ImageLabel7" type="ImageLabel">
-					<property name="x">534</property>
-					<property name="y">99</property>
+					<property name="x">535</property>
+					<property name="y">100</property>
 					<property name="width">260</property>
 					<property name="height">90</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -73,8 +74,8 @@ Label Text</property>
 					<property name="image_align">top</property>
 				</widget>
 				<widget name="ImageLabel8" type="ImageLabel">
-					<property name="x">4</property>
-					<property name="y">194</property>
+					<property name="x">5</property>
+					<property name="y">195</property>
 					<property name="width">260</property>
 					<property name="height">90</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -85,8 +86,8 @@ Label Text</property>
 					<property name="image_align">left</property>
 				</widget>
 				<widget name="ImageLabel9" type="ImageLabel">
-					<property name="x">269</property>
-					<property name="y">194</property>
+					<property name="x">270</property>
+					<property name="y">195</property>
 					<property name="width">260</property>
 					<property name="height">90</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -97,8 +98,8 @@ Label Text</property>
 					<property name="image_align">right</property>
 				</widget>
 				<widget name="ImageLabel10" type="ImageLabel">
-					<property name="x">534</property>
-					<property name="y">194</property>
+					<property name="x">535</property>
+					<property name="y">195</property>
 					<property name="width">260</property>
 					<property name="height">90</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -109,8 +110,8 @@ Label Text</property>
 					<property name="image_align">bottom</property>
 				</widget>
 				<widget name="ImageLabel11" type="ImageLabel">
-					<property name="x">4</property>
-					<property name="y">289</property>
+					<property name="x">5</property>
+					<property name="y">290</property>
 					<property name="width">260</property>
 					<property name="height">90</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -123,8 +124,8 @@ Label Text</property>
 					<property name="image_align">left</property>
 				</widget>
 				<widget name="ImageLabel12" type="ImageLabel">
-					<property name="x">269</property>
-					<property name="y">289</property>
+					<property name="x">270</property>
+					<property name="y">290</property>
 					<property name="width">260</property>
 					<property name="height">90</property>
 					<property name="align">expand_horizontal|expand_vertical</property>

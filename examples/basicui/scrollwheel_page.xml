@@ -16,7 +16,6 @@
 					<property name="y">190</property>
 					<property name="width">50</property>
 					<property name="height">100</property>
-					<property name="border">1</property>
 					<property name="image_up">res:internal_arrow_up</property>
 					<property name="image_down">res:internal_arrow_down</property>
 					<property name="orient">vertical</property>
@@ -57,7 +56,6 @@
 					<property name="y">190</property>
 					<property name="width">200</property>
 					<property name="height">100</property>
-					<property name="border">1</property>
 					<property name="image_up">res:internal_arrow_up</property>
 					<property name="image_down">res:internal_arrow_down</property>
 					<property name="orient">vertical</property>
@@ -80,7 +78,6 @@
 					<property name="y">190</property>
 					<property name="width">100</property>
 					<property name="height">100</property>
-					<property name="border">1</property>
 					<property name="image_up">res:internal_arrow_up</property>
 					<property name="image_down">res:internal_arrow_down</property>
 					<property name="reversed">true</property>

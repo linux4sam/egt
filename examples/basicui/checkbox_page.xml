@@ -6,17 +6,18 @@
 			<property name="height">480</property>
 			<property name="fillflags">solid</property>
 			<widget name="StaticGrid1" type="StaticGrid">
-				<property name="grid_flags"/>
 				<property name="column_priority">false</property>
 				<property name="n_col">3</property>
 				<property name="n_row">10</property>
+				<property name="horizontal_space">5</property>
+				<property name="vertical_space">5</property>
 				<property name="width">800</property>
 				<property name="height">480</property>
 				<property name="align">expand_horizontal|expand_vertical</property>
-				<property name="border">5</property>
+				<property name="margin">5</property>
 				<widget name="ToggleBox2" type="ToggleBox">
-					<property name="x">4</property>
-					<property name="y">4</property>
+					<property name="x">5</property>
+					<property name="y">5</property>
 					<property name="width">260</property>
 					<property name="height">42</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -30,8 +31,8 @@
 					<property name="enable_disable">1</property>
 				</widget>
 				<widget name="ToggleBox3" type="ToggleBox">
-					<property name="x">269</property>
-					<property name="y">4</property>
+					<property name="x">270</property>
+					<property name="y">5</property>
 					<property name="width">260</property>
 					<property name="height">42</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -46,8 +47,8 @@
 					<property name="enable_disable">1</property>
 				</widget>
 				<widget name="ToggleBox4" type="ToggleBox">
-					<property name="x">534</property>
-					<property name="y">4</property>
+					<property name="x">535</property>
+					<property name="y">5</property>
 					<property name="width">260</property>
 					<property name="height">42</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -62,8 +63,8 @@
 					<property name="enable_disable">1</property>
 				</widget>
 				<widget name="CheckBox5" type="CheckBox">
-					<property name="x">4</property>
-					<property name="y">51</property>
+					<property name="x">5</property>
+					<property name="y">52</property>
 					<property name="width">260</property>
 					<property name="height">42</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -73,8 +74,8 @@
 					<property name="text_align">center_horizontal|center_vertical|left</property>
 				</widget>
 				<widget name="CheckBox6" type="CheckBox">
-					<property name="x">269</property>
-					<property name="y">51</property>
+					<property name="x">270</property>
+					<property name="y">52</property>
 					<property name="width">260</property>
 					<property name="height">42</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -84,8 +85,8 @@
 					<property name="text_align">center_horizontal|center_vertical|left</property>
 				</widget>
 				<widget name="CheckBox7" type="CheckBox">
-					<property name="x">534</property>
-					<property name="y">51</property>
+					<property name="x">535</property>
+					<property name="y">52</property>
 					<property name="width">260</property>
 					<property name="height">42</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -95,8 +96,8 @@
 					<property name="text_align">center_horizontal|center_vertical|left</property>
 				</widget>
 				<widget name="CheckBox8" type="CheckBox">
-					<property name="x">4</property>
-					<property name="y">98</property>
+					<property name="x">5</property>
+					<property name="y">99</property>
 					<property name="width">260</property>
 					<property name="height">42</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -107,8 +108,8 @@
 					<property name="text_align">center_horizontal|center_vertical|left</property>
 				</widget>
 				<widget name="RadioBox9" type="RadioBox">
-					<property name="x">269</property>
-					<property name="y">98</property>
+					<property name="x">270</property>
+					<property name="y">99</property>
 					<property name="width">260</property>
 					<property name="height">42</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -118,8 +119,8 @@
 					<property name="text_align">center_horizontal|center_vertical|left</property>
 				</widget>
 				<widget name="RadioBox10" type="RadioBox">
-					<property name="x">534</property>
-					<property name="y">98</property>
+					<property name="x">535</property>
+					<property name="y">99</property>
 					<property name="width">260</property>
 					<property name="height">42</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -130,8 +131,8 @@
 					<property name="text_align">center_horizontal|center_vertical|left</property>
 				</widget>
 				<widget name="RadioBox11" type="RadioBox">
-					<property name="x">4</property>
-					<property name="y">145</property>
+					<property name="x">5</property>
+					<property name="y">146</property>
 					<property name="width">260</property>
 					<property name="height">42</property>
 					<property name="align">expand_horizontal|expand_vertical</property>

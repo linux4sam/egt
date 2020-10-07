@@ -6,17 +6,18 @@
 			<property name="height">480</property>
 			<property name="fillflags">solid</property>
 			<widget name="StaticGrid1" type="StaticGrid">
-				<property name="grid_flags"/>
 				<property name="column_priority">false</property>
 				<property name="n_col">3</property>
 				<property name="n_row">6</property>
+				<property name="horizontal_space">5</property>
+				<property name="vertical_space">5</property>
 				<property name="width">800</property>
 				<property name="height">480</property>
 				<property name="align">expand_horizontal|expand_vertical</property>
-				<property name="border">5</property>
+				<property name="margin">5</property>
 				<widget name="Button2" type="Button">
-					<property name="x">4</property>
-					<property name="y">4</property>
+					<property name="x">5</property>
+					<property name="y">5</property>
 					<property name="width">260</property>
 					<property name="height">74</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -26,8 +27,8 @@
 					<property name="text_align">center_horizontal|center_vertical</property>
 				</widget>
 				<widget name="Button3" type="Button">
-					<property name="x">269</property>
-					<property name="y">4</property>
+					<property name="x">270</property>
+					<property name="y">5</property>
 					<property name="width">260</property>
 					<property name="height">74</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -38,8 +39,8 @@
 					<property name="text_align">center_horizontal|center_vertical</property>
 				</widget>
 				<widget name="ImageButton4" type="ImageButton">
-					<property name="x">534</property>
-					<property name="y">4</property>
+					<property name="x">535</property>
+					<property name="y">5</property>
 					<property name="width">260</property>
 					<property name="height">74</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -51,8 +52,8 @@
 					<property name="image">icon:calculator.png</property>
 				</widget>
 				<widget name="ImageButton5" type="ImageButton">
-					<property name="x">4</property>
-					<property name="y">83</property>
+					<property name="x">5</property>
+					<property name="y">84</property>
 					<property name="width">260</property>
 					<property name="height">74</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -64,8 +65,8 @@
 					<property name="image">icon:calculator.png</property>
 				</widget>
 				<widget name="ImageButton6" type="ImageButton">
-					<property name="x">269</property>
-					<property name="y">83</property>
+					<property name="x">270</property>
+					<property name="y">84</property>
 					<property name="width">260</property>
 					<property name="height">74</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -77,8 +78,8 @@
 					<property name="image">icon:calculator.png</property>
 				</widget>
 				<widget name="ImageButton7" type="ImageButton">
-					<property name="x">534</property>
-					<property name="y">83</property>
+					<property name="x">535</property>
+					<property name="y">84</property>
 					<property name="width">260</property>
 					<property name="height">74</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -90,8 +91,8 @@
 					<property name="image">icon:calculator.png</property>
 				</widget>
 				<widget name="ImageButton8" type="ImageButton">
-					<property name="x">4</property>
-					<property name="y">162</property>
+					<property name="x">5</property>
+					<property name="y">163</property>
 					<property name="width">260</property>
 					<property name="height">74</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -103,8 +104,8 @@
 					<property name="image">icon:calculator.png</property>
 				</widget>
 				<widget name="ImageButton9" type="ImageButton">
-					<property name="x">269</property>
-					<property name="y">162</property>
+					<property name="x">270</property>
+					<property name="y">163</property>
 					<property name="width">260</property>
 					<property name="height">74</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
@@ -115,8 +116,8 @@
 					<property name="image">icon:calculator.png</property>
 				</widget>
 				<widget name="Button10" type="Button">
-					<property name="x">534</property>
-					<property name="y">162</property>
+					<property name="x">535</property>
+					<property name="y">163</property>
 					<property name="width">260</property>
 					<property name="height">74</property>
 					<property name="align">expand_horizontal|expand_vertical</property>

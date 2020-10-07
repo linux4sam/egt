@@ -6,28 +6,30 @@
 			<property name="height">480</property>
 			<property name="fillflags">solid</property>
 			<widget name="StaticGrid1" type="StaticGrid">
-				<property name="grid_flags"/>
 				<property name="column_priority">false</property>
 				<property name="n_col">2</property>
 				<property name="n_row">1</property>
+				<property name="horizontal_space">5</property>
+				<property name="vertical_space">5</property>
 				<property name="width">800</property>
 				<property name="height">480</property>
 				<property name="align">expand_horizontal|expand_vertical</property>
-				<property name="border">5</property>
+				<property name="margin">5</property>
 				<widget name="StaticGrid2" type="StaticGrid">
-					<property name="grid_flags"/>
 					<property name="column_priority">false</property>
 					<property name="n_col">1</property>
 					<property name="n_row">10</property>
-					<property name="x">4</property>
-					<property name="y">4</property>
+					<property name="horizontal_space">5</property>
+					<property name="vertical_space">5</property>
+					<property name="x">5</property>
+					<property name="y">5</property>
 					<property name="width">392</property>
 					<property name="height">470</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
-					<property name="border">5</property>
+					<property name="margin">5</property>
 					<widget name="TextBox3" type="TextBox">
-						<property name="x">4</property>
-						<property name="y">4</property>
+						<property name="x">5</property>
+						<property name="y">5</property>
 						<property name="width">382</property>
 						<property name="height">41</property>
 						<property name="align">expand_horizontal|expand_vertical</property>
@@ -40,8 +42,8 @@
 						<property name="cursor">6</property>
 					</widget>
 					<widget name="TextBox4" type="TextBox">
-						<property name="x">4</property>
-						<property name="y">50</property>
+						<property name="x">5</property>
+						<property name="y">51</property>
 						<property name="width">382</property>
 						<property name="height">41</property>
 						<property name="align">expand_horizontal|expand_vertical</property>
@@ -54,8 +56,8 @@
 						<property name="cursor">15</property>
 					</widget>
 					<widget name="TextBox5" type="TextBox">
-						<property name="x">4</property>
-						<property name="y">96</property>
+						<property name="x">5</property>
+						<property name="y">97</property>
 						<property name="width">382</property>
 						<property name="height">41</property>
 						<property name="align">expand_horizontal|expand_vertical</property>
@@ -68,8 +70,8 @@
 						<property name="cursor">18</property>
 					</widget>
 					<widget name="TextBox6" type="TextBox">
-						<property name="x">4</property>
-						<property name="y">142</property>
+						<property name="x">5</property>
+						<property name="y">143</property>
 						<property name="width">382</property>
 						<property name="height">41</property>
 						<property name="align">expand_horizontal|expand_vertical</property>
@@ -83,8 +85,8 @@
 						<property name="cursor">6</property>
 					</widget>
 					<widget name="TextBox7" type="TextBox">
-						<property name="x">4</property>
-						<property name="y">188</property>
+						<property name="x">5</property>
+						<property name="y">189</property>
 						<property name="width">382</property>
 						<property name="height">41</property>
 						<property name="align">expand_horizontal|expand_vertical</property>
@@ -96,8 +98,8 @@
 						<property name="cursor">22</property>
 					</widget>
 					<widget name="TextBox8" type="TextBox">
-						<property name="x">4</property>
-						<property name="y">234</property>
+						<property name="x">5</property>
+						<property name="y">235</property>
 						<property name="width">382</property>
 						<property name="height">41</property>
 						<property name="align">expand_horizontal|expand_vertical</property>
@@ -110,9 +112,9 @@
 					</widget>
 				</widget>
 				<widget name="TextBox9" type="TextBox">
-					<property name="x">401</property>
-					<property name="y">4</property>
-					<property name="width">392</property>
+					<property name="x">402</property>
+					<property name="y">5</property>
+					<property name="width">393</property>
 					<property name="height">470</property>
 					<property name="align">expand_horizontal|expand_vertical</property>
 					<property name="padding">5</property>
