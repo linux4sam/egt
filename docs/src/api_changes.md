@@ -38,3 +38,12 @@ and row. Prefer these new member functions to the older ones.
 - grid.add(button, 2, 1);
 + grid.add(button, egt::StaticGrid::GridPoint(2, 1));
 @endcode
+@li Layout changes: the border of the widget is no longer used to space out
+cells. Remove the border parameter from the constructor and add
+horizontal/vertical_space getters and setters.
+@code{.unparsed}
+- auto grid = make_shared<StaticGrid>(StaticGrid::GridSize(2, 2), 1);
++ auto grid = make_shared<StaticGrid>(StaticGrid::GridSize(2, 2));
++ instance->horizontal_space(1);
++ instance->vertical_space(1);
+@endcode
