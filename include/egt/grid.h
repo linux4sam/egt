@@ -25,12 +25,17 @@ inline namespace v1
 /**
  * Static grid organization for widgets.
  *
- * A static grid that does not perform any drawing, but controls the
- * size and position of any widget added into a grid.
+ * A static grid provides cells of the same size. Cells of the last column or
+ * row may have a different size to counterbalance rounding errors.
  *
- * Every cell in a grid is the same size. The size of the grid and each cell is
- * established, and then the widgets are aligned within each cell according to
- * widget alignment and padding.
+ * Widgets added to the grid will be positionned within the cell according to
+ * their alignment.
+ *
+ * @image html staticgrid.png
+ * @image latex staticgrid.png "StaticGrid" width=8cm
+ *
+ * If extra horizontal or vertical space is needed, the margin, border and
+ * padding properties of the widget within the cell can still be used.
  *
  * @ingroup sizers
  */
@@ -299,8 +304,8 @@ protected:
  * border.
  *
  * @note The highlighted border for the item selected is drawn within the
- * cell. It means the border will be drawn on top of your cell widgets. To avoid
- * this, you can set a margin for the cell widgets.
+ * cell. It means the border will be drawn on top of the content area of the
+ * widgets if they have their margin, border and padding set to 0;
  *
  * @ingroup sizers
  */
