@@ -5,7 +5,7 @@
 Here, you can find the API changes from the version 1.0. In addition, some hints
 are provided to help you update your code.
 
-@section v1_0_1 1.0.1
+@section v1_1 1.1
 
 @subsection combobox ComboBox
 
