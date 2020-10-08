@@ -47,3 +47,10 @@ horizontal/vertical_space getters and setters.
 + instance->horizontal_space(1);
 + instance->vertical_space(1);
 @endcode
+
+@subsection camera_videowindow Camera/VideoWindow
+
+@li Add a new signal: on_click.
+@li Handling of the drag event. It can be enabled or disabled with the new
+setter move_on_drag. There is also a getter to check the status.
+
