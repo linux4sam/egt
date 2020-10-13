@@ -79,6 +79,12 @@ public:
           m_y(y)
     {}
 
+    template<class Dim2>
+    constexpr PointType(const PointType<Dim2>& p)
+        : m_x(p.x()),
+          m_y(p.y())
+    {}
+
     /// PointType operator
     constexpr PointType& operator+=(const PointType& rhs) noexcept
     {
@@ -342,6 +348,12 @@ public:
     constexpr SizeType(Dim width, Dim height) noexcept
         : m_height(height),
           m_width(width)
+    {}
+
+    template<class Dim2>
+    constexpr SizeType(const SizeType<Dim2>& s)
+        : m_height(s.height()),
+          m_width(s.width())
     {}
 
     /**
@@ -612,6 +624,12 @@ public:
      */
     constexpr RectType(Dim x, Dim y, Dim width, Dim height) noexcept
         : RectType( {x, y}, {width, height})
+    {}
+
+    template<typename Dim2>
+    constexpr RectType(const RectType<Dim2>& r)
+        : m_origin(r.point()),
+          m_size(r.size())
     {}
 
     /// RectType operator
