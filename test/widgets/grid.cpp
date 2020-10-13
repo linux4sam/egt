@@ -22,7 +22,10 @@ TEST_P(StaticGridTest, TestWidget)
     auto rows = ::testing::get<0>(GetParam());
     auto columns = ::testing::get<1>(GetParam());
 
-    widget.reset(new egt::StaticGrid(egt::StaticGrid::GridSize(columns, rows), 5));
+    widget.reset(new egt::StaticGrid(egt::StaticGrid::GridSize(columns, rows)));
+    widget->margin(5);
+    widget->horizontal_space(5);
+    widget->vertical_space(5);
     win.add(egt::expand(widget));
 
     EXPECT_TRUE(widget->last_add_column() == -1);
@@ -81,7 +84,10 @@ TEST_P(SelectableGridTest, TestWidget)
     auto rows = ::testing::get<0>(GetParam());
     auto columns = ::testing::get<1>(GetParam());
 
-    widget.reset(new egt::SelectableGrid(egt::StaticGrid::GridSize(columns, rows), 5));
+    widget.reset(new egt::SelectableGrid(egt::StaticGrid::GridSize(columns, rows)));
+    widget->margin(5);
+    widget->horizontal_space(5);
+    widget->vertical_space(5);
     win.add(egt::expand(widget));
 
     EXPECT_TRUE(widget->last_add_column() == -1);
