@@ -48,6 +48,7 @@ nobase_dist_icons_DATA = $(PNG_ICONS_FILES)
 endif
 
 CPPCHECK_CMD = $(CPPCHECK_BIN) \
+	--output-file=cppcheck.log \
 	--inline-suppr \
 	--suppress=*:*asio/* \
 	--config-exclude=include/egt/asio/ \
