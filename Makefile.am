@@ -60,6 +60,16 @@ CPPCHECK_CMD = $(CPPCHECK_BIN) \
 	--platform=unix32 \
 	--template=gcc \
 	-UTSLIB_MT_VALID \
+	-UEXAMPLEDATA \
+	-ULUA_INIT_VAR \
+	-ULUA_MAXINPUT \
+	-ULUA_PROGNAME \
+	-ULUA_PROMPT \
+	-ULUA_USE_POSIX \
+	-ULUA_USE_READLINE \
+	-ULUA_USE_WINDOWS \
+	-UPACKAGE_VERSION \
+	-USRCDIR \
 	-I$(top_srcdir) -I$(top_srcdir)/include -I$(top_srcdir)/src/images/jpeg
 
 CPPCHECK_DIRS = \
