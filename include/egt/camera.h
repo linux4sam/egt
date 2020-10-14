@@ -57,11 +57,6 @@ public:
      * Generated when an USB camera disconnected.
      */
     Signal<const std::string&> on_disconnect;
-
-    /**
-     * Invoked on clicked event
-     */
-    Signal<> on_click;
     /** @} */
 
     /**
