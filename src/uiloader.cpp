@@ -32,7 +32,7 @@ static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
 
     for (auto prop = node->first_node("property"); prop; prop = prop->next_sibling("property"))
     {
-        auto name = prop->first_attribute("name");
+        name = prop->first_attribute("name");
         if (!name)
         {
             detail::warn("property with no name");

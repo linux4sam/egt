@@ -456,7 +456,7 @@ get_camera_device_caps(const std::string& dev_name, BusCallback bus_callback, vo
             GstStringHandle dev_string{gst_device_get_device_class(device)};
             EGTLOG_DEBUG("class : {}", dev_string.get());
 
-            GstCaps* caps = gst_device_get_caps(device);
+            caps = gst_device_get_caps(device);
             if (caps)
             {
                 resolutions.clear();
