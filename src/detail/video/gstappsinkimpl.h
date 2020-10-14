@@ -28,7 +28,7 @@ public:
 
     std::string create_pipeline() override;
 
-    void resize(const Size& size) override;
+    void scale(float scalex, float scaley) override;
 
 protected:
     GstElement* m_appsink;

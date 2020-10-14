@@ -89,7 +89,7 @@ VideoWindow::VideoWindow(const Rect& rect, PixelFormat format, WindowHint hint)
       m_rect(rect)
 {
     fill_flags().clear();
-    flags().set(Widget::Flag::no_layout);
+
     create_impl(rect.size());
 }
 
@@ -198,7 +198,7 @@ void VideoWindow::scale(float hscale, float vscale)
     {
         if (!plane_window())
         {
-            Window::resize(Size(m_rect.width() * m_hscale, m_rect.height() *  m_vscale));
+            m_video_impl->scale(m_hscale, m_vscale);
         }
         else
         {
@@ -236,18 +236,6 @@ void VideoWindow::handle(Event& event)
     }
     default:
         break;
-    }
-}
-
-void VideoWindow::resize(const Size& size)
-{
-    if (m_rect.size() != size)
-    {
-        EGTLOG_DEBUG("VideoWindow: resize {} from {}", m_rect.size(), size);
-        pause();
-        Window::resize(size);
-        m_video_impl->resize(size);
-        play();
     }
 }
 

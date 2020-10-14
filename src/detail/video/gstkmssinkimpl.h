@@ -27,9 +27,10 @@ public:
         ignoreparam(rect);
     }
 
-    void resize(const Size& size) override
+    void scale(float scalex, float scaley) override
     {
-        ignoreparam(size);
+        ignoreparam(scalex);
+        ignoreparam(scaley);
     }
 
     std::string create_pipeline() override;
