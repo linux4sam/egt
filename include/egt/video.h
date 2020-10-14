@@ -112,8 +112,6 @@ public:
 
     void draw(Painter& painter, const Rect& rect) override;
 
-    void handle(Event& event) override;
-
     /**
      * Initialize gstreamer pipeline for specified media file.
      *
@@ -234,9 +232,6 @@ public:
     ~VideoWindow() noexcept override;
 
 protected:
-    /// Rect Size
-    Rect m_rect;
-
     /// Loopback enabled.
     bool m_loopback{false};
 
@@ -245,9 +240,6 @@ protected:
 
     /// Vertical scale value.
     float m_vscale{1.0};
-
-    /// Starting offset for the drag.
-    Point m_start_offset;
 
     /// Create the internal implementation.
     void create_impl(const Size& size);

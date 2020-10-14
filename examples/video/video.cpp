@@ -64,27 +64,6 @@ static bool is_target_sama5d4()
     return false;
 }
 
-static void scale_video_window(egt::ImageButton& fullscreenbtn, egt::VideoWindow& player, const egt::Size& ssize)
-{
-    static bool scaled = true;
-    if (scaled)
-    {
-        auto wscale = static_cast<float>(ssize.width()) / player.width();
-        auto hscale = static_cast<float>(ssize.height()) / player.height();
-        player.move(egt::Point(0, 0));
-        player.scale(wscale, hscale);
-        fullscreenbtn.image(egt::Image("res:fullscreen_exit_png"));
-        scaled = false;
-    }
-    else
-    {
-        player.scale(1.0, 1.0);
-        player.move_to_center();
-        fullscreenbtn.image(egt::Image("res:fullscreen_png"));
-        scaled = true;
-    }
-}
-
 int main(int argc, char** argv)
 {
     cxxopts::Options options(argv[0], "play video file");
@@ -203,9 +182,25 @@ int main(int argc, char** argv)
 
     const auto ssize = egt::Application::instance().screen()->size();
 
-    fullscreenbtn.on_click([&fullscreenbtn, &player, &ssize](egt::Event&)
+    fullscreenbtn.on_click([&fullscreenbtn, &player, &ssize, &win](egt::Event&)
     {
-        scale_video_window(fullscreenbtn, player, ssize);
+        static bool scaled = true;
+        if (scaled)
+        {
+            auto wscale = static_cast<float>(ssize.width()) / player.width();
+            auto hscale = static_cast<float>(ssize.height()) / player.height();
+            player.move(egt::Point(0, 0));
+            player.scale(wscale, hscale);
+            fullscreenbtn.image(egt::Image("res:fullscreen_exit_png"));
+            scaled = false;
+        }
+        else
+        {
+            player.move_to_center(win.center());
+            player.scale(1.0, 1.0);
+            fullscreenbtn.image(egt::Image("res:fullscreen_png"));
+            scaled = true;
+        }
     });
 
     egt::ImageButton loopbackbtn(egt::Image("res:repeat_one_png"));
@@ -273,9 +268,40 @@ int main(int argc, char** argv)
         errlabel.text(line_break(err));
     });
 
-    player.on_click([&fullscreenbtn, &player, &ssize]()
+    player.on_event([&player, &win, &ssize](egt::Event & event)
     {
-        scale_video_window(fullscreenbtn, player, ssize);
+        static egt::Point drag_start_point;
+        switch (event.id())
+        {
+        case egt::EventId::pointer_drag_start:
+        {
+            drag_start_point = player.box().point();
+            break;
+        }
+        case egt::EventId::pointer_drag:
+        {
+            auto wscale = static_cast<float>(ssize.width()) / player.width();
+            if (!(egt::detail::float_equal(player.hscale(), wscale)))
+            {
+                auto diff = event.pointer().drag_start - event.pointer().point;
+                auto p = drag_start_point - egt::Point(diff.x(), diff.y());
+                auto max_x = win.width() - player.width();
+                auto max_y = win.height() - player.height();
+                if (p.x() >= max_x)
+                    p.x(max_x);
+                if (p.x() < 0)
+                    p.x(0);
+                if (p.y() >= max_y)
+                    p.y(max_y);
+                if (p.y() < 0)
+                    p.y(0);
+                player.move(p);
+            }
+            break;
+        }
+        default:
+            break;
+        }
     });
 
     ctrlwindow.show();
