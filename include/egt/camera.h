@@ -151,26 +151,6 @@ public:
         return m_vscale;
     }
 
-    /**
-     * Enable/disable moving CameraWindow during pointer drag.
-     *
-     * @note By default set to false.
-     */
-    void move_on_drag(bool enable)
-    {
-        m_move_on_drag = enable;
-    }
-
-    /**
-     * Get move_on_drag state.
-     *
-     * @return true/false based on move_on_drag state.
-     */
-    EGT_NODISCARD bool move_on_drag() const
-    {
-        return m_move_on_drag;
-    }
-
     ~CameraWindow() noexcept override;
 
 protected:
@@ -185,9 +165,6 @@ protected:
 
     /// Starting offset for the drag.
     Point m_start_offset;
-
-    /// Enable/disable moving CameraWindow during pointer drag
-    bool m_move_on_drag{false};
 
     /// @private
     std::unique_ptr<detail::CameraImpl> m_camera_impl;
