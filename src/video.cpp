@@ -224,12 +224,9 @@ void VideoWindow::handle(Event& event)
     case EventId::pointer_drag:
     case EventId::pointer_drag_stop:
     {
-        if (m_move_on_drag)
-        {
-            auto diff = event.pointer().drag_start - event.pointer().point;
-            auto p = m_start_offset - egt::Point(diff.x(), diff.y());
-            move(p);
-        }
+        auto diff = event.pointer().drag_start - event.pointer().point;
+        auto p = m_start_offset - egt::Point(diff.x(), diff.y());
+        move(p);
         break;
     }
     case EventId::pointer_click:

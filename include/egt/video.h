@@ -234,26 +234,6 @@ public:
      */
     EGT_NODISCARD bool has_audio() const;
 
-    /**
-     * Enable/disable moving VideoWindow on pointer drag.
-     *
-     * @note By default set to false.
-     */
-    void move_on_drag(bool enable)
-    {
-        m_move_on_drag = enable;
-    }
-
-    /**
-     * Get move_on_drag state.
-     *
-     * @return true/false based on move_on_drag state
-     */
-    EGT_NODISCARD bool move_on_drag() const
-    {
-        return m_move_on_drag;
-    }
-
     ~VideoWindow() noexcept override;
 
 protected:
@@ -271,9 +251,6 @@ protected:
 
     /// Starting offset for the drag.
     Point m_start_offset;
-
-    /// Enable/disable moving VideoWindow on pointer drag
-    bool m_move_on_drag{false};
 
     /// Create the internal implementation.
     void create_impl(const Size& size);
