@@ -668,8 +668,8 @@ public:
 
     bool next() override
     {
-        for (const auto& callback : m_callbacks)
-            callback(0);
+        for (const auto& c : m_callbacks)
+            c(0);
 
         return false;
     }

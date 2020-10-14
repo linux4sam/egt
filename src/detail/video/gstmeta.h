@@ -34,10 +34,10 @@ using GstErrorHandle = std::unique_ptr<GError, GstDeleter<GError, g_error_free>>
 template<class T>
 inline void gst_message_parse(T& func, GstMessage* msg, GstErrorHandle& err, GstStringHandle& debug)
 {
-    GError* error = nullptr;
+    GError* gst_error = nullptr;
     gchar* string = nullptr;
-    func(msg, &error, &string);
-    err.reset(error);
+    func(msg, &gst_error, &string);
+    err.reset(gst_error);
     debug.reset(string);
 }
 
@@ -88,13 +88,13 @@ inline void gst_init_plugins(T& plugins)
 
         for (const auto& plugin : plugins)
         {
-            GError* error = nullptr;
-            gst_plugin_load_file(std::string(path + plugin).c_str(), &error);
-            if (error)
+            GError* gst_error = nullptr;
+            gst_plugin_load_file(std::string(path + plugin).c_str(), &gst_error);
+            if (gst_error)
             {
-                if (error->message)
-                    detail::error("load plugin error: {}", error->message);
-                g_error_free(error);
+                if (gst_error->message)
+                    detail::error("load plugin error: {}", gst_error->message);
+                g_error_free(gst_error);
             }
         }
     }

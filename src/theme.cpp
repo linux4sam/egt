@@ -248,10 +248,10 @@ void Theme::draw_box(Painter& painter,
         // force the pattern on the center of the widget box vertically
         if (bg.type() == Pattern::Type::linear)
         {
-            auto pattern = bg;
-            pattern.linear(Point(box.x() + box.width() / 2., box.y()),
-                           Point(box.x() + box.width() / 2., box.y() + box.height()));
-            painter.set(pattern);
+            auto bg_pattern = bg;
+            bg_pattern.linear(Point(box.x() + box.width() / 2., box.y()),
+                              Point(box.x() + box.width() / 2., box.y() + box.height()));
+            painter.set(bg_pattern);
         }
         else
         {
@@ -365,10 +365,10 @@ void Theme::draw_circle(Painter& painter,
         if (bg.type() == Pattern::Type::linear ||
             bg.type() == Pattern::Type::radial)
         {
-            auto pattern = bg;
-            pattern.radial(circle.center(), circle.radius(),
-                           circle.center(), 0);
-            painter.set(pattern);
+            auto bg_pattern = bg;
+            bg_pattern.radial(circle.center(), circle.radius(),
+                              circle.center(), 0);
+            painter.set(bg_pattern);
         }
         else
         {

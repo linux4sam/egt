@@ -50,7 +50,7 @@ GstKmsSinkImpl::GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool de
 
 std::string GstKmsSinkImpl::create_pipeline()
 {
-    std::string format = "BGRx";
+    std::string gst_format = "BGRx";
     PixelFormat pf;
     if (m_interface.plane_window())
     {
@@ -58,8 +58,8 @@ std::string GstKmsSinkImpl::create_pipeline()
         assert(s);
         m_gem = s->gem();
         pf = detail::egt_format(s->get_plane_format());
-        format = detail::gstreamer_format(pf);
-        EGTLOG_DEBUG("egt_format = {}", format);
+        gst_format = detail::gstreamer_format(pf);
+        EGTLOG_DEBUG("egt_format = {}", gst_format);
     }
 
     std::string a_pipe;
@@ -114,7 +114,7 @@ std::string GstKmsSinkImpl::create_pipeline()
             (pf == PixelFormat::yuy2) || (pf == PixelFormat::yuy2) ||
             (pf == PixelFormat::uyvy))
         {
-            v_pipe = fmt::format(" ! video/x-raw,width={},height={},format={}", m_size.width(), m_size.height(), format);
+            v_pipe = fmt::format(" ! video/x-raw,width={},height={},format={}", m_size.width(), m_size.height(), gst_format);
         }
         else
         {
@@ -125,7 +125,7 @@ std::string GstKmsSinkImpl::create_pipeline()
     {
         EGTLOG_DEBUG("Decoding through software decoders");
         v_pipe = fmt::format(" ! queue ! videoscale ! video/x-raw,width={},height={} " \
-                             " ! videoconvert ! video/x-raw,format={}", m_size.width(), m_size.height(), format);
+                             " ! videoconvert ! video/x-raw,format={}", m_size.width(), m_size.height(), gst_format);
     }
 
     static constexpr auto pipeline = "uridecodebin uri={} expose-all-streams=false name=video  {} " \

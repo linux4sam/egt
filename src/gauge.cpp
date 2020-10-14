@@ -126,12 +126,12 @@ Rect NeedleLayer::rectangle_of_rotated()
     const auto angle = detail::to_radians(0.0f, detail::normalize_to_angle(m_value, m_min, m_max,
                                           m_angle_start, m_angle_stop,
                                           m_clockwise));
-    const auto center = Point(m_center.x(), m_center.y());
+    const auto center_point = Point(m_center.x(), m_center.y());
 
-    const auto p1 = point_calc(center, rect.top_left(), angle);
-    const auto p2 = point_calc(center, rect.top_right(), angle);
-    const auto p3 = point_calc(center, rect.bottom_right(), angle);
-    const auto p4 = point_calc(center, rect.bottom_left(), angle);
+    const auto p1 = point_calc(center_point, rect.top_left(), angle);
+    const auto p2 = point_calc(center_point, rect.top_right(), angle);
+    const auto p3 = point_calc(center_point, rect.bottom_right(), angle);
+    const auto p4 = point_calc(center_point, rect.bottom_left(), angle);
 
     const auto xmin = std::roundf(std::min(std::min(p1.x(), p2.x()), std::min(p3.x(), p4.x())));
     const auto ymin = std::roundf(std::min(std::min(p1.y(), p2.y()), std::min(p3.y(), p4.y())));

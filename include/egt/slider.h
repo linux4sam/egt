@@ -303,22 +303,22 @@ protected:
     void draw_label(Painter& painter, T value)
     {
         const auto b = this->content_area();
-        auto handle = handle_box(value);
+        auto handle_rect = handle_box(value);
 
         if (m_orient == Orientation::horizontal)
-            handle -= Point(0, b.height() / 2.);
+            handle_rect -= Point(0, b.height() / 2.);
         else
-            handle -= Point(b.width() / 2., 0);
+            handle_rect -= Point(b.width() / 2., 0);
 
         const auto text = std::to_string(value);
-        const auto f = TextWidget::scale_font(handle.size(), text, this->font());
+        const auto f = TextWidget::scale_font(handle_rect.size(), text, this->font());
 
         painter.set(this->color(Palette::ColorId::label_text));
         painter.set(f);
 
         const auto text_size = painter.text_size(text);
         const auto target = detail::align_algorithm(text_size,
-                            handle,
+                            handle_rect,
                             AlignFlag::center,
                             5);
         painter.draw(target.point());
@@ -568,13 +568,13 @@ Rect SliderType<T>::handle_box(T value) const
 template <class T>
 void SliderType<T>::draw_handle(Painter& painter)
 {
-    const auto handle = handle_box();
+    const auto handle_rect = handle_box();
 
     if (slider_flags().is_set(SliderFlag::round_handle))
     {
         this->theme().draw_circle(painter,
                                   Theme::FillFlag::blend,
-                                  handle,
+                                  handle_rect,
                                   this->color(Palette::ColorId::border),
                                   this->color(Palette::ColorId::button_bg),
                                   this->border());
@@ -583,7 +583,7 @@ void SliderType<T>::draw_handle(Painter& painter)
     {
         this->theme().draw_box(painter,
                                Theme::FillFlag::blend,
-                               handle,
+                               handle_rect,
                                this->color(Palette::ColorId::border),
                                this->color(Palette::ColorId::button_bg),
                                this->border(),
@@ -596,7 +596,7 @@ template <class T>
 void SliderType<T>::draw_line(Painter& painter, float xp, float yp)
 {
     const auto b = this->content_area();
-    const auto handle = handle_box();
+    const auto handle_rect = handle_box();
 
     Point a1;
     Point a2;
@@ -606,20 +606,20 @@ void SliderType<T>::draw_line(Painter& painter, float xp, float yp)
     if (m_orient == Orientation::horizontal)
     {
         a1 = Point(b.x(), yp);
-        a2 = Point(handle.x(), yp);
-        b1 = Point(handle.x(), yp);
+        a2 = Point(handle_rect.x(), yp);
+        b1 = Point(handle_rect.x(), yp);
         b2 = Point(b.x() + b.width(), yp);
 
-        painter.line_width(handle.height() / 5.0);
+        painter.line_width(handle_rect.height() / 5.0);
     }
     else
     {
         a1 = Point(xp, b.y() + b.height());
-        a2 = Point(xp, handle.y());
-        b1 = Point(xp, handle.y());
+        a2 = Point(xp, handle_rect.y());
+        b1 = Point(xp, handle_rect.y());
         b2 = Point(xp, b.y());
 
-        painter.line_width(handle.width() / 5.0);
+        painter.line_width(handle_rect.width() / 5.0);
     }
 
     if (slider_flags().is_set(SliderFlag::consistent_line))
