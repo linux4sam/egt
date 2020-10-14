@@ -63,6 +63,7 @@ void Uri::parse(const std::string& uri)
     if (std::regex_match(uri, match, uri_regex))
     {
 #ifndef NDEBUG
+        // cppcheck-suppress unreadVariable
         int counter = 0;
         for (const auto& res : match)
         {

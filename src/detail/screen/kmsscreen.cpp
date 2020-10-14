@@ -404,10 +404,10 @@ size_t KMSScreen::brightness() const
 
 void KMSScreen::brightness(size_t brightness)
 {
+#ifdef HAVE_EXPERIMENTAL_FILESYSTEM
     auto max = max_brightness();
     if (brightness > max)
         brightness = max;
-#ifdef HAVE_EXPERIMENTAL_FILESYSTEM
     auto const backlight_dir = get_backlight_dir("/sys/class/backlight/");
     std::ofstream{backlight_dir / "brightness"} << std::to_string(brightness);
 #else

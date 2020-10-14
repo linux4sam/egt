@@ -596,6 +596,7 @@ void Widget::layout()
     if (!flags().is_set(Widget::Flag::no_autoresize))
     {
         m_in_layout = true;
+        // cppcheck-suppress unreadVariable
         auto reset = detail::on_scope_exit([this]() { m_in_layout = false; });
         auto s = size();
         if (s.width() < min_size_hint().width())
