@@ -63,11 +63,6 @@ public:
 
     /// Invoked when the state of the player changes.
     Signal<> on_state_changed;
-
-    /**
-     * Invoked on clicked event
-     */
-    Signal<> on_click;
     /** @} */
 
     /**
