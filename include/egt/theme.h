@@ -212,7 +212,7 @@ public:
     /**
      * Set the theme palette.
      */
-    void palette(Palette& palette)
+    void palette(const Palette& palette)
     {
         m_palette = palette;
     }

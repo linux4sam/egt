@@ -27,7 +27,7 @@ struct EventLoop::EventLoopImpl
     detail::PriorityQueue m_queue;
 };
 
-EventLoop::EventLoop(Application& app) noexcept
+EventLoop::EventLoop(const Application& app) noexcept
     : m_impl(std::make_unique<EventLoopImpl>()),
       m_app(app)
 {}

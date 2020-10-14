@@ -19,7 +19,7 @@ void ShamrockTheme::init_draw()
     Theme::init_draw();
     /// @[RoundButtons]
     // round buttons
-    Drawer<Button>::draw([](Button & widget, Painter & painter, const Rect & rect)
+    Drawer<Button>::draw([](const Button & widget, Painter & painter, const Rect & rect)
     {
         detail::ignoreparam(rect);
 

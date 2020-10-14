@@ -132,7 +132,7 @@ public:
     }
 
     /// Default draw method for the widget.
-    static void default_draw(Button& widget, Painter& painter, const Rect& rect);
+    static void default_draw(const Button& widget, Painter& painter, const Rect& rect);
 
     using Widget::checked;
 

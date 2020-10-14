@@ -122,7 +122,7 @@ int main(int argc, char** argv)
         std::cerr << "GPIOHANDLE_GET_LINE_VALUES_IOCTL failed" << std::endl;
 
     // start a monitor and set the label text when the GPIO changes
-    GpioEventMonitor monitor(ereq.fd, [&label](gpioevent_data & event)
+    GpioEventMonitor monitor(ereq.fd, [&label](const gpioevent_data & event)
     {
         auto status = event.id == GPIOEVENT_EVENT_RISING_EDGE ? "off" : "on";
         std::cout << status << std::endl;

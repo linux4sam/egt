@@ -56,7 +56,7 @@ void RadioBox::draw(Painter& painter, const Rect& rect)
     Drawer<RadioBox>::draw(*this, painter, rect);
 }
 
-void RadioBox::default_draw(RadioBox& widget, Painter& painter, const Rect& rect)
+void RadioBox::default_draw(const RadioBox& widget, Painter& painter, const Rect& rect)
 {
     detail::ignoreparam(rect);
 

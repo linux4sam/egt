@@ -39,7 +39,7 @@ class EGT_API EventLoop
 {
 public:
 
-    explicit EventLoop(Application& app) noexcept;
+    explicit EventLoop(const Application& app) noexcept;
     EventLoop(const EventLoop&) = delete;
     EventLoop& operator=(const EventLoop&) = delete;
     EventLoop(EventLoop&&) = delete;
@@ -133,7 +133,7 @@ protected:
     bool m_do_quit{false};
 
     /// Application reference.
-    Application& m_app;
+    const Application& m_app;
 };
 
 }

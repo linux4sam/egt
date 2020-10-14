@@ -86,7 +86,7 @@ public:
     void draw(Painter& painter, const Rect& rect) override;
 
     /// Default draw method for the widget.
-    static void default_draw(Label& widget, Painter& painter, const Rect& rect);
+    static void default_draw(const Label& widget, Painter& painter, const Rect& rect);
 
     using TextWidget::min_size_hint;
 

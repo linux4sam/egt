@@ -62,7 +62,7 @@ public:
     /**
      * Default draw method for the CheckBox.
      */
-    static void default_draw(CheckBox& widget, Painter& painter, const Rect& rect);
+    static void default_draw(const CheckBox& widget, Painter& painter, const Rect& rect);
 
     using Button::min_size_hint;
 

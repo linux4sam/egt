@@ -57,7 +57,7 @@ void Label::draw(Painter& painter, const Rect& rect)
     Drawer<Label>::draw(*this, painter, rect);
 }
 
-void Label::default_draw(Label& widget, Painter& painter, const Rect&)
+void Label::default_draw(const Label& widget, Painter& painter, const Rect&)
 {
     widget.draw_box(painter, Palette::ColorId::label_bg, Palette::ColorId::border);
 

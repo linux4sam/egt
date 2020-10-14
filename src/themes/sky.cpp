@@ -18,7 +18,7 @@ void SkyTheme::init_draw()
 {
     Theme::init_draw();
 
-    Drawer<CheckBox>::draw([](CheckBox & widget, Painter & painter, const Rect & rect)
+    Drawer<CheckBox>::draw([](const CheckBox & widget, Painter & painter, const Rect & rect)
     {
         detail::ignoreparam(rect);
 
