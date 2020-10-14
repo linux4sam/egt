@@ -352,6 +352,7 @@ public:
      */
     EGT_NODISCARD constexpr bool empty() const noexcept
     {
+        // cppcheck-suppress unsignedLessThanZero
         return m_width <= 0 || m_height <= 0;
     }
 

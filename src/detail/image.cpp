@@ -83,7 +83,7 @@ EGT_API shared_cairo_surface_t load_image_from_memory(const unsigned char* data,
         size_t len,
         const std::string& name)
 {
-    if (!data || len <= 0)
+    if (!data || !len)
         return {};
 
     shared_cairo_surface_t image;
@@ -329,7 +329,7 @@ private:
 
 std::string get_mime_type(const void* buffer, size_t length)
 {
-    if (!buffer || length <= 0)
+    if (!buffer || !length)
         return {};
 
     BasicMimeTypeDetector detector;
