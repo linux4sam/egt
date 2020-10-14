@@ -597,7 +597,7 @@ public:
      * @param[in] interp Interpolation color space.
      */
     template<class T>
-    ColorMap(std::initializer_list<T> steps, Interpolation interp = Interpolation::rgba)
+    explicit ColorMap(std::initializer_list<T> steps, Interpolation interp = Interpolation::rgba)
         : m_interp(interp)
     {
         m_steps.insert(m_steps.end(), steps.begin(), steps.end());

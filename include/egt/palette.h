@@ -270,7 +270,7 @@ public:
 
     Palette() = default;
 
-    constexpr Palette(std::initializer_list<PatternArray::value_type> colors) noexcept
+    explicit constexpr Palette(std::initializer_list<PatternArray::value_type> colors) noexcept
         : m_colors(colors)
     {}
 
