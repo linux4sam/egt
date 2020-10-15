@@ -30,6 +30,8 @@ public:
 
     void scale(float scalex, float scaley) override;
 
+    void resize(const Size& size) override;
+
 protected:
     GstElement* m_appsink;
 

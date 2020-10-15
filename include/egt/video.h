@@ -197,8 +197,15 @@ public:
     }
 
     using Window::scale;
-
     void scale(float hscale, float vscale) override;
+
+    using Widget::min_size_hint;
+    EGT_NODISCARD Size min_size_hint() const override;
+
+    using Window::resize;
+    void resize(const Size& s) override;
+
+    void layout() override;
 
     /**
      * Get horizontal scale value.

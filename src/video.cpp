@@ -88,7 +88,7 @@ VideoWindow::VideoWindow(const Rect& rect, PixelFormat format, WindowHint hint)
     : Window(rect, format, detail::check_windowhint(hint))
 {
     fill_flags().clear();
-
+    flags().set(Widget::Flag::no_layout);
     create_impl(rect.size());
 }
 
@@ -204,6 +204,34 @@ void VideoWindow::scale(float hscale, float vscale)
             Window::scale(m_hscale, m_vscale);
         }
     }
+}
+
+void VideoWindow::resize(const Size& size)
+{
+    /*
+     * sama5d4 does not support changing video resolution dynamically
+     * due to g1kmssink in client mode.
+     */
+    if ((box().size() != size) && (!detail::is_target_sama5d4()))
+    {
+        pause();
+        Window::resize(size);
+        m_video_impl->resize(size);
+        play();
+    }
+}
+
+Size VideoWindow::min_size_hint() const
+{
+    return Size(320, 192);
+}
+
+
+void VideoWindow::layout()
+{
+    // Resize to min_size_hint if needed and allowed.
+    Widget::layout();
+    Window::layout();
 }
 
 bool VideoWindow::has_audio() const

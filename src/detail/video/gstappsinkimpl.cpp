@@ -118,6 +118,22 @@ GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
 #ifdef HAVE_LIBPLANES
         if (impl->m_interface.plane_window())
         {
+            GstCaps* caps = gst_sample_get_caps(sample);
+            GstStructure* capsStruct = gst_caps_get_structure(caps, 0);
+            int width = 0;
+            int height = 0;
+            gst_structure_get_int(capsStruct, "width", &width);
+            gst_structure_get_int(capsStruct, "height", &height);
+
+            auto b = impl->m_interface.content_area();
+            if (b.size() != egt::Size(width, height))
+            {
+                gst_sample_unref(sample);
+                EGTLOG_DEBUG("frame dropped b.size() {} egt::Size(width, height) {}", b.size(), egt::Size(width, height));
+                // drop this frame and continue;
+                return GST_FLOW_OK;
+            }
+
             GstBuffer* buffer = gst_sample_get_buffer(sample);
             if (buffer)
             {
@@ -182,12 +198,18 @@ std::string GstAppSinkImpl::create_pipeline()
         a_pipe = "! queue ! audioconvert ! volume name=volume ! autoaudiosink sync=false";
     }
 
+    std::string vscapf = " ! capsfilter name=vcaps";
+    if ((m_size.width() > 32) && (m_size.height() > 32))
+    {
+        vscapf = fmt::format(vscapf + " caps=video/x-raw,width={},height={} ",
+                             m_size.width(), m_size.height());
+    }
+
     static constexpr auto pipeline =
         "uridecodebin uri={} expose-all-streams=false name=video " \
-        " {} video. ! queue ! videoscale ! video/x-raw,width={},height={} {} " \
-        " ! appsink name=appsink video. {} ";
+        " {} video. {} ! videoscale {} ! appsink name=appsink video. {} ";
 
-    return fmt::format(pipeline, m_uri, caps, m_size.width(), m_size.height(), vc, a_pipe);
+    return fmt::format(pipeline, m_uri, caps, vc, vscapf, a_pipe);
 }
 
 /* This function takes a textual representation of a pipeline
@@ -224,6 +246,15 @@ bool GstAppSinkImpl::media(const std::string& uri)
                 detail::error("{}", error->message);
                 m_interface.on_error.invoke(error->message);
             }
+            return false;
+        }
+
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
+        m_vcapsfilter = gst_bin_get_by_name(GST_BIN(m_pipeline), "vcaps");
+        if (!m_vcapsfilter)
+        {
+            detail::error("failed to get vcaps element");
+            m_interface.on_error.invoke("failed to get vcaps element");
             return false;
         }
 
@@ -271,6 +302,28 @@ bool GstAppSinkImpl::media(const std::string& uri)
 void GstAppSinkImpl::scale(float scalex, float scaley)
 {
     m_interface.resize(Size(m_size.width() * scalex, m_size.height() * scaley));
+}
+
+void GstAppSinkImpl::resize(const Size& size)
+{
+    if (size != m_size)
+    {
+        std::string vs = fmt::format("video/x-raw,width={},height={}", size.width(), size.height());
+        GstCaps* caps = gst_caps_from_string(vs.c_str());
+        if (m_pipeline && m_vcapsfilter)
+        {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
+            g_object_set(G_OBJECT(m_vcapsfilter), "caps", caps, NULL);
+            EGTLOG_DEBUG("change gst videoscale element to {}", size);
+        }
+        gst_caps_unref(caps);
+
+        if (m_size.empty())
+        {
+            m_size = size;
+            EGTLOG_DEBUG("setting m_size to {} from {}", size, m_size);
+        }
+    }
 }
 
 gboolean GstAppSinkImpl::post_position(gpointer data)

@@ -49,6 +49,11 @@ public:
 
     virtual void scale(float scalex, float scaley) = 0;
 
+    virtual void resize(const Size& size)
+    {
+        ignoreparam(size);
+    }
+
     virtual bool play();
 
     virtual bool pause();
@@ -92,7 +97,7 @@ protected:
     std::string m_acodec;
     bool m_audiotrack{false};
     std::string m_container;
-
+    GstElement* m_vcapsfilter{nullptr};
 
     static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data);
 
