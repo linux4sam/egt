@@ -63,9 +63,8 @@ Image::Image(cairo_surface_t* surface)
 }
 
 Image::Image(const unsigned char* data, size_t len)
+    : m_surface(detail::load_image_from_memory(data, len))
 {
-    m_surface = detail::load_image_from_memory(data, len);
-
     assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
 
     m_orig_size = Size(std::ceil(cairo_image_surface_get_width(m_surface.get())),
