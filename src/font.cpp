@@ -347,10 +347,7 @@ struct FontCache : private detail::NonCopyable<FontCache>
         case detail::SchemeType::resource:
         case detail::SchemeType::network:
         default:
-        {
             throw std::runtime_error("unable to load font uri: " + font.face());
-            break;
-        }
         }
 
         if (scaled_font)
