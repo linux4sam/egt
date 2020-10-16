@@ -254,7 +254,7 @@ protected:
         const auto div = 1000;
         size_t s = 0;
         double count = bytes;
-        while (count >= div && s < 7)
+        while (count >= div && s < 6)
         {
             s++;
             count /= div;
