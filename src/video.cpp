@@ -223,7 +223,11 @@ void VideoWindow::resize(const Size& size)
 
 Size VideoWindow::min_size_hint() const
 {
-    return Size(320, 192);
+
+    if (!m_min_size.empty())
+        return m_min_size;
+
+    return Size(320, 240);
 }
 
 
