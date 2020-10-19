@@ -37,8 +37,8 @@ widgets/window.cpp
 if HAVE_GSTREAMER
 test_SOURCES += \
 audio/audio.cpp \
-video/video.cpp \
-video/camera.cpp
+video/camera.cpp \
+video/video.cpp
 endif
 
 test_CPPFLAGS = -I$(top_srcdir)/external/googletest/googletest/include \
