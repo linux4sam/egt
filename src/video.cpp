@@ -88,7 +88,7 @@ VideoWindow::VideoWindow(const Rect& rect, PixelFormat format, WindowHint hint)
     : Window(rect, format, detail::check_windowhint(hint))
 {
     fill_flags().clear();
-    flags().set(Widget::Flag::no_layout);
+
     create_impl(rect.size());
 }
 
@@ -219,23 +219,6 @@ void VideoWindow::resize(const Size& size)
         m_video_impl->resize(size);
         play();
     }
-}
-
-Size VideoWindow::min_size_hint() const
-{
-
-    if (!m_min_size.empty())
-        return m_min_size;
-
-    return Size(320, 240);
-}
-
-
-void VideoWindow::layout()
-{
-    // Resize to min_size_hint if needed and allowed.
-    Widget::layout();
-    Window::layout();
 }
 
 bool VideoWindow::has_audio() const

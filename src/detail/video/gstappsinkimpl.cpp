@@ -124,13 +124,23 @@ GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
             int height = 0;
             gst_structure_get_int(capsStruct, "width", &width);
             gst_structure_get_int(capsStruct, "height", &height);
-
+            auto vs = egt::Size(width, height);
             auto b = impl->m_interface.content_area();
-            if (b.size() != egt::Size(width, height))
+            if (b.size() != vs)
             {
+                if (Application::check_instance())
+                {
+                    asio::post(Application::instance().event().io(), [impl, vs, b]()
+                    {
+                        if (vs.width() < b.width() || vs.height() < b.height())
+                            impl->resize(vs);
+                        else
+                            impl->resize(b.size());
+                    });
+                }
+
+                // drop this frame and continue
                 gst_sample_unref(sample);
-                EGTLOG_DEBUG("frame dropped b.size() {} egt::Size(width, height) {}", b.size(), egt::Size(width, height));
-                // drop this frame and continue;
                 return GST_FLOW_OK;
             }
 
@@ -196,6 +206,15 @@ std::string GstAppSinkImpl::create_pipeline()
     {
         caps += ";audio/x-raw";
         a_pipe = "! queue ! audioconvert ! volume name=volume ! autoaudiosink sync=false";
+    }
+
+    if (!m_interface.plane_window() && m_size.empty())
+    {
+        /*
+         * If size is empty, then PlaneWindow is created with size(32,32) but not for
+         * BasicWindow. so resizing BasicWindow to size(32,32).
+         */
+        m_interface.resize(Size(32, 32));
     }
 
     std::string vscapf = " ! capsfilter name=vcaps";
@@ -308,15 +327,15 @@ void GstAppSinkImpl::resize(const Size& size)
 {
     if (size != m_size)
     {
-        std::string vs = fmt::format("video/x-raw,width={},height={}", size.width(), size.height());
-        GstCaps* caps = gst_caps_from_string(vs.c_str());
         if (m_pipeline && m_vcapsfilter)
         {
+            std::string vs = fmt::format("video/x-raw,width={},height={}", size.width(), size.height());
+            GstCaps* caps = gst_caps_from_string(vs.c_str());
             // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
             g_object_set(G_OBJECT(m_vcapsfilter), "caps", caps, NULL);
             EGTLOG_DEBUG("change gst videoscale element to {}", size);
+            gst_caps_unref(caps);
         }
-        gst_caps_unref(caps);
 
         if (m_size.empty())
         {
