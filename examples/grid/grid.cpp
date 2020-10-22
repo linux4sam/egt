@@ -6,9 +6,9 @@
 /// @[Example]
 #include <egt/ui>
 
-int main()
+int main(int argc, char** argv)
 {
-    egt::Application app;
+    egt::Application app(argc, argv);
 
     egt::TopWindow window;
 
