@@ -284,6 +284,25 @@ public:
     }
 
     /**
+     * Enable/disable the auto scale of the image.
+     *
+     * If enabled, the image will be automatically scaled to fit within the
+     * button box. By default, set to true.
+     */
+    void auto_scale_image(bool enable)
+    {
+        m_auto_scale_image = enable;
+    }
+
+    /**
+     * Get the auto scale image state.
+     */
+    bool auto_scale_image() const
+    {
+        return m_auto_scale_image;
+    }
+
+    /**
      * Get a const reference of the image.
      */
     EGT_NODISCARD const Image& image() const { return m_image; }
@@ -333,6 +352,9 @@ protected:
 
     /// The image. Allowed to be empty.
     Image m_image;
+
+    /// When true, the image is scaled to fit within the label box.
+    bool m_auto_scale_image{true};
 
     /// When true, the label text is shown.
     bool m_show_label{true};
