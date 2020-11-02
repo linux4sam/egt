@@ -185,11 +185,14 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
                             widget.content_area(),
                             widget.image_align());
 
-        const auto hs = static_cast<float>(target.width()) /
-                        static_cast<float>(widget.image().size_orig().width());
-        const auto vs = static_cast<float>(target.height()) /
-                        static_cast<float>(widget.image().size_orig().height());
-        widget.image().scale(hs, vs);
+        if (widget.auto_scale_image())
+        {
+            const auto hs = static_cast<float>(target.width()) /
+                            static_cast<float>(widget.image().size_orig().width());
+            const auto vs = static_cast<float>(target.height()) /
+                            static_cast<float>(widget.image().size_orig().height());
+            widget.image().scale(hs, vs);
+        }
 
         painter.draw(target.point());
         painter.draw(widget.image());
