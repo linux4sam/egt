@@ -47,3 +47,9 @@ horizontal/vertical_space getters and setters.
 + instance->horizontal_space(1);
 + instance->vertical_space(1);
 @endcode
+
+@subsection imagebutton_label ImageButton/Label
+
+@li Add auto_scale_image() setter and getter. The auto scale image state is set
+to true by default. When enabled, the image will be automatically scaled down to
+fit the box attributed by the align algorithm.
