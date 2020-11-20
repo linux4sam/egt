@@ -358,26 +358,23 @@ struct VerticalBarPage : public egt::NotebookTab
     }
 };
 
-static std::shared_ptr<egt::HorizontalBoxSizer> create_line_combo(const std::shared_ptr<egt::LineChart>& chart)
+static std::shared_ptr<egt::ListBox> line_chart_style(const std::shared_ptr<egt::LineChart>& chart)
 {
-    auto hsizer = std::make_shared<egt::HorizontalBoxSizer>();
-
     static const std::pair<std::string, egt::LineChart::LinePattern> line_patterns[] =
     {
-        {"LineStyle: Solid", egt::LineChart::LinePattern::solid},
+        {"LineStyle: Solid", egt::LineChart::LinePattern::solid },
         {"LineStyle: Dotted", egt::LineChart::LinePattern::dotted },
         {"LineStyle: Dashes", egt::LineChart::LinePattern::dashes },
     };
 
-    auto pattern = std::make_shared<egt::ComboBox>();
+    auto pattern = std::make_shared<egt::ListBox>();
     for (auto& i : line_patterns)
         pattern->add_item(std::make_shared<egt::StringItem>(i.first));
     pattern->margin(5);
-    hsizer->add(pattern);
 
-    pattern->on_selected_changed([pattern, chart]()
+    pattern->on_selected([pattern, chart](size_t index)
     {
-        auto s = pattern->item_at(pattern->selected());
+        auto s = pattern->item_at(index);
         for (auto& i : line_patterns)
         {
             if (s->text() == i.first)
@@ -386,42 +383,44 @@ static std::shared_ptr<egt::HorizontalBoxSizer> create_line_combo(const std::sha
                 break;
             }
         }
+        pattern->parent()->hide();
     });
-    pattern->selected(0);
 
-    auto line_width = std::make_shared<egt::ComboBox>();
+    return pattern;
+}
+
+static std::shared_ptr<egt::ListBox> line_chart_width(const std::shared_ptr<egt::LineChart>& chart)
+{
+    auto line_width = std::make_shared<egt::ListBox>();
     for (int i = 1; i < 10; i++)
     {
         line_width->add_item(std::make_shared<egt::StringItem>("LineWidth: " + std::to_string(i)));
     }
     line_width->margin(5);
-    hsizer->add(line_width);
 
-    line_width->on_selected_changed([line_width, chart]()
+    line_width->on_selected([line_width, chart](size_t index)
     {
-        auto s = line_width->item_at(line_width->selected());
+        auto s = line_width->item_at(index);
         chart->line_width(strtoul(s->text().substr(11, 1).c_str(), nullptr, 10));
+        line_width->parent()->hide();
     });
-    line_width->selected(0);
 
-    return hsizer;
+    return line_width;
 }
 
 enum LineChartType
 {
     Sine = 1,
     Cosine,
-    Tangent,
 };
 
 struct LineChartPage : public egt::NotebookTab
 {
-    explicit LineChartPage(LineChartType type)
+	explicit LineChartPage(const std::shared_ptr<egt::LineChart>& line, LineChartType type)
     {
         auto sizer = std::make_shared<egt::VerticalBoxSizer>();
         add(expand(sizer));
 
-        auto line = std::make_shared<egt::LineChart>();
         sizer->add(egt::expand(line));
 
         egt::LineChart::DataArray data;
@@ -440,18 +439,14 @@ struct LineChartPage : public egt::NotebookTab
         }
         line->data(data);
 
-        auto csizer = std::make_shared<egt::HorizontalBoxSizer>(egt::Justification::start);
-        sizer->add(csizer);
-
-        csizer->add(create_line_combo(line));
-
-        csizer->add(create_grid_combo(line));
-
-        auto btn2 = std::make_shared<egt::Button>("Add Data");
-        csizer->add(btn2);
+        auto btn2 = std::make_shared<egt::ImageButton>(egt::Image("file:add.png"));
+        btn2->fill_flags().clear();
+        btn2->align(egt::AlignFlag::right | egt::AlignFlag::center);
+        sizer->add(btn2);
         btn2->on_click([btn2, line, type](egt::Event&)
         {
-            if (btn2->text() == "Add Data")
+            static bool btn_flag = true;
+            if (btn_flag)
             {
                 egt::LineChart::DataArray data1;
                 if (type == LineChartType::Cosine)
@@ -476,12 +471,14 @@ struct LineChartPage : public egt::NotebookTab
                     line->add_data(data1);
                     ssize ++;
                 }
-                btn2->text("RM Data");
+                btn2->image(egt::Image("file:rm.png"));
+                btn_flag = false;
             }
             else
             {
                 line->remove_data(M_PI * 2);
-                btn2->text("Add Data");
+                btn2->image(egt::Image("file:add.png"));
+                btn_flag = true;
             }
         });
     }
@@ -491,6 +488,10 @@ int main(int argc, char** argv)
 {
     egt::Application app(argc, argv);
     egt::TopWindow win;
+
+#ifdef EXAMPLEDATA
+    egt::add_search_path(EXAMPLEDATA);
+#endif
 
     egt::VerticalBoxSizer vsizer(win);
     expand(vsizer);
@@ -554,10 +555,12 @@ int main(int argc, char** argv)
     });
     tlist->selected(0);
 
+    auto line = std::make_shared<egt::LineChart>();
+
     const std::pair<const char*, std::function<std::shared_ptr<egt::NotebookTab>()>> charts_items[] =
     {
-        {"Sine Chart", []{ return std::make_shared<LineChartPage>(LineChartType::Sine); }},
-        {"Cosine Chart", []{ return std::make_shared<LineChartPage>(LineChartType::Cosine); }},
+        {"Sine Chart", [line] { return std::make_shared<LineChartPage>(line, LineChartType::Sine);}},
+        {"Cosine Chart", [line] { return std::make_shared<LineChartPage>(line, LineChartType::Cosine);}},
         {"Points", []{ return std::make_shared<Points>(); }},
         {"Vertical Bar", []{ return std::make_shared<VerticalBarPage>(false); }},
         {"Vertical Bar-2", []{ return std::make_shared<VerticalBarPage>(true); }},
@@ -593,7 +596,13 @@ int main(int argc, char** argv)
 
     setting->on_click([&](egt::Event&)
     {
+        auto s = chart->item_at(chart->selected());
         slist->clear();
+        if ((s->text() == "Sine Chart") || (s->text() == "Cosine Chart"))
+        {
+            slist->add_item(std::make_shared<egt::StringItem>("Line Style"));
+            slist->add_item(std::make_shared<egt::StringItem>("Line Width"));
+        }
         slist->add_item(std::make_shared<egt::StringItem>("Themes"));
         spopup->resize(egt::Size(win.width() * 0.50, slist->item_count() * 40));
         spopup->show_modal(true);
@@ -609,7 +618,18 @@ int main(int argc, char** argv)
     {
         auto s = slist->item_at(index);
         spopup->hide();
-        if (s->text() == "Themes")
+        if (s->text() == "Line Style")
+        {
+            auto pw = line_chart_style(line);
+            tpopup->add(egt::expand(pw));
+            tpopup->resize(egt::Size(win.width() * 0.50, pw->item_count() * 40));
+        }
+        else if (s->text() == "Line Width")
+        {
+            auto pw = line_chart_width(line);
+            tpopup->add(egt::expand(pw));
+        }
+        else if (s->text() == "Themes")
         {
             tpopup->add(egt::expand(tlist));
         }

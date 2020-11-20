@@ -148,7 +148,8 @@ calc_calc_LDFLAGS = $(AM_LDFLAGS)
 EXTRA_DIST += calc/calc.xml
 
 charts_charts_SOURCES = charts/charts.cpp
-charts_charts_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+charts_charts_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
+	-DEXAMPLEDATA=\"$(datadir)/egt/examples/charts\"
 charts_charts_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 charts_chartsdir = $(prefix)/share/egt/examples/charts
 dist_charts_charts_DATA = $(wildcard $(top_srcdir)/examples/charts/*.png) \
