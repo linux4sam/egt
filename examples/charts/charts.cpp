@@ -79,23 +79,28 @@ struct PiePage : public egt::NotebookTab
         auto csizer = std::make_shared<egt::HorizontalBoxSizer>();
         sizer->add(expand_horizontal(csizer));
 
-        auto btn1 = std::make_shared<egt::Button>("Add Data");
-        csizer->add(btn1);
+        auto btn1 = std::make_shared<egt::ImageButton>(egt::Image("file:add.png"));
+        btn1->fill_flags().clear();
+        btn1->align(egt::AlignFlag::right | egt::AlignFlag::center);
+        sizer->add(btn1);
         btn1->on_click([pie, btn1](egt::Event&)
         {
-            if (btn1->text() == "Add Data")
+            static bool btn_flag = true;
+            if (btn_flag)
             {
                 egt::PieChart::StringDataArray data1;
                 static size_t i = 1;
                 data1.push_back(std::make_pair(random_item(1, 25), "label" + std::to_string(++i)));
                 data1.push_back(std::make_pair(random_item(1, 10), "label" + std::to_string(++i)));
                 pie->add_data(data1);
-                btn1->text("Remove Data");
+                btn1->image(egt::Image("file:rm.png"));
+                btn_flag = false;
             }
             else
             {
                 pie->remove_data(2);
-                btn1->text("Add Data");
+                btn1->image(egt::Image("file:add.png"));
+                btn_flag = true;
             }
         });
     }
