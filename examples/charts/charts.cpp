@@ -101,16 +101,47 @@ struct PiePage : public egt::NotebookTab
     }
 };
 
+static std::shared_ptr<egt::ListBox> point_chart_type(const std::shared_ptr<egt::PointChart>& point)
+{
+    static const std::pair<std::string, egt::PointChart::PointType> point_items[] =
+    {
+        {"PointType: Dot", egt::PointChart::PointType::dot},
+        {"PointType: Star", egt::PointChart::PointType::star },
+        {"PointType: Circle", egt::PointChart::PointType::circle },
+        {"PointType: Cross", egt::PointChart::PointType::cross },
+    };
+
+    auto plist = std::make_shared<egt::ListBox>();
+    for (auto& i : point_items)
+        plist->add_item(std::make_shared<egt::StringItem>(i.first));
+    plist->margin(5);;
+
+    plist->on_selected([plist, point](size_t index)
+    {
+        auto s = plist->item_at(index);
+        for (auto& i : point_items)
+        {
+            if (s->text() == i.first)
+            {
+                point->point_type(i.second);
+                break;
+            }
+        }
+        plist->parent()->hide();
+    });
+
+    return plist;
+}
+
 struct Points : public egt::NotebookTab
 {
-    explicit Points()
+    explicit Points(const std::shared_ptr<egt::PointChart>& point)
     {
         auto sizer = std::make_shared<egt::VerticalBoxSizer>();
         add(expand(sizer));
 
-        auto line = std::make_shared<egt::PointChart>();
-        line->label("x-axis", "y-axis", "Point Chart");
-        sizer->add(expand(line));
+        point->label("x-axis", "y-axis", "Point Chart");
+        sizer->add(expand(point));
 
         auto csizer = std::make_shared<egt::HorizontalBoxSizer>();
         sizer->add(expand_horizontal(csizer));
@@ -120,43 +151,16 @@ struct Points : public egt::NotebookTab
         {
             data.push_back(std::make_pair(i, random_item(1, 100)));
         }
-        line->data(data);
+        point->data(data);
 
-        csizer->add(create_grid_combo(line));
-
-        static const std::pair<std::string, egt::PointChart::PointType> point_items[] =
+        auto btn2 = std::make_shared<egt::ImageButton>(egt::Image("file:add.png"));
+        btn2->fill_flags().clear();
+        btn2->align(egt::AlignFlag::right | egt::AlignFlag::center);
+        sizer->add(btn2);
+        btn2->on_click([point, btn2](egt::Event&)
         {
-            {"PointType: Dot", egt::PointChart::PointType::dot},
-            {"PointType: Star", egt::PointChart::PointType::star },
-            {"PointType: Circle", egt::PointChart::PointType::circle },
-            {"PointType: Cross", egt::PointChart::PointType::cross },
-        };
-
-        auto combo = std::make_shared<egt::ComboBox>();
-        for (auto& i : point_items)
-            combo->add_item(std::make_shared<egt::StringItem>(i.first));
-        combo->margin(5);
-        csizer->add(combo);
-
-        combo->on_selected_changed([combo, line]()
-        {
-            auto s = combo->item_at(combo->selected());
-            for (auto& i : point_items)
-            {
-                if (s->text() == i.first)
-                {
-                    line->point_type(i.second);
-                    break;
-                }
-            }
-        });
-        combo->selected(0);
-
-        auto btn2 = std::make_shared<egt::Button>("Add Data");
-        csizer->add(btn2);
-        btn2->on_click([line, btn2](egt::Event&)
-        {
-            if (btn2->text() == "Add Data")
+            static bool btn_flag = true;
+            if (btn_flag)
             {
                 egt::PointChart::DataArray data1;
                 static int n = 101;
@@ -164,14 +168,16 @@ struct Points : public egt::NotebookTab
                 {
                     data1.push_back(std::make_pair(i, random_item(1, 125)));
                 }
-                line->add_data(data1);
+                point->add_data(data1);
                 n += 10;
-                btn2->text("Remove Data");
+                btn2->image(egt::Image("file:rm.png"));
+                btn_flag = false;
             }
             else
             {
-                line->remove_data(15);
-                btn2->text("Add Data");
+                point->remove_data(15);
+                btn2->image(egt::Image("file:add.png"));
+                btn_flag = true;
             }
         });
     }
@@ -416,7 +422,7 @@ enum LineChartType
 
 struct LineChartPage : public egt::NotebookTab
 {
-	explicit LineChartPage(const std::shared_ptr<egt::LineChart>& line, LineChartType type)
+    explicit LineChartPage(const std::shared_ptr<egt::LineChart>& line, LineChartType type)
     {
         auto sizer = std::make_shared<egt::VerticalBoxSizer>();
         add(expand(sizer));
@@ -556,12 +562,13 @@ int main(int argc, char** argv)
     tlist->selected(0);
 
     auto line = std::make_shared<egt::LineChart>();
+    auto pchart = std::make_shared<egt::PointChart>();
 
     const std::pair<const char*, std::function<std::shared_ptr<egt::NotebookTab>()>> charts_items[] =
     {
         {"Sine Chart", [line] { return std::make_shared<LineChartPage>(line, LineChartType::Sine);}},
         {"Cosine Chart", [line] { return std::make_shared<LineChartPage>(line, LineChartType::Cosine);}},
-        {"Points", []{ return std::make_shared<Points>(); }},
+        {"Points", [pchart] { return std::make_shared<Points>(pchart);}},
         {"Vertical Bar", []{ return std::make_shared<VerticalBarPage>(false); }},
         {"Vertical Bar-2", []{ return std::make_shared<VerticalBarPage>(true); }},
         {"Horizontal Bar", []{ return std::make_shared<HorizontalBarPage>(false); }},
@@ -603,6 +610,10 @@ int main(int argc, char** argv)
             slist->add_item(std::make_shared<egt::StringItem>("Line Style"));
             slist->add_item(std::make_shared<egt::StringItem>("Line Width"));
         }
+        else if (s->text() == "Points")
+        {
+            slist->add_item(std::make_shared<egt::StringItem>("Point Type"));
+        }
         slist->add_item(std::make_shared<egt::StringItem>("Themes"));
         spopup->resize(egt::Size(win.width() * 0.50, slist->item_count() * 40));
         spopup->show_modal(true);
@@ -628,6 +639,12 @@ int main(int argc, char** argv)
         {
             auto pw = line_chart_width(line);
             tpopup->add(egt::expand(pw));
+        }
+        else if (s->text() == "Point Type")
+        {
+            auto pw = point_chart_type(pchart);
+            tpopup->add(egt::expand(pw));
+            tpopup->resize(egt::Size(win.width() * 0.50, pw->item_count() * 40));
         }
         else if (s->text() == "Themes")
         {
