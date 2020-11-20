@@ -183,7 +183,7 @@ struct Points : public egt::NotebookTab
     }
 };
 
-static std::shared_ptr<egt::ComboBox> create_bar_pattern(const std::shared_ptr<egt::BarChart>& chart)
+static std::shared_ptr<egt::ListBox> bar_chart_pattern(const std::shared_ptr<egt::BarChart>& chart)
 {
     static const std::pair<std::string, egt::BarChart::BarPattern> bar_pattern[] =
     {
@@ -193,14 +193,14 @@ static std::shared_ptr<egt::ComboBox> create_bar_pattern(const std::shared_ptr<e
         {"BarPattern: Boxes", egt::BarChart::BarPattern::boxes},
     };
 
-    auto combo = std::make_shared<egt::ComboBox>();
+    auto blist = std::make_shared<egt::ListBox>();
     for (auto& i : bar_pattern)
-        combo->add_item(std::make_shared<egt::StringItem>(i.first));
-    combo->margin(5);
+        blist->add_item(std::make_shared<egt::StringItem>(i.first));
+    blist->margin(5);
 
-    combo->on_selected_changed([combo, chart]()
+    blist->on_selected([blist, chart](size_t index)
     {
-        auto s = combo->item_at(combo->selected());
+        auto s = blist->item_at(index);
         for (auto& i : bar_pattern)
         {
             if (s->text() == i.first)
@@ -209,20 +209,19 @@ static std::shared_ptr<egt::ComboBox> create_bar_pattern(const std::shared_ptr<e
                 break;
             }
         }
+        blist->parent()->hide();
     });
-    combo->selected(0);
 
-    return combo;
+    return blist;
 }
 
 struct HorizontalBarPage : public egt::NotebookTab
 {
-    explicit HorizontalBarPage(bool sdata)
+    explicit HorizontalBarPage(const std::shared_ptr<egt::HorizontalBarChart>& bar, bool sdata)
     {
         auto sizer = std::make_shared<egt::VerticalBoxSizer>();
         add(expand(sizer));
 
-        auto bar = std::make_shared<egt::HorizontalBarChart>();
         sizer->add(expand(bar));
 
         const char* months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
@@ -248,18 +247,14 @@ struct HorizontalBarPage : public egt::NotebookTab
             bar->data(data);
         }
 
-        auto csizer = std::make_shared<egt::HorizontalBoxSizer>();
-        sizer->add(expand_horizontal(csizer));
-
-        csizer->add(create_grid_combo(bar));
-
-        csizer->add(create_bar_pattern(bar));
-
-        auto btn2 = std::make_shared<egt::Button>("Remove Data");
-        csizer->add(btn2);
-        btn2->on_click([btn2, bar, months, sdata](egt::Event&)
+        auto btn2 = std::make_shared<egt::ImageButton>(egt::Image("file:add.png"));
+        btn2->fill_flags().clear();
+        btn2->align(egt::AlignFlag::right | egt::AlignFlag::center);
+        sizer->add(btn2);
+        btn2->on_click([bar, btn2, sdata, months](egt::Event&)
         {
-            if (btn2->text() == "Add Data")
+            static bool btn_flag = true;
+            if (btn_flag)
             {
                 if (sdata)
                 {
@@ -279,12 +274,14 @@ struct HorizontalBarPage : public egt::NotebookTab
                     bar->add_data(data1);
                     year++;
                 }
-                btn2->text("Remove Data");
+                btn2->image(egt::Image("file:rm.png"));
+                btn_flag = false;
             }
             else
             {
                 bar->remove_data(1);
-                btn2->text("Add Data");
+                btn2->image(egt::Image("file:add.png"));
+                btn_flag = true;
             }
         });
     }
@@ -292,12 +289,11 @@ struct HorizontalBarPage : public egt::NotebookTab
 
 struct VerticalBarPage : public egt::NotebookTab
 {
-    explicit VerticalBarPage(bool sdata)
+    explicit VerticalBarPage(const std::shared_ptr<egt::BarChart>& bar, bool sdata)
     {
         auto sizer = std::make_shared<egt::VerticalBoxSizer>();
         add(expand(sizer));
 
-        auto bar = std::make_shared<egt::BarChart>();
         sizer->add(expand(bar));
 
         const char* months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
@@ -322,18 +318,14 @@ struct VerticalBarPage : public egt::NotebookTab
             bar->data(data);
         }
 
-        auto csizer = std::make_shared<egt::HorizontalBoxSizer>();
-        sizer->add(expand_horizontal(csizer));
-
-        csizer->add(create_grid_combo(bar));
-
-        csizer->add(create_bar_pattern(bar));
-
-        auto btn2 = std::make_shared<egt::Button>("Remove Data");
-        csizer->add(btn2);
+        auto btn2 = std::make_shared<egt::ImageButton>(egt::Image("file:add.png"));
+        btn2->fill_flags().clear();
+        btn2->align(egt::AlignFlag::right | egt::AlignFlag::center);
+        sizer->add(btn2);
         btn2->on_click([bar, btn2, sdata, months](egt::Event&)
         {
-            if (btn2->text() == "Add Data")
+            static bool btn_flag = true;
+            if (btn_flag)
             {
                 if (sdata)
                 {
@@ -353,12 +345,14 @@ struct VerticalBarPage : public egt::NotebookTab
                     bar->add_data(data1);
                     year++;
                 }
-                btn2->text("Remove Data");
+                btn2->image(egt::Image("file:rm.png"));
+                btn_flag = false;
             }
             else
             {
                 bar->remove_data(1);
-                btn2->text("Add Data");
+                btn2->image(egt::Image("file:add.png"));
+                btn_flag = true;
             }
         });
     }
@@ -563,16 +557,18 @@ int main(int argc, char** argv)
 
     auto line = std::make_shared<egt::LineChart>();
     auto pchart = std::make_shared<egt::PointChart>();
+    auto vbar = std::make_shared<egt::BarChart>();
+    auto hbar = std::make_shared<egt::HorizontalBarChart>();
 
     const std::pair<const char*, std::function<std::shared_ptr<egt::NotebookTab>()>> charts_items[] =
     {
         {"Sine Chart", [line] { return std::make_shared<LineChartPage>(line, LineChartType::Sine);}},
         {"Cosine Chart", [line] { return std::make_shared<LineChartPage>(line, LineChartType::Cosine);}},
         {"Points", [pchart] { return std::make_shared<Points>(pchart);}},
-        {"Vertical Bar", []{ return std::make_shared<VerticalBarPage>(false); }},
-        {"Vertical Bar-2", []{ return std::make_shared<VerticalBarPage>(true); }},
-        {"Horizontal Bar", []{ return std::make_shared<HorizontalBarPage>(false); }},
-        {"Horizontal Bar-2", []{ return std::make_shared<HorizontalBarPage>(true); }},
+        {"Vertical Bar",  [vbar] { return std::make_shared<VerticalBarPage>(vbar, false);}},
+        {"Vertical Bar-2", [vbar] { return std::make_shared<VerticalBarPage>(vbar, true);}},
+        {"Horizontal Bar", [hbar] { return std::make_shared<HorizontalBarPage>(hbar, false);}},
+        {"Horizontal Bar-2", [hbar] { return std::make_shared<HorizontalBarPage>(hbar, true);}},
         {"Pie Chart", []{ return std::make_shared<PiePage>(); }}
     };
 
@@ -614,6 +610,11 @@ int main(int argc, char** argv)
         {
             slist->add_item(std::make_shared<egt::StringItem>("Point Type"));
         }
+        else if ((s->text() == "Vertical Bar") || (s->text() == "Vertical Bar-2")
+                 || (s->text() == "Horizontal Bar") || (s->text() == "Horizontal Bar-2"))
+        {
+            slist->add_item(std::make_shared<egt::StringItem>("Bar Type"));
+        }
         slist->add_item(std::make_shared<egt::StringItem>("Themes"));
         spopup->resize(egt::Size(win.width() * 0.50, slist->item_count() * 40));
         spopup->show_modal(true);
@@ -645,6 +646,22 @@ int main(int argc, char** argv)
             auto pw = point_chart_type(pchart);
             tpopup->add(egt::expand(pw));
             tpopup->resize(egt::Size(win.width() * 0.50, pw->item_count() * 40));
+        }
+        else if (s->text() == "Bar Type")
+        {
+            auto ctype = chart->item_at(chart->selected());
+            if ((ctype->text() == "Vertical Bar") || (ctype->text() == "Vertical Bar-2"))
+            {
+                auto pw = bar_chart_pattern(vbar);
+                tpopup->add(egt::expand(pw));
+                tpopup->resize(egt::Size(win.width() * 0.50, pw->item_count() * 40));
+            }
+            else if ((ctype->text() == "Horizontal Bar") || (ctype->text() == "Horizontal Bar-2"))
+            {
+                auto pw = bar_chart_pattern(hbar);
+                tpopup->add(egt::expand(pw));
+                tpopup->resize(egt::Size(win.width() * 0.50, pw->item_count() * 40));
+            }
         }
         else if (s->text() == "Themes")
         {
