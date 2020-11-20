@@ -22,9 +22,9 @@ static int random_item(int start, int end)
     return dist(e);
 }
 
-static std::shared_ptr<egt::ComboBox> create_grid_combo(const std::shared_ptr<egt::ChartBase>& chart)
+static std::shared_ptr<egt::ListBox> chart_axis_type(const std::shared_ptr<egt::ChartBase>& chart)
 {
-    static const std::pair<const char*, egt::ChartBase::GridFlag> combo_items[] =
+    static const std::pair<const char*, egt::ChartBase::GridFlag> view_items[] =
     {
         {"None", egt::ChartBase::GridFlag::none },
         {"Box", egt::ChartBase::GridFlag::box },
@@ -34,15 +34,15 @@ static std::shared_ptr<egt::ComboBox> create_grid_combo(const std::shared_ptr<eg
         {"Minor Ticks", egt::ChartBase::GridFlag::box_minor_ticks_coord },
     };
 
-    auto combo = std::make_shared<egt::ComboBox>();
-    for (auto& i : combo_items)
-        combo->add_item(std::make_shared<egt::StringItem>(i.first));
-    combo->margin(5);
+    auto cvlist = std::make_shared<egt::ListBox>();
+    for (auto& i : view_items)
+        cvlist->add_item(std::make_shared<egt::StringItem>(i.first));
+    cvlist->margin(5);
 
-    combo->on_selected_changed([combo, chart]()
+    cvlist->on_selected([cvlist, chart](size_t index)
     {
-        auto s = combo->item_at(combo->selected());
-        for (auto& i : combo_items)
+        auto s = cvlist->item_at(index);
+        for (auto& i : view_items)
         {
             if (s->text() == i.first)
             {
@@ -50,10 +50,10 @@ static std::shared_ptr<egt::ComboBox> create_grid_combo(const std::shared_ptr<eg
                 break;
             }
         }
+        cvlist->parent()->hide();
     });
-    combo->selected(1);
 
-    return combo;
+    return cvlist;
 }
 
 struct PiePage : public egt::NotebookTab
@@ -620,7 +620,12 @@ int main(int argc, char** argv)
         {
             slist->add_item(std::make_shared<egt::StringItem>("Bar Type"));
         }
+
+        if (s->text() != "Pie Chart")
+            slist->add_item(std::make_shared<egt::StringItem>("Chart Axis"));
+
         slist->add_item(std::make_shared<egt::StringItem>("Themes"));
+
         spopup->resize(egt::Size(win.width() * 0.50, slist->item_count() * 40));
         spopup->show_modal(true);
     });
@@ -666,6 +671,30 @@ int main(int argc, char** argv)
                 auto pw = bar_chart_pattern(hbar);
                 tpopup->add(egt::expand(pw));
                 tpopup->resize(egt::Size(win.width() * 0.50, pw->item_count() * 40));
+            }
+        }
+        else if (s->text() == "Chart Axis")
+        {
+            auto ctype = chart->item_at(chart->selected());
+            if ((ctype->text() == "Sine Chart") || (ctype->text() == "Cosine Chart"))
+            {
+                auto pw = chart_axis_type(line);
+                tpopup->add(egt::expand(pw));
+            }
+            else if (ctype->text() == "Points")
+            {
+                auto pw = chart_axis_type(pchart);
+                tpopup->add(egt::expand(pw));
+            }
+            else if ((ctype->text() == "Vertical Bar") || (ctype->text() == "Vertical Bar-2"))
+            {
+                auto pw = chart_axis_type(vbar);
+                tpopup->add(egt::expand(pw));
+            }
+            else if ((ctype->text() == "Horizontal Bar") || (ctype->text() == "Horizontal Bar-2"))
+            {
+                auto pw = chart_axis_type(hbar);
+                tpopup->add(egt::expand(pw));
             }
         }
         else if (s->text() == "Themes")
