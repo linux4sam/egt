@@ -504,7 +504,19 @@ int main(int argc, char** argv)
     logo->margin(5);
     frame->add(logo);
 
-    const std::pair<const char*, std::function<std::unique_ptr<egt::Theme>()>> combo_items[] =
+    auto setting = std::make_shared<egt::ImageButton>(egt::Image("icon:settings.png"));
+    setting->fill_flags().clear();
+    setting->align(egt::AlignFlag::right | egt::AlignFlag::center);
+    frame->add(setting);
+
+    auto spopup = std::make_shared<egt::Popup>(egt::Size(win.width() * 0.50, 40));
+    auto slist = std::make_shared<egt::ListBox>();
+    slist->add_item(std::make_shared<egt::StringItem>("Themes"));
+    spopup->add(egt::expand(slist));
+    win.add(spopup);
+
+    auto tpopup = std::make_shared<egt::Popup>(egt::Size(win.size() * 0.50));
+    const std::pair<const char*, std::function<std::unique_ptr<egt::Theme>()>> theme_items[] =
     {
         {"Default Theme", []{ return std::make_unique<egt::Theme>(); }},
         {"Lapis", []{ return std::make_unique<egt::LapisTheme>(); }},
@@ -515,17 +527,15 @@ int main(int argc, char** argv)
         {"Ultra Violet", []{ return std::make_unique<egt::UltraVioletTheme>(); }}
     };
 
-    auto combo = std::make_shared<egt::ComboBox>();
-    for (auto& i : combo_items)
-        combo->add_item(std::make_shared<egt::StringItem>(i.first));
-    combo->align(egt::AlignFlag::center_vertical | egt::AlignFlag::right);
-    combo->margin(5);
-    frame->add(combo);
+    auto tlist = std::make_shared<egt::ListBox>();
+    for (auto& i : theme_items)
+        tlist->add_item(std::make_shared<egt::StringItem>(i.first));
+    tlist->margin(5);
 
-    combo->on_selected_changed([&]()
+    tlist->on_selected([&](size_t index)
     {
-        auto s = combo->item_at(combo->selected());
-        for (auto& i : combo_items)
+        auto s = tlist->item_at(index);
+        for (auto& i : theme_items)
         {
             if (s->text() == i.first)
             {
@@ -539,9 +549,10 @@ int main(int argc, char** argv)
                 break;
             }
         }
+        tpopup->hide();
         win.damage();
     });
-    combo->selected(0);
+    tlist->selected(0);
 
     const std::pair<const char*, std::function<std::shared_ptr<egt::NotebookTab>()>> charts_items[] =
     {
@@ -579,6 +590,32 @@ int main(int argc, char** argv)
         }
     });
     chart->selected(1);
+
+    setting->on_click([&](egt::Event&)
+    {
+        slist->clear();
+        slist->add_item(std::make_shared<egt::StringItem>("Themes"));
+        spopup->resize(egt::Size(win.width() * 0.50, slist->item_count() * 40));
+        spopup->show_modal(true);
+    });
+
+    tpopup->on_hide([&]()
+    {
+        tpopup->remove_all();
+        win.remove(tpopup.get());
+    });
+
+    slist->on_selected([&](size_t index)
+    {
+        auto s = slist->item_at(index);
+        spopup->hide();
+        if (s->text() == "Themes")
+        {
+            tpopup->add(egt::expand(tlist));
+        }
+        win.add(tpopup);
+        tpopup->show_modal(true);
+    });
 
     win.show();
 
