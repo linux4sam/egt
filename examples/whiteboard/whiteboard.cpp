@@ -152,6 +152,12 @@ public:
         m_sizer = std::make_unique<egt::VerticalBoxSizer>(*this);
         top(left(*m_sizer));
 
+        m_colorbtn.auto_scale_image(false);
+        m_fillbutton.auto_scale_image(false);
+        m_widthbtn.auto_scale_image(false);
+        m_clearbtn.auto_scale_image(false);
+        m_snapshotbtn.auto_scale_image(false);
+
         m_colorbtn.fill_flags().clear();
         m_fillbutton.fill_flags().clear();
         m_widthbtn.fill_flags().clear();
