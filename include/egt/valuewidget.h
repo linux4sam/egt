@@ -11,7 +11,6 @@
  * @brief Widgets for managing values.
  */
 
-#include <cassert>
 #include <egt/signal.h>
 #include <egt/widget.h>
 
@@ -119,13 +118,10 @@ public:
           m_end(end),
           m_value(value)
     {
-        assert(m_end > m_start);
-
-        if (m_value > m_end)
-            m_value = m_end;
-
-        if (m_value < m_start)
-            m_value = m_start;
+        if (m_start < m_end)
+            value = detail::clamp<T>(value, m_start, m_end);
+        else
+            value = detail::clamp<T>(value, m_end, m_start);
     }
 
     /**
@@ -143,13 +139,10 @@ public:
     {
         T orig = m_value;
 
-        assert(m_end > m_start);
-
-        if (value > m_end)
-            value = m_end;
-
-        if (value < m_start)
-            value = m_start;
+        if (m_start < m_end)
+            value = detail::clamp<T>(value, m_start, m_end);
+        else
+            value = detail::clamp<T>(value, m_end, m_start);
 
         if (detail::change_if_diff<T>(m_value, value))
         {
@@ -179,8 +172,6 @@ public:
     {
         if (detail::change_if_diff<>(m_start, v))
             damage();
-
-        assert(m_end > m_start);
     }
 
     /**
@@ -192,8 +183,6 @@ public:
     {
         if (detail::change_if_diff<>(m_end, v))
             damage();
-
-        assert(m_end > m_start);
     }
 
     /**
