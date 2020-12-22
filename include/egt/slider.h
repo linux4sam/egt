@@ -11,7 +11,6 @@
  * @brief Working with sliders.
  */
 
-#include <cassert>
 #include <egt/detail/alignment.h>
 #include <egt/detail/enum.h>
 #include <egt/detail/math.h>
@@ -264,13 +263,10 @@ protected:
     /// Update the value without notifying the handlers.
     void update_value(T value)
     {
-        assert(this->m_end > this->m_start);
-
-        if (value > this->m_end)
-            value = this->m_end;
-
-        if (value < this->m_start)
-            value = this->m_start;
+        if (this->m_start < this->m_end)
+            value = detail::clamp<T>(value, this->m_start, this->m_end);
+        else
+            value = detail::clamp<T>(value, this->m_end, this->m_start);
 
         if (detail::change_if_diff<>(this->m_value, value))
         {
