@@ -103,10 +103,12 @@ public:
      */
     RangeValue(T start, T end, T value = {}) noexcept
         : m_start(start),
-          m_end(end),
-          m_value(detail::clamp<T>(value, m_start, m_end))
+          m_end(end)
     {
-        assert(m_end > m_start);
+        if (m_start < m_end)
+            value = detail::clamp<T>(value, m_start, m_end);
+        else
+            value = detail::clamp<T>(value, m_end, m_start);
     }
 
     /// Get the current value.
@@ -136,9 +138,10 @@ public:
      */
     bool value(T value)
     {
-        assert(m_end > m_start);
-
-        value = detail::clamp<T>(value, m_start, m_end);
+        if (m_start < m_end)
+            value = detail::clamp<T>(value, m_start, m_end);
+        else
+            value = detail::clamp<T>(value, m_end, m_start);
 
         if (detail::change_if_diff<T>(m_value, value))
         {
