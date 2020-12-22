@@ -343,7 +343,7 @@ struct SliderPage : public egt::NotebookTab
         slider2->value(75);
         hsizer1->add(slider2);
 
-        auto slider3 = std::make_shared<egt::SliderF>(egt::Rect(0, 0, 200, 80));
+        auto slider3 = std::make_shared<egt::SliderF>(egt::Rect(0, 0, 200, 80), 100, 0);
         slider3->value(50);
         slider3->slider_flags().set({egt::SliderF::SliderFlag::round_handle,
                                      egt::SliderF::SliderFlag::show_label});
