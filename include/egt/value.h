@@ -97,16 +97,16 @@ public:
     /** @} */
 
     /**
-     * @param[in] min Minimum value for the range.
-     * @param[in] max Maximum value in the range.
+     * @param[in] start Start value for the range.
+     * @param[in] end End value in the range.
      * @param[in] value Current value in the range.
      */
-    RangeValue(T min, T max, T value = {}) noexcept
-        : m_min(min),
-          m_max(max),
-          m_value(detail::clamp<T>(value, m_min, m_max))
+    RangeValue(T start, T end, T value = {}) noexcept
+        : m_start(start),
+          m_end(end),
+          m_value(detail::clamp<T>(value, m_start, m_end))
     {
-        assert(m_max > m_min);
+        assert(m_end > m_start);
     }
 
     /// Get the current value.
@@ -128,17 +128,17 @@ public:
     /**
      * Set value.
      *
-     * If the value is above max, the value will be set to max.  If the
-     * value is below min, the value will be set to min.
+     * If the value is above end, the value will be set to end.  If the
+     * value is below start, the value will be set to start.
      *
      * @param[in] value Value to set.
      * @return true if changed.
      */
     bool value(T value)
     {
-        assert(m_max > m_min);
+        assert(m_end > m_start);
 
-        value = detail::clamp<T>(value, m_min, m_max);
+        value = detail::clamp<T>(value, m_start, m_end);
 
         if (detail::change_if_diff<T>(m_value, value))
         {
@@ -149,41 +149,41 @@ public:
         return false;
     }
 
-    /// Get the min value.
-    EGT_NODISCARD T min() const { return m_min; }
+    /// Get the start value.
+    EGT_NODISCARD T start() const { return m_start; }
 
     /**
-     * Set the min value.
+     * Set the start value.
      *
-     * @param[in] min The min value.
+     * @param[in] start The start value.
      */
-    void min(T min)
+    void start(T start)
     {
-        if (detail::change_if_diff<>(m_min, min))
+        if (detail::change_if_diff<>(m_start, start))
             value(m_value);
     }
 
-    /// Get the max value.
-    EGT_NODISCARD T max() const { return m_max; }
+    /// Get the end value.
+    EGT_NODISCARD T end() const { return m_end; }
 
     /**
-     * Set the max value.
+     * Set the end value.
      *
-     * @param[in] max The max value.
+     * @param[in] end The end value.
      */
-    void max(T max)
+    void end(T end)
     {
-        if (detail::change_if_diff<>(m_max, max))
+        if (detail::change_if_diff<>(m_end, end))
             value(m_value);
     }
 
 protected:
 
-    /// The min value.
-    T m_min{};
+    /// The start value.
+    T m_start{};
 
-    /// The max value.
-    T m_max{};
+    /// The end value.
+    T m_end{};
 
     /// The current value.
     T m_value{};

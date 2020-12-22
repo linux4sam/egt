@@ -70,8 +70,8 @@ struct AudioRadial : public egt::experimental::Radial
         const auto c = b.center();
         const auto radius = std::min(b.width(), b.height()) / 2.f;
         const auto angle2 = egt::detail::to_radians<float>(-90,
-                            value_to_degrees(m_value->min(),
-                                             m_value->max(),
+                            value_to_degrees(m_value->start(),
+                                             m_value->end(),
                                              m_value->value()));
 
         auto p = c.point_on_circumference(radius + offset, angle2);
@@ -190,7 +190,7 @@ public:
             {
                 auto duration = static_cast<int>(m_player.duration());
                 if (duration > 0)
-                    range2->max(duration);
+                    range2->end(duration);
 
                 range2->value(static_cast<int>(position));
             }

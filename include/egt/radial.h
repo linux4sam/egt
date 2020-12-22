@@ -199,8 +199,8 @@ public:
             {
                 if (value.flags.is_set(RadialFlag::input_value))
                 {
-                    auto v = this->degrees_to_value(value.range->min(),
-                                                    value.range->max(),
+                    auto v = this->degrees_to_value(value.range->start(),
+                                                    value.range->end(),
                                                     angle);
                     if (value.range->value(v))
                         changed = true;
@@ -244,8 +244,8 @@ public:
             const auto radius = smalldim * 0.5f - (maxwidth * 0.5f);
             const auto angle1 = detail::to_radians<float>(-90, widget.start_angle());
             const auto angle2 = detail::to_radians<float>(-90,
-                                widget.value_to_degrees(value.range->min(),
-                                        value.range->max(),
+                                widget.value_to_degrees(value.range->start(),
+                                        value.range->end(),
                                         value.range->value()));
 
             painter.set(value.color);
