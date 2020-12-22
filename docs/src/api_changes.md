@@ -5,6 +5,23 @@
 Here, you can find the API changes from the version 1.0. In addition, some hints
 are provided to help you update your code.
 
+@section v1_2 1.2
+
+@subsection rangevalue RangeValue
+
+@li Rename min and max to start and end. The constraint to get max > min is
+removed.
+
+@subsection slider Slider
+
+@li The constraint to get start > end is removed.
+@li The origin_opposite flag is removed. As end can be greater than start, swap
+end and start instead of setting the origin_opposite flag.
+
+@subsection valuerangewidget ValueRangeWidget
+
+@li The constraint to get start > end is removed.
+
 @section v1_1 1.1
 
 @subsection combobox ComboBox
