@@ -62,14 +62,7 @@ std::string GstKmsSinkImpl::create_pipeline()
         EGTLOG_DEBUG("egt_format = {}", gst_format);
     }
 
-    std::string a_pipe;
     std::string caps = " caps=video/x-raw";
-    if (m_audiodevice && m_audiotrack)
-    {
-        caps += ";audio/x-raw";
-        a_pipe = " ! queue ! audioconvert ! volume name=volume ! autoaudiosink sync=false";
-    }
-
     std::string v_pipe;
     std::array<std::string, 5> hwcodecs{"MPEG-4", "VP8", "H.264", "H.263", "H.26n"};
     auto it = std::find_if(begin(hwcodecs), end(hwcodecs), [&](const std::string & s)
@@ -105,6 +98,13 @@ std::string GstKmsSinkImpl::create_pipeline()
             }
         }
 
+        std::string cp;
+        if (*it == "MPEG-4")
+        {
+            caps = " caps=video/mpeg";
+            cp = " ! mpeg4videoparse ! queue ! g1mp4dec ";
+        }
+
         /**
          * sama5d4 post processing module supports only below pixel formats
          * if planewindow is created with other pixel format, then throw an exception
@@ -114,7 +114,7 @@ std::string GstKmsSinkImpl::create_pipeline()
             (pf == PixelFormat::yuy2) || (pf == PixelFormat::yuy2) ||
             (pf == PixelFormat::uyvy))
         {
-            v_pipe = fmt::format(" ! video/x-raw,width={},height={},format={}", m_size.width(), m_size.height(), gst_format);
+            v_pipe = fmt::format(" {} ! video/x-raw,width={},height={},format={}", cp, m_size.width(), m_size.height(), gst_format);
         }
         else
         {
@@ -126,6 +126,13 @@ std::string GstKmsSinkImpl::create_pipeline()
         EGTLOG_DEBUG("Decoding through software decoders");
         v_pipe = fmt::format(" ! queue ! videoscale ! video/x-raw,width={},height={} " \
                              " ! videoconvert ! video/x-raw,format={}", m_size.width(), m_size.height(), gst_format);
+    }
+
+    std::string a_pipe;
+    if (m_audiodevice && m_audiotrack)
+    {
+        caps += ";audio/x-raw";
+        a_pipe = " ! queue ! audioconvert ! volume name=volume ! autoaudiosink sync=false";
     }
 
     static constexpr auto pipeline = "uridecodebin uri={} expose-all-streams=false name=video  {} " \
