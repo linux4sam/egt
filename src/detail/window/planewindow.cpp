@@ -53,6 +53,29 @@ void PlaneWindow::scale(float scalex, float scaley)
     {
         m_overlay->scale(scalex, scaley);
         m_dirty = true;
+        /*
+         * The overlay has been scaled with the help of the libplanes. So EGT is
+         * not aware of the new size of the window. It has to be updated. Using
+         * the resize method would trigger several actions we may want to avoid.
+         * For instance, with a CameraWindow, once the gstreamer pipeline is
+         * configured, we don't want to modify it as scaling is an LCD
+         * controller hardware operation independant from the gstreamer
+         * configuration.
+         * Note that scaling is based on the user requested box, i.e. the
+         * original request of the user. If the user hasn't setup a box and
+         * relies on automatic layout, updating the box size is not done as
+         * it'll involve scaling to become relative instead of absolute. For
+         * instance, if the window has been automatically sized to 320x240,
+         * set the scale to 2 will cause the sizing of the window to 640x480,
+         * then set the scale to 0.5 will cause the sizing of the window to
+         * 320x240 and not 160x120.
+         */
+        if (!m_interface->user_requested_box().empty())
+        {
+            auto w = m_interface->user_requested_box().width() * scalex;
+            auto h = m_interface->user_requested_box().height() * scaley;
+            m_interface->m_box.size(Size(w, h));
+        }
     }
 }
 
