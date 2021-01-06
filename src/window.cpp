@@ -85,7 +85,11 @@ void Window::move(const Point& point)
     if (point != box().point())
     {
         if (m_impl)
+        {
             m_impl->move(point);
+            if (!parent_in_layout())
+                m_user_requested_box.point(m_box.point());
+        }
 
         parent_layout();
     }
@@ -166,7 +170,11 @@ void Window::resize(const Size& size)
         return;
 
     if (m_impl)
+    {
         m_impl->resize(size);
+        if (!parent_in_layout() && !in_layout())
+            m_user_requested_box.size(size);
+    }
 }
 
 void Window::scale(float hscale, float vscale)
