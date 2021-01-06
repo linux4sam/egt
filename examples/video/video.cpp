@@ -196,8 +196,8 @@ int main(int argc, char** argv)
         }
         else
         {
-            player.move_to_center(win.center());
             player.scale(1.0, 1.0);
+            player.move_to_center(win.center());
             fullscreenbtn.image(egt::Image("res:fullscreen_png"));
             scaled = true;
         }
