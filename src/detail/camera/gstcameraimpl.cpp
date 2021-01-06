@@ -292,7 +292,27 @@ bool CameraImpl::start()
 
     get_camera_device_caps();
 
-    auto box = m_interface.content_area();
+    Rect box;
+    /*
+     * At this stage, the interface m_box may no longer represent the original
+     * size requested by the user if scaling occured. So compute the content
+     * area based on the m_user_requested_box. If the user requested box is
+     * empty, let's consider the user relies on automatic layout, then use the
+     * window box.
+     */
+    if (!m_interface.user_requested_box().empty())
+    {
+        box = m_interface.user_requested_box();
+        auto m = m_interface.moat();
+        box += Point(m, m);
+        box -= Size(2. * m, 2. * m);
+        if (box.empty())
+            box = Rect(m_interface.point(), m_interface.size());
+    }
+    else
+    {
+        box = m_interface.content_area();
+    }
     EGTLOG_DEBUG("box = {}", box);
 
     /*
