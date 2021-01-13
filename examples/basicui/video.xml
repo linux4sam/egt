@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<egt>
+	<widgets>
+		<widget name="Window0" type="TopWindow">
+			<property name="width">800</property>
+			<property name="height">480</property>
+			<property name="fillflags">solid</property>
+			<widget name="VideoWindow0" type="VideoWindow">
+				<property name="x">0</property>
+				<property name="y">0</property>
+				<property name="width">320</property>
+				<property name="height">240</property>
+				<property name="uri">file:microchip_corporate_mpeg2.avi</property>
+				<property name="show">true</property>
+				<property name="align">center</property>
+			</widget>
+		</widget>
+	</widgets>
+</egt>
+

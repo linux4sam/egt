@@ -136,21 +136,20 @@ int64_t VideoWindow::duration() const
 
 bool VideoWindow::media(const std::string& uri)
 {
-    std::string path;
-    auto type = detail::resolve_path(uri, path);
+    auto type = detail::resolve_path(uri, m_uri);
 
     switch (type)
     {
     case detail::SchemeType::network:
-        return m_video_impl->media(uri);
+        return m_video_impl->media(m_uri);
     case detail::SchemeType::filesystem:
     {
-        auto gstpath = "file://" + path;
+        auto gstpath = "file://" + m_uri;
         return m_video_impl->media(gstpath);
     }
     default:
     {
-        throw std::runtime_error("unsupported uri: " + uri);
+        throw std::runtime_error("unsupported uri: " + m_uri);
     }
     }
 
@@ -224,6 +223,39 @@ void VideoWindow::resize(const Size& size)
 bool VideoWindow::has_audio() const
 {
     return m_video_impl->has_audio();
+}
+
+void VideoWindow::serialize(Serializer& serializer) const
+{
+    Window::serialize(serializer);
+    serializer.add_property("uri", m_uri);
+    serializer.add_property("loopback", loopback());
+    serializer.add_property("volume", volume());
+}
+
+void VideoWindow::deserialize(const std::string& name, const std::string& value,
+                              const Serializer::Attributes& attrs)
+{
+    switch (detail::hash(name))
+    {
+    case detail::hash("uri"):
+    {
+        media(value);
+        break;
+    }
+    case detail::hash("loopback"):
+    {
+        loopback(detail::from_string(value));
+        break;
+    }
+    case detail::hash("volume"):
+    {
+        volume(std::stoi(value));
+        break;
+    }
+    default:
+        Window::deserialize(name, value, attrs);
+    }
 }
 
 VideoWindow::VideoWindow(VideoWindow&&) noexcept = default;

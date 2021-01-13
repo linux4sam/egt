@@ -116,6 +116,16 @@ public:
     bool media(const std::string& uri);
 
     /**
+     * get the media file used of video playback.
+     *
+     * @return media file.
+     */
+    EGT_NODISCARD std::string media() const
+    {
+        return m_uri;
+    }
+
+    /**
      * Play the video.
      *
      * @return true on success
@@ -226,6 +236,11 @@ public:
      */
     EGT_NODISCARD bool has_audio() const;
 
+    void serialize(Serializer& serializer) const override;
+
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs) override;
+
     ~VideoWindow() noexcept override;
 
 protected:
@@ -237,6 +252,9 @@ protected:
 
     /// Vertical scale value.
     float m_vscale{1.0};
+
+    /// media file
+    std::string m_uri;
 
     /// Create the internal implementation.
     void create_impl(const Size& size);
