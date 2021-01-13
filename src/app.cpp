@@ -419,15 +419,20 @@ void Application::paint_to_file(const std::string& filename)
 void Application::dump(std::ostream& out) const
 {
     OstreamWidgetSerializer s;
+    XmlWidgetSerializer s_xml;
 
     for (const auto& w : windows())
     {
         // draw top level frames and plane frames
         if (w->top_level())
+        {
             s.add(w);
+            s_xml.add(w);
+        }
     }
 
     s.write(out);
+    s_xml.write("ui.xml");
 
     dump_timers(out);
 }
