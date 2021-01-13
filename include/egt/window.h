@@ -166,6 +166,12 @@ public:
         return PixelFormat::invalid;
     }
 
+
+    void serialize(Serializer& serializer) const override;
+
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs) override;
+
     ~Window() noexcept override;
 
 protected:

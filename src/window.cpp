@@ -292,6 +292,34 @@ void Window::background(const Image& image)
     }
 }
 
+void Window::serialize(Serializer& serializer) const
+{
+    Frame::serialize(serializer);
+    serializer.add_property("show", visible());
+}
+
+void Window::deserialize(const std::string& name, const std::string& value,
+                         const Serializer::Attributes& attrs)
+{
+    switch (detail::hash(name))
+    {
+    case detail::hash("show"):
+    {
+        auto enable =  detail::from_string(value);
+
+        if (enable)
+            show();
+        else
+            hide();
+
+        break;
+    }
+    default:
+        Frame::deserialize(name, value, attrs);
+        break;
+    }
+}
+
 Window::Window(Window&&) noexcept = default;
 Window& Window::operator=(Window&&) noexcept = default;
 
