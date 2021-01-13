@@ -29,8 +29,25 @@ int main(int argc, char** argv)
 
     egt::experimental::UiLoader loader;
     auto window = loader.load(args["input"].as<std::string>());
-    window->show();
 
+    window->on_show([&]()
+    {
+        for (const auto& w : app.windows())
+        {
+            if (w->name() == "VideoWindow0")
+            {
+                egt::VideoWindow* vwin = dynamic_cast<egt::VideoWindow*>(w);
+                vwin->play();
+            }
+            else if (w->name() == "CameraWindow0")
+            {
+                egt::CameraWindow* cwin = dynamic_cast<egt::CameraWindow*>(w);
+                cwin->start();
+            }
+        }
+    });
+
+    window->show();
     return app.run();
 }
 /// @[Example]
