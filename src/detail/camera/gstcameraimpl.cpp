@@ -411,6 +411,10 @@ void CameraImpl::scale(float scalex, float scaley)
     m_interface.resize(Size(m_rect.width() * scalex, m_rect.height() * scaley));
 }
 
+std::vector<std::string> CameraImpl::list_devices()
+{
+    return detail::get_camera_device_list(&bus_callback, this);
+}
 
 void CameraImpl::device(const std::string& device)
 {
@@ -456,6 +460,45 @@ CameraImpl::~CameraImpl() noexcept
         m_gmain_thread.join();
         g_main_loop_unref(m_gmain_loop);
     }
+}
+
+std::vector<std::string> get_camera_device_list(BusCallback bus_callback, void* instance)
+{
+    std::vector<std::string> dlist;
+    GstDeviceMonitor* monitor = gst_device_monitor_new();
+
+    GstBus* bus = gst_device_monitor_get_bus(monitor);
+    gst_bus_add_watch(bus, bus_callback, instance);
+    gst_object_unref(bus);
+
+    GstCaps* caps = gst_caps_new_empty_simple("video/x-raw");
+    gst_device_monitor_add_filter(monitor, "Video/Source", caps);
+    gst_caps_unref(caps);
+
+    std::string caps_name;
+    std::string caps_format;
+    std::vector<std::tuple<int, int>> resolutions;
+    if (gst_device_monitor_start(monitor))
+    {
+        GList* devlist = gst_device_monitor_get_devices(monitor);
+        for (GList* i = g_list_first(devlist); i; i = g_list_next(i))
+        {
+            auto device = static_cast<GstDevice*>(i->data);
+            if (device == nullptr)
+                continue;
+
+            GstStructure* props = gst_device_get_properties(device);
+            if (props)
+            {
+                auto devnode = std::string(gst_structure_get_string(props, "device.path"));
+                gst_structure_free(props);
+                EGTLOG_DEBUG("device : {}", devnode);
+                dlist.push_back(devnode);
+            }
+        }
+        g_list_free(devlist);
+    }
+    return dlist;
 }
 
 std::tuple<std::string, std::string, std::string, std::vector<std::tuple<int, int>>>

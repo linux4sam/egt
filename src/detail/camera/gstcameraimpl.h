@@ -42,6 +42,8 @@ public:
 
     void scale(float scalex, float scaley);
 
+    std::vector<std::string> list_devices();
+
     ~CameraImpl() noexcept;
 
 protected:
@@ -68,6 +70,8 @@ using BusCallback = gboolean(*)(GstBus* bus, GstMessage* message, gpointer data)
 
 std::tuple<std::string, std::string, std::string, std::vector<std::tuple<int, int>>>
 get_camera_device_caps(const std::string& dev_name, BusCallback bus_callback, void* instance);
+
+std::vector<std::string> get_camera_device_list(BusCallback bus_callback, void* instance);
 
 } //End of detail
 

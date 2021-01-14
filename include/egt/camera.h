@@ -131,6 +131,11 @@ public:
      */
     std::string device() const;
 
+    /*
+     * Get the list of camera devices
+     */
+    std::vector<std::string> list_devices();
+
     /**
      * Stop camera.
      */

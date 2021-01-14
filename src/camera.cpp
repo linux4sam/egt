@@ -47,6 +47,11 @@ std::string CameraWindow::device() const
     return m_camera_impl->device();
 }
 
+std::vector<std::string> CameraWindow::list_devices()
+{
+    return m_camera_impl->list_devices();
+}
+
 void CameraWindow::scale(float hscale, float vscale)
 {
     auto xs = detail::change_if_diff<float>(m_hscale, hscale);
