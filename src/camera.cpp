@@ -75,6 +75,27 @@ void CameraWindow::stop()
     m_camera_impl->stop();
 }
 
+void CameraWindow::serialize(Serializer& serializer) const
+{
+    Window::serialize(serializer);
+    serializer.add_property("device", device());
+}
+
+void CameraWindow::deserialize(const std::string& name, const std::string& value,
+                               const Serializer::Attributes& attrs)
+{
+    switch (detail::hash(name))
+    {
+    case detail::hash("device"):
+    {
+        device(value);
+        break;
+    }
+    default:
+        Window::deserialize(name, value, attrs);
+    }
+}
+
 CameraWindow::~CameraWindow() noexcept = default;
 
 } //namespace v1

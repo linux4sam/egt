@@ -161,6 +161,11 @@ public:
         return m_vscale;
     }
 
+    void serialize(Serializer& serializer) const override;
+
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs) override;
+
     ~CameraWindow() noexcept override;
 
 protected:
