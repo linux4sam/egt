@@ -37,6 +37,16 @@ bool CameraWindow::start()
     return m_camera_impl->start();
 }
 
+void CameraWindow::device(const std::string& device)
+{
+    m_camera_impl->device(device);
+}
+
+std::string CameraWindow::device() const
+{
+    return m_camera_impl->device();
+}
+
 void CameraWindow::scale(float hscale, float vscale)
 {
     auto xs = detail::change_if_diff<float>(m_hscale, hscale);

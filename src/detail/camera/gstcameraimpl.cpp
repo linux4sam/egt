@@ -411,6 +411,22 @@ void CameraImpl::scale(float scalex, float scaley)
     m_interface.resize(Size(m_rect.width() * scalex, m_rect.height() * scaley));
 }
 
+
+void CameraImpl::device(const std::string& device)
+{
+    if ((m_devnode != device) || !m_pipeline)
+    {
+        stop();
+        m_devnode = device;
+        start();
+    }
+}
+
+std::string CameraImpl::device() const
+{
+    return m_devnode;
+}
+
 void CameraImpl::stop()
 {
     if (m_pipeline)

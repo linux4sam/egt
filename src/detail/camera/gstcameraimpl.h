@@ -36,6 +36,10 @@ public:
 
     void stop();
 
+    void device(const std::string& device);
+
+    std::string device() const;
+
     void scale(float scalex, float scaley);
 
     ~CameraImpl() noexcept;

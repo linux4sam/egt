@@ -119,6 +119,18 @@ public:
      */
     bool start();
 
+    /*
+     * set camera device node.
+     *
+     *  @param[in] device Camera device node.
+     */
+    void device(const std::string& device);
+
+    /*
+     * Get camera device node in use.
+     */
+    std::string device() const;
+
     /**
      * Stop camera.
      */
