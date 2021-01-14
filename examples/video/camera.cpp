@@ -76,6 +76,23 @@ int main(int argc, char** argv)
     errlabel.text_align(egt::AlignFlag::center | egt::AlignFlag::top);
     win.add(errlabel);
 
+    auto message_dialog = std::make_shared<egt::Dialog>(win.size() * 0.75);
+    message_dialog->title("egt_camera");
+    std::string dialog_text("");
+    auto dtext = std::make_shared<egt::TextBox>(dialog_text);
+    message_dialog->widget(expand(dtext));
+    message_dialog->button(egt::Dialog::ButtonId::button1, "Cancel");
+    message_dialog->button(egt::Dialog::ButtonId::button2, "OK");
+    win.add(message_dialog);
+
+    message_dialog->on_button2_click([&player]()
+    {
+        std::vector<std::string> dlist = player.list_devices();
+        auto ndev = dlist.at(dlist.size() - 1);
+        std::cout << " setting new device " << ndev << std::endl;
+        player.device(ndev);
+    });
+
     // wait to start playing the video until the window is shown
     win.on_show([&player]()
     {
@@ -87,19 +104,26 @@ int main(int argc, char** argv)
         errlabel.text(line_break(err));
     });
 
-    player.on_connect([&player, &errlabel, dev](const std::string&)
+    player.on_connect([&player, &errlabel, &dev, &message_dialog, &dtext](const std::string & devnode)
     {
         if (!errlabel.text().empty())
         {
             errlabel.text("");
-            player.start();
         }
+
+        auto dmesg =  devnode + " device is connected would like to switch";
+        dtext->text(dmesg);
+        message_dialog->show_modal(true);
     });
 
     player.on_disconnect([&player, &errlabel, dev](const std::string & devnode)
     {
         errlabel.text(line_break("Device removed: " + devnode));
-        player.stop();
+        if (player.device() == devnode)
+        {
+            std::cout << devnode << "is disconnected: stoping it" << std::endl;
+            player.stop();
+        }
     });
 
     const auto wscale = static_cast<float>(egt::Application::instance().screen()->size().width()) / size.width();
