@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<egt>
+	<widgets>
+		<widget name="Window0" type="TopWindow">
+			<property name="width">800</property>
+			<property name="height">480</property>
+			<property name="fillflags">solid</property>
+                        <widget name="StaticGrid1" type="StaticGrid">
+                                <property name="column_priority">false</property>
+                                <property name="n_col">3</property>
+                                <property name="n_row">2</property>
+                                <property name="horizontal_space">5</property>
+                                <property name="vertical_space">5</property>
+                                <property name="width">800</property>
+                                <property name="height">480</property>
+                                <property name="align">expand_horizontal|expand_vertical</property>
+				<property name="margin">5</property>
+				<widget name="LineChart" type="LineChart">
+					<property name="x">0</property>
+					<property name="y">0</property>
+					<property name="width">250</property>
+					<property name="height">220</property>
+					<property name="xlabel">x-axis</property>
+					<property name="ylabel">y-axis</property>
+					<property name="title">Line Chart</property>
+					<property name="align">center</property>
+					<property name="gridflags">box_ticks</property>
+					<property name="linetype">dotted</property>
+					<property name="gridwidth">2</property>
+					<property name="linewidth">4</property>
+					<property name="item">0,0</property>
+					<property name="item">1,4</property>
+					<property name="item">2,8</property>
+					<property name="item">3,12</property>
+					<property name="item">4,16</property>
+					<property name="item">5,20</property>
+					<property name="item">6,24</property>
+					<property name="item">7,28</property>
+					<property name="item">8,32</property>
+					<property name="item">9,36</property>
+					<property name="item">10,40</property>
+					<property name="item">11,44</property>
+					<property name="item">12,48</property>
+					<property name="item">13,52</property>
+					<property name="item">14,56</property>
+					<property name="item">15,60</property>
+					<property name="item">16,64</property>
+					<property name="item">17,68</property>
+				</widget>
+				<widget name="PointChart" type="PointChart">
+					<property name="x">0</property>
+					<property name="y">0</property>
+					<property name="width">250</property>
+					<property name="height">220</property>
+					<property name="xlabel">x-axis</property>
+					<property name="ylabel">y-axis</property>
+					<property name="title">Point Chart</property>
+					<property name="gridflags">box_ticks</property>
+					<property name="pointtype">star</property>
+					<property name="gridwidth">2</property>
+					<property name="item">0,0</property>
+					<property name="item">1,4</property>
+					<property name="item">2,8</property>
+					<property name="item">3,12</property>
+					<property name="item">4,16</property>
+					<property name="item">5,20</property>
+					<property name="item">6,24</property>
+					<property name="item">7,28</property>
+					<property name="item">8,32</property>
+					<property name="item">9,36</property>
+					<property name="item">10,40</property>
+					<property name="item">11,44</property>
+					<property name="item">12,48</property>
+					<property name="item">13,52</property>
+					<property name="item">14,56</property>
+					<property name="item">15,60</property>
+					<property name="item">16,64</property>
+					<property name="item">17,68</property>
+				</widget>
+				<widget name="BarChart" type="BarChart">
+					<property name="x">0</property>
+					<property name="y">0</property>
+					<property name="width">250</property>
+					<property name="height">220</property>
+					<property name="xlabel">x-axis</property>
+					<property name="ylabel">y-axis</property>
+					<property name="title">Bar Chart</property>
+					<property name="gridflags">box_ticks</property>
+					<property name="gridwidth">2</property>
+					<property name="bartype">boxes</property>
+					<property name="item">0,0</property>
+					<property name="item">1,4</property>
+					<property name="item">2,8</property>
+					<property name="item">3,12</property>
+					<property name="item">4,16</property>
+					<property name="item">5,20</property>
+					<property name="item">6,24</property>
+					<property name="item">7,28</property>
+					<property name="item">8,32</property>
+					<property name="item">9,36</property>
+					<property name="item">10,40</property>
+					<property name="item">11,44</property>
+					<property name="item">12,48</property>
+					<property name="item">13,52</property>
+					<property name="item">14,56</property>
+					<property name="item">15,60</property>
+					<property name="item">16,64</property>
+					<property name="item">17,68</property>
+				</widget>
+				<widget name="HBarChart" type="HorizontalBarChart">
+					<property name="x">0</property>
+					<property name="y">0</property>
+					<property name="width">250</property>
+					<property name="height">220</property>
+					<property name="xlabel">x-axis</property>
+					<property name="ylabel">y-axis</property>
+					<property name="title">Horizontal Bar Chart</property>
+					<property name="gridflags">box_ticks</property>
+					<property name="gridwidth">2</property>
+					<property name="bartype">boxes</property>
+					<property name="item">0,0</property>
+					<property name="item">1,4</property>
+					<property name="item">2,8</property>
+					<property name="item">3,12</property>
+					<property name="item">4,16</property>
+					<property name="item">5,20</property>
+					<property name="item">6,24</property>
+					<property name="item">7,28</property>
+					<property name="item">8,32</property>
+					<property name="item">9,36</property>
+					<property name="item">10,40</property>
+					<property name="item">11,44</property>
+					<property name="item">12,48</property>
+					<property name="item">13,52</property>
+					<property name="item">14,56</property>
+					<property name="item">15,60</property>
+					<property name="item">16,64</property>
+					<property name="item">17,68</property>
+				</widget>
+				<widget name="PieChart" type="PieChart">
+					<property name="x">0</property>
+					<property name="y">0</property>
+					<property name="width">250</property>
+					<property name="height">220</property>
+					<property name="title">Pie Chart</property>
+					<property name="item">5,Jan</property>
+					<property name="item">10,Feb</property>
+					<property name="item">15,Mar</property>
+					<property name="item">20,Apr</property>
+					<property name="item">2,May</property>
+					<property name="item">8,Jun</property>
+					<property name="item">4,Jul</property>
+					<property name="item">6,Aug</property>
+					<property name="item">12,Sep</property>
+					<property name="item">8,Oct</property>
+					<property name="item">1,Nov</property>
+					<property name="item">9,Dec</property>
+				</widget>
+				<widget name="BarChart" type="BarChart">
+					<property name="x">0</property>
+					<property name="y">0</property>
+					<property name="width">250</property>
+					<property name="height">220</property>
+					<property name="xlabel">x-axis</property>
+					<property name="ylabel">y-axis</property>
+					<property name="title">Bar Chart</property>
+					<property name="gridflags">box_ticks</property>
+					<property name="gridwidth">1</property>
+					<property name="bartype">solid</property>
+					<property name="item">75,Jan</property>
+					<property name="item">100,Feb</property>
+					<property name="item">125,Mar</property>
+					<property name="item">250,Apr</property>
+					<property name="item">200,May</property>
+					<property name="item">300,Jun</property>
+					<property name="item">350,Jul</property>
+					<property name="item">325,Aug</property>
+					<property name="item">275,Sep</property>
+					<property name="item">225,Oct</property>
+					<property name="item">175,Nov</property>
+					<property name="item">125,Dec</property>
+				</widget>
+			</widget>
+                </widget>
+        </widgets>
+</egt>
+
