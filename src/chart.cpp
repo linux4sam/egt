@@ -89,6 +89,11 @@ void LineChart::line_style(LinePattern pattern)
     m_impl->line_style(static_cast<int>(pattern));
 }
 
+LineChart::LinePattern LineChart::line_style() const
+{
+    return static_cast<LineChart::LinePattern>(m_impl->line_style());
+}
+
 void LineChart::label(const std::string& xlabel, const std::string& ylabel, const std::string& title)
 {
     m_impl->label(xlabel, ylabel, title);

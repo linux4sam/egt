@@ -79,6 +79,11 @@ public:
 
     void line_style(int val);
 
+    int line_style()
+    {
+        return m_pattern;
+    }
+
     void point_type(int ptype);
 
     virtual void resize();

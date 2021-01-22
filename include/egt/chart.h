@@ -192,6 +192,13 @@ public:
     void line_style(LinePattern pattern);
 
     /**
+     * Get Linechart style.
+     *
+     * @return LinePattern
+     */
+    LinePattern line_style() const;
+
+    /**
      * Set chart labels.
      *
      * @param[in] xlabel is x-axis label.
