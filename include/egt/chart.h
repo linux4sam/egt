@@ -157,10 +157,16 @@ public:
     void grid_width(int val);
 
     /**
+     * Get chart grid width.
+     *
+     * @return grid width
+     */
+    int grid_width() const;
+
+    /**
      * Set line width
      *
-     * @param[in] val size of a line width.
-     *
+     * @param[in] val size of a line width.     *
      */
     void line_width(int val);
 
@@ -306,6 +312,13 @@ public:
     void grid_width(int val);
 
     /**
+     * Get chart grid width.
+     *
+     * @return grid width
+     */
+    int grid_width() const;
+
+    /**
      * Resize the PointChart.
      *
      * Change width and height of the PointChart.
@@ -442,6 +455,13 @@ public:
      * @param[in] val size of a grid width.
      */
     void grid_width(int val);
+
+    /**
+     * Get chart grid width.
+     *
+     * @return grid width
+     */
+    int grid_width() const;
 
     /**
      * Resize the BarChart.

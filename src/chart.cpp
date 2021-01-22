@@ -64,6 +64,11 @@ void LineChart::grid_width(const int val)
     m_impl->grid_width(val);
 }
 
+int LineChart::grid_width() const
+{
+    return m_impl->grid_width();
+}
+
 void LineChart::line_width(const int val)
 {
     m_impl->line_width(val);
@@ -174,6 +179,11 @@ void PointChart::grid_width(const int val)
     m_impl->grid_width(val);
 }
 
+int PointChart::grid_width() const
+{
+    return m_impl->grid_width();
+}
+
 PointChart::PointChart(PointChart&&) noexcept = default;
 PointChart& PointChart::operator=(PointChart&&) noexcept = default;
 PointChart::~PointChart() = default;
@@ -255,6 +265,11 @@ ChartBase::GridFlag BarChart::grid_style() const
 void BarChart::grid_width(const int val)
 {
     m_impl->grid_width(val);
+}
+
+int BarChart::grid_width() const
+{
+    return m_impl->grid_width();
 }
 
 void BarChart::resize(const Size& size)

@@ -61,6 +61,11 @@ public:
 
     void grid_width(int val);
 
+    int grid_width()
+    {
+        return m_grid_width;
+    }
+
     void line_width(int val);
 
     void line_style(int val);
