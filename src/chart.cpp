@@ -856,6 +856,55 @@ void PieChart::resize(const Size& size)
     }
 }
 
+void PieChart::serialize(Serializer& serializer) const
+{
+    Widget::serialize(serializer);
+
+    serializer.add_property("title", title());
+
+    StringDataArray items = sdata();
+    if (!items.empty())
+    {
+        for (auto& elem : items)
+        {
+            auto value = fmt::format("{},{}", detail::to_string(elem.first), detail::to_string(elem.second));
+            serializer.add_property("item", value);
+        }
+    }
+}
+
+void PieChart::deserialize(const std::string& name, const std::string& value,
+                           const Serializer::Attributes& attrs)
+{
+    switch (detail::hash(name))
+    {
+    case detail::hash("title"):
+    {
+        title(value);
+        break;
+    }
+    case detail::hash("item"):
+    {
+        std::vector<std::string> tokens;
+        detail::tokenize(value, ',', tokens);
+        if (tokens.size() == 2)
+        {
+            StringDataArray data_item;
+            data_item.push_back(std::make_pair(std::stod(tokens[0]), tokens[1]));
+            add_data(data_item);
+        }
+        else
+        {
+            egt::detail::warn("unhandled property {} values", name, value);
+        }
+        break;
+    }
+    default:
+        Widget::deserialize(name, value, attrs);
+        break;
+    }
+}
+
 PieChart::PieChart(PieChart&&) noexcept = default;
 PieChart& PieChart::operator=(PieChart&&) noexcept = default;
 
