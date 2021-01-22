@@ -79,6 +79,11 @@ void LineChart::line_width(const int val)
     m_impl->line_width(val);
 }
 
+int LineChart::line_width() const
+{
+    return m_impl->line_width();
+}
+
 void LineChart::line_style(LinePattern pattern)
 {
     m_impl->line_style(static_cast<int>(pattern));

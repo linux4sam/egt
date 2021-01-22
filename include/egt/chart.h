@@ -178,6 +178,13 @@ public:
     void line_width(int val);
 
     /**
+     * Get chart line width.
+     *
+     * @return line width
+     */
+    int line_width() const;
+
+    /**
      * Sets line style
      *
      *  @param[in] pattern is one of the enum LinePattern

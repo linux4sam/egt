@@ -72,6 +72,11 @@ public:
 
     void line_width(int val);
 
+    int line_width() const
+    {
+        return m_line_width;
+    }
+
     void line_style(int val);
 
     void point_type(int ptype);
