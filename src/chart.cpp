@@ -526,6 +526,11 @@ void BarChart::bar_style(BarPattern pattern)
     m_impl->line_style(static_cast<int>(pattern));
 }
 
+BarChart::BarPattern BarChart::bar_style() const
+{
+    return static_cast<BarChart::BarPattern>(m_impl->line_style());
+}
+
 void BarChart::label(const std::string& xlabel, const std::string& ylabel, const std::string& title)
 {
     m_impl->label(xlabel, ylabel, title);

@@ -542,6 +542,13 @@ public:
     void bar_style(BarPattern pattern);
 
     /**
+     * get the Bar chart bar type.
+     *
+     * @return PointType enum
+     */
+    EGT_NODISCARD BarPattern bar_style() const;
+
+    /**
     * Set the grid style.
     */
     void grid_style(GridFlag flag) override;
