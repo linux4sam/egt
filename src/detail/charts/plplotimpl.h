@@ -54,6 +54,11 @@ public:
 
     void grid_style(ChartBase::GridFlag flag);
 
+    ChartBase::GridFlag grid_style() const
+    {
+        return m_grid;
+    }
+
     void grid_width(int val);
 
     void line_width(int val);

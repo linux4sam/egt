@@ -62,6 +62,11 @@ public:
      */
     virtual void grid_style(GridFlag flag) = 0;
 
+    /**
+     * Get chart grid style.
+     */
+    virtual GridFlag grid_style() const = 0;
+
     /// A data pair array.
     using DataArray = std::deque<std::pair<double, double>>;
 
@@ -136,6 +141,13 @@ public:
      * Set the grid style.
      */
     void grid_style(GridFlag flag) override;
+
+    /**
+     * Get chart grid style.
+     *
+     * @return GridFlag
+     */
+    GridFlag grid_style() const override;
 
     /**
      * Set grid width
@@ -280,6 +292,13 @@ public:
     void grid_style(GridFlag flag) override;
 
     /**
+     * Get chart grid style.
+     *
+     * @return GridFlag
+     */
+    GridFlag grid_style() const override;
+
+    /**
      * Set grid width
      *
      * @param[in] val size of a grid width.
@@ -409,6 +428,13 @@ public:
     * Set the grid style.
     */
     void grid_style(GridFlag flag) override;
+
+    /**
+     * Get chart grid style.
+     *
+     * @return GridFlag
+     */
+    GridFlag grid_style() const override;
 
     /**
      * Set grid width

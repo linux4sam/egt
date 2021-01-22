@@ -54,6 +54,11 @@ void LineChart::grid_style(GridFlag flag)
     m_impl->grid_style(flag);
 }
 
+ChartBase::GridFlag LineChart::grid_style() const
+{
+    return static_cast<ChartBase::GridFlag>(m_impl->grid_style());
+}
+
 void LineChart::grid_width(const int val)
 {
     m_impl->grid_width(val);
@@ -159,6 +164,11 @@ void PointChart::grid_style(GridFlag flag)
     m_impl->grid_style(flag);
 }
 
+ChartBase::GridFlag PointChart::grid_style() const
+{
+    return static_cast<ChartBase::GridFlag>(m_impl->grid_style());
+}
+
 void PointChart::grid_width(const int val)
 {
     m_impl->grid_width(val);
@@ -235,6 +245,11 @@ void BarChart::clear()
 void BarChart::grid_style(GridFlag flag)
 {
     m_impl->grid_style(flag);
+}
+
+ChartBase::GridFlag BarChart::grid_style() const
+{
+    return static_cast<ChartBase::GridFlag>(m_impl->grid_style());
 }
 
 void BarChart::grid_width(const int val)
