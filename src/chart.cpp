@@ -99,6 +99,21 @@ void LineChart::label(const std::string& xlabel, const std::string& ylabel, cons
     m_impl->label(xlabel, ylabel, title);
 }
 
+std::string LineChart::xlabel() const
+{
+    return m_impl->xlabel();
+}
+
+std::string LineChart::ylabel() const
+{
+    return m_impl->ylabel();
+}
+
+std::string LineChart::title() const
+{
+    return m_impl->title();
+}
+
 void LineChart::resize(const Size& size)
 {
     if (size != this->size())
@@ -170,6 +185,21 @@ void PointChart::label(const std::string& xlabel, const std::string& ylabel, con
     m_impl->label(xlabel, ylabel, title);
 }
 
+std::string PointChart::xlabel() const
+{
+    return m_impl->xlabel();
+}
+
+std::string PointChart::ylabel() const
+{
+    return m_impl->ylabel();
+}
+
+std::string PointChart::title() const
+{
+    return m_impl->title();
+}
+
 void PointChart::resize(const Size& size)
 {
     if (size != this->size())
@@ -235,6 +265,21 @@ void BarChart::bar_style(BarPattern pattern)
 void BarChart::label(const std::string& xlabel, const std::string& ylabel, const std::string& title)
 {
     m_impl->label(xlabel, ylabel, title);
+}
+
+std::string BarChart::xlabel() const
+{
+    return m_impl->xlabel();
+}
+
+std::string BarChart::ylabel() const
+{
+    return m_impl->ylabel();
+}
+
+std::string BarChart::title() const
+{
+    return m_impl->title();
 }
 
 void BarChart::data(const DataArray& data)
@@ -346,6 +391,11 @@ void PieChart::draw(Painter& painter, const Rect& rect)
 void PieChart::title(const std::string& title)
 {
     return m_impl->title(title);
+}
+
+std::string PieChart::title() const
+{
+    return m_impl->title();
 }
 
 void PieChart::data(const StringDataArray& data)

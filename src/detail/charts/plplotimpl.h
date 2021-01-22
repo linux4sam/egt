@@ -84,6 +84,21 @@ public:
         return m_pattern;
     }
 
+    std::string xlabel() const
+    {
+        return m_xlabel;
+    }
+
+    std::string ylabel() const
+    {
+        return m_ylabel;
+    }
+
+    std::string title() const
+    {
+        return m_title;
+    }
+
     void point_type(int ptype);
 
     virtual void resize();

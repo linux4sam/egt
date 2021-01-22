@@ -210,6 +210,21 @@ public:
                const std::string& title);
 
     /**
+     * Get chart x-axis label.
+     */
+    EGT_NODISCARD std::string xlabel() const;
+
+    /**
+     * Get chart y-axis label.
+     */
+    EGT_NODISCARD std::string ylabel() const;
+
+    /**
+     * Get chart title.
+     */
+    EGT_NODISCARD std::string title() const;
+
+    /**
      * Resize the LineChart.
      *
      * Change width and height of the LineChart.
@@ -319,6 +334,21 @@ public:
     void label(const std::string& xlabel,
                const std::string& ylabel,
                const std::string& title);
+
+    /**
+     * Get chart x-axis label.
+     */
+    EGT_NODISCARD std::string xlabel() const;
+
+    /**
+     * Get chart y-axis label.
+     */
+    EGT_NODISCARD std::string ylabel() const;
+
+    /**
+     * Get chart title.
+     */
+    EGT_NODISCARD std::string title() const;
 
     /**
     * Set the grid style.
@@ -473,6 +503,21 @@ public:
                const std::string& title);
 
     /**
+     * Get chart x-axis label.
+     */
+    EGT_NODISCARD std::string xlabel() const;
+
+    /**
+     * Get chart y-axis label.
+     */
+    EGT_NODISCARD std::string ylabel() const;
+
+    /**
+     * Get chart title.
+     */
+    EGT_NODISCARD std::string title() const;
+
+    /**
      * Set bar style.
      *
      * @param[in] pattern is one of the enum BarPattern
@@ -589,6 +634,11 @@ public:
      * @param[in] title is PieChart title.
      */
     void title(const std::string& title);
+
+    /**
+     * Get chart title.
+     */
+    EGT_NODISCARD std::string title() const;
 
     /**
      * Set a new set of data to PieChart.
