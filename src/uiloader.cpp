@@ -120,7 +120,7 @@ static const std::pair<std::string, CreateFunction> allocators[] =
     //{"egt::v1::NeedleLayer", create_widget<NeedleLayer>},
 #ifdef EGT_HAS_CHART
     {"egt::v1::LineChart", create_widget<LineChart>},
-    {"egt::v1::PointChart", create_widget<PieChart>},
+    {"egt::v1::PointChart", create_widget<PointChart>},
     {"egt::v1::BarChart", create_widget<BarChart>},
     {"egt::v1::HorizontalBarChart", create_widget<HorizontalBarChart>},
     {"egt::v1::PieChart", create_widget<PieChart>},
