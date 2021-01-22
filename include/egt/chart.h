@@ -330,6 +330,13 @@ public:
     void point_type(PointType ptype);
 
     /**
+     * get the chart point type.
+     *
+     * @return PointType enum
+     */
+    EGT_NODISCARD PointChart::PointType point_type() const;
+
+    /**
      * Set chart labels.
      *
      * @param[in] xlabel is x-axis label.

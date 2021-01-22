@@ -101,6 +101,11 @@ public:
 
     void point_type(int ptype);
 
+    int point_type() const
+    {
+        return m_pointtype;
+    }
+
     virtual void resize();
 
     void bank(float bank);

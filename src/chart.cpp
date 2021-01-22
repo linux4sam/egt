@@ -311,6 +311,11 @@ void PointChart::point_type(const PointType ptype)
     m_impl->point_type(static_cast<int>(ptype));
 }
 
+PointChart::PointType PointChart::point_type() const
+{
+    return static_cast<PointChart::PointType>(m_impl->point_type());
+}
+
 void PointChart::label(const std::string& xlabel, const std::string& ylabel, const std::string& title)
 {
     m_impl->label(xlabel, ylabel, title);
