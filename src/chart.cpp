@@ -5,6 +5,7 @@
  */
 
 #include "detail/charts/plplotimpl.h"
+#include "detail/egtlog.h"
 #include "egt/chart.h"
 
 namespace egt
@@ -126,6 +127,136 @@ void LineChart::resize(const Size& size)
 void LineChart::bank(float bank)
 {
     m_impl->bank(bank);
+}
+
+void LineChart::serialize(Serializer& serializer) const
+{
+    ChartBase::serialize(serializer);
+
+    serializer.add_property("xlabel", xlabel());
+
+    serializer.add_property("ylabel", ylabel());
+
+    serializer.add_property("title", title());
+
+    auto gflag = grid_style();
+    if (gflag == egt::ChartBase::GridFlag::none)
+        serializer.add_property("gridflags", "none");
+    else if (gflag == egt::ChartBase::GridFlag::box)
+        serializer.add_property("gridflags", "box");
+    else if (gflag == egt::ChartBase::GridFlag::box_ticks)
+        serializer.add_property("gridflags", "box_ticks");
+    else if (gflag == egt::ChartBase::GridFlag::box_ticks_coord)
+        serializer.add_property("gridflags", "box_ticks_coord");
+    else if (gflag == egt::ChartBase::GridFlag::box_major_ticks_coord)
+        serializer.add_property("gridflags", "box_major_ticks_coord");
+    else if (gflag == egt::ChartBase::GridFlag::box_minor_ticks_coord)
+        serializer.add_property("gridflags", "box_minor_ticks_coord");
+
+    auto lp = line_style();
+    if (lp == egt::LineChart::LinePattern::solid)
+        serializer.add_property("linetype", "solid");
+    else if (lp == egt::LineChart::LinePattern::dotted)
+        serializer.add_property("linetype", "dotted");
+    else if (lp == egt::LineChart::LinePattern::dashes)
+        serializer.add_property("linetype", "dashes");
+
+    serializer.add_property("linewidth", line_width());
+
+    serializer.add_property("gridwidth", grid_width());
+
+    ChartBase::DataArray items = data();
+    if (!items.empty())
+    {
+        for (auto& elem : items)
+        {
+            auto value = fmt::format("{},{}", detail::to_string(elem.first), detail::to_string(elem.second));
+            serializer.add_property("item", value);
+        }
+    }
+}
+
+void LineChart::deserialize(const std::string& name, const std::string& value,
+                            const Serializer::Attributes& attrs)
+{
+    switch (detail::hash(name))
+    {
+    case detail::hash("xlabel"):
+    {
+        label(value, ylabel(), title());
+        break;
+    }
+    case detail::hash("ylabel"):
+    {
+        label(xlabel(), value, title());
+        break;
+    }
+    case detail::hash("title"):
+    {
+        label(xlabel(), ylabel(), value);
+        break;
+    }
+    case detail::hash("item"):
+    {
+        std::vector<std::string> tokens;
+        detail::tokenize(value, ',', tokens);
+        if (tokens.size() == 2)
+        {
+            egt::ChartBase::DataArray data_item;
+            data_item.push_back(std::make_pair(std::stod(tokens[0]), std::stod(tokens[1])));
+            add_data(data_item);
+        }
+        else
+        {
+            egt::detail::warn("unhandled property {} values", name, value);
+        }
+        break;
+    }
+    case detail::hash("gridflags"):
+    {
+        if (value == "none")
+            grid_style(egt::ChartBase::GridFlag::none);
+        else if (value == "box")
+            grid_style(egt::ChartBase::GridFlag::box);
+        else if (value == "box_ticks")
+            grid_style(egt::ChartBase::GridFlag::box_ticks);
+        else if (value == "box_ticks_coord")
+            grid_style(egt::ChartBase::GridFlag::box_ticks_coord);
+        else if (value == "box_major_ticks_coord")
+            grid_style(egt::ChartBase::GridFlag::box_major_ticks_coord);
+        else if (value == "box_minor_ticks_coord")
+            grid_style(egt::ChartBase::GridFlag::box_minor_ticks_coord);
+        else
+            egt::detail::warn("unhandled property {}", name);
+
+        break;
+    }
+    case detail::hash("linetype"):
+    {
+        if (value == "solid")
+            line_style(egt::LineChart::LinePattern::solid);
+        else if (value == "dotted")
+            line_style(egt::LineChart::LinePattern::dotted);
+        else if (value == "dashes")
+            line_style(egt::LineChart::LinePattern::dashes);
+        else
+            egt::detail::warn("unhandled property {}", name);
+        break;
+    }
+    case detail::hash("linewidth"):
+    {
+        line_width(std::stoi(value));
+        break;
+    }
+    case detail::hash("gridwidth"):
+    {
+        grid_width(std::stoi(value));
+        break;
+    }
+    default:
+        ChartBase::deserialize(name, value, attrs);
+        break;
+    }
 }
 
 LineChart::LineChart(LineChart&&) noexcept = default;

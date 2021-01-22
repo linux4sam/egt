@@ -238,6 +238,11 @@ public:
      */
     void bank(float bank);
 
+    void serialize(Serializer& serializer) const override;
+
+    void deserialize(const std::string& name, const std::string& value,
+                     const Serializer::Attributes& attrs) override;
+
     ~LineChart() override;
 
 protected:
