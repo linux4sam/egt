@@ -40,11 +40,15 @@ public:
 
     void data(const ChartBase::DataArray& data);
 
+    ChartBase::DataArray data() const;
+
     size_t data_size() const;
 
     void add_data(const ChartBase::DataArray& data);
 
     void data(const ChartBase::StringDataArray& data);
+
+    ChartBase::StringDataArray sdata() const;
 
     void add_data(const ChartBase::StringDataArray& data);
 

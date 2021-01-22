@@ -114,6 +114,13 @@ public:
     void data(const DataArray& data);
 
     /**
+     * Get the data points set for LineChart.
+     *
+     * @return DataArray set for LineChart.
+     */
+    ChartBase::DataArray data() const;
+
+    /**
      * Get the number of data points.
      */
     EGT_NODISCARD size_t data_size() const;
@@ -251,6 +258,13 @@ public:
     void data(const DataArray& data);
 
     /**
+     * Get the data points set for PointChart.
+     *
+     * @return DataArray set for PointChart.
+     */
+    ChartBase::DataArray data() const;
+
+    /**
     * Get the number of data points.
     */
     EGT_NODISCARD size_t data_size() const;
@@ -382,6 +396,13 @@ public:
     void data(const DataArray& data);
 
     /**
+     * Get the data points set for BarChart.
+     *
+     * @return DataArray set for BarChart.
+     */
+    DataArray data() const;
+
+    /**
     * Get the number of data points.
     */
     EGT_NODISCARD size_t data_size() const;
@@ -399,6 +420,13 @@ public:
      * @param[in] data is a data items for BarChart.
      */
     void data(const StringDataArray& data);
+
+    /**
+     * Get the data points set for BarChart.
+     *
+     * @return StringDataArray set for BarChart.
+     */
+    StringDataArray sdata() const;
 
     /**
      * Add data items to an existing array.
@@ -554,6 +582,13 @@ public:
      * @param[in] data is a data items for PieChart.
      */
     void data(const StringDataArray& data);
+
+    /**
+     * Get the data points set for PieChart.
+     *
+     * @return StringDataArray set for PieChart.
+     */
+    StringDataArray sdata() const;
 
     /**
      * Get the number of data points.

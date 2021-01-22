@@ -29,6 +29,11 @@ void LineChart::data(const DataArray& data)
     m_impl->data(data);
 }
 
+ChartBase::DataArray LineChart::data() const
+{
+    return m_impl->data();
+}
+
 size_t LineChart::data_size() const
 {
     return m_impl->data_size();
@@ -118,6 +123,11 @@ void PointChart::draw(Painter& painter, const Rect& rect)
 void PointChart::data(const DataArray& data)
 {
     m_impl->data(data);
+}
+
+ChartBase::DataArray PointChart::data() const
+{
+    return m_impl->data();
 }
 
 size_t PointChart::data_size() const
@@ -222,6 +232,11 @@ void BarChart::data(const DataArray& data)
     m_impl->data(data);
 }
 
+ChartBase::DataArray BarChart::data() const
+{
+    return m_impl->data();
+}
+
 size_t BarChart::data_size() const
 {
     return m_impl->data_size();
@@ -235,6 +250,11 @@ void BarChart::add_data(const DataArray& data)
 void BarChart::data(const StringDataArray& data)
 {
     m_impl->data(data);
+}
+
+ChartBase::StringDataArray BarChart::sdata() const
+{
+    return m_impl->sdata();
 }
 
 void BarChart::add_data(const StringDataArray& data)
@@ -321,6 +341,11 @@ void PieChart::title(const std::string& title)
 void PieChart::data(const StringDataArray& data)
 {
     m_impl->data(data);
+}
+
+PieChart::StringDataArray PieChart::sdata() const
+{
+    return m_impl->sdata();
 }
 
 size_t PieChart::data_size() const

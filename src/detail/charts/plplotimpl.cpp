@@ -75,6 +75,17 @@ void PlPlotImpl::data(const ChartBase::DataArray& data)
     }
 }
 
+ChartBase::DataArray PlPlotImpl::data() const
+{
+    ChartBase::DataArray data;
+    if (!m_xdata.empty() && (!m_ydata.empty()))
+    {
+        std::transform(m_xdata.begin(), m_xdata.end(), m_ydata.begin(), std::back_inserter(data),
+        [](int x, int y) { return std::make_pair(x, y); });
+    }
+    return data;
+}
+
 void PlPlotImpl::add_data(const ChartBase::DataArray& data)
 {
     if (!data.empty())
@@ -107,6 +118,17 @@ void PlPlotImpl::data(const ChartBase::StringDataArray& data)
 
         invoke_damage();
     }
+}
+
+ChartBase::StringDataArray PlPlotImpl::sdata() const
+{
+    ChartBase::StringDataArray data;
+    if (!m_ydata.empty() && (!m_sdata.empty()))
+    {
+        std::transform(m_ydata.begin(), m_ydata.end(), m_sdata.begin(), std::back_inserter(data),
+        [](int x, std::string str) { return std::make_pair(x, str); });
+    }
+    return data;
 }
 
 size_t PlPlotImpl::data_size() const
