@@ -630,6 +630,156 @@ void BarChart::bank(float bank)
     m_impl->bank(bank);
 }
 
+
+void BarChart::serialize(Serializer& serializer) const
+{
+    ChartBase::serialize(serializer);
+
+    serializer.add_property("xlabel", xlabel());
+
+    serializer.add_property("ylabel", ylabel());
+
+    serializer.add_property("title", title());
+
+    auto gflag = grid_style();
+    if (gflag == egt::ChartBase::GridFlag::none)
+        serializer.add_property("gridflags", "none");
+    else if (gflag == egt::ChartBase::GridFlag::box)
+        serializer.add_property("gridflags", "box");
+    else if (gflag == egt::ChartBase::GridFlag::box_ticks)
+        serializer.add_property("gridflags", "box_ticks");
+    else if (gflag == egt::ChartBase::GridFlag::box_ticks_coord)
+        serializer.add_property("gridflags", "box_ticks_coord");
+    else if (gflag == egt::ChartBase::GridFlag::box_major_ticks_coord)
+        serializer.add_property("gridflags", "box_major_ticks_coord");
+    else if (gflag == egt::ChartBase::GridFlag::box_minor_ticks_coord)
+        serializer.add_property("gridflags", "box_minor_ticks_coord");
+
+    auto pt = bar_style();
+    if (pt == egt::BarChart::BarPattern::solid)
+        serializer.add_property("bartype", "solid");
+    else if (pt == egt::BarChart::BarPattern::horizontal_line)
+        serializer.add_property("bartype", "horizontal_line");
+    else if (pt == egt::BarChart::BarPattern::vertical_line)
+        serializer.add_property("bartype", "vertical_line");
+    else if (pt == egt::BarChart::BarPattern::boxes)
+        serializer.add_property("bartype", "boxes");
+
+    serializer.add_property("gridwidth", grid_width());
+
+    ChartBase::DataArray items = data();
+    if (!items.empty())
+    {
+        for (auto& elem : items)
+        {
+            auto value = fmt::format("{},{}", detail::to_string(elem.first), detail::to_string(elem.second));
+            serializer.add_property("item", value);
+        }
+    }
+    else
+    {
+        ChartBase::StringDataArray sitems = sdata();
+        if (!sitems.empty())
+        {
+            for (auto& selem : sitems)
+            {
+                auto value = fmt::format("{},{}", detail::to_string(selem.first), detail::to_string(selem.second));
+                serializer.add_property("item", value);
+            }
+        }
+    }
+}
+
+void BarChart::deserialize(const std::string& name, const std::string& value,
+                           const Serializer::Attributes& attrs)
+{
+    switch (detail::hash(name))
+    {
+    case detail::hash("xlabel"):
+    {
+        label(value, ylabel(), title());
+        break;
+    }
+    case detail::hash("ylabel"):
+    {
+        label(xlabel(), value, title());
+        break;
+    }
+    case detail::hash("title"):
+    {
+        label(xlabel(), ylabel(), value);
+        break;
+    }
+    case detail::hash("item"):
+    {
+        std::vector<std::string> tokens;
+        detail::tokenize(value, ',', tokens);
+        if (tokens.size() == 2)
+        {
+            try
+            {
+                egt::ChartBase::DataArray data_item;
+                data_item.push_back(std::make_pair(std::stod(tokens[0]), std::stod(tokens[1])));
+                add_data(data_item);
+            }
+            catch (const std::exception& e)
+            {
+                ChartBase::StringDataArray sdata_item;
+                sdata_item.push_back(std::make_pair(std::stod(tokens[0]), tokens[1]));
+                add_data(sdata_item);
+            }
+        }
+        else
+        {
+            egt::detail::warn("unhandled property {} values", name, value);
+        }
+        break;
+    }
+    case detail::hash("gridflags"):
+    {
+        if (value == "none")
+            grid_style(egt::ChartBase::GridFlag::none);
+        else if (value == "box")
+            grid_style(egt::ChartBase::GridFlag::box);
+        else if (value == "box_ticks")
+            grid_style(egt::ChartBase::GridFlag::box_ticks);
+        else if (value == "box_ticks_coord")
+            grid_style(egt::ChartBase::GridFlag::box_ticks_coord);
+        else if (value == "box_major_ticks_coord")
+            grid_style(egt::ChartBase::GridFlag::box_major_ticks_coord);
+        else if (value == "box_minor_ticks_coord")
+            grid_style(egt::ChartBase::GridFlag::box_minor_ticks_coord);
+        else
+            egt::detail::warn("unhandled property {}", name);
+
+        break;
+    }
+    case detail::hash("bartype"):
+    {
+        if (value == "solid")
+            bar_style(egt::BarChart::BarPattern::solid);
+        else if (value == "horizontal_line")
+            bar_style(egt::BarChart::BarPattern::horizontal_line);
+        else if (value == "vertical_line")
+            bar_style(egt::BarChart::BarPattern::vertical_line);
+        else if (value == "boxes")
+            bar_style(egt::BarChart::BarPattern::boxes);
+        else
+            egt::detail::warn("unhandled property {}", name);
+
+        break;
+    }
+    case detail::hash("gridwidth"):
+    {
+        grid_width(std::stoi(value));
+        break;
+    }
+    default:
+        ChartBase::deserialize(name, value, attrs);
+        break;
+    }
+}
+
 BarChart::BarChart(BarChart&&) noexcept = default;
 BarChart& BarChart::operator=(BarChart&&) noexcept = default;
 BarChart::~BarChart() = default;
