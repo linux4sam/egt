@@ -69,7 +69,7 @@ int main(int argc, char** argv)
     cxxopts::Options options(argv[0], "play video file");
     options.add_options()
     ("h,help", "Show help")
-    ("i,input", "URI to video file", cxxopts::value<std::string>())
+    ("i,input", "URI to video file. If there is a '&' in the URI, escape it with \\ or surround the URI with double quotes.", cxxopts::value<std::string>())
     ("width", "Width of the stream", cxxopts::value<int>()->default_value("320"))
     ("height", "Height of the stream", cxxopts::value<int>()->default_value("192"))
     ("f,format", "Pixel format", cxxopts::value<std::string>()->default_value(is_target_sama5d4() ? "xrgb8888" : "yuv420"), "[egt::PixelFormat]");
