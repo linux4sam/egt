@@ -72,8 +72,8 @@ int main(int argc, char** argv)
     egt::Label label2("FPS: -",
                       egt::Rect(egt::Point(0, 40), egt::Size(100, 40)),
                       egt::AlignFlag::center);
-    label2.color(egt::Palette::ColorId::text, egt::Palette::black);
-    label2.color(egt::Palette::ColorId::bg, egt::Palette::transparent);
+    label2.color(egt::Palette::ColorId::label_text, egt::Palette::black);
+    label2.color(egt::Palette::ColorId::label_bg, egt::Palette::transparent);
 
 #define DEFAULT_MS_INTERVAL 100
 
@@ -132,8 +132,8 @@ int main(int argc, char** argv)
     egt::Label label1("CPU: -",
                       egt::Rect(egt::Point(0, 0), egt::Size(100, 40)),
                       egt::AlignFlag::center);
-    label1.color(egt::Palette::ColorId::text, egt::Palette::black);
-    label1.color(egt::Palette::ColorId::bg, egt::Palette::transparent);
+    label1.color(egt::Palette::ColorId::label_text, egt::Palette::black);
+    label1.color(egt::Palette::ColorId::label_bg, egt::Palette::transparent);
 
     popup.add(label1);
     popup.add(label2);

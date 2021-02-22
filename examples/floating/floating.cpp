@@ -203,7 +203,7 @@ int main(int argc, char** argv)
     movetimer.start();
 
     egt::Label label1("CPU: ----");
-    label1.color(egt::Palette::ColorId::text, egt::Palette::white);
+    label1.color(egt::Palette::ColorId::label_text, egt::Palette::white);
     win.add(bottom(left(label1)));
 
     egt::experimental::CPUMonitorUsage tools;

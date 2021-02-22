@@ -28,8 +28,8 @@ int main(int argc, char** argv)
     egt::VerticalBoxSizer sizer;
 
     egt::Label label("FPS: ---");
-    label.color(egt::Palette::ColorId::text, egt::Palette::black);
-    label.color(egt::Palette::ColorId::bg, egt::Palette::transparent);
+    label.color(egt::Palette::ColorId::label_text, egt::Palette::black);
+    label.color(egt::Palette::ColorId::label_bg, egt::Palette::transparent);
     sizer.add(expand_horizontal(label));
 
     label.on_text_changed([&label]()
@@ -38,8 +38,8 @@ int main(int argc, char** argv)
     });
 
     egt::Label label_dims("");
-    label_dims.color(egt::Palette::ColorId::text, egt::Palette::black);
-    label_dims.color(egt::Palette::ColorId::bg, egt::Palette::transparent);
+    label_dims.color(egt::Palette::ColorId::label_text, egt::Palette::black);
+    label_dims.color(egt::Palette::ColorId::label_bg, egt::Palette::transparent);
     sizer.add(expand_horizontal(label_dims));
 
     label_dims.on_text_changed([&label_dims]()
