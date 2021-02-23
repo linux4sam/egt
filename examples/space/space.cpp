@@ -158,8 +158,8 @@ int main(int argc, char** argv)
     spawntimer.start();
 
     egt::Label label1("CPU: ----");
-    label1.color(egt::Palette::ColorId::text, egt::Palette::white);
-    label1.color(egt::Palette::ColorId::bg, egt::Palette::transparent);
+    label1.color(egt::Palette::ColorId::label_text, egt::Palette::white);
+    label1.color(egt::Palette::ColorId::label_bg, egt::Palette::transparent);
     win.add(bottom(left(label1)));
 
     egt::experimental::CPUMonitorUsage tools;
