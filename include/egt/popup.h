@@ -49,6 +49,8 @@ public:
      */
     virtual void show_centered()
     {
+        this->zorder_top();
+
         if (T::parent())
             this->move_to_center(T::parent()->box().center());
         else
@@ -69,11 +71,25 @@ public:
         {
             Application::instance().set_modal_window(this);
 
+            this->zorder_top();
+
             if (center)
                 this->show_centered();
             else
                 this->show();
         }
+    }
+
+    /**
+     * Show the Widget.
+     *
+     * Always move the widget to the top.
+     */
+    void show() override
+    {
+        this->zorder_top();
+
+        T::show();
     }
 
     /**
