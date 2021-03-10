@@ -413,14 +413,13 @@ void PlPlotImpl::plplot_label(const shared_cairo_t& cr, Rect b, const Font& font
         cairo_set_font_matrix(cr.get(), &font_reflection_matrix);
 
         cairo_text_extents_t te;
-        double x;
-        double y;
+        double x = 0.0;
+        double y = 0.0;
         double offset = b.width() * 0.5;
         if (!m_xlabel.empty())
         {
             cairo_text_extents(cr.get(), m_xlabel.c_str(), &te);
-            x = (b.x() + offset) - (te.x_bearing + (te.width * 0.5));
-            y = b.y();
+            x = offset - (te.x_bearing + (te.width * 0.5));
 
             cairo_move_to(cr.get(), x, y);
             cairo_rotate(cr.get(), 0);
@@ -430,8 +429,8 @@ void PlPlotImpl::plplot_label(const shared_cairo_t& cr, Rect b, const Font& font
         if (!m_title.empty())
         {
             cairo_text_extents(cr.get(), m_title.c_str(), &te);
-            x = (b.x() + offset) - (te.x_bearing + (te.width * 0.5));
-            y =  b.y() + b.height() - font.size();
+            x = offset - (te.x_bearing + (te.width * 0.5));
+            y = b.height() - (font.size());
 
             cairo_move_to(cr.get(), x, y);
             cairo_rotate(cr.get(), 0);
@@ -441,8 +440,8 @@ void PlPlotImpl::plplot_label(const shared_cairo_t& cr, Rect b, const Font& font
         if (!m_ylabel.empty())
         {
             cairo_text_extents(cr.get(), m_ylabel.c_str(), &te);
-            x = b.x() + font.size();
-            y = (b.y() + (b.height() * 0.5)) - (te.x_bearing + (te.width * 0.5));
+            x = font.size();
+            y = (b.height() * 0.5) - (te.x_bearing + (te.width * 0.5));
 
             cairo_move_to(cr.get(), x, y);
             cairo_rotate(cr.get(), detail::pi<float>() * 2.5f);
