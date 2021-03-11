@@ -277,8 +277,11 @@ void ComboBox::default_draw(ComboBox& widget, Painter& painter, const Rect& /*re
     widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
     const auto b = widget.content_area();
-    const auto handle_dim = std::min(b.width(), b.height());
-    const auto handle = Rect(b.top_right() - Point(handle_dim, 0), Size(handle_dim, handle_dim));
+    const auto handle_dim = b.width() * 0.15;
+    const auto pos = ((b.top_right() + b.bottom_right()) / 2.0);
+    const auto y = pos.y() - (handle_dim / 2.0);
+    const auto x = pos.x() - handle_dim;
+    const auto handle = Rect(Point(x, y), Size(handle_dim, handle_dim));
     const auto text = Rect(b.point(), b.size() - Size(handle.size().width(), 0));
 
     // draw a down arrow
