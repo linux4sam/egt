@@ -74,6 +74,11 @@ public:
         parent.add(*this);
     }
 
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit BoxSizer(Serializer::Properties& props);
+
     void layout() override;
 
     /**
@@ -105,9 +110,6 @@ public:
     }
 
     void serialize(Serializer& serializer) const override;
-
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
 
 protected:
 
@@ -166,6 +168,10 @@ protected:
     Orientation m_orient{Orientation::horizontal};
     /// @private
     Justification m_justify{Justification::start};
+
+private:
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 /**
@@ -184,6 +190,9 @@ public:
         : BoxSizer(Orientation::horizontal, justify)
     {}
 
+    explicit HorizontalBoxSizer(Serializer::Properties& props)
+        : BoxSizer(props)
+    {}
     /**
      * @param[in] parent The parent Frame.
      * @param[in] justify Justification of child widgets.
@@ -207,6 +216,10 @@ public:
      */
     explicit VerticalBoxSizer(Justification justify = Justification::middle)
         : BoxSizer(Orientation::vertical, justify)
+    {}
+
+    explicit VerticalBoxSizer(Serializer::Properties& props)
+        : BoxSizer(props)
     {}
 
     /**
@@ -240,6 +253,10 @@ public:
      */
     explicit FlexBoxSizer(Frame& parent, Justification justify = Justification::middle)
         : BoxSizer(parent, Orientation::flex, justify)
+    {}
+
+    explicit FlexBoxSizer(Serializer::Properties& props)
+        : BoxSizer(props)
     {}
 };
 

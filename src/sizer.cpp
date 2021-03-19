@@ -43,6 +43,12 @@ enum
     LAY_BREAK = 0x200
 };
 
+BoxSizer::BoxSizer(Serializer::Properties& props)
+	: Frame(props)
+{
+    deserialize(props);
+}
+
 void BoxSizer::layout()
 {
     if (!visible())
@@ -152,15 +158,22 @@ void BoxSizer::serialize(Serializer& serializer) const
     Frame::serialize(serializer);
 }
 
-void BoxSizer::deserialize(const std::string& name, const std::string& value,
-                           const Serializer::Attributes& attrs)
+void BoxSizer::deserialize(Serializer::Properties& props)
 {
-    if (name == "orient")
-        orient(detail::enum_from_string<Orientation>(value));
-    else if (name == "justify")
-        justify(detail::enum_from_string<Justification>(value));
-    else
-        Frame::deserialize(name, value, attrs);
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
+    {
+        if (std::get<0>(p) == "orient")
+        {
+            orient(detail::enum_from_string<Orientation>(std::get<1>(p)));
+            return true;
+        }
+        else if (std::get<0>(p) == "justify")
+        {
+            justify(detail::enum_from_string<Justification>(std::get<1>(p)));
+            return true;
+        }
+        return false;
+    }), props.end());
 }
 
 }
