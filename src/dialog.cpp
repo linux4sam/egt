@@ -18,7 +18,21 @@ Dialog::Dialog(const Rect& rect) noexcept
       m_button2("Cancel")
 {
     name("Dialog" + std::to_string(m_widgetid));
+    initialize();
+}
 
+Dialog::Dialog(Serializer::Properties& props) noexcept
+    : Popup(props),
+      m_grid(std::make_shared<egt::StaticGrid>(Size(0, (box().height() * 0.15)), StaticGrid::GridSize(2, 1))),
+      m_button1("OK"),
+      m_button2("Cancel")
+{
+    name("Dialog" + std::to_string(m_widgetid));
+    initialize();
+}
+
+void Dialog::initialize()
+{
     m_grid->margin(5);
     m_grid->horizontal_space(5);
     m_grid->vertical_space(5);
@@ -56,7 +70,6 @@ Dialog::Dialog(const Rect& rect) noexcept
         on_button2_click.invoke();
         hide();
     }, {EventId::pointer_click});
-
 }
 
 void Dialog::title(const std::string& title)

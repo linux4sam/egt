@@ -25,8 +25,19 @@ FileDialog::FileDialog(const std::string& filepath, const Rect& rect) noexcept
       m_filepath(filepath)
 {
     name("FileDialog" + std::to_string(m_widgetid));
+    initialize();
+}
 
-    title(Image("res:internal_folder"), filepath),
+FileDialog::FileDialog(const Rect& rect) noexcept
+    : FileDialog( {}, rect)
+{}
+
+void FileDialog::initialize()
+{
+    if (m_filepath.empty())
+        m_filepath = fs::current_path().string();
+
+    title(Image("res:internal_folder"), m_filepath),
 
           widget(expand(m_flist));
 
@@ -34,15 +45,17 @@ FileDialog::FileDialog(const std::string& filepath, const Rect& rect) noexcept
     {
         list_item_selected(index);
     });
-
-    if (m_filepath.empty())
-        m_filepath = fs::current_path().string();
 }
 
-FileDialog::FileDialog(const Rect& rect) noexcept
-    : FileDialog( {}, rect)
+FileDialog::FileDialog(Serializer::Properties& props) noexcept
+    : Dialog(props),
+      m_flist(std::make_shared<egt::ListBox>())
 {
+    name("FileDialog" + std::to_string(m_widgetid));
 
+    initialize();
+
+    deserialize(props);
 }
 
 bool FileDialog::list_files(const std::string& filepath)
@@ -142,11 +155,45 @@ void FileDialog::show_centered()
     Popup::show_centered();
 }
 
+void FileDialog::serialize(Serializer& serializer) const
+{
+    Popup::serialize(serializer);
+    serializer.add_property("filepath", m_filepath);
+}
+
+void FileDialog::deserialize(Serializer::Properties& props)
+{
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
+    {
+        if (std::get<0>(p) == "filepath")
+        {
+            list_files(std::get<1>(p));
+            return true;
+        }
+        return false;
+    }), props.end());
+}
+
 FileOpenDialog::FileOpenDialog(const std::string& filepath, const Rect& rect) noexcept
     : FileDialog(filepath, rect)
 {
     name("FileOpenDialog" + std::to_string(m_widgetid));
+    initialize();
+}
 
+FileOpenDialog::FileOpenDialog(Serializer::Properties& props) noexcept
+    : FileDialog(props)
+{
+    name("FileOpenDialog" + std::to_string(m_widgetid));
+    initialize();
+}
+
+FileOpenDialog::FileOpenDialog(const Rect& rect) noexcept
+    : FileOpenDialog( {}, rect)
+{}
+
+void FileOpenDialog::initialize()
+{
     on_button1_click([this]()
     {
         this->list_item_selected(this->m_flist->selected());
@@ -159,11 +206,6 @@ FileOpenDialog::FileOpenDialog(const std::string& filepath, const Rect& rect) no
         this->hide();
     });
 }
-
-FileOpenDialog::FileOpenDialog(const Rect& rect) noexcept
-    : FileOpenDialog( {}, rect)
-{}
-
 
 void FileOpenDialog::selected(const std::string& fselect)
 {
@@ -181,10 +223,28 @@ FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect) no
     : FileDialog(filepath, rect),
       m_fsave_box("", Size(rect.width() * 0.50, rect.height() * 0.15))
 {
+    name("FileSaveDialog" + std::to_string(m_widgetid));
+    initialize();
+}
+
+FileSaveDialog::FileSaveDialog(Serializer::Properties& props) noexcept
+    : FileDialog(props),
+      m_fsave_box("", Size(box().width() * 0.50, box().height() * 0.15))
+{
+    name("FileSaveDialog" + std::to_string(m_widgetid));
+    initialize();
+}
+
+FileSaveDialog::FileSaveDialog(const Rect& rect) noexcept
+    : FileSaveDialog(std::string(), rect)
+{}
+
+void FileSaveDialog::initialize()
+{
     m_grid->remove_all();
     m_layout.remove(m_grid.get());
 
-    m_grid.reset(new StaticGrid(Size(rect.width(), (rect.height() * 0.15)), StaticGrid::GridSize(3, 1)));
+    m_grid.reset(new StaticGrid(Size(box().width(), (box().height() * 0.15)), StaticGrid::GridSize(3, 1)));
     m_grid->margin(5);
     m_grid->horizontal_space(5);
     m_grid->vertical_space(5);
@@ -216,11 +276,7 @@ FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect) no
         this->m_fsave_box.text(std::string());
         this->hide();
     });
-}
 
-FileSaveDialog::FileSaveDialog(const Rect& rect) noexcept
-    : FileSaveDialog(std::string(), rect)
-{
 }
 
 void FileSaveDialog::show()

@@ -65,6 +65,11 @@ public:
     explicit Dialog(const Rect& rect = {}) noexcept;
 
     /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit Dialog(Serializer::Properties& props) noexcept;
+
+    /**
      * Set the title info for this dialog.
      *
      * @param[in] icon set the icon in a title.
@@ -135,6 +140,8 @@ protected:
 
     /// Button for okay or cancel.
     Button m_button2;
+
+    void initialize();
 };
 
 }

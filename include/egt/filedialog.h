@@ -73,6 +73,13 @@ public:
     explicit FileDialog(const std::string& filepath, const Rect& rect = {}) noexcept;
 
     /**
+     * Create a file dialog window.
+     *
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit FileDialog(Serializer::Properties& props) noexcept;
+
+    /**
      * Show the Widget.
      *
      * This changes the visible() state of the Widget.
@@ -80,6 +87,8 @@ public:
     void show() override;
 
     void show_centered() override;
+
+    void serialize(Serializer& serializer) const override;
 
 protected:
     /// List Box for file listing.
@@ -100,6 +109,12 @@ protected:
      * @param[in] fselect Selected filename.
      */
     virtual void selected(const std::string& fselect) = 0;
+
+private:
+
+    void initialize();
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 /**
@@ -133,6 +148,13 @@ public:
     explicit FileOpenDialog(const std::string& filepath, const Rect& rect = {}) noexcept;
 
     /**
+     * Create a file open dialog window.
+     *
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit FileOpenDialog(Serializer::Properties& props) noexcept;
+
+    /**
      * Return file selected in file open dialog window.
      *
      * @return full path of the selected file.
@@ -149,6 +171,8 @@ protected:
      * @param[in] fselect Selected filename.
      */
     void selected(const std::string& fselect) override;
+
+    void initialize();
 };
 
 /**
@@ -182,6 +206,13 @@ public:
     explicit FileSaveDialog(const std::string& filepath, const Rect& rect = {}) noexcept;
 
     /**
+     * Create a file save dialog window.
+     *
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit FileSaveDialog(Serializer::Properties& props) noexcept;
+
+    /**
      * Show the Widget.
      *
      * This changes the visible() state of the Widget.
@@ -211,6 +242,8 @@ protected:
      * @param[in] fselect Selected filename.
      */
     void selected(const std::string& fselect) override;
+
+    void initialize();
 };
 
 }
