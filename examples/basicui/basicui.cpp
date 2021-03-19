@@ -34,12 +34,12 @@ int main(int argc, char** argv)
     {
         for (const auto& w : app.windows())
         {
-            if (w->name() == "VideoWindow0")
+            if (w->type() == "VideoWindow")
             {
                 egt::VideoWindow* vwin = dynamic_cast<egt::VideoWindow*>(w);
                 vwin->play();
             }
-            else if (w->name() == "CameraWindow0")
+            else if (w->type() == "CameraWindow")
             {
                 egt::CameraWindow* cwin = dynamic_cast<egt::CameraWindow*>(w);
                 cwin->start();
