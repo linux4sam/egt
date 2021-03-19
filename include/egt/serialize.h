@@ -43,6 +43,8 @@ public:
     /// Attributes array type.
     using Attributes = std::vector<std::pair<std::string, std::string>>;
 
+    using Properties = std::vector<std::tuple<std::string, std::string, Serializer::Attributes>>;
+
     /// Add a widget to the serializer.
     virtual bool add(const Widget* widget, int level = 0) = 0;
 
