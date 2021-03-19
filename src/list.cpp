@@ -48,6 +48,30 @@ ListBox::ListBox(const ItemArray& items, const Rect& rect) noexcept
         add_item_private(i);
 }
 
+ListBox::ListBox(Serializer::Properties& props) noexcept
+    : Frame(props),
+      m_view(*this, ScrolledView::Policy::never),
+      m_sizer(Orientation::vertical, Justification::start)
+{
+    name("ListBox" + std::to_string(m_widgetid));
+
+    fill_flags(Theme::FillFlag::blend);
+    border(theme().default_border());
+
+    m_sizer.align(AlignFlag::expand_horizontal);
+
+    m_view.add(m_sizer);
+
+    auto carea = content_area();
+    if (!carea.empty())
+    {
+        m_view.box(to_child(carea));
+        m_sizer.resize(carea.size());
+    }
+
+    deserialize(props);
+}
+
 ListBox::ListBox(Frame& parent, const ItemArray& items, const Rect& rect) noexcept
     : ListBox(items, rect)
 {
@@ -212,32 +236,33 @@ void ListBox::serialize(Serializer& serializer) const
     }
 }
 
-void ListBox::deserialize(const std::string& name, const std::string& value,
-                          const Serializer::Attributes& attrs)
+void ListBox::deserialize(Serializer::Properties& props)
 {
-
-    if (name == "item")
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
     {
-        std::string text;
-        Image image;
-        AlignFlags text_align;
-
-        for (const auto& i : attrs)
+        if (std::get<0>(p) == "item")
         {
-            if (i.first == "image")
-                image = Image(i.second);
+            std::string text;
+            Image image;
+            AlignFlags text_align;
+            auto attrs = std::get<2>(p);
+            for (const auto& i : attrs)
+            {
+                if (i.first == "image")
+                    image = Image(i.second);
 
-            if (i.first == "text_align")
-                text_align = AlignFlags(i.second);
+                if (i.first == "text_align")
+                    text_align = AlignFlags(i.second);
 
-            if (i.first == "selected" && detail::from_string(i.second))
-                selected(item_count() - 1);
+                if (i.first == "selected" && detail::from_string(i.second))
+                    selected(item_count() - 1);
+            }
+
+            add_item(std::make_shared<StringItem>(std::get<1>(p), image, Rect(), text_align));
+            return true;
         }
-
-        add_item(std::make_shared<StringItem>(value, image, Rect(), text_align));
-    }
-    else
-        Widget::deserialize(name, value, attrs);
+        return false;
+    }), props.end());
 }
 
 }

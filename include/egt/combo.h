@@ -83,6 +83,11 @@ public:
                       const ItemArray& items = {},
                       const Rect& rect = {}) noexcept;
 
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit ComboBox(Serializer::Properties& props) noexcept;
+
     void handle(Event& event) override;
 
     void resize(const Size& s) override;
@@ -153,9 +158,6 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
-
 protected:
 
     void set_parent(Frame* parent) override;
@@ -167,6 +169,12 @@ protected:
     std::shared_ptr<detail::ComboBoxPopup> m_popup;
 
     friend class detail::ComboBoxPopup;
+
+private:
+
+    void initialize();
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 }

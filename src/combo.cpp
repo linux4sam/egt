@@ -138,6 +138,32 @@ ComboBox::ComboBox(const ItemArray& items,
 {
     name("ComboBox" + std::to_string(m_widgetid));
 
+    for (auto& i : items)
+    {
+        m_list.add_item(i);
+    }
+
+    initialize();
+}
+
+ComboBox::ComboBox(Frame& parent, const ItemArray& items, const Rect& rect) noexcept
+    : ComboBox(items, rect)
+{
+    parent.add(*this);
+}
+
+ComboBox::ComboBox(Serializer::Properties& props) noexcept
+    : Widget(props),
+      m_popup(std::make_shared<detail::ComboBoxPopup>(*this))
+{
+    name("ComboBox" + std::to_string(m_widgetid));
+    initialize();
+
+    deserialize(props);
+}
+
+void ComboBox::initialize()
+{
     fill_flags(Theme::FillFlag::blend);
     border_radius(4.0);
     padding(5);
@@ -149,11 +175,6 @@ ComboBox::ComboBox(const ItemArray& items,
 
     m_list.align(AlignFlag::expand);
 
-    for (auto& i : items)
-    {
-        m_list.add_item(i);
-    }
-
     // automatically select the first item
     if (m_list.item_count())
         m_list.selected(0);
@@ -163,12 +184,6 @@ ComboBox::ComboBox(const ItemArray& items,
         damage();
         on_selected_changed.invoke();
     });
-}
-
-ComboBox::ComboBox(Frame& parent, const ItemArray& items, const Rect& rect) noexcept
-    : ComboBox(items, rect)
-{
-    parent.add(*this);
 }
 
 void ComboBox::add_item(const std::shared_ptr<StringItem>& item)
@@ -334,31 +349,33 @@ void ComboBox::serialize(Serializer& serializer) const
     }
 }
 
-void ComboBox::deserialize(const std::string& name, const std::string& value,
-                           const Serializer::Attributes& attrs)
+void ComboBox::deserialize(Serializer::Properties& props)
 {
-    if (name == "item")
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
     {
-        std::string text;
-        Image image;
-        AlignFlags text_align;
-
-        for (const auto& i : attrs)
+        if (std::get<0>(p) == "item")
         {
-            if (i.first == "image")
-                image = Image(i.second);
+            std::string text;
+            Image image;
+            AlignFlags text_align;
+            auto attrs = std::get<2>(p);
+            for (const auto& i : attrs)
+            {
+                if (i.first == "image")
+                    image = Image(i.second);
 
-            if (i.first == "text_align")
-                text_align = AlignFlags(i.second);
+                if (i.first == "text_align")
+                    text_align = AlignFlags(i.second);
 
-            if (i.first == "selected" && detail::from_string(i.second))
-                selected(item_count() - 1);
+                if (i.first == "selected" && detail::from_string(i.second))
+                    selected(item_count() - 1);
+            }
+
+            add_item(std::make_shared<StringItem>(std::get<1>(p), image, Rect(), text_align));
+            return true;
         }
-
-        add_item(std::make_shared<StringItem>(value, image, Rect(), text_align));
-    }
-    else
-        Widget::deserialize(name, value, attrs);
+        return false;
+    }), props.end());
 }
 
 }

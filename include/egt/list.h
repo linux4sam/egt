@@ -88,6 +88,11 @@ public:
      */
     explicit ListBox(Frame& parent, const ItemArray& items = {}, const Rect& rect = {}) noexcept;
 
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit ListBox(Serializer::Properties& props) noexcept;
+
     void handle(Event& event) override;
 
     void resize(const Size& s) override
@@ -153,9 +158,6 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
-
 protected:
 
     /// View used to contain the possible large sizer.
@@ -167,6 +169,8 @@ protected:
 private:
 
     void add_item_private(const std::shared_ptr<StringItem>& item);
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 }
