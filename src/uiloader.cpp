@@ -22,17 +22,12 @@ template <class T>
 static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
         const std::shared_ptr<Frame>& parent)
 {
-    auto instance = std::make_shared<T>();
-    if (parent)
-        parent->add(instance);
+    auto wname = node->first_attribute("name");
 
-    auto name = node->first_attribute("name");
-    if (name)
-        instance->name(name->value());
-
+    Serializer::Properties props;
     for (auto prop = node->first_node("property"); prop; prop = prop->next_sibling("property"))
     {
-        name = prop->first_attribute("name");
+        auto name = prop->first_attribute("name");
         if (!name)
         {
             detail::warn("property with no name");
@@ -52,7 +47,20 @@ static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
             attrs.emplace_back(attr->name(), attr->value());
         }
 
-        instance->deserialize(pname, pvalue, attrs);
+        props.emplace_back(std::make_tuple(pname, pvalue, attrs));
+    }
+
+    auto instance = std::make_shared<T>(props);
+    if (parent)
+        parent->add(instance);
+
+    if (wname)
+        instance->name(wname->value());
+
+    if (!props.empty())
+    {
+        for (auto& p : props)
+            detail::warn("unhandled {} property : {}", instance->type(), std::get<0>(p));
     }
 
     return std::static_pointer_cast<Widget>(instance);
