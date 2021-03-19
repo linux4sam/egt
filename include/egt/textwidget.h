@@ -53,6 +53,11 @@ public:
                         const AlignFlags& text_align = AlignFlag::center) noexcept;
 
     /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit TextWidget(Serializer::Properties& props) noexcept;
+
+    /**
      * Set the text.
      *
      * @param str The text string to set.
@@ -98,9 +103,6 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
-
 protected:
 
     /// Get the size of the text.
@@ -111,6 +113,10 @@ protected:
 
     /// The text.
     std::string m_text;
+
+private:
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 }

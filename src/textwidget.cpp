@@ -24,6 +24,12 @@ TextWidget::TextWidget(std::string text,
       m_text(std::move(text))
 {}
 
+TextWidget::TextWidget(Serializer::Properties& props) noexcept
+    : Widget(props)
+{
+    deserialize(props);
+}
+
 void TextWidget::clear()
 {
     if (!m_text.empty())
@@ -140,15 +146,20 @@ void TextWidget::serialize(Serializer& serializer) const
         serializer.add_property("text_align", text_align());
 }
 
-void TextWidget::deserialize(const std::string& name, const std::string& value,
-                             const Serializer::Attributes& attrs)
+void TextWidget::deserialize(Serializer::Properties& props)
 {
-    if (name == "text")
-        text(value);
-    else if (name == "text_align")
-        text_align(AlignFlags(value));
-    else
-        Widget::deserialize(name, value, attrs);
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
+    {
+        if (std::get<0>(p) == "text")
+            text(std::get<1>(p));
+        else if (std::get<0>(p) == "text_align")
+            text_align(AlignFlags(std::get<1>(p)));
+        else
+            return false;
+
+        return true;
+    }), props.end());
+
 }
 
 }

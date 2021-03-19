@@ -102,6 +102,10 @@ public:
            const std::string& text,
            const Rect& rect,
            const AlignFlags& text_align = default_text_align()) noexcept;
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit Button(Serializer::Properties& props) noexcept;
 
     Button(const Button&) = delete;
     Button& operator=(const Button&) = delete;
@@ -229,6 +233,11 @@ public:
                 const Rect& rect,
                 const AlignFlags& text_align = default_text_align()) noexcept;
 
+    /**
+     * @param[in] props list of arguments and its properties.
+     */
+    explicit ImageButton(Serializer::Properties& props) noexcept;
+
     void draw(Painter& painter, const Rect& rect) override;
 
     /// Default draw method for the widget.
@@ -342,8 +351,9 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
+private:
+
+    void deserialize(Serializer::Properties& props) override;
 
 protected:
 

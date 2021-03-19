@@ -52,6 +52,12 @@ Label::Label(Frame& parent, const std::string& text, const Rect& rect,
     parent.add(*this);
 }
 
+Label::Label(Serializer::Properties& props) noexcept
+    : TextWidget(props)
+{
+    name("Label" + std::to_string(m_widgetid));
+}
+
 void Label::draw(Painter& painter, const Rect& rect)
 {
     Drawer<Label>::draw(*this, painter, rect);
@@ -135,6 +141,14 @@ ImageLabel::ImageLabel(Frame& parent,
     : ImageLabel(image, text, rect, text_align)
 {
     parent.add(*this);
+}
+
+ImageLabel::ImageLabel(Serializer::Properties& props) noexcept
+    : Label(props)
+{
+    name("ImageLabel" + std::to_string(m_widgetid));
+
+    deserialize(props);
 }
 
 void ImageLabel::draw(Painter& painter, const Rect& rect)
@@ -257,26 +271,27 @@ void ImageLabel::serialize(Serializer& serializer) const
         serializer.add_property("image_align", image_align());
 }
 
-void ImageLabel::deserialize(const std::string& name, const std::string& value,
-                             const Serializer::Attributes& attrs)
+void ImageLabel::deserialize(Serializer::Properties& props)
 {
     // TODO proper loading of all image properties
-
-    switch (detail::hash(name))
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
     {
-    case detail::hash("showlabel"):
-        show_label(egt::detail::from_string(value));
-        break;
-    case detail::hash("image"):
-        m_image.deserialize(name, value, attrs);
-        break;
-    case detail::hash("image_align"):
-        image_align(AlignFlags(value));
-        break;
-    default:
-        Label::deserialize(name, value, attrs);
-        break;
-    }
+        switch (detail::hash(std::get<0>(p)))
+        {
+        case detail::hash("showlabel"):
+            show_label(egt::detail::from_string(std::get<1>(p)));
+            break;
+        case detail::hash("image"):
+            m_image.deserialize(std::get<0>(p), std::get<1>(p), std::get<2>(p));
+            break;
+        case detail::hash("image_align"):
+            image_align(AlignFlags(std::get<1>(p)));
+            break;
+        default:
+            return false;
+        }
+        return true;
+    }), props.end());
 }
 
 }

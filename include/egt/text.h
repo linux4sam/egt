@@ -133,6 +133,11 @@ public:
             const AlignFlags& text_align = default_text_align(),
             const TextFlags& flags = {}) noexcept;
 
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit TextBox(Serializer::Properties& props) noexcept;
+
     TextBox(const TextBox&) = delete;
     TextBox& operator=(const TextBox&) = delete;
     TextBox(TextBox&&) = default;
@@ -297,9 +302,6 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
-
     ~TextBox() noexcept override;
 
 protected:
@@ -371,6 +373,10 @@ private:
 
     /// Lost focus registration.
     Signal<>::RegisterHandle m_lost_focus_reg{};
+
+    void initialize();
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 namespace detail

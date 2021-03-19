@@ -62,15 +62,48 @@ m_timer(std::chrono::seconds(1)),
 m_text_flags(flags)
 {
     name("TextBox" + std::to_string(m_widgetid));
+    initialize();
 
+    insert(text);
+}
+
+TextBox::TextBox(Frame& parent,
+                 const std::string& text,
+                 const AlignFlags& text_align,
+                 const TextFlags& flags) noexcept
+    : TextBox(text, Rect(), text_align, flags)
+{
+    parent.add(*this);
+}
+
+TextBox::TextBox(Frame& parent,
+                 const std::string& text,
+                 const Rect& rect,
+                 const AlignFlags& text_align,
+                 const TextFlags& flags) noexcept
+    : TextBox(text, rect, text_align, flags)
+{
+    parent.add(*this);
+}
+
+TextBox::TextBox(Serializer::Properties& props) noexcept
+    : TextWidget(props),
+      m_timer(std::chrono::seconds(1))
+{
+    name("TextBox" + std::to_string(m_widgetid));
+    initialize();
+
+    deserialize(props);
+}
+
+void TextBox::initialize()
+{
     border(theme().default_border());
     fill_flags(Theme::FillFlag::blend);
     border_radius(4.0);
     padding(5);
 
     m_timer.on_timeout([this]() { cursor_timeout(); });
-
-    insert(text);
 
     m_gain_focus_reg = on_gain_focus([this]()
     {
@@ -91,25 +124,6 @@ m_text_flags(flags)
                 popup_virtual_keyboard()->hide();
 #endif
     });
-}
-
-TextBox::TextBox(Frame& parent,
-                 const std::string& text,
-                 const AlignFlags& text_align,
-                 const TextFlags& flags) noexcept
-    : TextBox(text, Rect(), text_align, flags)
-{
-    parent.add(*this);
-}
-
-TextBox::TextBox(Frame& parent,
-                 const std::string& text,
-                 const Rect& rect,
-                 const AlignFlags& text_align,
-                 const TextFlags& flags) noexcept
-    : TextBox(text, rect, text_align, flags)
-{
-    parent.add(*this);
 }
 
 void TextBox::handle(Event& event)
@@ -576,21 +590,24 @@ void TextBox::serialize(Serializer& serializer) const
         serializer.add_property("selection_length", static_cast<unsigned int>(selection_length()));
 }
 
-void TextBox::deserialize(const std::string& name, const std::string& value,
-                          const Serializer::Attributes& attrs)
+void TextBox::deserialize(Serializer::Properties& props)
 {
-    if (name == "maxlength")
-        max_length(std::stoul(value));
-    else if (name == "text_flags")
-        m_text_flags.from_string(value);
-    else if (name == "cursor")
-        cursor_set(std::stoul(value));
-    else if (name == "selection_start")
-        selection(std::stoul(value), selection_length());
-    else if (name == "selection_length")
-        selection(selection_start(), std::stoul(value));
-    else
-        TextWidget::deserialize(name, value, attrs);
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
+    {
+        if (std::get<0>(p) == "maxlength")
+            max_length(std::stoul(std::get<1>(p)));
+        else if (std::get<0>(p) == "text_flags")
+            m_text_flags.from_string(std::get<1>(p));
+        else if (std::get<0>(p) == "cursor")
+            cursor_set(std::stoul(std::get<1>(p)));
+        else if (std::get<0>(p) == "selection_start")
+            selection(std::stoul(std::get<1>(p)), selection_length());
+        else if (std::get<0>(p) == "selection_length")
+            selection(selection_start(), std::stoul(std::get<1>(p)));
+        else
+            return false;
+        return true;
+    }), props.end());
 }
 
 }

@@ -81,6 +81,11 @@ public:
           const Rect& rect,
           const AlignFlags& text_align = default_text_align()) noexcept;
 
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit Label(Serializer::Properties& props) noexcept;
+
     using TextWidget::text;
 
     void draw(Painter& painter, const Rect& rect) override;
@@ -166,6 +171,11 @@ public:
                const std::string& text,
                const Rect& rect,
                const AlignFlags& text_align = default_text_align()) noexcept;
+
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit ImageLabel(Serializer::Properties& props) noexcept;
 
     void draw(Painter& painter, const Rect& rect) override;
 
@@ -278,9 +288,6 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
-
 protected:
 
     /// @private
@@ -297,6 +304,10 @@ protected:
 
     /// Alignment of the image relative to the text.
     AlignFlags m_image_align{AlignFlag::left};
+
+private:
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 }

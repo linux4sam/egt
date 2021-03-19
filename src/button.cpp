@@ -76,6 +76,17 @@ Button::Button(Frame& parent,
     parent.add(*this);
 }
 
+Button::Button(Serializer::Properties& props) noexcept
+    : TextWidget(props)
+{
+    name("Button" + std::to_string(m_widgetid));
+
+    fill_flags(Theme::FillFlag::blend);
+    border_radius(4.0);
+
+    grab_mouse(true);
+}
+
 void Button::handle(Event& event)
 {
     TextWidget::handle(event);
@@ -219,6 +230,17 @@ ImageButton::ImageButton(Frame& parent,
     parent.add(*this);
 }
 
+ImageButton::ImageButton(Serializer::Properties& props) noexcept
+    : Button(props)
+{
+    name("ImageButton" + std::to_string(m_widgetid));
+
+    if (m_text.empty())
+        image_align(AlignFlag::center);
+
+    deserialize(props);
+}
+
 Size ImageButton::min_size_hint() const
 {
     if (!m_min_size.empty())
@@ -339,23 +361,24 @@ void ImageButton::serialize(Serializer& serializer) const
     // TODO m_image_align
 }
 
-void ImageButton::deserialize(const std::string& name, const std::string& value,
-                              const Serializer::Attributes& attrs)
+void ImageButton::deserialize(Serializer::Properties& props)
 {
     // TODO proper loading of all image properties
-
-    switch (detail::hash(name))
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
     {
-    case detail::hash("showlabel"):
-        show_label(detail::from_string(value));
-        break;
-    case detail::hash("image"):
-        m_image.deserialize(name, value, attrs);
-        break;
-    default:
-        Button::deserialize(name, value, attrs);
-        break;
-    }
+        switch (detail::hash(std::get<0>(p)))
+        {
+        case detail::hash("showlabel"):
+            show_label(detail::from_string(std::get<1>(p)));
+            break;
+        case detail::hash("image"):
+            m_image.deserialize(std::get<0>(p), std::get<1>(p), std::get<2>(p));
+            break;
+        default:
+            return false;
+        }
+        return true;
+    }), props.end());
 }
 
 }
