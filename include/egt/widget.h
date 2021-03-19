@@ -170,6 +170,11 @@ public:
     explicit Widget(Frame& parent, const Rect& rect = {},
                     const Widget::Flags& flags = {}) noexcept;
 
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit Widget(Serializer::Properties& props) noexcept;
+
     Widget(const Widget&) = delete;
     Widget& operator=(const Widget&) = delete;
     Widget(Widget&&) noexcept = default;
@@ -1329,12 +1334,6 @@ public:
      */
     virtual void serialize(Serializer& serializer) const;
 
-    /**
-     * Deserialize widget properties.
-     */
-    virtual void deserialize(const std::string& name, const std::string& value,
-                             const Serializer::Attributes& attrs);
-
     ~Widget() noexcept override;
 
 protected:
@@ -1521,6 +1520,11 @@ private:
      * functions because this is not set until it is modified.
      */
     std::unique_ptr<Font> m_font;
+
+    /**
+     * Deserialize widget properties.
+     */
+    virtual void deserialize(Serializer::Properties& props);
 
     friend class Frame;
 };

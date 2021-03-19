@@ -78,6 +78,29 @@ Widget::Widget(const Rect& rect, const Widget::Flags& flags) noexcept
     });
 }
 
+Widget::Widget(Serializer::Properties& props) noexcept
+    : m_widgetid(global_widget_id++)
+{
+    deserialize(props);
+
+    m_user_requested_box = m_box;
+
+    m_align.on_change([this]()
+    {
+        parent_layout();
+    });
+
+    on_gain_focus([this]()
+    {
+        m_focus = true;
+    });
+
+    on_lost_focus([this]()
+    {
+        m_focus = false;
+    });
+}
+
 Widget::Widget(Frame& parent, const Rect& rect, const Widget::Flags& flags) noexcept
     : Widget(rect, flags)
 {
@@ -672,87 +695,94 @@ void Widget::serialize(Serializer& serializer) const
         m_font->serialize("font", serializer);
 }
 
-void Widget::deserialize(const std::string& name, const std::string& value,
-                         const Serializer::Attributes& attrs)
+void Widget::deserialize(Serializer::Properties& props)
 {
-    switch (detail::hash(name))
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
     {
-    case detail::hash("width"):
-        width(std::stoi(value));
-        break;
-    case detail::hash("height"):
-        height(std::stoi(value));
-        break;
-    case detail::hash("x"):
-        x(std::stoi(value));
-        break;
-    case detail::hash("y"):
-        y(std::stoi(value));
-        break;
-    case detail::hash("align"):
-        align(AlignFlags(value));
-        break;
-    case detail::hash("borderflags"):
-        border_flags(Theme::BorderFlags(value));
-        break;
-    case detail::hash("autoresize"):
-        autoresize(egt::detail::from_string(value));
-        break;
-    case detail::hash("checked"):
-        checked(egt::detail::from_string(value));
-        break;
-    case detail::hash("disabled"):
-        disabled(egt::detail::from_string(value));
-        break;
-    case detail::hash("grab_mouse"):
-        grab_mouse(egt::detail::from_string(value));
-        break;
-    case detail::hash("no_layout"):
-        no_layout(egt::detail::from_string(value));
-        break;
-    case detail::hash("alpha"):
-        alpha(std::stoi(value));
-        break;
-    case detail::hash("padding"):
-        padding(std::stoi(value));
-        break;
-    case detail::hash("margin"):
-        margin(std::stoi(value));
-        break;
-    case detail::hash("border"):
-        border(std::stoi(value));
-        break;
-    case detail::hash("fillflags"):
-        m_fill_flags.from_string(value);
-        break;
-    case detail::hash("ratio:x"):
-        xratio(std::stoi(value));
-        break;
-    case detail::hash("ratio:y"):
-        yratio(std::stoi(value));
-        break;
-    case detail::hash("ratio:horizontal"):
-        horizontal_ratio(std::stoi(value));
-        break;
-    case detail::hash("ratio:vertical"):
-        vertical_ratio(std::stoi(value));
-        break;
-    case detail::hash("font"):
-    {
-        Font f;
-        f.deserialize(name, value, attrs);
-        font(f);
-        break;
-    }
-    case detail::hash("color"):
-        if (!m_palette)
-            m_palette = std::make_unique<Palette>();
-        m_palette->deserialize(name, value, attrs);
-        break;
-    default:
-        detail::warn("unhandled property {}", name);
-        break;
-    }
+        bool ret = true;
+        auto value = std::get<1>(p);
+        switch (detail::hash(std::get<0>(p)))
+        {
+        case detail::hash("width"):
+            width(std::stoi(value));
+            break;
+        case detail::hash("height"):
+            height(std::stoi(value));
+            break;
+        case detail::hash("x"):
+            x(std::stoi(value));
+            break;
+        case detail::hash("y"):
+            y(std::stoi(value));
+            break;
+        case detail::hash("align"):
+            align(AlignFlags(value));
+            break;
+        case detail::hash("borderflags"):
+            border_flags(Theme::BorderFlags(value));
+            break;
+        case detail::hash("autoresize"):
+            autoresize(egt::detail::from_string(value));
+            break;
+        case detail::hash("checked"):
+            checked(egt::detail::from_string(value));
+            break;
+        case detail::hash("disabled"):
+            disabled(egt::detail::from_string(value));
+            break;
+        case detail::hash("grab_mouse"):
+            grab_mouse(egt::detail::from_string(value));
+            break;
+        case detail::hash("no_layout"):
+            no_layout(egt::detail::from_string(value));
+            break;
+        case detail::hash("alpha"):
+            alpha(std::stoi(value));
+            break;
+        case detail::hash("padding"):
+            padding(std::stoi(value));
+            break;
+        case detail::hash("margin"):
+            margin(std::stoi(value));
+            break;
+        case detail::hash("border"):
+            border(std::stoi(value));
+            break;
+        case detail::hash("fillflags"):
+            m_fill_flags.from_string(value);
+            break;
+        case detail::hash("ratio:x"):
+            xratio(std::stoi(value));
+            break;
+        case detail::hash("ratio:y"):
+            yratio(std::stoi(value));
+            break;
+        case detail::hash("ratio:horizontal"):
+            horizontal_ratio(std::stoi(value));
+            break;
+        case detail::hash("ratio:vertical"):
+            vertical_ratio(std::stoi(value));
+            break;
+        case detail::hash("font"):
+        {
+            Font f;
+            f.deserialize(std::get<0>(p), value, std::get<2>(p));
+            font(f);
+            break;
+        }
+        case detail::hash("color"):
+        {
+            if (!m_palette)
+                m_palette = std::make_unique<Palette>();
+            m_palette->deserialize(std::get<0>(p), value, std::get<2>(p));
+            break;
+        }
+        default:
+            ret = false;
+            break;
+        }
+        return ret;
+    }), props.end());
 }
 
 Widget::~Widget() noexcept
