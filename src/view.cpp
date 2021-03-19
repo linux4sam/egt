@@ -55,6 +55,22 @@ ScrolledView::ScrolledView(Frame& parent,
     parent.add(*this);
 }
 
+ScrolledView::ScrolledView(Serializer::Properties& props) noexcept
+    : Frame(props),
+      m_hslider(100, 0, 0, Orientation::horizontal),
+      m_vslider(100, 0, 0, Orientation::vertical)
+{
+    name("ScrolledView" + std::to_string(m_widgetid));
+
+    m_hslider.slider_flags().set({Slider::SliderFlag::rectangle_handle,
+                                  Slider::SliderFlag::consistent_line});
+
+    m_vslider.slider_flags().set({Slider::SliderFlag::rectangle_handle,
+                                  Slider::SliderFlag::consistent_line});
+
+    resize_slider();
+}
+
 void ScrolledView::draw(Painter& painter, const Rect& rect)
 {
     if (!m_canvas)

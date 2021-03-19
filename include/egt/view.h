@@ -81,6 +81,11 @@ public:
                           Policy horizontal_policy = Policy::as_needed,
                           Policy vertical_policy = Policy::as_needed) noexcept;
 
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit ScrolledView(Serializer::Properties& props) noexcept;
+
     void handle(Event& event) override;
 
     void draw(Painter& painter, const Rect& rect) override;
