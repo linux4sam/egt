@@ -20,6 +20,15 @@ LineChart::LineChart(const Rect& rect)
     name("LineChart" + std::to_string(m_widgetid));
 }
 
+LineChart::LineChart(Serializer::Properties& props)
+    : ChartBase(props),
+      m_impl(std::make_unique<detail::PlPlotLineChart>(*this))
+{
+    name("LineChart" + std::to_string(m_widgetid));
+
+    deserialize(props);
+}
+
 void LineChart::draw(Painter& painter, const Rect& rect)
 {
     return m_impl->draw(painter, rect);
@@ -176,87 +185,92 @@ void LineChart::serialize(Serializer& serializer) const
     }
 }
 
-void LineChart::deserialize(const std::string& name, const std::string& value,
-                            const Serializer::Attributes& attrs)
+void LineChart::deserialize(Serializer::Properties& props)
 {
-    switch (detail::hash(name))
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
     {
-    case detail::hash("xlabel"):
-    {
-        label(value, ylabel(), title());
-        break;
-    }
-    case detail::hash("ylabel"):
-    {
-        label(xlabel(), value, title());
-        break;
-    }
-    case detail::hash("title"):
-    {
-        label(xlabel(), ylabel(), value);
-        break;
-    }
-    case detail::hash("item"):
-    {
-        std::vector<std::string> tokens;
-        detail::tokenize(value, ',', tokens);
-        if (tokens.size() == 2)
-        {
-            egt::ChartBase::DataArray data_item;
-            data_item.push_back(std::make_pair(std::stod(tokens[0]), std::stod(tokens[1])));
-            add_data(data_item);
-        }
-        else
-        {
-            egt::detail::warn("unhandled property {} values", name, value);
-        }
-        break;
-    }
-    case detail::hash("gridflags"):
-    {
-        if (value == "none")
-            grid_style(egt::ChartBase::GridFlag::none);
-        else if (value == "box")
-            grid_style(egt::ChartBase::GridFlag::box);
-        else if (value == "box_ticks")
-            grid_style(egt::ChartBase::GridFlag::box_ticks);
-        else if (value == "box_ticks_coord")
-            grid_style(egt::ChartBase::GridFlag::box_ticks_coord);
-        else if (value == "box_major_ticks_coord")
-            grid_style(egt::ChartBase::GridFlag::box_major_ticks_coord);
-        else if (value == "box_minor_ticks_coord")
-            grid_style(egt::ChartBase::GridFlag::box_minor_ticks_coord);
-        else
-            egt::detail::warn("unhandled property {}", name);
+        auto name = std::get<0>(p);
+        auto value = std::get<1>(p);
 
-        break;
-    }
-    case detail::hash("linetype"):
-    {
-        if (value == "solid")
-            line_style(egt::LineChart::LinePattern::solid);
-        else if (value == "dotted")
-            line_style(egt::LineChart::LinePattern::dotted);
-        else if (value == "dashes")
-            line_style(egt::LineChart::LinePattern::dashes);
-        else
-            egt::detail::warn("unhandled property {}", name);
-        break;
-    }
-    case detail::hash("linewidth"):
-    {
-        line_width(std::stoi(value));
-        break;
-    }
-    case detail::hash("gridwidth"):
-    {
-        grid_width(std::stoi(value));
-        break;
-    }
-    default:
-        ChartBase::deserialize(name, value, attrs);
-        break;
-    }
+        switch (detail::hash(name))
+        {
+        case detail::hash("xlabel"):
+        {
+            label(value, ylabel(), title());
+            break;
+        }
+        case detail::hash("ylabel"):
+        {
+            label(xlabel(), value, title());
+            break;
+        }
+        case detail::hash("title"):
+        {
+            label(xlabel(), ylabel(), value);
+            break;
+        }
+        case detail::hash("item"):
+        {
+            std::vector<std::string> tokens;
+            detail::tokenize(value, ',', tokens);
+            if (tokens.size() == 2)
+            {
+                egt::ChartBase::DataArray data_item;
+                data_item.push_back(std::make_pair(std::stod(tokens[0]), std::stod(tokens[1])));
+                add_data(data_item);
+            }
+            else
+            {
+                egt::detail::warn("unhandled property {} : values {}", name, value);
+            }
+            break;
+        }
+        case detail::hash("gridflags"):
+        {
+            if (value == "none")
+                grid_style(egt::ChartBase::GridFlag::none);
+            else if (value == "box")
+                grid_style(egt::ChartBase::GridFlag::box);
+            else if (value == "box_ticks")
+                grid_style(egt::ChartBase::GridFlag::box_ticks);
+            else if (value == "box_ticks_coord")
+                grid_style(egt::ChartBase::GridFlag::box_ticks_coord);
+            else if (value == "box_major_ticks_coord")
+                grid_style(egt::ChartBase::GridFlag::box_major_ticks_coord);
+            else if (value == "box_minor_ticks_coord")
+                grid_style(egt::ChartBase::GridFlag::box_minor_ticks_coord);
+            else
+                egt::detail::warn("unhandled property {}", name);
+
+            break;
+        }
+        case detail::hash("linetype"):
+        {
+            if (value == "solid")
+                line_style(egt::LineChart::LinePattern::solid);
+            else if (value == "dotted")
+                line_style(egt::LineChart::LinePattern::dotted);
+            else if (value == "dashes")
+                line_style(egt::LineChart::LinePattern::dashes);
+            else
+                egt::detail::warn("unhandled property {}", name);
+            break;
+        }
+        case detail::hash("linewidth"):
+        {
+            line_width(std::stoi(value));
+            break;
+        }
+        case detail::hash("gridwidth"):
+        {
+            grid_width(std::stoi(value));
+            break;
+        }
+        default:
+            return false;
+        }
+        return true;
+    }), props.end());
 }
 
 LineChart::LineChart(LineChart&&) noexcept = default;
@@ -269,6 +283,15 @@ PointChart::PointChart(const Rect& rect)
       m_impl(std::make_unique<detail::PlPlotPointChart>(*this))
 {
     name("PointChart" + std::to_string(m_widgetid));
+}
+
+PointChart::PointChart(Serializer::Properties& props)
+    : ChartBase(props),
+      m_impl(std::make_unique<detail::PlPlotPointChart>(*this))
+{
+    name("PointChart" + std::to_string(m_widgetid));
+
+    deserialize(props);
 }
 
 void PointChart::draw(Painter& painter, const Rect& rect)
@@ -417,85 +440,90 @@ void PointChart::serialize(Serializer& serializer) const
     }
 }
 
-void PointChart::deserialize(const std::string& name, const std::string& value,
-                             const Serializer::Attributes& attrs)
+void PointChart::deserialize(Serializer::Properties& props)
 {
-    switch (detail::hash(name))
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
     {
-    case detail::hash("xlabel"):
-    {
-        label(value, ylabel(), title());
-        break;
-    }
-    case detail::hash("ylabel"):
-    {
-        label(xlabel(), value, title());
-        break;
-    }
-    case detail::hash("title"):
-    {
-        label(xlabel(), ylabel(), value);
-        break;
-    }
-    case detail::hash("item"):
-    {
-        std::vector<std::string> tokens;
-        detail::tokenize(value, ',', tokens);
-        if (tokens.size() == 2)
-        {
-            egt::ChartBase::DataArray data_item;
-            data_item.push_back(std::make_pair(std::stod(tokens[0]), std::stod(tokens[1])));
-            add_data(data_item);
-        }
-        else
-        {
-            egt::detail::warn("unhandled property {} values", name, value);
-        }
-        break;
-    }
-    case detail::hash("gridflags"):
-    {
-        if (value == "none")
-            grid_style(egt::ChartBase::GridFlag::none);
-        else if (value == "box")
-            grid_style(egt::ChartBase::GridFlag::box);
-        else if (value == "box_ticks")
-            grid_style(egt::ChartBase::GridFlag::box_ticks);
-        else if (value == "box_ticks_coord")
-            grid_style(egt::ChartBase::GridFlag::box_ticks_coord);
-        else if (value == "box_major_ticks_coord")
-            grid_style(egt::ChartBase::GridFlag::box_major_ticks_coord);
-        else if (value == "box_minor_ticks_coord")
-            grid_style(egt::ChartBase::GridFlag::box_minor_ticks_coord);
-        else
-            egt::detail::warn("unhandled property {}", name);
+        auto name = std::get<0>(p);
+        auto value = std::get<1>(p);
 
-        break;
-    }
-    case detail::hash("pointtype"):
-    {
-        if (value == "star")
-            point_type(egt::PointChart::PointType::star);
-        else if (value == "dot")
-            point_type(egt::PointChart::PointType::dot);
-        else if (value == "cross")
-            point_type(egt::PointChart::PointType::cross);
-        else if (value == "circle")
-            point_type(egt::PointChart::PointType::circle);
-        else
-            egt::detail::warn("unhandled property {}", name);
+        switch (detail::hash(name))
+        {
+        case detail::hash("xlabel"):
+        {
+            label(value, ylabel(), title());
+            break;
+        }
+        case detail::hash("ylabel"):
+        {
+            label(xlabel(), value, title());
+            break;
+        }
+        case detail::hash("title"):
+        {
+            label(xlabel(), ylabel(), value);
+            break;
+        }
+        case detail::hash("item"):
+        {
+            std::vector<std::string> tokens;
+            detail::tokenize(value, ',', tokens);
+            if (tokens.size() == 2)
+            {
+                egt::ChartBase::DataArray data_item;
+                data_item.push_back(std::make_pair(std::stod(tokens[0]), std::stod(tokens[1])));
+                add_data(data_item);
+            }
+            else
+            {
+                egt::detail::warn("unhandled property {} : values {}", name, value);
+            }
+            break;
+        }
+        case detail::hash("gridflags"):
+        {
+            if (value == "none")
+                grid_style(egt::ChartBase::GridFlag::none);
+            else if (value == "box")
+                grid_style(egt::ChartBase::GridFlag::box);
+            else if (value == "box_ticks")
+                grid_style(egt::ChartBase::GridFlag::box_ticks);
+            else if (value == "box_ticks_coord")
+                grid_style(egt::ChartBase::GridFlag::box_ticks_coord);
+            else if (value == "box_major_ticks_coord")
+                grid_style(egt::ChartBase::GridFlag::box_major_ticks_coord);
+            else if (value == "box_minor_ticks_coord")
+                grid_style(egt::ChartBase::GridFlag::box_minor_ticks_coord);
+            else
+                egt::detail::warn("unhandled property {}", name);
 
-        break;
-    }
-    case detail::hash("gridwidth"):
-    {
-        grid_width(std::stoi(value));
-        break;
-    }
-    default:
-        ChartBase::deserialize(name, value, attrs);
-        break;
-    }
+            break;
+        }
+        case detail::hash("pointtype"):
+        {
+            if (value == "star")
+                point_type(egt::PointChart::PointType::star);
+            else if (value == "dot")
+                point_type(egt::PointChart::PointType::dot);
+            else if (value == "cross")
+                point_type(egt::PointChart::PointType::cross);
+            else if (value == "circle")
+                point_type(egt::PointChart::PointType::circle);
+            else
+                egt::detail::warn("unhandled property {}", name);
+
+            break;
+        }
+        case detail::hash("gridwidth"):
+        {
+            grid_width(std::stoi(value));
+            break;
+        }
+        default:
+            return false;
+        }
+        return true;
+    }), props.end());
 }
 
 PointChart::PointChart(PointChart&&) noexcept = default;
@@ -509,11 +537,29 @@ BarChart::BarChart(const Rect& rect)
     name("BarChart" + std::to_string(m_widgetid));
 }
 
+BarChart::BarChart(Serializer::Properties& props)
+    : ChartBase(props),
+      m_impl(std::make_unique<detail::PlPlotBarChart>(*this))
+{
+    name("BarChart" + std::to_string(m_widgetid));
+
+    deserialize(props);
+}
+
 BarChart::BarChart(const Rect& rect, std::unique_ptr<detail::PlPlotImpl>&& impl)
     : ChartBase(rect),
       m_impl(std::move(impl))
 {
     name("BarChart" + std::to_string(m_widgetid));
+}
+
+BarChart::BarChart(Serializer::Properties& props, std::unique_ptr<detail::PlPlotImpl>&& impl)
+    : ChartBase(props),
+      m_impl(std::move(impl))
+{
+    name("BarChart" + std::to_string(m_widgetid));
+
+    deserialize(props);
 }
 
 void BarChart::draw(Painter& painter, const Rect& rect)
@@ -690,94 +736,99 @@ void BarChart::serialize(Serializer& serializer) const
     }
 }
 
-void BarChart::deserialize(const std::string& name, const std::string& value,
-                           const Serializer::Attributes& attrs)
+void BarChart::deserialize(Serializer::Properties& props)
 {
-    switch (detail::hash(name))
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
     {
-    case detail::hash("xlabel"):
-    {
-        label(value, ylabel(), title());
-        break;
-    }
-    case detail::hash("ylabel"):
-    {
-        label(xlabel(), value, title());
-        break;
-    }
-    case detail::hash("title"):
-    {
-        label(xlabel(), ylabel(), value);
-        break;
-    }
-    case detail::hash("item"):
-    {
-        std::vector<std::string> tokens;
-        detail::tokenize(value, ',', tokens);
-        if (tokens.size() == 2)
-        {
-            try
-            {
-                egt::ChartBase::DataArray data_item;
-                data_item.push_back(std::make_pair(std::stod(tokens[0]), std::stod(tokens[1])));
-                add_data(data_item);
-            }
-            catch (const std::exception& e)
-            {
-                ChartBase::StringDataArray sdata_item;
-                sdata_item.push_back(std::make_pair(std::stod(tokens[0]), tokens[1]));
-                add_data(sdata_item);
-            }
-        }
-        else
-        {
-            egt::detail::warn("unhandled property {} values", name, value);
-        }
-        break;
-    }
-    case detail::hash("gridflags"):
-    {
-        if (value == "none")
-            grid_style(egt::ChartBase::GridFlag::none);
-        else if (value == "box")
-            grid_style(egt::ChartBase::GridFlag::box);
-        else if (value == "box_ticks")
-            grid_style(egt::ChartBase::GridFlag::box_ticks);
-        else if (value == "box_ticks_coord")
-            grid_style(egt::ChartBase::GridFlag::box_ticks_coord);
-        else if (value == "box_major_ticks_coord")
-            grid_style(egt::ChartBase::GridFlag::box_major_ticks_coord);
-        else if (value == "box_minor_ticks_coord")
-            grid_style(egt::ChartBase::GridFlag::box_minor_ticks_coord);
-        else
-            egt::detail::warn("unhandled property {}", name);
+        auto name = std::get<0>(p);
+        auto value = std::get<1>(p);
 
-        break;
-    }
-    case detail::hash("bartype"):
-    {
-        if (value == "solid")
-            bar_style(egt::BarChart::BarPattern::solid);
-        else if (value == "horizontal_line")
-            bar_style(egt::BarChart::BarPattern::horizontal_line);
-        else if (value == "vertical_line")
-            bar_style(egt::BarChart::BarPattern::vertical_line);
-        else if (value == "boxes")
-            bar_style(egt::BarChart::BarPattern::boxes);
-        else
-            egt::detail::warn("unhandled property {}", name);
+        switch (detail::hash(name))
+        {
+        case detail::hash("xlabel"):
+        {
+            label(value, ylabel(), title());
+            break;
+        }
+        case detail::hash("ylabel"):
+        {
+            label(xlabel(), value, title());
+            break;
+        }
+        case detail::hash("title"):
+        {
+            label(xlabel(), ylabel(), value);
+            break;
+        }
+        case detail::hash("item"):
+        {
+            std::vector<std::string> tokens;
+            detail::tokenize(value, ',', tokens);
+            if (tokens.size() == 2)
+            {
+                try
+                {
+                    egt::ChartBase::DataArray data_item;
+                    data_item.push_back(std::make_pair(std::stod(tokens[0]), std::stod(tokens[1])));
+                    add_data(data_item);
+                }
+                catch (const std::exception& e)
+                {
+                    ChartBase::StringDataArray sdata_item;
+                    sdata_item.push_back(std::make_pair(std::stod(tokens[0]), tokens[1]));
+                    add_data(sdata_item);
+                }
+            }
+            else
+            {
+                egt::detail::warn("unhandled property {} : values {}", name, value);
+            }
+            break;
+        }
+        case detail::hash("gridflags"):
+        {
+            if (value == "none")
+                grid_style(egt::ChartBase::GridFlag::none);
+            else if (value == "box")
+                grid_style(egt::ChartBase::GridFlag::box);
+            else if (value == "box_ticks")
+                grid_style(egt::ChartBase::GridFlag::box_ticks);
+            else if (value == "box_ticks_coord")
+                grid_style(egt::ChartBase::GridFlag::box_ticks_coord);
+            else if (value == "box_major_ticks_coord")
+                grid_style(egt::ChartBase::GridFlag::box_major_ticks_coord);
+            else if (value == "box_minor_ticks_coord")
+                grid_style(egt::ChartBase::GridFlag::box_minor_ticks_coord);
+            else
+                egt::detail::warn("unhandled property {}", name);
 
-        break;
-    }
-    case detail::hash("gridwidth"):
-    {
-        grid_width(std::stoi(value));
-        break;
-    }
-    default:
-        ChartBase::deserialize(name, value, attrs);
-        break;
-    }
+            break;
+        }
+        case detail::hash("bartype"):
+        {
+            if (value == "solid")
+                bar_style(egt::BarChart::BarPattern::solid);
+            else if (value == "horizontal_line")
+                bar_style(egt::BarChart::BarPattern::horizontal_line);
+            else if (value == "vertical_line")
+                bar_style(egt::BarChart::BarPattern::vertical_line);
+            else if (value == "boxes")
+                bar_style(egt::BarChart::BarPattern::boxes);
+            else
+                egt::detail::warn("unhandled property {}", name);
+
+            break;
+        }
+        case detail::hash("gridwidth"):
+        {
+            grid_width(std::stoi(value));
+            break;
+        }
+        default:
+            return false;
+        }
+        return true;
+    }), props.end());
 }
 
 BarChart::BarChart(BarChart&&) noexcept = default;
@@ -786,6 +837,12 @@ BarChart::~BarChart() = default;
 
 HorizontalBarChart::HorizontalBarChart(const Rect& rect)
     : BarChart(rect, std::make_unique<detail::PlPlotHBarChart>(*this))
+{
+    name("HorizontalBarChart" + std::to_string(m_widgetid));
+}
+
+HorizontalBarChart::HorizontalBarChart(Serializer::Properties& props)
+    : BarChart(props, std::make_unique<detail::PlPlotHBarChart>(*this))
 {
     name("HorizontalBarChart" + std::to_string(m_widgetid));
 }
@@ -800,6 +857,15 @@ PieChart::PieChart(const Rect& rect)
       m_impl(std::make_unique<detail::PlPlotPieChart>(*this))
 {
     name("PieChart" + std::to_string(m_widgetid));
+}
+
+PieChart::PieChart(Serializer::Properties& props)
+    : Widget(props),
+      m_impl(std::make_unique<detail::PlPlotPieChart>(*this))
+{
+    name("PieChart" + std::to_string(m_widgetid));
+
+    deserialize(props);
 }
 
 void PieChart::draw(Painter& painter, const Rect& rect)
@@ -873,36 +939,41 @@ void PieChart::serialize(Serializer& serializer) const
     }
 }
 
-void PieChart::deserialize(const std::string& name, const std::string& value,
-                           const Serializer::Attributes& attrs)
+void PieChart::deserialize(Serializer::Properties& props)
 {
-    switch (detail::hash(name))
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
     {
-    case detail::hash("title"):
-    {
-        title(value);
-        break;
-    }
-    case detail::hash("item"):
-    {
-        std::vector<std::string> tokens;
-        detail::tokenize(value, ',', tokens);
-        if (tokens.size() == 2)
+        auto name = std::get<0>(p);
+        auto value = std::get<1>(p);
+
+        switch (detail::hash(name))
         {
-            StringDataArray data_item;
-            data_item.push_back(std::make_pair(std::stod(tokens[0]), tokens[1]));
-            add_data(data_item);
-        }
-        else
+        case detail::hash("title"):
         {
-            egt::detail::warn("unhandled property {} values", name, value);
+            title(value);
+            break;
         }
-        break;
-    }
-    default:
-        Widget::deserialize(name, value, attrs);
-        break;
-    }
+        case detail::hash("item"):
+        {
+            std::vector<std::string> tokens;
+            detail::tokenize(value, ',', tokens);
+            if (tokens.size() == 2)
+            {
+                StringDataArray data_item;
+                data_item.push_back(std::make_pair(std::stod(tokens[0]), tokens[1]));
+                add_data(data_item);
+            }
+            else
+            {
+                egt::detail::warn("unhandled property {} : values {}", name, value);
+            }
+            break;
+        }
+        default:
+            return false;
+        }
+        return true;
+    }), props.end());
 }
 
 PieChart::PieChart(PieChart&&) noexcept = default;

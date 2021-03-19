@@ -99,6 +99,13 @@ public:
      */
     explicit LineChart(const Rect& rect = {});
 
+    /**
+     * Construct a Linechart.
+     *
+     * @param[in] props list of widget argument and its properties.
+     */
+    LineChart(Serializer::Properties& props);
+
     LineChart(const LineChart&) = delete;
     LineChart& operator=(const LineChart&) = delete;
     LineChart(LineChart&&) noexcept;
@@ -240,15 +247,16 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
-
     ~LineChart() override;
 
 protected:
 
     /// @private
     std::unique_ptr<detail::PlPlotLineChart> m_impl;
+
+private:
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 /**
@@ -276,6 +284,13 @@ public:
      * @param[in] rect Initial rectangle of the widget.
      */
     explicit PointChart(const Rect& rect = {});
+
+    /**
+     * Construct a Pointchart.
+     *
+     * @param[in] props list of widget argument and its properties.
+     */
+    PointChart(Serializer::Properties& props);
 
     PointChart(const PointChart&) = delete;
     PointChart& operator=(const PointChart&) = delete;
@@ -404,15 +419,16 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
-
     ~PointChart() override;
 
 protected:
 
     /// @private
     std::unique_ptr<detail::PlPlotPointChart> m_impl;
+
+private:
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 /**
@@ -440,6 +456,13 @@ public:
      * @param[in] rect Initial rectangle of the widget.
      */
     explicit BarChart(const Rect& rect = {});
+
+    /**
+     * Construct a Barchart.
+     *
+     * @param[in] props list of widget argument and its properties.
+     */
+    BarChart(Serializer::Properties& props);
 
     BarChart(const BarChart&) = delete;
     BarChart& operator=(const BarChart&) = delete;
@@ -590,9 +613,6 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
-
     ~BarChart() override;
 
 protected:
@@ -601,7 +621,14 @@ protected:
     BarChart(const Rect& rect, std::unique_ptr<detail::PlPlotImpl>&& impl);
 
     /// @private
+    BarChart(Serializer::Properties& props, std::unique_ptr<detail::PlPlotImpl>&& impl);
+
+    /// @private
     std::unique_ptr<detail::PlPlotImpl> m_impl;
+
+private:
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 
@@ -621,6 +648,13 @@ public:
      * @param[in] rect Initial rectangle of the widget.
      */
     explicit HorizontalBarChart(const Rect& rect = {});
+
+    /**
+     * Construct a HorizontalBarchart.
+     *
+     * @param[in] props list of widget argument and its properties.
+     */
+    HorizontalBarChart(Serializer::Properties& props);
 
     HorizontalBarChart(const HorizontalBarChart&) = delete;
     HorizontalBarChart& operator=(const HorizontalBarChart&) = delete;
@@ -649,6 +683,13 @@ public:
      * @param[in] rect Initial rectangle of the widget.
      */
     explicit PieChart(const Rect& rect = {});
+
+    /**
+     * Construct a Piechart.
+     *
+     * @param[in] props list of widget argument and its properties.
+     */
+    PieChart(Serializer::Properties& props);
 
     PieChart(const PieChart&) = delete;
     PieChart& operator=(const PieChart&) = delete;
@@ -718,15 +759,16 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
-
     ~PieChart() override;
 
 protected:
 
     /// @private
     std::unique_ptr<detail::PlPlotPieChart> m_impl;
+
+private:
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 }
