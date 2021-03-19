@@ -27,6 +27,15 @@ CircleWidget::CircleWidget(Frame& parent, const Circle& circle)
     parent.add(*this);
 }
 
+CircleWidget::CircleWidget(Serializer::Properties& props)
+    : Widget(props)
+{
+    name("CircleWidget" + std::to_string(m_widgetid));
+    fill_flags(Theme::FillFlag::blend);
+
+    deserialize(props);
+}
+
 void CircleWidget::draw(Painter& painter, const Rect&)
 {
     auto b = content_area();
@@ -38,6 +47,46 @@ void CircleWidget::draw(Painter& painter, const Rect&)
                         color(Palette::ColorId::button_bg),
                         border(),
                         margin());
+}
+
+void CircleWidget::serialize(Serializer& serializer) const
+{
+    Widget::serialize(serializer);
+    serializer.add_property("radius", std::min(box().width(), box().height()) / 2.);
+}
+
+void CircleWidget::deserialize(Serializer::Properties& props)
+{
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
+    {
+        if (std::get<0>(p) == "radius")
+        {
+            auto w = std::stod(std::get<1>(p)) * 2.;
+            resize(Size(w, w));
+            return true;
+        }
+        return false;
+    }), props.end());
+}
+
+void RectangleWidget::draw(Painter& painter, const Rect&)
+{
+    auto b = content_area();
+
+    theme().draw_box(painter,
+                     fill_flags(),
+                     b,
+                     color(Palette::ColorId::border),
+                     color(Palette::ColorId::button_bg),
+                     border(),
+                     margin());
+
+}
+
+LineWidget::LineWidget(Serializer::Properties& props)
+    : Widget(props)
+{
+    deserialize(props);
 }
 
 void LineWidget::draw(Painter& painter, const Rect&)
@@ -61,20 +110,6 @@ void LineWidget::draw(Painter& painter, const Rect&)
     painter.stroke();
 }
 
-void RectangleWidget::draw(Painter& painter, const Rect&)
-{
-    auto b = content_area();
-
-    theme().draw_box(painter,
-                     fill_flags(),
-                     b,
-                     color(Palette::ColorId::border),
-                     color(Palette::ColorId::button_bg),
-                     border(),
-                     margin());
-
-}
-
 void LineWidget::serialize(Serializer& serializer) const
 {
     Widget::serialize(serializer);
@@ -83,18 +118,17 @@ void LineWidget::serialize(Serializer& serializer) const
         serializer.add_property("horizontal", horizontal());
 }
 
-void LineWidget::deserialize(const std::string& name, const std::string& value,
-                             const Serializer::Attributes& attr)
+void LineWidget::deserialize(Serializer::Properties& props)
 {
-    switch (detail::hash(name))
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
     {
-    case detail::hash("horizontal"):
-        horizontal(detail::from_string(value));
-        break;
-    default:
-        Widget::deserialize(name, value, attr);
-        break;
-    }
+        if (std::get<0>(p) == "horizontal")
+        {
+            horizontal(detail::from_string(std::get<1>(p)));
+            return true;
+        }
+        return false;
+    }), props.end());
 }
 }
 }

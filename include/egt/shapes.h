@@ -48,6 +48,11 @@ public:
     explicit CircleWidget(Frame& parent, const Circle& circle = Circle());
 
     /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit CircleWidget(Serializer::Properties& props);
+
+    /**
      * Get the radius of the widget.
      */
     EGT_NODISCARD Circle::DimType radius() const
@@ -57,10 +62,21 @@ public:
 
     void draw(Painter& painter, const Rect&) override;
 
+    /**
+     * Serialize the widget to the specified serializer.
+     */
+    void serialize(Serializer& serializer) const override;
+
 protected:
 
     /// @private
     Circle::DimType m_radius{};
+
+private:
+    /**
+     * Deserialize widget properties.
+     */
+    void deserialize(Serializer::Properties& props) override;
 };
 
 /**
@@ -92,6 +108,11 @@ public:
         parent.add(*this);
     }
 
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit LineWidget(Serializer::Properties& props);
+
     void draw(Painter& painter, const Rect&) override;
 
     /**
@@ -113,15 +134,15 @@ public:
      */
     void serialize(Serializer& serializer) const override;
 
-    /**
-     * Deserialize widget properties.
-     */
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
-
 protected:
     /// Horizontal state
     bool m_horizontal{true};
+
+private:
+    /**
+     * Deserialize widget properties.
+     */
+    void deserialize(Serializer::Properties& props) override;
 };
 
 /**
@@ -151,6 +172,16 @@ public:
         : RectangleWidget(rect)
     {
         parent.add(*this);
+    }
+
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit RectangleWidget(Serializer::Properties& props)
+        : Widget(props)
+    {
+        name("RectangleWidget" + std::to_string(m_widgetid));
+        fill_flags(Theme::FillFlag::blend);
     }
 
     void draw(Painter& painter, const Rect& rect) override;
