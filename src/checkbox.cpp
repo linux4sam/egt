@@ -38,6 +38,18 @@ CheckBox::CheckBox(Frame& parent,
     parent.add(*this);
 }
 
+CheckBox::CheckBox(Serializer::Properties& props) noexcept
+    : Button(props)
+{
+    name("CheckBox" + std::to_string(m_widgetid));
+
+    fill_flags().clear();
+    padding(5);
+    text_align(AlignFlag::left | AlignFlag::center);
+
+    grab_mouse(true);
+}
+
 void CheckBox::handle(Event& event)
 {
     // NOLINTNEXTLINE(bugprone-parent-virtual-call)
@@ -152,6 +164,17 @@ ToggleBox::ToggleBox(Frame& parent, const Rect& rect) noexcept
     parent.add(*this);
 }
 
+ToggleBox::ToggleBox(Serializer::Properties& props) noexcept
+    : CheckBox(props)
+{
+    name("ToggleBox" + std::to_string(m_widgetid));
+
+    fill_flags(Theme::FillFlag::blend);
+    border(theme().default_border());
+    border_radius(4.0);
+
+    deserialize(props);
+}
 void ToggleBox::draw(Painter& painter, const Rect& rect)
 {
     Drawer<ToggleBox>::draw(*this, painter, rect);
@@ -263,17 +286,21 @@ void ToggleBox::serialize(Serializer& serializer) const
     serializer.add_property("enable_disable", static_cast<int>(enable_disable()));
 }
 
-void ToggleBox::deserialize(const std::string& name, const std::string& value,
-                            const Serializer::Attributes& attrs)
+void ToggleBox::deserialize(Serializer::Properties& props)
 {
-    if (name == "off_text")
-        toggle_text(value, on_text());
-    else if (name == "on_text")
-        toggle_text(off_text(), value);
-    else if (name == "enable_disable")
-        enable_disable(std::stoi(value));
-    else
-        CheckBox::deserialize(name, value, attrs);
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
+    {
+        auto name = std::get<0>(p);
+        if (name == "off_text")
+            toggle_text(std::get<1>(p), on_text());
+        else if (name == "on_text")
+            toggle_text(off_text(), std::get<1>(p));
+        else if (name == "enable_disable")
+            enable_disable(std::stoi(std::get<1>(p)));
+        else
+            return false;
+        return true;
+    }), props.end());
 }
 
 }

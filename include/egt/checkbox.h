@@ -55,6 +55,11 @@ public:
                       const std::string& text = {},
                       const Rect& rect = {}) noexcept;
 
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit CheckBox(Serializer::Properties& props) noexcept;
+
     void handle(Event& event) override;
 
     void draw(Painter& painter, const Rect& rect) override;
@@ -91,6 +96,11 @@ public:
     * @param[in] rect Initial rectangle of the widget.
     */
     explicit ToggleBox(Frame& parent, const Rect& rect = {}) noexcept;
+
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit ToggleBox(Serializer::Properties& props) noexcept;
 
     void draw(Painter& painter, const Rect& rect) override;
 
@@ -150,8 +160,9 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
+private:
+
+    void deserialize(Serializer::Properties& props) override;
 
 protected:
 

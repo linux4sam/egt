@@ -36,6 +36,18 @@ RadioBox::RadioBox(Frame& parent,
     parent.add(*this);
 }
 
+RadioBox::RadioBox(Serializer::Properties& props) noexcept
+    : Button(props)
+{
+    name("RadioBox" + std::to_string(m_widgetid));
+
+    fill_flags().clear();
+    padding(5);
+    text_align(AlignFlag::left | AlignFlag::center);
+
+    grab_mouse(true);
+}
+
 void RadioBox::handle(Event& event)
 {
     // NOLINTNEXTLINE(bugprone-parent-virtual-call)

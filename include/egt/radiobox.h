@@ -48,6 +48,11 @@ public:
                       const std::string& text = {},
                       const Rect& rect = {}) noexcept;
 
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit RadioBox(Serializer::Properties& props) noexcept;
+
     void handle(Event& event) override;
 
     void draw(Painter& painter, const Rect& rect) override;
