@@ -46,6 +46,24 @@ SideBoard::SideBoard(PositionFlag position,
     m_oanim.easing_func(std::move(open_func));
     m_canim.easing_func(std::move(close_func));
 
+    initialize();
+}
+
+SideBoard::SideBoard(Serializer::Properties& props) noexcept
+    : Window(props)
+{
+    m_oanim.duration(std::chrono::milliseconds(1000));
+    m_canim.duration(std::chrono::milliseconds(1000));
+    m_oanim.easing_func(std::move(easing_cubic_easeinout));
+    m_canim.easing_func(std::move(easing_circular_easeinout));
+
+    initialize();
+
+    deserialize(props);
+}
+
+void SideBoard::initialize()
+{
     reset_animations();
 
     switch (m_position)
@@ -199,13 +217,17 @@ void SideBoard::serialize(Serializer& serializer) const
     serializer.add_property("position", detail::enum_to_string(position()));
 }
 
-void SideBoard::deserialize(const std::string& name, const std::string& value,
-                            const Serializer::Attributes& attrs)
+void SideBoard::deserialize(Serializer::Properties& props)
 {
-    if (name == "position")
-        position(detail::enum_from_string<PositionFlag>(value));
-    else
-        Window::deserialize(name, value, attrs);
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
+    {
+        if (std::get<0>(p) == "position")
+        {
+            position(detail::enum_from_string<PositionFlag>(std::get<1>(p)));
+            return true;
+        }
+        return false;
+    }), props.end());
 }
 
 std::ostream& operator<<(std::ostream& os, const SideBoard::PositionFlag& flag)

@@ -75,6 +75,11 @@ public:
      */
     SideBoard(PositionFlag position, WindowHint hint);
 
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit SideBoard(Serializer::Properties& props) noexcept;
+
     void handle(Event& event) override;
 
     /**
@@ -95,9 +100,6 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
-
 protected:
 
     /// Reset animation start/end values.
@@ -114,6 +116,11 @@ protected:
 
     /// State of the current direction.
     bool m_dir{false};
+
+private:
+    void initialize();
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 /// Overloaded std::ostream insertion operator
