@@ -45,6 +45,11 @@ public:
     explicit Form(Frame& parent, const std::string& title = {}) noexcept;
 
     /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit Form(Serializer::Properties& props) noexcept;
+
+    /**
      * Add a group to the Form.
      */
     void add_group(const std::string& caption);
