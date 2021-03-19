@@ -26,6 +26,15 @@ Frame::Frame(const Rect& rect, const Widget::Flags& flags) noexcept
     m_damage.reserve(10);
 }
 
+Frame::Frame(Serializer::Properties& props) noexcept
+    : Widget(props)
+{
+    flags().set(Widget::Flag::frame);
+
+    name("Frame" + std::to_string(m_widgetid));
+    m_damage.reserve(10);
+}
+
 Frame::Frame(Frame& parent, const Rect& rect, const Widget::Flags& flags) noexcept
     : Frame(rect, flags)
 {
@@ -564,12 +573,6 @@ void Frame::serialize(Serializer& serializer) const
 
     for (auto& child : m_children)
         serializer.add(child.get(), level);
-}
-
-void Frame::deserialize(const std::string& name, const std::string& value,
-                        const Serializer::Attributes& attrs)
-{
-    Widget::deserialize(name, value, attrs);
 }
 
 Frame::~Frame() noexcept

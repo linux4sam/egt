@@ -60,6 +60,11 @@ public:
     Frame(Frame& parent, const Rect& rect,
           const Flags& flags = {}) noexcept;
 
+    /**
+     * @param[in] props array of widget arguments and its properties.
+     */
+    Frame(Serializer::Properties& props) noexcept;
+
     Frame(const Frame&) = delete;
     Frame& operator=(const Frame&) = delete;
     Frame(Frame&&) noexcept = default;
@@ -466,9 +471,6 @@ public:
     }
 
     void serialize(Serializer& serializer) const override;
-
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
 
 protected:
 
