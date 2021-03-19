@@ -67,6 +67,19 @@ public:
         parent.add(*this);
     }
 
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit ProgressBarType(Serializer::Properties& props) noexcept
+        : ValueRangeWidget<T>(props)
+    {
+        this->name("ProgressBar" + std::to_string(this->m_widgetid));
+        this->fill_flags(Theme::FillFlag::blend);
+        this->border(this->theme().default_border());
+
+        deserialize(props);
+    }
+
     void draw(Painter& painter, const Rect& rect) override
     {
         Drawer<ProgressBarType<T>>::draw(*this, painter, rect);
@@ -143,9 +156,6 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
-
 protected:
     /**
      * When true, the label text is shown.
@@ -155,6 +165,8 @@ protected:
 private:
     /// Default size.
     static Size m_default_size;
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 template <class T>
@@ -166,13 +178,17 @@ void ProgressBarType<T>::serialize(Serializer& serializer) const
 }
 
 template <class T>
-void ProgressBarType<T>::deserialize(const std::string& name, const std::string& value,
-                                     const Serializer::Attributes& attrs)
+void ProgressBarType<T>::deserialize(Serializer::Properties& props)
 {
-    if (name == "show_label")
-        m_show_label = detail::from_string(value);
-    else
-        ValueRangeWidget<T>::deserialize(name, value, attrs);
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
+    {
+        if (std::get<0>(p) == "show_label")
+        {
+            m_show_label = detail::from_string(std::get<1>(p));
+            return true;
+        }
+        return false;
+    }), props.end());
 }
 
 /**
@@ -262,6 +278,18 @@ public:
         parent.add(*this);
     }
 
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit SpinProgressType(Serializer::Properties& props) noexcept
+        : ValueRangeWidget<T>(props)
+    {
+        this->name("SpinProgress" + std::to_string(this->m_widgetid));
+        this->fill_flags(Theme::FillFlag::blend);
+
+        deserialize(props);
+    }
+
 
     void draw(Painter& painter, const Rect& rect) override
     {
@@ -341,9 +369,6 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
-
 protected:
     /// When true, the label text is shown.
     bool m_show_label{true};
@@ -351,6 +376,8 @@ protected:
 private:
     /// Default size.
     static Size m_default_size;
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 /**
@@ -409,13 +436,17 @@ void SpinProgressType<T>::serialize(Serializer& serializer) const
 }
 
 template <class T>
-void SpinProgressType<T>::deserialize(const std::string& name, const std::string& value,
-                                      const Serializer::Attributes& attrs)
+void SpinProgressType<T>::deserialize(Serializer::Properties& props)
 {
-    if (name == "show_label")
-        m_show_label = detail::from_string(value);
-    else
-        ValueRangeWidget<T>::deserialize(name, value, attrs);
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
+    {
+        if (std::get<0>(p) == "show_label")
+        {
+            m_show_label = detail::from_string(std::get<1>(p));
+            return true;
+        }
+        return false;
+    }), props.end());
 }
 
 /**
@@ -461,6 +492,19 @@ public:
         : LevelMeterType(rect, start, end, value)
     {
         parent.add(*this);
+    }
+
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit LevelMeterType(Serializer::Properties& props) noexcept
+        : ValueRangeWidget<T>(props)
+    {
+        this->name("LevelMeter" + std::to_string(this->m_widgetid));
+        this->fill_flags(Theme::FillFlag::blend);
+        this->padding(2);
+
+        deserialize(props);
     }
 
     void draw(Painter& painter, const Rect& rect) override
@@ -527,9 +571,6 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
-
 protected:
 
     /// The number of bars to display.
@@ -538,6 +579,8 @@ protected:
 private:
     /// Default size.
     static Size m_default_size;
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 /**
@@ -596,13 +639,17 @@ void LevelMeterType<T>::serialize(Serializer& serializer) const
 }
 
 template <class T>
-void LevelMeterType<T>::deserialize(const std::string& name, const std::string& value,
-                                    const Serializer::Attributes& attrs)
+void LevelMeterType<T>::deserialize(Serializer::Properties& props)
 {
-    if (name == "num_bars")
-        m_num_bars = std::stoi(value);
-    else
-        ValueRangeWidget<T>::deserialize(name, value, attrs);
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
+    {
+        if (std::get<0>(p) == "num_bars")
+        {
+            m_num_bars = std::stoi(std::get<1>(p));
+            return true;
+        }
+        return false;
+    }), props.end());
 }
 
 /**
@@ -638,6 +685,16 @@ public:
         : AnalogMeterType(rect)
     {
         parent.add(*this);
+    }
+
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit AnalogMeterType(Serializer::Properties& props) noexcept
+        : ValueRangeWidget<T>(props)
+    {
+        this->name("AnalogMeter" + std::to_string(this->m_widgetid));
+        this->fill_flags(Theme::FillFlag::blend);
     }
 
     void draw(Painter& painter, const Rect& rect) override

@@ -125,6 +125,15 @@ public:
     }
 
     /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit ValueRangeWidget(Serializer::Properties& props)
+        : Widget(props)
+    {
+        deserialize(props);
+    }
+
+    /**
      * Set value.
      *
      * If the value is above end, the value will be set to end.  If the
@@ -195,9 +204,6 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
-
 protected:
 
     /// The start value.
@@ -208,6 +214,10 @@ protected:
 
     /// The current value.
     T m_value;
+
+private:
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 template <class T>
@@ -225,33 +235,35 @@ void ValueRangeWidget<T>::serialize(Serializer& serializer) const
 }
 
 template <class T>
-void ValueRangeWidget<T>::deserialize(const std::string& name, const std::string& value,
-                                      const Serializer::Attributes& attrs)
+void ValueRangeWidget<T>::deserialize(Serializer::Properties& props)
 {
-    if (name == "value")
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
     {
-        float starting_value = 0, ending_value = 100;
-
-        for (auto& a : attrs)
+        if (std::get<0>(p) == "value")
         {
-            switch (detail::hash(a.first))
+            float starting_value = 0, ending_value = 100;
+            auto attrs = std::get<2>(p);
+            for (auto& a : attrs)
             {
-            case detail::hash("starting"):
-                starting_value = std::stof(a.second);
-                break;
-            case detail::hash("ending"):
-                ending_value = std::stof(a.second);
-                break;
+                switch (detail::hash(a.first))
+                {
+                case detail::hash("starting"):
+                    starting_value = std::stof(a.second);
+                    break;
+                case detail::hash("ending"):
+                    ending_value = std::stof(a.second);
+                    break;
+                }
             }
+
+            this->ending(ending_value);
+            this->starting(starting_value);
+            this->value(std::stof(std::get<1>(p)));
+
+            return true;
         }
-
-        this->ending(ending_value);
-        this->starting(starting_value);
-        this->value(std::stof(value));
-
-    }
-    else
-        Widget::deserialize(name, value, attrs);
+        return false;
+    }), props.end());
 }
 
 }

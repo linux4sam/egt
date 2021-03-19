@@ -130,6 +130,11 @@ public:
         parent.add(*this);
     }
 
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit SliderType(Serializer::Properties& props) noexcept;
+
     void handle(Event& event) override
     {
         Widget::handle(event);
@@ -218,9 +223,6 @@ public:
     SliderFlags& slider_flags() { return m_slider_flags; }
 
     void serialize(Serializer& serializer) const override;
-
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
 
 protected:
 
@@ -329,6 +331,10 @@ protected:
 
     /// When dragging, the offset at the drag start.
     int m_start_offset{0};
+
+private:
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 /**
@@ -375,6 +381,21 @@ SliderType<T>::SliderType(const Rect& rect, T start, T end, T value,
     this->slider_flags().set(SliderFlag::rectangle_handle);
     this->border_radius(4.0);
 }
+
+template <class T>
+SliderType<T>::SliderType(Serializer::Properties& props) noexcept
+    : ValueRangeWidget<T>(props)
+{
+
+    this->name("Slider" + std::to_string(this->m_widgetid));
+    this->fill_flags(Theme::FillFlag::blend);
+    this->grab_mouse(true);
+    this->slider_flags().set(SliderFlag::rectangle_handle);
+    this->border_radius(4.0);
+
+    deserialize(props);
+}
+
 
 template <class T>
 void SliderType<T>::draw(Painter& painter, const Rect& /*rect*/)
@@ -639,15 +660,22 @@ void SliderType<T>::serialize(Serializer& serializer) const
 }
 
 template <class T>
-void SliderType<T>::deserialize(const std::string& name, const std::string& value,
-                                const Serializer::Attributes& attrs)
+void SliderType<T>::deserialize(Serializer::Properties& props)
 {
-    if (name == "sliderflags")
-        m_slider_flags.from_string(value);
-    else if (name == "orient")
-        orient(detail::enum_from_string<Orientation>(value));
-    else
-        ValueRangeWidget<T>::deserialize(name, value, attrs);
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
+    {
+        if (std::get<0>(p) == "sliderflags")
+        {
+            m_slider_flags.from_string(std::get<1>(p));
+            return true;
+        }
+        else if (std::get<0>(p) == "orient")
+        {
+            orient(detail::enum_from_string<Orientation>(std::get<1>(p)));
+            return true;
+        }
+        return false;
+    }), props.end());
 }
 
 /// Enum string conversion map

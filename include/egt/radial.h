@@ -100,6 +100,16 @@ public:
     }
 
     /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit RadialType(Serializer::Properties& props) noexcept
+        : Widget(props)
+    {
+        this->name("Radial" + std::to_string(m_widgetid));
+        this->grab_mouse(true);
+    }
+
+    /**
      * Add a range value to the radial.
      *
      * @param range The range value to add.
