@@ -92,11 +92,8 @@ void VirtualKeyboard::Key::font(const Font& font)
     m_button->font(font);
 }
 
-VirtualKeyboard::VirtualKeyboard(const std::vector<PanelKeys>& keys, const Rect& rect)
-    : Frame(rect)
+void VirtualKeyboard::initialize(const std::vector<PanelKeys>& keys)
 {
-    name("VirtualKeyboard" + std::to_string(m_widgetid));
-
     m_main_panel.align(AlignFlag::expand);
     add(m_main_panel);
 
@@ -131,11 +128,17 @@ VirtualKeyboard::VirtualKeyboard(const std::vector<PanelKeys>& keys, const Rect&
                 if (!key->m_keys_multichoice.empty())
                 {
                     key_multichoice(key);
-
                 }
             }
         }
     }
+}
+
+VirtualKeyboard::VirtualKeyboard(const std::vector<PanelKeys>& keys, const Rect& rect)
+    : Frame(rect)
+{
+    name("VirtualKeyboard" + std::to_string(m_widgetid));
+    initialize(keys);
 }
 
 VirtualKeyboard::VirtualKeyboard(const Rect& rect) noexcept
@@ -146,7 +149,22 @@ VirtualKeyboard::VirtualKeyboard(const Rect& rect) noexcept
                            QwertySymbols1(),
                            QwertySymbols2()
 }, rect)
+{}
+
+VirtualKeyboard::VirtualKeyboard(Serializer::Properties& props) noexcept
+    : Frame(props)
 {
+    name("VirtualKeyboard" + std::to_string(m_widgetid));
+
+    const std::vector<PanelKeys>& keys =
+    {
+        QwertyLettersLowerCase(),
+        QwertyLettersUpperCase(),
+        QwertySymbols1(),
+        QwertySymbols2()
+    };
+
+    initialize(keys);
 }
 
 void VirtualKeyboard::resize(const Size& s)

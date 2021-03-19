@@ -188,6 +188,11 @@ public:
     explicit VirtualKeyboard(const std::vector<PanelKeys>& keys,
                              const Rect& rect = {});
 
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit VirtualKeyboard(Serializer::Properties& props) noexcept;
+
     void resize(const Size& s) override;
 
     /**
@@ -273,6 +278,8 @@ protected:
      * The size factor for keys in the multichoice panel.
      */
     double m_key_size_multichoice_factor {1.2};
+
+    void initialize(const std::vector<PanelKeys>& keys);
 };
 
 /**
