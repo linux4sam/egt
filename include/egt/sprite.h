@@ -82,6 +82,11 @@ public:
            int frame_count, const Point& frame_point = {},
            WindowHint hint = WindowHint::automatic);
 
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit Sprite(Serializer::Properties& props) noexcept;
+
     Sprite(const Sprite&) = delete;
     Sprite& operator=(const Sprite&) = delete;
     Sprite(Sprite&&) noexcept;

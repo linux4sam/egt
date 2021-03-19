@@ -194,7 +194,10 @@ void SoftwareSprite::paint(Painter& painter)
 
 Sprite::Sprite(WindowHint hint)
     : Window(PixelFormat::argb8888, hint)
-{}
+{
+    name("Sprite" + std::to_string(m_widgetid));
+    fill_flags().clear();
+}
 
 Sprite::Sprite(const Image& image, const Size& frame_size,
                int frame_count, const Point& frame_point,
@@ -204,6 +207,13 @@ Sprite::Sprite(const Image& image, const Size& frame_size,
     name("Sprite" + std::to_string(m_widgetid));
     fill_flags().clear();
     create_impl(image, frame_size, frame_count, frame_point);
+}
+
+Sprite::Sprite(Serializer::Properties& props) noexcept
+    : Window(props)
+{
+    name("Sprite" + std::to_string(m_widgetid));
+    fill_flags().clear();
 }
 
 void Sprite::init(const Image& image, const Size& frame_size,
