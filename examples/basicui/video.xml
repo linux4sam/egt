@@ -6,6 +6,8 @@
 			<property name="height">480</property>
 			<property name="fillflags">solid</property>
 			<widget name="VideoWindow0" type="VideoWindow">
+				<property name="pixelformat">rgb565</property>
+				<property name="windowhint">automatic</property>
 				<property name="x">0</property>
 				<property name="y">0</property>
 				<property name="width">320</property>
