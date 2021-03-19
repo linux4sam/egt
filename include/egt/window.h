@@ -101,6 +101,12 @@ public:
            const Rect& rect,
            PixelFormat format_hint = DEFAULT_FORMAT,
            WindowHint hint = WindowHint::automatic);
+    /**
+     * Construct a window.
+     *
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit Window(Serializer::Properties& props);
 
     Window(const Window&) = delete;
     Window& operator=(const Window&) = delete;
@@ -168,9 +174,6 @@ public:
 
 
     void serialize(Serializer& serializer) const override;
-
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
 
     ~Window() noexcept override;
 
@@ -257,6 +260,10 @@ protected:
 
     friend class detail::WindowImpl;
     friend class detail::PlaneWindow;
+
+private:
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 /**

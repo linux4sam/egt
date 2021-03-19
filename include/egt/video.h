@@ -95,6 +95,13 @@ public:
                 PixelFormat format = PixelFormat::xrgb8888,
                 WindowHint hint = WindowHint::overlay);
 
+    /**
+     * Construct a video window.
+     *
+     * @param[in] props list of widget argument and its properties.
+     */
+    VideoWindow(Serializer::Properties& props);
+
     VideoWindow(const VideoWindow&) = delete;
     VideoWindow& operator=(const VideoWindow&) = delete;
     VideoWindow(VideoWindow&&) noexcept;
@@ -238,9 +245,6 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
-
     ~VideoWindow() noexcept override;
 
 protected:
@@ -265,6 +269,10 @@ protected:
     friend class detail::GstDecoderImpl;
     friend class detail::GstKmsSinkImpl;
     friend class detail::GstAppSinkImpl;
+
+private:
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 }

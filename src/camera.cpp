@@ -26,6 +26,13 @@ CameraWindow::CameraWindow(const Rect& rect,
       m_camera_impl(std::make_unique<detail::CameraImpl>(*this, rect, device))
 {}
 
+CameraWindow::CameraWindow(Serializer::Properties& props)
+    : Window(props),
+      m_camera_impl(std::make_unique<detail::CameraImpl>(*this, box(), ""))
+{
+    deserialize(props);
+}
+
 void CameraWindow::draw(Painter& painter, const Rect& rect)
 {
     m_camera_impl->draw(painter, rect);
@@ -81,19 +88,17 @@ void CameraWindow::serialize(Serializer& serializer) const
     serializer.add_property("device", device());
 }
 
-void CameraWindow::deserialize(const std::string& name, const std::string& value,
-                               const Serializer::Attributes& attrs)
+void CameraWindow::deserialize(Serializer::Properties& props)
 {
-    switch (detail::hash(name))
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
     {
-    case detail::hash("device"):
-    {
-        device(value);
-        break;
-    }
-    default:
-        Window::deserialize(name, value, attrs);
-    }
+        if (std::get<0>(p) == "device")
+        {
+            device(std::get<1>(p));
+            return true;
+        }
+        return false;
+    }), props.end());
 }
 
 CameraWindow::~CameraWindow() noexcept = default;

@@ -99,6 +99,13 @@ public:
                           PixelFormat format_hint = PixelFormat::yuyv,
                           WindowHint hint = WindowHint::overlay);
 
+    /**
+     * Construct a camera window.
+     *
+     * @param[in] props list of widget argument and its properties.
+     */
+    CameraWindow(Serializer::Properties& props);
+
     CameraWindow(const CameraWindow&) = delete;
     CameraWindow& operator=(const CameraWindow&) = delete;
     CameraWindow(CameraWindow&&) = default;
@@ -163,9 +170,6 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
-
     ~CameraWindow() noexcept override;
 
 protected:
@@ -178,6 +182,10 @@ protected:
 
     /// @private
     std::unique_ptr<detail::CameraImpl> m_camera_impl;
+
+private:
+
+    void deserialize(Serializer::Properties& props) override;
 
 };
 

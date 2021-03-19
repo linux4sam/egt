@@ -51,6 +51,43 @@ Window::Window(const Rect& rect,
     Application::instance().m_windows.push_back(this);
 }
 
+Window::Window(Serializer::Properties& props)
+    : Frame(props)
+{
+    flags().set({Widget::Flag::window, Widget::Flag::invisible});
+
+    name("Window" + std::to_string(m_widgetid));
+
+    // windows are not transparent by default
+    fill_flags(Theme::FillFlag::solid);
+
+    PixelFormat format = DEFAULT_FORMAT;
+    WindowHint hint = WindowHint::automatic;
+
+    props.erase(std::remove_if(props.begin(), props.end(), [&format, &hint](auto & p)
+    {
+        if (std::get<0>(p) == "pixelformat")
+        {
+            format = detail::enum_from_string<PixelFormat>(std::get<1>(p));
+            return true;
+        }
+        else if (std::get<0>(p) == "windowhint")
+        {
+            hint = detail::enum_from_string<WindowHint>(std::get<1>(p));
+            return true;
+        }
+        return false;
+    }), props.end());
+
+    // create the window implementation
+    create_impl(box(), format, hint);
+
+    // save off the new window to the window list
+    Application::instance().m_windows.push_back(this);
+
+    deserialize(props);
+}
+
 Window::Window(Frame& parent,
                const Rect& rect,
                PixelFormat format_hint,
@@ -306,26 +343,21 @@ void Window::serialize(Serializer& serializer) const
     serializer.add_property("show", visible());
 }
 
-void Window::deserialize(const std::string& name, const std::string& value,
-                         const Serializer::Attributes& attrs)
+void Window::deserialize(Serializer::Properties& props)
 {
-    switch (detail::hash(name))
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
     {
-    case detail::hash("show"):
-    {
-        auto enable =  detail::from_string(value);
-
-        if (enable)
-            show();
-        else
-            hide();
-
-        break;
-    }
-    default:
-        Frame::deserialize(name, value, attrs);
-        break;
-    }
+        if (std::get<0>(p) == "show")
+        {
+            auto enable =  detail::from_string(std::get<1>(p));
+            if (enable)
+                show();
+            else
+                hide();
+            return true;
+        }
+        return false;
+    }), props.end());
 }
 
 Window::Window(Window&&) noexcept = default;

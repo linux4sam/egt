@@ -41,6 +41,10 @@ public:
         this->move(point);
     }
 
+    explicit PopupType(Serializer::Properties& props) noexcept
+        : T(props)
+    {}
+
     /**
      * Show the window centered.
      *

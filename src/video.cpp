@@ -96,11 +96,20 @@ VideoWindow::VideoWindow(const Rect& rect, const std::string& uri,
                          PixelFormat format, WindowHint hint)
     : VideoWindow(rect, format, hint)
 {
-
     if (!media(uri))
     {
         throw std::runtime_error("failed to initialize gstreamer pipeline");
     }
+}
+
+VideoWindow::VideoWindow(Serializer::Properties& props)
+    : Window(props)
+{
+    fill_flags().clear();
+
+    create_impl(box().size());
+
+    deserialize(props);
 }
 
 void VideoWindow::create_impl(const Size& size)
@@ -233,29 +242,32 @@ void VideoWindow::serialize(Serializer& serializer) const
     serializer.add_property("volume", volume());
 }
 
-void VideoWindow::deserialize(const std::string& name, const std::string& value,
-                              const Serializer::Attributes& attrs)
+void VideoWindow::deserialize(Serializer::Properties& props)
 {
-    switch (detail::hash(name))
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
     {
-    case detail::hash("uri"):
-    {
-        media(value);
-        break;
-    }
-    case detail::hash("loopback"):
-    {
-        loopback(detail::from_string(value));
-        break;
-    }
-    case detail::hash("volume"):
-    {
-        volume(std::stoi(value));
-        break;
-    }
-    default:
-        Window::deserialize(name, value, attrs);
-    }
+        switch (detail::hash(std::get<0>(p)))
+        {
+        case detail::hash("uri"):
+        {
+            media(std::get<1>(p));
+            break;
+        }
+        case detail::hash("loopback"):
+        {
+            loopback(detail::from_string(std::get<1>(p)));
+            break;
+        }
+        case detail::hash("volume"):
+        {
+            volume(std::stoi(std::get<1>(p)));
+            break;
+        }
+        default:
+            return false;
+        }
+        return true;
+    }), props.end());
 }
 
 VideoWindow::VideoWindow(VideoWindow&&) noexcept = default;
