@@ -157,6 +157,68 @@ Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step) noexcept
     });
 }
 
+Scrollwheel::Scrollwheel(Serializer::Properties& props) noexcept
+    : StaticGrid(props),
+      m_button_up(Image("res:internal_arrow_up")),
+      m_button_down(Image("res:internal_arrow_down"))
+{
+    reallocate(StaticGrid::GridSize(1, 3));
+
+    init();
+
+    m_button_up.on_click([this](Event&)
+    {
+        if (m_items.empty())
+            return;
+
+        if (m_reversed)
+        {
+            if (m_selected == 0)
+                m_selected = m_items.size() - 1;
+            else
+                m_selected--;
+        }
+        else
+        {
+            if (m_selected == m_items.size() - 1)
+                m_selected = 0;
+            else
+                m_selected++;
+        }
+
+        m_label.text(m_items[m_selected]);
+
+        on_value_changed.invoke();
+    });
+
+    m_button_down.on_click([this](Event&)
+    {
+        if (m_items.empty())
+            return;
+
+        if (m_reversed)
+        {
+            if (m_selected == m_items.size() - 1)
+                m_selected = 0;
+            else
+                m_selected++;
+        }
+        else
+        {
+            if (m_selected == 0)
+                m_selected = m_items.size() - 1;
+            else
+                m_selected--;
+        }
+
+        m_label.text(m_items[m_selected]);
+
+        on_value_changed.invoke();
+    });
+
+    deserialize(props);
+}
+
 void Scrollwheel::orient(Orientation orient)
 {
     if (orient != Orientation::horizontal &&
@@ -307,35 +369,40 @@ void Scrollwheel::serialize(Serializer& serializer) const
     }
 }
 
-void Scrollwheel::deserialize(const std::string& name, const std::string& value,
-                              const Serializer::Attributes& attrs)
+void Scrollwheel::deserialize(Serializer::Properties& props)
 {
-    switch (detail::hash(name))
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
     {
-    case detail::hash("image_up"):
-        image_up(Image(value));
-        break;
-    case detail::hash("image_down"):
-        image_down(Image(value));
-        break;
-    case detail::hash("reversed"):
-        reversed(detail::from_string(value));
-        break;
-    case detail::hash("orient"):
-        orient(detail::enum_from_string<Orientation>(value));
-        break;
-    case detail::hash("item"):
-        add_item(value);
-        for (const auto& i : attrs)
+        switch (detail::hash(std::get<0>(p)))
         {
-            if (i.first == "selected" && detail::from_string(i.second))
-                selected(item_count() - 1);
+        case detail::hash("image_up"):
+            image_up(Image(std::get<1>(p)));
+            break;
+        case detail::hash("image_down"):
+            image_down(Image(std::get<1>(p)));
+            break;
+        case detail::hash("reversed"):
+            reversed(detail::from_string(std::get<1>(p)));
+            break;
+        case detail::hash("orient"):
+            orient(detail::enum_from_string<Orientation>(std::get<1>(p)));
+            break;
+        case detail::hash("item"):
+        {
+            add_item(std::get<1>(p));
+            auto attrs = std::get<2>(p);
+            for (const auto& i : attrs)
+            {
+                if (i.first == "selected" && detail::from_string(i.second))
+                    selected(item_count() - 1);
+            }
+            break;
         }
-        break;
-    default:
-        Widget::deserialize(name, value, attrs);
-        break;
-    }
+        default:
+            return false;
+        }
+        return true;
+    }), props.end());
 }
 
 }

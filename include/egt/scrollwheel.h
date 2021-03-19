@@ -76,6 +76,11 @@ public:
                          const ItemArray& items = {}) noexcept;
 
     /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit Scrollwheel(Serializer::Properties& props) noexcept;
+
+    /**
      * @param[in] min The range minimum value.
      * @param[in] max The range maximum value.
      * @param[in] step The value of step to create a list from the minimum value to the maximum one.
@@ -151,9 +156,6 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
-
 protected:
     /// @private
     void init();
@@ -171,6 +173,10 @@ protected:
     bool m_reversed{false};
     /// Orientation of the Scrollwheel.
     Orientation m_orient{Orientation::vertical};
+
+private:
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 }
