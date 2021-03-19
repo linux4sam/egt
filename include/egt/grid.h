@@ -88,6 +88,11 @@ public:
     explicit StaticGrid(Frame& parent,
                         const GridSize& size = GridSize(1, 1));
 
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit StaticGrid(Serializer::Properties& props);
+
     using Frame::add;
 
     /**
@@ -261,9 +266,6 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
-
 protected:
 
     /// Reallocate the size of the grid keeping any existing cells intact.
@@ -295,6 +297,10 @@ protected:
     DefaultDim m_horizontal_space{};
     /// Space betwwen columns.
     DefaultDim m_vertical_space{};
+
+private:
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 /**
@@ -321,6 +327,11 @@ public:
     /// Invoked when the selection changes.
     Signal<> on_selected_changed;
     /** @} */
+
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit SelectableGrid(Serializer::Properties& props);
 
     using StaticGrid::StaticGrid;
 
@@ -364,9 +375,6 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
-    void deserialize(const std::string& name, const std::string& value,
-                     const Serializer::Attributes& attrs) override;
-
 protected:
     /// Currently selected column.
     size_t m_selected_column{0};
@@ -374,6 +382,10 @@ protected:
     size_t m_selected_row{0};
     /// Dimension of the highlight border.
     DefaultDim m_selection_highlight{5};
+
+private:
+
+    void deserialize(Serializer::Properties& props) override;
 };
 
 }

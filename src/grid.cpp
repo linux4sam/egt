@@ -24,6 +24,16 @@ StaticGrid::StaticGrid(const Rect& rect, const GridSize& size)
     reallocate(size);
 }
 
+StaticGrid::StaticGrid(Serializer::Properties& props)
+    : Frame(props)
+{
+    name("StaticGrid" + std::to_string(m_widgetid));
+
+    reallocate(GridSize(1, 1));
+
+    deserialize(props);
+}
+
 void StaticGrid::reallocate(const GridSize& size)
 {
     if (!size.width() || !size.height())
@@ -339,21 +349,32 @@ void StaticGrid::serialize(Serializer& serializer) const
     Frame::serialize(serializer);
 }
 
-void StaticGrid::deserialize(const std::string& name, const std::string& value,
-                             const Serializer::Attributes& attrs)
+void StaticGrid::deserialize(Serializer::Properties& props)
 {
-    if (name == "column_priority")
-        m_column_priority = detail::from_string(value);
-    else if (name == "n_col")
-        reallocate(GridSize(std::stoi(value), n_row()));
-    else if (name == "n_row")
-        reallocate(GridSize(n_col(), std::stoi(value)));
-    else if (name == "horizontal_space")
-        horizontal_space(std::stoi(value));
-    else if (name == "vertical_space")
-        vertical_space(std::stoi(value));
-    else
-        Frame::deserialize(name, value, attrs);
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
+    {
+        auto name = std::get<0>(p);
+        if (name == "column_priority")
+            m_column_priority = detail::from_string(std::get<1>(p));
+        else if (name == "n_col")
+            reallocate(GridSize(std::stoi(std::get<1>(p)), n_row()));
+        else if (name == "n_row")
+            reallocate(GridSize(n_col(), std::stoi(std::get<1>(p))));
+        else if (name == "horizontal_space")
+            horizontal_space(std::stoi(std::get<1>(p)));
+        else if (name == "vertical_space")
+            vertical_space(std::stoi(std::get<1>(p)));
+        else
+            return false;
+        return true;
+    }), props.end());
+
+}
+
+SelectableGrid::SelectableGrid(Serializer::Properties& props)
+    : StaticGrid(props)
+{
+    deserialize(props);
 }
 
 void SelectableGrid::handle(Event& event)
@@ -447,17 +468,21 @@ void SelectableGrid::serialize(Serializer& serializer) const
     serializer.add_property("selection_highlight", selection_highlight());
 }
 
-void SelectableGrid::deserialize(const std::string& name, const std::string& value,
-                                 const Serializer::Attributes& attrs)
+void SelectableGrid::deserialize(Serializer::Properties& props)
 {
-    if (name == "selected_column")
-        m_selected_column = std::stoul(value);
-    else if (name == "selected_row")
-        m_selected_row = std::stoul(value);
-    else if (name == "selection_highlight")
-        selection_highlight(std::stoi(value));
-    else
-        StaticGrid::deserialize(name, value, attrs);
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
+    {
+        auto name = std::get<0>(p);
+        if (name == "selected_column")
+            m_selected_column = std::stoul(std::get<1>(p));
+        else if (name == "selected_row")
+            m_selected_row = std::stoul(std::get<1>(p));
+        else if (name == "selection_highlight")
+            selection_highlight(std::stoi(std::get<1>(p)));
+        else
+            return false;
+        return true;
+    }), props.end());
 }
 
 }
