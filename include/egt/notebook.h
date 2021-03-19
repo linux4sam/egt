@@ -38,6 +38,15 @@ public:
         fill_flags(Theme::FillFlag::solid);
     }
 
+    explicit NotebookTab(Serializer::Properties& props) noexcept
+        : Frame(props)
+    {
+        name("NotebookTab" + std::to_string(m_widgetid));
+
+        // tabs are not transparent by default
+        fill_flags(Theme::FillFlag::solid);
+    }
+
     /**
      * @return true if allowed to leave, false otherwise.
      */
@@ -88,6 +97,11 @@ public:
      * @param[in] rect Initial rectangle of the widget.
      */
     explicit Notebook(Frame& parent, const Rect& rect = {}) noexcept;
+
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit Notebook(Serializer::Properties& props) noexcept;
 
     using Frame::add;
 

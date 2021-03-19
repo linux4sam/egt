@@ -34,6 +34,12 @@ Notebook::Notebook(Frame& parent, const Rect& rect) noexcept
     parent.add(*this);
 }
 
+Notebook::Notebook(Serializer::Properties& props) noexcept
+    : Frame(props)
+{
+    name("Notebook" + std::to_string(m_widgetid));
+}
+
 void Notebook::add(const std::shared_ptr<Widget>& widget)
 {
     if (!widget)
