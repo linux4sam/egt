@@ -41,6 +41,7 @@ drag/drag \
 floating/floating \
 frames/frames \
 grid/grid \
+imagebutton/imagebutton \
 imagestack/imagestack \
 keys/keys \
 press/press \
@@ -246,6 +247,12 @@ grid_grid_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 grid_grid_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 grid_griddir = $(prefix)/share/egt/examples/grid
 grid_grid_LDFLAGS = $(AM_LDFLAGS)
+
+imagebutton_imagebutton_SOURCES = imagebutton/imagebutton.cpp
+imagebutton_imagebutton_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+imagebutton_imagebutton_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
+imagebutton_imagebuttondir = $(prefix)/share/egt/examples/imagebutton
+imagebutton_imagebutton_LDFLAGS = $(AM_LDFLAGS)
 
 imagestack_imagestack_SOURCES = imagestack/imagestack.cpp
 imagestack_imagestack_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
