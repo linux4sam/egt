@@ -326,7 +326,27 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
     }
     else if (!widget.image().empty())
     {
-        auto target = detail::align_algorithm(widget.image().size(),
+        auto max_image_size = widget.image().size();
+
+        if (!widget.auto_scale_image())
+        {
+            if (max_image_size.width() > widget.content_area().width())
+                max_image_size.width(widget.content_area().width());
+            if (max_image_size.height() > widget.content_area().height())
+                max_image_size.height(widget.content_area().height());
+        }
+        else
+        {
+            /*
+             * If auto scale is enabled, the image can't be bigger than the
+             * content area.
+             */
+            max_image_size.width(widget.content_area().width());
+            max_image_size.height(widget.content_area().height());
+        }
+
+
+        auto target = detail::align_algorithm(max_image_size,
                                               widget.content_area(),
                                               widget.image_align());
 
