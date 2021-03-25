@@ -176,6 +176,15 @@ private:
  * is aligned relative to the position of the text.  If there is no text, the
  * image is aligned relative to the Widget::box() as the text would be.
  *
+ * Layout rules:
+ * - When text is displayed, the auto scale feature has no effect on the layout.
+ * - Unless you disabled the auto resize feature, the size of the button will be
+ *   updated to the original size of the image plus extra space for the text.
+ * - If you specify a size for the button, and there is no text, the image will
+ *   be scaled up or down to fit the button size. You can disable this feature
+ *   and you can choose if you want to keep the original ratio of the image
+ *   during this operation.
+ *
  * @ingroup controls
  */
 class EGT_API ImageButton : public Button
