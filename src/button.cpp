@@ -356,7 +356,30 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
                             static_cast<float>(widget.image().size_orig().width());
             const auto vs = static_cast<float>(target.height()) /
                             static_cast<float>(widget.image().size_orig().height());
-            widget.image().scale(hs, vs);
+
+            // This check avoid rounding issues.
+            if (widget.image().size() != target.size())
+            {
+                if (widget.keep_image_ratio())
+                {
+                    if (hs < vs)
+                        widget.image().scale(hs);
+                    else
+                        widget.image().scale(vs);
+                    /*
+                     * Need to update the target as the image size is probably
+                     * no longer the max size due to the scaling with ratio
+                     * preservation.
+                     */
+                    target = detail::align_algorithm(widget.image().size(),
+                                                     widget.content_area(),
+                                                     widget.image_align());
+                }
+                else
+                {
+                    widget.image().scale(hs, vs);
+                }
+            }
         }
 
         painter.draw(target.point());

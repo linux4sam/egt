@@ -312,6 +312,25 @@ public:
     }
 
     /**
+     * Enable/disable ratio preservation while scaling the image.
+     *
+     * If enabled, the original image ratio won't be changed during the image
+     * auto scale operation. By default, set to true.
+     */
+    void keep_image_ratio(bool enable)
+    {
+        m_keep_image_ratio = enable;
+    }
+
+    /**
+     * Get the keep image ratio state.
+     */
+    bool keep_image_ratio() const
+    {
+        return m_keep_image_ratio;
+    }
+
+    /**
      * Get a const reference of the image.
      */
     EGT_NODISCARD const Image& image() const { return m_image; }
@@ -365,6 +384,9 @@ protected:
 
     /// When true, the image is scaled to fit within the label box.
     bool m_auto_scale_image{true};
+
+    /// When true, the image ratio is kept while scaled.
+    bool m_keep_image_ratio{true};
 
     /// When true, the label text is shown.
     bool m_show_label{true};
