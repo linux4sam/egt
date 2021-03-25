@@ -22,6 +22,12 @@ end and start instead of setting the origin_opposite flag.
 
 @li The constraint to get start > end is removed.
 
+@subsection imagebutton ImageButton
+
+@li Add keep_image_ratio() setter and getter. The keep image ratio state is set
+to true by default. When enabled, the image ratio is kept during the image auto
+scale operation.
+
 @section v1_1 1.1
 
 @subsection combobox ComboBox
