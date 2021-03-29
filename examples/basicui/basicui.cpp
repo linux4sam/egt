@@ -34,17 +34,21 @@ int main(int argc, char** argv)
     {
         for (const auto& w : app.windows())
         {
+#ifdef EGT_HAS_VIDEO
             if (w->type() == "VideoWindow")
             {
                 egt::VideoWindow* vwin = dynamic_cast<egt::VideoWindow*>(w);
                 vwin->play();
             }
-            else if (w->type() == "CameraWindow")
+#endif
+#ifdef EGT_HAS_CAMERA
+            if (w->type() == "CameraWindow")
             {
                 egt::CameraWindow* cwin = dynamic_cast<egt::CameraWindow*>(w);
                 cwin->start();
             }
         }
+#endif
     });
 
     window->show();
