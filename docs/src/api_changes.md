@@ -28,6 +28,12 @@ end and start instead of setting the origin_opposite flag.
 to true by default. When enabled, the image ratio is kept during the image auto
 scale operation.
 
+@subsection imagelabel ImageLabel
+
+@li Add keep_image_ratio() setter and getter. The keep image ratio state is set
+to true by default. When enabled, the image ratio is kept during the image auto
+scale operation.
+
 @section v1_1 1.1
 
 @subsection combobox ComboBox
