@@ -140,3 +140,16 @@ box.on_checked_changed([&box]()
     std::cout << "CheckBox state is: " << box.checked() << std::endl;
 });
 @endcode
+
+@section use_blocking_functions Use Blocking Functions
+
+@warning
+Using functions that could block such as read() or poll() will interfere with
+the EventLoop. It means it will prevent event handling and drawing.
+
+If you want your application to continue to handle events, you have to use the
+asio library. For instance, if you want to do an asynchronous read, use
+async_read().
+If you really want to block your application, you can use the
+egt::v1::EventLoop::step() method to deal with pending events and force a draw.
+It's probably not what you want.
