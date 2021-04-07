@@ -306,8 +306,6 @@ void ScrolledView::update_sliders()
 
 void ScrolledView::handle(Event& event)
 {
-    Frame::handle(event);
-
     switch (event.id())
     {
     case EventId::pointer_drag_start:
@@ -336,7 +334,11 @@ void ScrolledView::handle(Event& event)
     case EventId::pointer_drag:
     case EventId::pointer_drag_stop:
     {
-        Point pos = display_to_local(event.pointer().point);
+        /*
+         * Take into account the offset to get the real position of the pointer
+         * in the ScrolledView.
+         */
+        Point pos = display_to_local(event.pointer().point) - m_offset;
 
         for (auto& child : detail::reverse_iterate(m_children))
         {
@@ -349,9 +351,13 @@ void ScrolledView::handle(Event& event)
             if (!child->visible())
                 continue;
 
-            auto b = child->box() + m_offset;
-            if (b.intersect(pos))
+            if (child->box().intersect(pos))
             {
+                /*
+                 * The pointer position must be updated before delegating the
+                 * event handling to the child.
+                 */
+                event.pointer().point -= DisplayPoint(m_offset);
                 child->handle(event);
                 if (event.quit())
                     return;
