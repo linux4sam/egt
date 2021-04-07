@@ -45,6 +45,9 @@ public:
      * Predefined colors.
      *
      * @see These are the same colors defined in [CSS Color Module Level 3](https://www.w3.org/TR/css-color-3/)
+     *
+     * @note For the transparent color, Widget's fill flags must be set to
+     * Theme::FillFlag::blend.
      */
 
     /**
