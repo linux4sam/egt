@@ -201,7 +201,7 @@ public:
     constexpr static Color whitesmoke = Color::rgb(0xf5f5f5);
     constexpr static Color yellow = Color::rgb(0xffff00);
     constexpr static Color yellowgreen = Color::rgb(0x9acd32);
-    //@}
+    /** @} */
 
     /**
      * Used to define a category of patterns that usually relate to the state of
