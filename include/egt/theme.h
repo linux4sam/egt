@@ -147,8 +147,8 @@ class EGT_API Theme
 public:
 
     /**
-     * Fill flags are used to characterize how a widget's background should be
-     * drawn.
+     * Fill flags are used to characterize how a widget's background and border
+     * should be drawn.
      *
      * This is an optimization to control whether a solid fill is done, it's
      * blended, or if nothing is set - nothing will be drawn.
