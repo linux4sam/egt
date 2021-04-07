@@ -210,13 +210,41 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
         auto target = detail::align_algorithm(max_image_size,
                                               widget.content_area(),
                                               widget.image_align());
+
+        /*
+         * Better to do it with target rect. Depending on the align flags, the
+         * target size can be different from the max_image_size.
+         */
         if (widget.auto_scale_image())
         {
             const auto hs = static_cast<float>(target.width()) /
                             static_cast<float>(widget.image().size_orig().width());
             const auto vs = static_cast<float>(target.height()) /
                             static_cast<float>(widget.image().size_orig().height());
-            widget.image().scale(hs, vs);
+
+            // This check avoid rounding issues.
+            if (widget.image().size() != target.size())
+            {
+                if (widget.keep_image_ratio())
+                {
+                    if (hs < vs)
+                        widget.image().scale(hs);
+                    else
+                        widget.image().scale(vs);
+                    /*
+                     * Need to update the alignement as the image size is
+                     * probably no longer the max size due to the scaling with
+                     * ratio preservation.
+                     */
+                    target = detail::align_algorithm(widget.image().size(),
+                                                     widget.content_area(),
+                                                     widget.image_align());
+                }
+                else
+                {
+                    widget.image().scale(hs, vs);
+                }
+            }
         }
 
         painter.draw(target.point());
