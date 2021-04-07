@@ -1106,6 +1106,9 @@ public:
     /**
      * Set the Widget's theme to a new theme.
      *
+     * @note It stores a copy of the theme. It means that future updates of the
+     * theme won't impact the widget theme.
+     *
      * @see @ref colors_themes
      *
      * @todo This does not call Theme::apply() which creates an inconsistency
