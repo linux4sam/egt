@@ -328,18 +328,11 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
     {
         auto max_image_size = widget.image().size();
 
-        if (!widget.auto_scale_image())
-        {
-            if (max_image_size.width() > widget.content_area().width())
-                max_image_size.width(widget.content_area().width());
-            if (max_image_size.height() > widget.content_area().height())
-                max_image_size.height(widget.content_area().height());
-        }
-        else
+        if (widget.auto_scale_image())
         {
             /*
-             * If auto scale is enabled, the image can't be bigger than the
-             * content area.
+             * If auto scale is enabled, we need to give the expected size of
+             * the image to the align algorithm.
              */
             max_image_size.width(widget.content_area().width());
             max_image_size.height(widget.content_area().height());
@@ -350,6 +343,10 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
                                               widget.content_area(),
                                               widget.image_align());
 
+        /*
+         * Better to do it with target rect. Depending on the align flags, the
+         * target size can be different from the max_image_size.
+         */
         if (widget.auto_scale_image())
         {
             const auto hs = static_cast<float>(target.width()) /
@@ -367,9 +364,9 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
                     else
                         widget.image().scale(vs);
                     /*
-                     * Need to update the target as the image size is probably
-                     * no longer the max size due to the scaling with ratio
-                     * preservation.
+                     * Need to update the alignment as the image size is
+                     * probably no longer the max size due to the scaling with
+                     * ratio preservation.
                      */
                     target = detail::align_algorithm(widget.image().size(),
                                                      widget.content_area(),
