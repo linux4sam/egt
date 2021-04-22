@@ -417,8 +417,17 @@ void Widget::color(Palette::ColorId id,
 {
     if (!m_palette)
         m_palette = std::make_unique<Palette>();
-    m_palette->set(id, group, color);
-    damage();
+
+    /*
+     * Performance improvement: do not update the color if there is no change,
+     * otherwise it can cause unexpected redraws.
+     */
+    const Pattern* current_color;
+    if (!m_palette->exists(id, group, &current_color) || (color != *current_color))
+    {
+        m_palette->set(id, group, color);
+        damage();
+    }
 }
 
 const Palette& Widget::default_palette() const
