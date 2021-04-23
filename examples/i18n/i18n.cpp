@@ -81,7 +81,7 @@ int main(int argc, char** argv)
         if (index == static_cast<int>(variations.size()) - 1)
             label->font(egt::Font("Noto Color Emoji", 16));
         else
-            label->font(egt::Font("Noto Sans CJK SC Regular", 30));
+            label->font(egt::Font("Noto Sans CJK SC", 30));
 
         vsizer.add(label);
         index++;
