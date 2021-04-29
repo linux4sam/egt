@@ -698,10 +698,33 @@ void Widget::serialize(Serializer& serializer) const
         serializer.add_property("ratio:vertical", vertical_ratio());
     if (!fill_flags().empty())
         serializer.add_property("fillflags", fill_flags().to_string());
-    if (m_palette)
-        m_palette->serialize("color", serializer);
     if (m_font)
         m_font->serialize("font", serializer);
+    /**
+     * widget color can be set by theme and using m_palette object.
+     * during draw first m_palette is checked and if m_palette not
+     * available, then theme is used.
+     */
+    if (m_palette)
+    {
+        m_palette->serialize("color", serializer);
+    }
+    if (m_theme)
+    {
+        // add new node theme
+        serializer.add_node("theme");
+        m_theme->serialize(serializer);
+
+        // return back widget node to add other widget properties.
+        serializer.previous_node();
+
+        /*
+         * widget font can be set either through theme or through m_font
+         * if m_font is set ignore theme font.
+         */
+        if (!m_font)
+            m_theme->font().serialize("font", serializer);
+    }
 }
 
 void Widget::deserialize(Serializer::Properties& props)
@@ -779,6 +802,11 @@ void Widget::deserialize(Serializer::Properties& props)
             font(f);
             break;
         }
+        /**
+         * widget color can be set by theme and using m_palette object.
+         * during draw first m_palette is checked and if m_palette not
+         * available, then theme is used.
+         */
         case detail::hash("color"):
         {
             if (!m_palette)
