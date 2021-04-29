@@ -314,7 +314,7 @@ void Palette::serialize(const std::string& name, Serializer& serializer) const
 
             /// @todo This does not handle patterns properly.
             serializer.add_property(name,
-                                    y.second.solid().hex(),
+                                    y.second.first().hex(),
                                     attrs);
         }
     }
