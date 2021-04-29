@@ -102,6 +102,11 @@ void OstreamWidgetSerializer::reset()
     m_impl->stack.push_back(m_impl->current);
 }
 
+void OstreamWidgetSerializer::previous_node()
+{
+    m_impl->current = m_impl->stack.back();
+}
+
 void OstreamWidgetSerializer::add_node(std::string nodename)
 {
     m_level++;
@@ -296,6 +301,11 @@ bool XmlWidgetSerializer::add(const Widget* widget, int level)
     widget->serialize(*this);
 
     return true;
+}
+
+void XmlWidgetSerializer::previous_node()
+{
+    m_impl->current = m_impl->stack.back();
 }
 
 void XmlWidgetSerializer::add_property(const std::string& name,

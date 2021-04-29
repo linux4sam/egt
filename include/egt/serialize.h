@@ -51,6 +51,9 @@ public:
     /// Add a node to the serializer.
     virtual void add_node(std::string nodename) = 0;
 
+    /// Go to previous node.
+    virtual void previous_node() = 0;
+
     /// Add a property.
     virtual void add_property(const std::string& name, const std::string& value,
                               const Attributes& attrs = {}) = 0;
@@ -124,6 +127,8 @@ public:
 
     void add_node(std::string nodename) override;
 
+    void previous_node() override;
+
     using Serializer::add_property;
 
     void add_property(const std::string& name, const std::string& value,
@@ -169,6 +174,8 @@ public:
     bool add(const Widget* widget, int level = 0) override;
 
     void add_node(std::string nodename) override;
+
+    void previous_node() override;
 
     using Serializer::add_property;
 
