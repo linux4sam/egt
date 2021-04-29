@@ -24,46 +24,87 @@ static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
 {
     auto wname = node->first_attribute("name");
 
-    Serializer::Properties props;
-    for (auto prop = node->first_node("property"); prop; prop = prop->next_sibling("property"))
+    Serializer::Properties tprops;
+    std::string ttype;
+    auto wtheme = node->first_node("theme");
+    if (wtheme)
     {
-        auto name = prop->first_attribute("name");
-        if (!name)
+        for (auto tprop = wtheme->first_node("property"); tprop; tprop = tprop->next_sibling("property"))
         {
-            detail::warn("property with no name");
-            continue;
-        }
-
-        const std::string pname = name->value();
-        const std::string pvalue = prop->value();
-
-        Serializer::Attributes attrs;
-        for (const rapidxml::xml_attribute<>* attr = prop->first_attribute(); attr;
-             attr = attr->next_attribute())
-        {
-            if (attr->name() == std::string("name"))
+            auto tname = tprop->first_attribute("name");
+            if (!tname)
+            {
+                detail::warn("property with no theme name");
                 continue;
+            }
 
-            attrs.emplace_back(attr->name(), attr->value());
+            std::string pname = tname->value();
+            std::string pvalue = tprop->value();
+
+            Serializer::Attributes tattrs;
+            for (const rapidxml::xml_attribute<>* attr = tprop->first_attribute(); attr;
+                 attr = attr->next_attribute())
+            {
+                tattrs.emplace_back(attr->name(), attr->value());
+            }
+
+            tprops.emplace_back(std::make_tuple(pname, pvalue, tattrs));
+        }
+    }
+
+    Serializer::Properties props;
+    if (node->first_node("property"))
+    {
+        for (auto prop = node->first_node("property"); prop; prop = prop->next_sibling("property"))
+        {
+            auto name = prop->first_attribute("name");
+            if (!name)
+            {
+                detail::warn("property with no name");
+                continue;
+            }
+
+            const std::string pname = name->value();
+            const std::string pvalue = prop->value();
+
+            Serializer::Attributes attrs;
+            for (const rapidxml::xml_attribute<>* attr = prop->first_attribute(); attr;
+                 attr = attr->next_attribute())
+            {
+                if (attr->name() == std::string("name"))
+                    continue;
+
+                attrs.emplace_back(attr->name(), attr->value());
+            }
+
+            props.emplace_back(std::make_tuple(pname, pvalue, attrs));
         }
 
-        props.emplace_back(std::make_tuple(pname, pvalue, attrs));
+        auto instance = std::make_shared<T>(props);
+        if (parent)
+            parent->add(instance);
+
+        if (wname)
+            instance->name(wname->value());
+
+        if (!props.empty())
+        {
+            for (auto& p : props)
+            {
+                detail::warn("unhandled {} property : {}", instance->type(), std::get<0>(p));
+            }
+        }
+
+        if (wtheme)
+        {
+            egt::Theme dtheme(tprops);
+            dtheme.apply();
+            instance->theme(dtheme);
+        }
+
+        return std::static_pointer_cast<Widget>(instance);
     }
-
-    auto instance = std::make_shared<T>(props);
-    if (parent)
-        parent->add(instance);
-
-    if (wname)
-        instance->name(wname->value());
-
-    if (!props.empty())
-    {
-        for (auto& p : props)
-            detail::warn("unhandled {} property : {}", instance->type(), std::get<0>(p));
-    }
-
-    return std::static_pointer_cast<Widget>(instance);
+    return nullptr;
 }
 
 using CreateFunction =
