@@ -48,6 +48,9 @@ public:
     /// Add a widget to the serializer.
     virtual bool add(const Widget* widget, int level = 0) = 0;
 
+    /// Add a node to the serializer.
+    virtual void add_node(std::string nodename) = 0;
+
     /// Add a property.
     virtual void add_property(const std::string& name, const std::string& value,
                               const Attributes& attrs = {}) = 0;
@@ -119,6 +122,8 @@ public:
 
     bool add(const Widget* widget, int level = 0) override;
 
+    void add_node(std::string nodename) override;
+
     using Serializer::add_property;
 
     void add_property(const std::string& name, const std::string& value,
@@ -163,11 +168,12 @@ public:
 
     bool add(const Widget* widget, int level = 0) override;
 
+    void add_node(std::string nodename) override;
+
     using Serializer::add_property;
 
     void add_property(const std::string& name, const std::string& value,
                       const Attributes& attrs = {}) override;
-
 
     /// Write to the specified file path.
     void write(const std::string& filename);

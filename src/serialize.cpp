@@ -102,6 +102,28 @@ void OstreamWidgetSerializer::reset()
     m_impl->stack.push_back(m_impl->current);
 }
 
+void OstreamWidgetSerializer::add_node(std::string nodename)
+{
+    m_level++;
+
+    const auto advance = m_level > static_cast<int>(m_impl->stack.size()) - 1;
+    if (advance)
+    {
+        m_impl->stack.push_back(m_impl->current);
+    }
+    else
+    {
+        while (static_cast<int>(m_impl->stack.size()) - 1 > m_level)
+            m_impl->stack.pop_back();
+    }
+
+    m_impl->stack.back()->children.emplace_back();
+    m_impl->current = &m_impl->stack.back()->children.back();
+    m_impl->current->value = nodename;
+
+    --m_level;
+}
+
 bool OstreamWidgetSerializer::add(const Widget* widget, int level)
 {
     m_level = level;
@@ -223,6 +245,28 @@ void XmlWidgetSerializer::reset()
     auto widgets = m_impl->doc.allocate_node(rapidxml::node_element, "widgets");
     root->append_node(widgets);
     m_impl->stack.push_back(widgets);
+}
+
+void XmlWidgetSerializer::add_node(std::string nodename)
+{
+    m_level++;
+
+    const auto advance = m_level > static_cast<int>(m_impl->stack.size()) - 1;
+    if (advance)
+    {
+        m_impl->stack.push_back(m_impl->current);
+    }
+    else
+    {
+        while (static_cast<int>(m_impl->stack.size()) - 1 > m_level)
+            m_impl->stack.pop_back();
+    }
+
+    m_impl->current = m_impl->doc.allocate_node(rapidxml::node_element,
+                      m_impl->doc.allocate_string(nodename.c_str()));
+    m_impl->stack.back()->append_node(m_impl->current);
+
+    --m_level;
 }
 
 bool XmlWidgetSerializer::add(const Widget* widget, int level)
