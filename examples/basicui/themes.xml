@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<egt>
+	<widgets>
+		<widget name="Window0" type="TopWindow">
+			<property name="width">800</property>
+			<property name="height">480</property>
+			<property name="margin">30</property>
+			<property name="fillflags">solid</property>
+			<widget name="Frame1" type="Frame">
+				<property name="x">30</property>
+				<property name="y">30</property>
+				<property name="width">740</property>
+				<property name="height">420</property>
+				<property name="align">expand_horizontal|expand_vertical</property>
+				<property name="margin">20</property>
+				<theme>
+					<property name="color" id="cursor" group="normal">ff0000ff</property>
+					<property name="color" id="bg" group="normal">f8f8f9ff</property>
+					<property name="color" id="text" group="normal">576060ff</property>
+					<property name="color" id="text_highlight" group="normal">ff69b4ff</property>
+					<property name="color" id="border" group="normal">3797daff</property>
+					<property name="color" id="button_bg" group="normal">5fabe1ff</property>
+					<property name="color" id="button_fg" group="normal">3797daff</property>
+					<property name="color" id="button_text" group="normal">ffffffff</property>
+					<property name="color" id="label_bg" group="normal">f8f8f9ff</property>
+					<property name="color" id="label_text" group="normal">576060ff</property>
+					<property name="color" id="bg" group="disabled">f8f8f9ff</property>
+					<property name="color" id="text" group="disabled">808080ff</property>
+					<property name="color" id="text_highlight" group="disabled">ff69b4ff</property>
+					<property name="color" id="border" group="disabled">c9c9caff</property>
+					<property name="color" id="button_bg" group="disabled">e3e3e3ff</property>
+					<property name="color" id="button_fg" group="disabled">c9c9caff</property>
+					<property name="color" id="button_text" group="disabled">808080ff</property>
+					<property name="color" id="label_bg" group="disabled">f8f8f9ff</property>
+					<property name="color" id="label_text" group="disabled">808080ff</property>
+					<property name="color" id="bg" group="active">3797daff</property>
+					<property name="color" id="text" group="active">576060ff</property>
+					<property name="color" id="text_highlight" group="active">ff69b4ff</property>
+					<property name="color" id="border" group="active">3797daff</property>
+					<property name="color" id="button_bg" group="active">5f9fe1ff</property>
+					<property name="color" id="button_fg" group="active">3797daff</property>
+					<property name="color" id="button_text" group="active">ffffffff</property>
+					<property name="color" id="label_bg" group="active">3797daff</property>
+					<property name="color" id="label_text" group="active">576060ff</property>
+					<property name="color" id="bg" group="checked">f8f8f9ff</property>
+					<property name="color" id="text" group="checked">576060ff</property>
+					<property name="color" id="text_highlight" group="checked">ff69b4ff</property>
+					<property name="color" id="border" group="checked">3797daff</property>
+					<property name="color" id="button_bg" group="checked">5fabe1ff</property>
+					<property name="color" id="button_fg" group="checked">3797daff</property>
+					<property name="color" id="button_text" group="checked">ffffffff</property>
+					<property name="color" id="label_bg" group="checked">3797daff</property>
+					<property name="color" id="label_text" group="checked">576060ff</property>
+				</theme>
+				<property name="font" weight="normal" slant="normal" size="18.000000">Free Sans</property>
+				<widget name="Button2" type="Button">
+					<property name="x">20</property>
+					<property name="y">20</property>
+					<property name="width">81</property>
+					<property name="height">66</property>
+					<property name="align">left</property>
+					<property name="grab_mouse">true</property>
+					<property name="fillflags">blend</property>
+					<property name="font" weight="normal" slant="italic" size="10.000000">Verdana</property>
+					<property name="color" id="button_bg" group="normal">000000ff</property>
+					<theme>
+						<property name="color" id="cursor" group="normal">ff0000ff</property>
+						<property name="color" id="bg" group="normal">f8f8f9ff</property>
+						<property name="color" id="text" group="normal">576060ff</property>
+						<property name="color" id="text_highlight" group="normal">ff69b4ff</property>
+						<property name="color" id="border" group="normal">3797daff</property>
+						<property name="color" id="button_bg" group="normal">5fabe1ff</property>
+						<property name="color" id="button_fg" group="normal">3797daff</property>
+						<property name="color" id="button_text" group="normal">ffffffff</property>
+						<property name="color" id="label_bg" group="normal">f8f8f9ff</property>
+						<property name="color" id="label_text" group="normal">576060ff</property>
+						<property name="color" id="bg" group="disabled">f8f8f9ff</property>
+						<property name="color" id="text" group="disabled">808080ff</property>
+						<property name="color" id="text_highlight" group="disabled">ff69b4ff</property>
+						<property name="color" id="border" group="disabled">c9c9caff</property>
+						<property name="color" id="button_bg" group="disabled">e3e3e3ff</property>
+						<property name="color" id="button_fg" group="disabled">c9c9caff</property>
+						<property name="color" id="button_text" group="disabled">808080ff</property>
+						<property name="color" id="label_bg" group="disabled">f8f8f9ff</property>
+						<property name="color" id="label_text" group="disabled">808080ff</property>
+						<property name="color" id="bg" group="active">3797daff</property>
+						<property name="color" id="text" group="active">576060ff</property>
+						<property name="color" id="text_highlight" group="active">ff69b4ff</property>
+						<property name="color" id="border" group="active">3797daff</property>
+						<property name="color" id="button_bg" group="active">5f9fe1ff</property>
+						<property name="color" id="button_fg" group="active">3797daff</property>
+						<property name="color" id="button_text" group="active">ffffffff</property>
+						<property name="color" id="label_bg" group="active">3797daff</property>
+						<property name="color" id="label_text" group="active">576060ff</property>
+						<property name="color" id="bg" group="checked">f8f8f9ff</property>
+						<property name="color" id="text" group="checked">576060ff</property>
+						<property name="color" id="text_highlight" group="checked">ff69b4ff</property>
+						<property name="color" id="border" group="checked">3797daff</property>
+						<property name="color" id="button_bg" group="checked">5fabe1ff</property>
+						<property name="color" id="button_fg" group="checked">3797daff</property>
+						<property name="color" id="button_text" group="checked">ffffffff</property>
+						<property name="color" id="label_bg" group="checked">3797daff</property>
+						<property name="color" id="label_text" group="checked">576060ff</property>
+					</theme>
+					<property name="text">Button</property>
+					<property name="text_align">center_horizontal|center_vertical</property>
+				</widget>
+				<widget name="Button3" type="Button">
+					<property name="x">324</property>
+					<property name="y">177</property>
+					<property name="width">93</property>
+					<property name="height">66</property>
+					<property name="align">center_horizontal|center_vertical</property>
+					<property name="grab_mouse">true</property>
+					<property name="fillflags">blend</property>
+					<theme>
+						<property name="color" id="cursor" group="normal">ff0000ff</property>
+						<property name="color" id="bg" group="normal">000000ff</property>
+						<property name="color" id="text" group="normal">ffffffff</property>
+						<property name="color" id="text_highlight" group="normal">ff69b4ff</property>
+						<property name="color" id="border" group="normal">c0c5c1ff</property>
+						<property name="color" id="button_bg" group="normal">ff9b29ff</property>
+						<property name="color" id="button_fg" group="normal">ff9b29ff</property>
+						<property name="color" id="button_text" group="normal">000000ff</property>
+						<property name="color" id="label_bg" group="normal">000000ff</property>
+						<property name="color" id="label_text" group="normal">ffffffff</property>
+						<property name="color" id="bg" group="disabled">000000ff</property>
+						<property name="color" id="text" group="disabled">808080ff</property>
+						<property name="color" id="text_highlight" group="disabled">ff69b4ff</property>
+						<property name="color" id="border" group="disabled">808080ff</property>
+						<property name="color" id="button_bg" group="disabled">dcdcdcff</property>
+						<property name="color" id="button_fg" group="disabled">808080ff</property>
+						<property name="color" id="button_text" group="disabled">808080ff</property>
+						<property name="color" id="label_bg" group="disabled">000000ff</property>
+						<property name="color" id="label_text" group="disabled">808080ff</property>
+						<property name="color" id="bg" group="active">ff9b29ff</property>
+						<property name="color" id="text" group="active">ffffffff</property>
+						<property name="color" id="text_highlight" group="active">ff69b4ff</property>
+						<property name="color" id="border" group="active">c088c1ff</property>
+						<property name="color" id="button_bg" group="active">ff8829ff</property>
+						<property name="color" id="button_fg" group="active">ff9b29ff</property>
+						<property name="color" id="button_text" group="active">000000ff</property>
+						<property name="color" id="label_bg" group="active">ff9b29ff</property>
+						<property name="color" id="label_text" group="active">ffffffff</property>
+						<property name="color" id="bg" group="checked">000000ff</property>
+						<property name="color" id="text" group="checked">ffffffff</property>
+						<property name="color" id="text_highlight" group="checked">ff69b4ff</property>
+						<property name="color" id="border" group="checked">c0c5c1ff</property>
+						<property name="color" id="button_bg" group="checked">ff9b29ff</property>
+						<property name="color" id="button_fg" group="checked">ff9b29ff</property>
+						<property name="color" id="button_text" group="checked">000000ff</property>
+						<property name="color" id="label_bg" group="checked">ff9b29ff</property>
+						<property name="color" id="label_text" group="checked">ffffffff</property>
+					</theme>
+					<property name="font" weight="normal" slant="normal" size="18.000000">Free Sans</property>
+					<property name="text">Button1</property>
+					<property name="text_align">center_horizontal|center_vertical</property>
+				</widget>
+				<widget name="Button4" type="Button">
+					<property name="x">622</property>
+					<property name="y">20</property>
+					<property name="width">98</property>
+					<property name="height">66</property>
+					<property name="align">right</property>
+					<property name="grab_mouse">true</property>
+					<property name="fillflags">blend</property>
+					<property name="font" weight="normal" slant="italic" size="10.000000">Verdana</property>
+					<property name="color" id="button_bg" group="normal">fff8dcff</property>
+					<property name="color" id="button_text" group="normal">000000ff</property>
+					<property name="text">Button2</property>
+					<property name="text_align">center_horizontal|center_vertical</property>
+				</widget>
+				<widget name="Button5" type="Button">
+					<property name="x">20</property>
+					<property name="y">334</property>
+					<property name="width">98</property>
+					<property name="height">66</property>
+					<property name="align">left|bottom</property>
+					<property name="grab_mouse">true</property>
+					<property name="fillflags">blend</property>
+					<theme>
+						<property name="color" id="cursor" group="normal">ff0000ff</property>
+						<property name="color" id="bg" group="normal">000000ff</property>
+						<property name="color" id="text" group="normal">ffffffff</property>
+						<property name="color" id="text_highlight" group="normal">ff69b4ff</property>
+						<property name="color" id="border" group="normal">c0c5c1ff</property>
+						<property name="color" id="button_bg" group="normal">ff9b29ff</property>
+						<property name="color" id="button_fg" group="normal">ff9b29ff</property>
+						<property name="color" id="button_text" group="normal">000000ff</property>
+						<property name="color" id="label_bg" group="normal">000000ff</property>
+						<property name="color" id="label_text" group="normal">ffffffff</property>
+						<property name="color" id="bg" group="disabled">000000ff</property>
+						<property name="color" id="text" group="disabled">808080ff</property>
+						<property name="color" id="text_highlight" group="disabled">ff69b4ff</property>
+						<property name="color" id="border" group="disabled">808080ff</property>
+						<property name="color" id="button_bg" group="disabled">dcdcdcff</property>
+						<property name="color" id="button_fg" group="disabled">808080ff</property>
+						<property name="color" id="button_text" group="disabled">808080ff</property>
+						<property name="color" id="label_bg" group="disabled">000000ff</property>
+						<property name="color" id="label_text" group="disabled">808080ff</property>
+						<property name="color" id="bg" group="active">ff9b29ff</property>
+						<property name="color" id="text" group="active">ffffffff</property>
+						<property name="color" id="text_highlight" group="active">ff69b4ff</property>
+						<property name="color" id="border" group="active">c088c1ff</property>
+						<property name="color" id="button_bg" group="active">ff8829ff</property>
+						<property name="color" id="button_fg" group="active">ff9b29ff</property>
+						<property name="color" id="button_text" group="active">000000ff</property>
+						<property name="color" id="label_bg" group="active">ff9b29ff</property>
+						<property name="color" id="label_text" group="active">ffffffff</property>
+						<property name="color" id="bg" group="checked">000000ff</property>
+						<property name="color" id="text" group="checked">ffffffff</property>
+						<property name="color" id="text_highlight" group="checked">ff69b4ff</property>
+						<property name="color" id="border" group="checked">c0c5c1ff</property>
+						<property name="color" id="button_bg" group="checked">ff9b29ff</property>
+						<property name="color" id="button_fg" group="checked">ff9b29ff</property>
+						<property name="color" id="button_text" group="checked">000000ff</property>
+						<property name="color" id="label_bg" group="checked">ff9b29ff</property>
+						<property name="color" id="label_text" group="checked">ffffffff</property>
+					</theme>
+					<property name="font" weight="normal" slant="normal" size="18.000000">Free Sans</property>
+					<property name="text">Button3</property>
+					<property name="text_align">center_horizontal|center_vertical</property>
+				</widget>
+				<widget name="Button6" type="Button">
+					<property name="x">622</property>
+					<property name="y">334</property>
+					<property name="width">98</property>
+					<property name="height">66</property>
+					<property name="align">right|bottom</property>
+					<property name="grab_mouse">true</property>
+					<property name="fillflags">blend</property>
+					<theme>
+						<property name="color" id="cursor" group="normal">ff0000ff</property>
+						<property name="color" id="bg" group="normal">000000ff</property>
+						<property name="color" id="text" group="normal">ffffffff</property>
+						<property name="color" id="text_highlight" group="normal">ff69b4ff</property>
+						<property name="color" id="border" group="normal">c0c5c1ff</property>
+						<property name="color" id="button_bg" group="normal">ff9b29ff</property>
+						<property name="color" id="button_fg" group="normal">ff9b29ff</property>
+						<property name="color" id="button_text" group="normal">000000ff</property>
+						<property name="color" id="label_bg" group="normal">000000ff</property>
+						<property name="color" id="label_text" group="normal">ffffffff</property>
+						<property name="color" id="bg" group="disabled">000000ff</property>
+						<property name="color" id="text" group="disabled">808080ff</property>
+						<property name="color" id="text_highlight" group="disabled">ff69b4ff</property>
+						<property name="color" id="border" group="disabled">808080ff</property>
+						<property name="color" id="button_bg" group="disabled">dcdcdcff</property>
+						<property name="color" id="button_fg" group="disabled">808080ff</property>
+						<property name="color" id="button_text" group="disabled">808080ff</property>
+						<property name="color" id="label_bg" group="disabled">000000ff</property>
+						<property name="color" id="label_text" group="disabled">808080ff</property>
+						<property name="color" id="bg" group="active">ff9b29ff</property>
+						<property name="color" id="text" group="active">ffffffff</property>
+						<property name="color" id="text_highlight" group="active">ff69b4ff</property>
+						<property name="color" id="border" group="active">c088c1ff</property>
+						<property name="color" id="button_bg" group="active">ff8829ff</property>
+						<property name="color" id="button_fg" group="active">ff9b29ff</property>
+						<property name="color" id="button_text" group="active">000000ff</property>
+						<property name="color" id="label_bg" group="active">ff9b29ff</property>
+						<property name="color" id="label_text" group="active">ffffffff</property>
+						<property name="color" id="bg" group="checked">000000ff</property>
+						<property name="color" id="text" group="checked">ffffffff</property>
+						<property name="color" id="text_highlight" group="checked">ff69b4ff</property>
+						<property name="color" id="border" group="checked">c0c5c1ff</property>
+						<property name="color" id="button_bg" group="checked">ff9b29ff</property>
+						<property name="color" id="button_fg" group="checked">ff9b29ff</property>
+						<property name="color" id="button_text" group="checked">000000ff</property>
+						<property name="color" id="label_bg" group="checked">ff9b29ff</property>
+						<property name="color" id="label_text" group="checked">ffffffff</property>
+					</theme>
+					<property name="font" weight="normal" slant="normal" size="18.000000">Free Sans</property>
+					<property name="text">Button4</property>
+					<property name="text_align">center_horizontal|center_vertical</property>
+					<property name="show">true</property>
+				</widget>
+			</widget>
+		</widget>
+	</widgets>
+</egt>
+
