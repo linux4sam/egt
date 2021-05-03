@@ -169,10 +169,18 @@ static shared_cairo_scaled_font_t create_scaled_font(cairo_t* cr, const Font& fo
     cairo_ft_font_options_substitute(font_options.get(), pattern.get());
     FcDefaultSubstitute(pattern.get());
     FcResult result;
+
     std::unique_ptr<FcPattern, decltype(FcPatternDestroy)*>
     resolved(FcFontMatch(nullptr, pattern.get(), &result), FcPatternDestroy);
     if (!resolved)
         return nullptr;
+
+    char* face = nullptr;
+    if (FcPatternGetString(resolved.get(), FC_FULLNAME, 0, reinterpret_cast<FcChar8**>(&face)) == FcResultMatch)
+    {
+        if (font.face() != std::string(face))
+            EGTLOG_DEBUG("Font \"{}\" not found: using default {} font", font.face(), face);
+    }
 
     double pixel_size;
     FcPatternGetDouble(resolved.get(), FC_PIXEL_SIZE, 0, &pixel_size);
