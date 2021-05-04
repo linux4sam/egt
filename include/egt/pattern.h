@@ -177,11 +177,11 @@ public:
 
     /// Get the starting point of the pattern.
     EGT_NODISCARD Point starting() const;
-    /// Set the starting radius of the pattern.
+    /// Get the starting radius of the pattern.
     EGT_NODISCARD float starting_radius() const;
     /// Get the ending point of the pattern.
     EGT_NODISCARD Point ending() const;
-    /// Set the ending radius of the pattern.
+    /// Get the ending radius of the pattern.
     EGT_NODISCARD float ending_radius() const;
 
     /// Get all of the steps of the pattern
