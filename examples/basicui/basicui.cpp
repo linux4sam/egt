@@ -47,8 +47,8 @@ int main(int argc, char** argv)
                 egt::CameraWindow* cwin = dynamic_cast<egt::CameraWindow*>(w);
                 cwin->start();
             }
-        }
 #endif
+        }
     });
 
     window->show();
