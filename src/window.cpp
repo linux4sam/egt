@@ -334,6 +334,9 @@ void Window::background(const Image& image)
         m_background->image_align(AlignFlag::expand);
         add(*m_background);
         m_background->zorder_bottom();
+        // auto scale of background image to fit the size of the window
+        m_background->keep_image_ratio(false);
+
     }
 }
 
