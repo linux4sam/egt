@@ -109,6 +109,8 @@ public:
             value = detail::clamp<T>(value, m_start, m_end);
         else
             value = detail::clamp<T>(value, m_end, m_start);
+
+        m_value = value;
     }
 
     /// Get the current value.
