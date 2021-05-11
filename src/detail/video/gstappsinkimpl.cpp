@@ -126,22 +126,33 @@ GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
             gst_structure_get_int(capsStruct, "height", &height);
             auto vs = egt::Size(width, height);
             auto b = impl->m_interface.content_area();
-            if (b.size() != vs)
+            /*
+             * If scaling is requested, it's normal that the size of the
+             * VideoWindow is different from the size of the video. Don't drop
+             * the frame in this case.
+             * Caution: checking only the scale may not enough to justifiy that
+             * the window and video size are different and it won't lead to a
+             * crash.
+             */
+            if (impl->m_interface.hscale() == 1.0 && impl->m_interface.vscale() == 1.0)
             {
-                if (Application::check_instance())
+                if (b.size() != vs)
                 {
-                    asio::post(Application::instance().event().io(), [impl, vs, b]()
+                    if (Application::check_instance())
                     {
-                        if (vs.width() < b.width() || vs.height() < b.height())
-                            impl->resize(vs);
-                        else
-                            impl->resize(b.size());
-                    });
-                }
+                        asio::post(Application::instance().event().io(), [impl, vs, b]()
+                                {
+                                if (vs.width() < b.width() || vs.height() < b.height())
+                                impl->resize(vs);
+                                else
+                                impl->resize(b.size());
+                                });
+                    }
 
-                // drop this frame and continue
-                gst_sample_unref(sample);
-                return GST_FLOW_OK;
+                    // drop this frame and continue
+                    gst_sample_unref(sample);
+                    return GST_FLOW_OK;
+                }
             }
 
             GstBuffer* buffer = gst_sample_get_buffer(sample);
