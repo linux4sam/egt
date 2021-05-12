@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include <detail/fmt.h>
 #include <egt/color.h>
 #include <egt/detail/string.h>
 #include <egt/font.h>
@@ -48,13 +49,6 @@ void Serializer::add_property(const std::string& name, double value,
                               const Attributes& attrs)
 {
     add_property(name, std::to_string(value), attrs);
-}
-
-void Serializer::add_property(const std::string& name, const Pattern& value)
-{
-    /// @todo This does not handle patterns properly.
-    auto color = value.solid();
-    add_property(name, color.pixel32());
 }
 
 void Serializer::add_property(const std::string& name, bool value,
@@ -173,6 +167,78 @@ void OstreamWidgetSerializer::add_property(const std::string& name,
         out << "]";
     }
 
+    m_impl->current->attrs.push_back(out.str());
+}
+
+void OstreamWidgetSerializer::add_property(const std::string& name, const Pattern& value,
+        const Attributes& attrs)
+{
+    std::ostringstream out;
+    if (value.type() == Pattern::Type::solid)
+    {
+        out << name  << "=" << value.solid().hex().c_str();
+
+        if (!attrs.empty())
+        {
+            out << " [";
+            for (auto i = attrs.begin(); i != attrs.end(); ++i)
+            {
+                if (i != attrs.begin())
+                    out << " ";
+                out << i->first << "=" << i->second;
+            }
+            out << "]";
+        }
+    }
+    else
+    {
+        out << name  << "=";
+        if (value.type() == Pattern::Type::linear)
+        {
+            out << "pattern [type=linear";
+        }
+        else if (value.type() == Pattern::Type::radial)
+        {
+            out << "pattern [type=radial";
+        }
+
+        out << " start=" << detail::to_string(value.starting());
+
+        out << " end=" << detail::to_string(value.ending());
+
+        auto steps = value.steps();
+        if (!steps.empty())
+        {
+            size_t count = 0;
+            out << " steps=[";
+            for (auto& s : steps)
+            {
+                out << "{" << std::to_string(s.first) << "," << s.second.hex().c_str() << "}";
+
+                if (++count <= (steps.size() - 1))
+                    out << ",";
+            }
+            out << "]";
+        }
+
+        if (value.type() == Pattern::Type::radial)
+        {
+            out << " start_radius=" << detail::to_string(value.starting_radius());
+            out << " end_radius=" << detail::to_string(value.ending_radius());
+        }
+
+        if (!attrs.empty())
+        {
+            out << " [";
+            for (auto i = attrs.begin(); i != attrs.end(); ++i)
+            {
+                if (i != attrs.begin())
+                    out << " ";
+                out << i->first << "=" << i->second;
+            }
+            out << "]";
+        }
+    }
     m_impl->current->attrs.push_back(out.str());
 }
 
@@ -323,6 +389,115 @@ void XmlWidgetSerializer::add_property(const std::string& name,
                                m_impl->doc.allocate_string(a.second.c_str())));
     }
 
+    m_impl->current->append_node(node);
+}
+
+void XmlWidgetSerializer::add_property(const std::string& name, const Pattern& value,
+                                       const Attributes& attrs)
+{
+    auto node = m_impl->doc.allocate_node(rapidxml::node_element, "property");
+
+    node->append_attribute(m_impl->doc.allocate_attribute("name",
+                           m_impl->doc.allocate_string(name.c_str())));
+
+    for (const auto& a : attrs)
+    {
+        node->append_attribute(m_impl->doc.allocate_attribute(m_impl->doc.allocate_string(a.first.c_str()),
+                               m_impl->doc.allocate_string(a.second.c_str())));
+    }
+
+    if (value.type() == Pattern::Type::solid)
+    {
+        node->value(m_impl->doc.allocate_string(value.first().hex().c_str()));
+    }
+    else
+    {
+        m_level++;
+
+        const auto advance = m_level > static_cast<int>(m_impl->stack.size()) - 1;
+        if (advance)
+        {
+            m_impl->stack.push_back(m_impl->current);
+        }
+        else
+        {
+            while (static_cast<int>(m_impl->stack.size()) - 1 > m_level)
+                m_impl->stack.pop_back();
+        }
+
+        auto patternnode  = m_impl->doc.allocate_node(rapidxml::node_element, "pattern");
+        node->append_node(patternnode);
+
+        auto snode = m_impl->doc.allocate_node(rapidxml::node_element, "property");
+        snode->append_attribute(m_impl->doc.allocate_attribute("name",
+                                m_impl->doc.allocate_string("start")));
+        snode->value(m_impl->doc.allocate_string(detail::to_string(value.starting()).c_str()));
+
+        auto enode = m_impl->doc.allocate_node(rapidxml::node_element, "property");
+        enode->append_attribute(m_impl->doc.allocate_attribute("name",
+                                m_impl->doc.allocate_string("end")));
+        enode->value(m_impl->doc.allocate_string(detail::to_string(value.ending()).c_str()));
+
+        auto steps = value.steps();
+        std::ostringstream oss;
+        auto stepsnode = m_impl->doc.allocate_node(rapidxml::node_element, "property");
+        stepsnode->append_attribute(m_impl->doc.allocate_attribute("name",
+                                    m_impl->doc.allocate_string("steps")));
+        if (!steps.empty())
+        {
+            std::string tmp;
+            for (auto& s : steps)
+            {
+                tmp = tmp + m_impl->doc.allocate_string(std::string("{" + std::to_string(s.first) + "," + s.second.hex().c_str() + "},").c_str());
+            }
+            stepsnode->value(m_impl->doc.allocate_string(tmp.c_str()));
+        }
+
+        if (value.type() == Pattern::Type::linear)
+        {
+            auto pnode = m_impl->doc.allocate_node(rapidxml::node_element, "property");
+            pnode->append_attribute(m_impl->doc.allocate_attribute("name",
+                                    m_impl->doc.allocate_string("type")));
+            pnode->value(m_impl->doc.allocate_string("linear"));
+
+            patternnode->append_node(pnode);
+            patternnode->append_node(snode);
+            patternnode->append_node(enode);
+            if (!steps.empty())
+                patternnode->append_node(stepsnode);
+        }
+        else if (value.type() == Pattern::Type::radial)
+        {
+            auto rnode = m_impl->doc.allocate_node(rapidxml::node_element, "property");
+            rnode->append_attribute(m_impl->doc.allocate_attribute("name",
+                                    m_impl->doc.allocate_string("type")));
+            rnode->value(m_impl->doc.allocate_string("radial"));
+
+            patternnode->append_node(rnode);
+            patternnode->append_node(snode);
+            patternnode->append_node(enode);
+            if (!steps.empty())
+                patternnode->append_node(stepsnode);
+
+            auto start_radius = detail::to_string(value.starting_radius());
+
+            auto sradius = m_impl->doc.allocate_node(rapidxml::node_element, "property");
+            sradius->append_attribute(m_impl->doc.allocate_attribute("name",
+                                      m_impl->doc.allocate_string("start_radius")));
+            sradius->value(m_impl->doc.allocate_string(start_radius.c_str()));
+
+            patternnode->append_node(sradius);
+
+            auto end_radius = detail::to_string(value.ending_radius());
+
+            auto eradius = m_impl->doc.allocate_node(rapidxml::node_element, "property");
+            eradius->append_attribute(m_impl->doc.allocate_attribute("name",
+                                      m_impl->doc.allocate_string("end_radius")));
+            eradius->value(m_impl->doc.allocate_string(end_radius.c_str()));
+            patternnode->append_node(eradius);
+        }
+        --m_level;
+    }
     m_impl->current->append_node(node);
 }
 

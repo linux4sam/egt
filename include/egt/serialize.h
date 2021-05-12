@@ -80,7 +80,8 @@ public:
     void add_property(const std::string& name, double value,
                       const Attributes& attrs = {});
     /// Add a property.
-    void add_property(const std::string& name, const Pattern& value);
+    virtual void add_property(const std::string& name, const Pattern& value,
+                              const Attributes& attrs = {}) = 0;
 
     /// Add a property.
     void add_property(const std::string& name, bool value,
@@ -134,6 +135,9 @@ public:
     void add_property(const std::string& name, const std::string& value,
                       const Attributes& attrs = {}) override;
 
+    void add_property(const std::string& name, const Pattern& value,
+                      const Attributes& attrs = {}) override;
+
     void write(std::ostream& out) override;
 
     ~OstreamWidgetSerializer() noexcept override;
@@ -180,6 +184,9 @@ public:
     using Serializer::add_property;
 
     void add_property(const std::string& name, const std::string& value,
+                      const Attributes& attrs = {}) override;
+
+    void add_property(const std::string& name, const Pattern& value,
                       const Attributes& attrs = {}) override;
 
     /// Write to the specified file path.
