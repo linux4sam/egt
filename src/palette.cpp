@@ -311,11 +311,7 @@ void Palette::serialize(const std::string& name, Serializer& serializer) const
                 {"id", detail::enum_to_string(y.first)},
                 {"group", detail::enum_to_string(x.first)},
             };
-
-            /// @todo This does not handle patterns properly.
-            serializer.add_property(name,
-                                    y.second.first().hex(),
-                                    attrs);
+            serializer.add_property(name, y.second, attrs);
         }
     }
 }
@@ -338,7 +334,112 @@ void Palette::deserialize(const std::string& name, const std::string& value,
         if (g != attrs.end())
             group = detail::enum_from_string<Palette::GroupId>(g->second);
 
-        set(id, Color(std::stoul(value, nullptr, 16)), group);
+        if (!value.empty())
+        {
+            set(id, Pattern(Color(std::stoul(value, nullptr, 16))), group);
+        }
+        else
+        {
+            const auto s = std::find_if(attrs.begin(), attrs.end(),
+            [](const auto & element) { return element.first == "start";});
+
+            std::string tmp;
+            Point start;
+            if (s != attrs.end())
+            {
+                tmp = s->second;
+                tmp.erase(std::remove(tmp.begin(), tmp.end(), '['), tmp.end());
+                tmp.erase(std::remove(tmp.begin(), tmp.end(), '['), tmp.end());
+                std::vector<std::string> stokens;
+                detail::tokenize(tmp, ',', stokens);
+                if (stokens.size() == 2)
+                {
+                    start = Point(std::stod(stokens[0]), std::stod(stokens[1]));
+                }
+            }
+
+            const auto e = std::find_if(attrs.begin(), attrs.end(),
+            [](const auto & element) { return element.first == "end";});
+
+            Point end;
+            if (e != attrs.end())
+            {
+                tmp = e->second;
+                tmp.erase(std::remove(tmp.begin(), tmp.end(), '['), tmp.end());
+                tmp.erase(std::remove(tmp.begin(), tmp.end(), ']'), tmp.end());
+                std::vector<std::string> etokens;
+                detail::tokenize(tmp, ',', etokens);
+                if (etokens.size() == 2)
+                {
+                    end = Point(std::stod(etokens[0]), std::stod(etokens[1]));
+                }
+            }
+
+            Pattern::StepArray sarray;
+            const auto step = std::find_if(attrs.begin(), attrs.end(),
+            [](const auto & element) { return element.first == "steps";});
+            if (step != attrs.end())
+            {
+                tmp = step->second;
+                tmp.erase(std::remove(tmp.begin(), tmp.end(), '{'), tmp.end());
+                tmp.erase(std::remove(tmp.begin(), tmp.end(), '}'), tmp.end());
+                std::vector<std::string> tokens;
+                detail::tokenize(tmp, ',', tokens);
+                if (tokens.size() > 1)
+                {
+                    for (size_t i = 0; i < tokens.size(); i = i + 2)
+                    {
+                        auto v = std::stod(tokens[i + 0]);
+                        auto c = Color(std::stoul(tokens[i + 1], nullptr, 16));
+                        sarray.push_back(std::make_pair(v, c));
+                    }
+                }
+                else
+                {
+                    throw std::runtime_error("invalid pattern steps");
+                }
+            }
+
+            const auto t = std::find_if(attrs.begin(), attrs.end(),
+            [](const auto & element) { return element.first == "type";});
+
+            if (t != attrs.end())
+            {
+                if (t->second == "linear")
+                {
+                    Pattern lpattern(sarray, start, end);
+                    set(id, lpattern, group);
+                }
+                else if (t->second == "radial")
+                {
+                    const auto sr = std::find_if(attrs.begin(), attrs.end(),
+                    [](const auto & element) { return element.first == "start_radius";});
+
+                    float start_radius = 0.0;
+                    if (sr != attrs.end())
+                    {
+                        start_radius = std::stod(sr->second);
+                    }
+
+
+                    const auto er = std::find_if(attrs.begin(), attrs.end(),
+                    [](const auto & element) { return element.first == "end_radius";});
+
+                    float end_radius = 0.0;
+                    if (er != attrs.end())
+                    {
+                        end_radius = std::stod(er->second);
+                    }
+
+                    Pattern rpattern(sarray, start, start_radius, end, end_radius);
+                    set(id, rpattern, group);
+                }
+                else
+                {
+                    throw std::runtime_error(fmt::format("invalid values {} {} {}", id, group, value));
+                }
+            }
+        }
     }
 }
 
