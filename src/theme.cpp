@@ -283,6 +283,13 @@ void Theme::draw_box(Painter& painter,
                               Point(box.x() + box.width() / 2., box.y() + box.height()));
             painter.set(bg_pattern);
         }
+        else if (bg.type() == Pattern::Type::radial)
+        {
+            auto bg_pattern = bg;
+            bg_pattern.radial(box.center(), box.width() / (bg_pattern.steps().size() / 2),
+                              box.center(), box.width() / bg_pattern.steps().size());
+            painter.set(bg_pattern);
+        }
         else
         {
             painter.set(bg);
