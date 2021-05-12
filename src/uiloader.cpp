@@ -39,9 +39,35 @@ static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
             }
 
             std::string pname = tname->value();
-            std::string pvalue = tprop->value();
-
+            std::string pvalue;
             Serializer::Attributes tattrs;
+            if (pname == "color")
+            {
+                auto tpattern = tprop->first_node("pattern");
+                if (tpattern)
+                {
+                    for (auto tpprop = tpattern->first_node("property"); tpprop; tpprop = tpprop->next_sibling("property"))
+                    {
+                        auto tppname = tpprop->first_attribute("name");
+                        if (!tppname)
+                        {
+                            detail::warn("pattern with no name");
+                            continue;
+                        }
+                        tattrs.emplace_back(tppname->value(), tpprop->value());
+                    }
+                }
+                else
+                {
+                    pvalue = tprop->value();
+                }
+            }
+            else
+            {
+                detail::error("invalid theme property : {} = {}", pname, tprop->value());
+                return nullptr;
+            }
+
             for (const rapidxml::xml_attribute<>* attr = tprop->first_attribute(); attr;
                  attr = attr->next_attribute())
             {
@@ -65,9 +91,33 @@ static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
             }
 
             const std::string pname = name->value();
-            const std::string pvalue = prop->value();
-
+            std::string pvalue;
             Serializer::Attributes attrs;
+            if (pname == "color")
+            {
+                auto pattern = prop->first_node("pattern");
+                if (pattern)
+                {
+                    for (auto pprop = pattern->first_node("property"); pprop; pprop = pprop->next_sibling("property"))
+                    {
+                        auto ppname = pprop->first_attribute("name");
+                        if (!ppname)
+                        {
+                            detail::warn("pattern with no name");
+                            continue;
+                        }
+                        attrs.emplace_back(ppname->value(), pprop->value());
+                    }
+                }
+                else
+                {
+                    pvalue = prop->value();
+                }
+            }
+            else
+            {
+                pvalue = prop->value();
+            }
             for (const rapidxml::xml_attribute<>* attr = prop->first_attribute(); attr;
                  attr = attr->next_attribute())
             {
