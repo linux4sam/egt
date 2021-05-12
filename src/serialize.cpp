@@ -197,6 +197,10 @@ void OstreamWidgetSerializer::add_property(const std::string& name, const Patter
         {
             out << "pattern [type=linear";
         }
+        else if (value.type() == Pattern::Type::linear_vertical)
+        {
+            out << "pattern [type=linear_vertical";
+        }
         else if (value.type() == Pattern::Type::radial)
         {
             out << "pattern [type=radial";
@@ -459,6 +463,19 @@ void XmlWidgetSerializer::add_property(const std::string& name, const Pattern& v
             pnode->append_attribute(m_impl->doc.allocate_attribute("name",
                                     m_impl->doc.allocate_string("type")));
             pnode->value(m_impl->doc.allocate_string("linear"));
+
+            patternnode->append_node(pnode);
+            patternnode->append_node(snode);
+            patternnode->append_node(enode);
+            if (!steps.empty())
+                patternnode->append_node(stepsnode);
+        }
+        else if (value.type() == Pattern::Type::linear_vertical)
+        {
+            auto pnode = m_impl->doc.allocate_node(rapidxml::node_element, "property");
+            pnode->append_attribute(m_impl->doc.allocate_attribute("name",
+                                    m_impl->doc.allocate_string("type")));
+            pnode->value(m_impl->doc.allocate_string("linear_vertical"));
 
             patternnode->append_node(pnode);
             patternnode->append_node(snode);

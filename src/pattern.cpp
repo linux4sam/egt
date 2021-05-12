@@ -159,7 +159,8 @@ void Pattern::linear(const Point& start, const Point& end)
         // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
         m_impl = new PatternImpl();
 
-    m_type = Type::linear;
+    if ((m_type != Type::linear) && (m_type != Type::linear_vertical))
+        m_type = Type::linear;
     m_impl->m_start = start;
     m_impl->m_end = end;
 
@@ -230,6 +231,7 @@ void Pattern::create_pattern() const
     switch (type())
     {
     case Pattern::Type::linear:
+    case Pattern::Type::linear_vertical:
     {
         m_pattern =
             shared_cairo_pattern_t(cairo_pattern_create_linear(starting().x(),

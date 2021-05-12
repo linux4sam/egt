@@ -283,6 +283,13 @@ void Theme::draw_box(Painter& painter,
                               Point(box.x() + box.width() / 2., box.y() + box.height()));
             painter.set(bg_pattern);
         }
+        else if (bg.type() == Pattern::Type::linear_vertical)
+        {
+            auto bg_pattern = bg;
+            bg_pattern.linear(Point(box.x(), box.y() + box.height() / 2.),
+                              Point(box.x() + box.width(), box.y() + box.height()));
+            painter.set(bg_pattern);
+        }
         else if (bg.type() == Pattern::Type::radial)
         {
             auto bg_pattern = bg;

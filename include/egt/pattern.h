@@ -60,6 +60,7 @@ public:
     {
         solid,
         linear,
+        linear_vertical,
         radial
     };
 

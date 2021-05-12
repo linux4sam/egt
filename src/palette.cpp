@@ -410,6 +410,12 @@ void Palette::deserialize(const std::string& name, const std::string& value,
                     Pattern lpattern(sarray, start, end);
                     set(id, lpattern, group);
                 }
+                else if (t->second == "linear_vertical")
+                {
+                    Pattern lvpattern(Pattern::Type::linear_vertical, sarray);
+                    lvpattern.linear(start, end);
+                    set(id, lvpattern, group);
+                }
                 else if (t->second == "radial")
                 {
                     const auto sr = std::find_if(attrs.begin(), attrs.end(),
