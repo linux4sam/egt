@@ -26,6 +26,7 @@ public:
         sizer->add(expand_horizontal(l));
 
         auto i = std::make_shared<egt::ImageLabel>(image);
+        i->keep_image_ratio(false);
         i->image_align(egt::AlignFlag::expand);
         sizer->add(egt::expand(i));
     }
