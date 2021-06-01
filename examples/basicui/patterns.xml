@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<egt>
+	<widgets>
+		<widget name="Window0" type="TopWindow">
+			<property name="width">800</property>
+			<property name="height">480</property>
+			<property name="fillflags">solid</property>
+			<widget name="BoxSizer1" type="VerticalBoxSizer">
+				<property name="orient">vertical</property>
+				<property name="justify">middle</property>
+				<property name="width">800</property>
+				<property name="height">480</property>
+				<property name="align">expand_horizontal|expand_vertical</property>
+				<widget name="Button2" type="Button">
+					<property name="x">359</property>
+					<property name="y">39</property>
+					<property name="width">81</property>
+					<property name="height">66</property>
+					<property name="grab_mouse">true</property>
+					<property name="fillflags">blend</property>
+					<theme>
+						<property name="color" id="cursor" group="normal">ff0000ff</property>
+						<property name="color" id="bg" group="normal">000000ff</property>
+						<property name="color" id="text" group="normal">ffffffff</property>
+						<property name="color" id="text_highlight" group="normal">ff69b4ff</property>
+						<property name="color" id="border" group="normal">c0c5c1ff</property>
+						<property name="color" id="button_bg" group="normal">
+							<pattern>
+								<property name="type">linear</property>
+								<property name="start">[0,0]</property>
+								<property name="end">[0,0]</property>
+								<property name="steps">{0.000000,ff9b29ff},{0.430000,e58b24ff},{0.500000,d88322ff},{1.000000,d17f21ff},</property>
+							</pattern>
+						</property>
+						<property name="color" id="button_fg" group="normal">ff9b29ff</property>
+						<property name="color" id="button_text" group="normal">000000ff</property>
+						<property name="color" id="label_bg" group="normal">000000ff</property>
+						<property name="color" id="label_text" group="normal">ffffffff</property>
+						<property name="color" id="bg" group="disabled">000000ff</property>
+						<property name="color" id="text" group="disabled">808080ff</property>
+						<property name="color" id="text_highlight" group="disabled">ff69b4ff</property>
+						<property name="color" id="border" group="disabled">808080ff</property>
+						<property name="color" id="button_bg" group="disabled">
+							<pattern>
+								<property name="type">linear</property>
+								<property name="start">[0,0]</property>
+								<property name="end">[0,0]</property>
+								<property name="steps">{0.000000,dcdcdcff},{0.430000,c6c6c6ff},{0.500000,bbbbbbff},{1.000000,b4b4b4ff},</property>
+							</pattern>
+						</property>
+						<property name="color" id="button_fg" group="disabled">808080ff</property>
+						<property name="color" id="button_text" group="disabled">808080ff</property>
+						<property name="color" id="label_bg" group="disabled">000000ff</property>
+						<property name="color" id="label_text" group="disabled">808080ff</property>
+						<property name="color" id="bg" group="active">ff9b29ff</property>
+						<property name="color" id="text" group="active">ffffffff</property>
+						<property name="color" id="text_highlight" group="active">ff69b4ff</property>
+						<property name="color" id="border" group="active">c088c1ff</property>
+						<property name="color" id="button_bg" group="active">
+							<pattern>
+								<property name="type">linear</property>
+								<property name="start">[0,0]</property>
+								<property name="end">[0,0]</property>
+								<property name="steps">{0.000000,ff8829ff},{0.430000,e57a24ff},{0.500000,d87322ff},{1.000000,d16f21ff},</property>
+							</pattern>
+						</property>
+						<property name="color" id="button_fg" group="active">ff9b29ff</property>
+						<property name="color" id="button_text" group="active">000000ff</property>
+						<property name="color" id="label_bg" group="active">ff9b29ff</property>
+						<property name="color" id="label_text" group="active">ffffffff</property>
+						<property name="color" id="bg" group="checked">000000ff</property>
+						<property name="color" id="text" group="checked">ffffffff</property>
+						<property name="color" id="text_highlight" group="checked">ff69b4ff</property>
+						<property name="color" id="border" group="checked">c0c5c1ff</property>
+						<property name="color" id="button_bg" group="checked">
+							<pattern>
+								<property name="type">linear</property>
+								<property name="start">[0,0]</property>
+								<property name="end">[0,0]</property>
+								<property name="steps">{0.000000,ff9b29ff},{0.430000,e58b24ff},{0.500000,d88322ff},{1.000000,d17f21ff},</property>
+							</pattern>
+						</property>
+						<property name="color" id="button_fg" group="checked">ff9b29ff</property>
+						<property name="color" id="button_text" group="checked">000000ff</property>
+						<property name="color" id="label_bg" group="checked">ff9b29ff</property>
+						<property name="color" id="label_text" group="checked">ffffffff</property>
+					</theme>
+					<property name="font" weight="normal" slant="normal" size="18.000000">Free Sans</property>
+					<property name="text">Button</property>
+					<property name="text_align">center_horizontal|center_vertical</property>
+				</widget>
+				<widget name="Button3" type="Button">
+					<property name="x">353</property>
+					<property name="y">105</property>
+					<property name="width">93</property>
+					<property name="height">66</property>
+					<property name="grab_mouse">true</property>
+					<property name="fillflags">blend</property>
+					<property name="color" id="button_bg" group="normal">ff0000ff</property>
+					<property name="text">Button1</property>
+					<property name="text_align">center_horizontal|center_vertical</property>
+				</widget>
+				<widget name="Button4" type="Button">
+					<property name="x">262</property>
+					<property name="y">171</property>
+					<property name="width">276</property>
+					<property name="height">96</property>
+					<property name="grab_mouse">true</property>
+					<property name="margin">15</property>
+					<property name="fillflags">blend</property>
+					<property name="color" id="button_bg" group="normal">
+						<pattern>
+							<property name="type">linear</property>
+							<property name="start">[0,0]</property>
+							<property name="end">[0,0]</property>
+							<property name="steps">{0.100000,ff0000ff},{0.200000,0000ffff},{0.400000,ffff00ff},{0.600000,ffffffff},{0.800000,000000ff},{1.000000,000000ff},</property>
+						</pattern>
+					</property>
+					<property name="color" id="button_text" group="normal">000000ff</property>
+					<property name="text">Button linear pattern</property>
+					<property name="text_align">center_horizontal|center_vertical</property>
+				</widget>
+				<widget name="Button5" type="Button">
+					<property name="x">262</property>
+					<property name="y">267</property>
+					<property name="width">276</property>
+					<property name="height">96</property>
+					<property name="grab_mouse">true</property>
+					<property name="margin">15</property>
+					<property name="fillflags">blend</property>
+					<property name="color" id="button_bg" group="normal">
+						<pattern>
+							<property name="type">radial</property>
+							<property name="start">[123,276]</property>
+							<property name="end">[123,276]</property>
+							<property name="steps">{0.100000,ff0000ff},{0.200000,ffff00ff},{0.400000,0000ffff},{0.600000,ffffffff},{0.800000,008000ff},{1.000000,ffff00ff},{2.000000,00000000},</property>
+							<property name="start_radius">82</property>
+							<property name="end_radius">35</property>
+						</pattern>
+					</property>
+					<property name="color" id="button_text" group="normal">000000ff</property>
+					<property name="text">Button radial pattern</property>
+					<property name="text_align">center_horizontal|center_vertical</property>
+				</widget>
+				<widget name="Label6" type="Label">
+					<property name="x">252</property>
+					<property name="y">363</property>
+					<property name="width">296</property>
+					<property name="height">77</property>
+					<property name="margin">10</property>
+					<property name="font" weight="normal" slant="normal" size="50.000000">Free Sans</property>
+					<property name="color" id="label_text" group="normal">
+						<pattern>
+							<property name="type">linear</property>
+							<property name="start">[262,401]</property>
+							<property name="end">[538,401]</property>
+							<property name="steps">{0.000000,ff0000ff},{0.250000,0000ffff},{0.750000,008000ff},{1.000000,ff0000ff},</property>
+						</pattern>
+					</property>
+					<property name="text">Pattern Test</property>
+					<property name="text_align">center_horizontal|center_vertical</property>
+					<property name="show">true</property>
+				</widget>
+			</widget>
+		</widget>
+	</widgets>
+</egt>
+
