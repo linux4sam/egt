@@ -1,11 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <egt>
-  <widgets>
-    <widget type="Window" name="window1">
-      <widget type="Button" name="button1">
-        <property name="text">Press Me</property>
-        <property name="align">center</property>
-      </widget>
-    </widget>
-  </widgets>
+       <widgets>
+               <widget name="Window0" type="TopWindow">
+                       <property name="width">800</property>
+                       <property name="height">480</property>
+                       <property name="fillflags">solid</property>
+                       <widget name="Button1" type="Button">
+                               <property name="x">340</property>
+                               <property name="y">207</property>
+                               <property name="width">120</property>
+                               <property name="height">66</property>
+                               <property name="align">center_horizontal|center_vertical</property>
+                               <property name="grab_mouse">true</property>
+                               <property name="fillflags">blend</property>
+                               <property name="text">Press Me</property>
+                               <property name="text_align">center_horizontal|center_vertical</property>
+                               <property name="show">true</property>
+                       </widget>
+               </widget>
+       </widgets>
 </egt>
+
