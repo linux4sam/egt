@@ -25,6 +25,11 @@ inline namespace v1
 EGT_API std::string egt_version();
 
 /**
+ * Get the git version of the EGT library.
+ */
+EGT_API std::string egt_git_version();
+
+/**
  * Creates and stores a simple ratio value.
  */
 template<class T>

@@ -23,5 +23,14 @@ std::string egt_version()
 #endif
 }
 
+std::string egt_git_version()
+{
+#ifdef GIT_VERSION
+    return GIT_VERSION; // NOLINT
+#else
+    return {};
+#endif
+}
+
 }
 }

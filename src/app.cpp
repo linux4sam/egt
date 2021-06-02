@@ -138,6 +138,7 @@ void Application::setup_events()
 void Application::setup_info()
 {
     detail::info("EGT Version {}", egt_version());
+    detail::info("EGT Git Version {}", egt_git_version());
 
 #ifdef HAVE_SIMD
     auto info = SimdCpuInfo();
