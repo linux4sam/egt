@@ -50,3 +50,5 @@ configuration of input devices.
 
 Also, take special note of [udev configuration of devices](https://wayland.freedesktop.org/libinput/doc/latest/device-configuration-via-udev.html#)
 that controls how they are introduced to libinput.
+
+@note libinput will not work if CONFIG_NET is disabled in kernel.
