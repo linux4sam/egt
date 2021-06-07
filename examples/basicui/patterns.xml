@@ -12,11 +12,12 @@
 				<property name="height">480</property>
 				<property name="align">expand_horizontal|expand_vertical</property>
 				<widget name="Button2" type="Button">
-					<property name="x">359</property>
-					<property name="y">39</property>
-					<property name="width">81</property>
-					<property name="height">66</property>
+					<property name="x">312</property>
+					<property name="y">11</property>
+					<property name="width">175</property>
+					<property name="height">76</property>
 					<property name="grab_mouse">true</property>
+					<property name="margin">5</property>
 					<property name="fillflags">blend</property>
 					<theme>
 						<property name="color" id="cursor" group="normal">ff0000ff</property>
@@ -86,27 +87,28 @@
 						<property name="color" id="label_text" group="checked">ffffffff</property>
 					</theme>
 					<property name="font" weight="normal" slant="normal" size="18.000000">Free Sans</property>
-					<property name="text">Button</property>
+					<property name="text">Button theme</property>
 					<property name="text_align">center_horizontal|center_vertical</property>
 				</widget>
 				<widget name="Button3" type="Button">
-					<property name="x">353</property>
-					<property name="y">105</property>
-					<property name="width">93</property>
-					<property name="height">66</property>
+					<property name="x">311</property>
+					<property name="y">87</property>
+					<property name="width">177</property>
+					<property name="height">76</property>
 					<property name="grab_mouse">true</property>
+					<property name="margin">5</property>
 					<property name="fillflags">blend</property>
 					<property name="color" id="button_bg" group="normal">ff0000ff</property>
-					<property name="text">Button1</property>
+					<property name="text">Button red bg</property>
 					<property name="text_align">center_horizontal|center_vertical</property>
 				</widget>
 				<widget name="Button4" type="Button">
-					<property name="x">262</property>
-					<property name="y">171</property>
-					<property name="width">276</property>
-					<property name="height">96</property>
+					<property name="x">272</property>
+					<property name="y">163</property>
+					<property name="width">256</property>
+					<property name="height">76</property>
 					<property name="grab_mouse">true</property>
-					<property name="margin">15</property>
+					<property name="margin">5</property>
 					<property name="fillflags">blend</property>
 					<property name="color" id="button_bg" group="normal">
 						<pattern>
@@ -121,30 +123,50 @@
 					<property name="text_align">center_horizontal|center_vertical</property>
 				</widget>
 				<widget name="Button5" type="Button">
-					<property name="x">262</property>
-					<property name="y">267</property>
-					<property name="width">276</property>
-					<property name="height">96</property>
+					<property name="x">225</property>
+					<property name="y">239</property>
+					<property name="width">349</property>
+					<property name="height">76</property>
 					<property name="grab_mouse">true</property>
-					<property name="margin">15</property>
+					<property name="margin">5</property>
+					<property name="fillflags">blend</property>
+					<property name="color" id="button_bg" group="normal">
+						<pattern>
+							<property name="type">linear_vertical</property>
+							<property name="start">[0,0]</property>
+							<property name="end">[0,0]</property>
+							<property name="steps">{0.100000,ff0000ff},{0.200000,0000ffff},{0.400000,ffff00ff},{0.600000,ffffffff},{0.800000,000000ff},{1.000000,000000ff},</property>
+						</pattern>
+					</property>
+					<property name="color" id="button_text" group="normal">000000ff</property>
+					<property name="text">Button linear vertical pattern</property>
+					<property name="text_align">center_horizontal|center_vertical</property>
+				</widget>
+				<widget name="Button6" type="Button">
+					<property name="x">272</property>
+					<property name="y">315</property>
+					<property name="width">256</property>
+					<property name="height">76</property>
+					<property name="grab_mouse">true</property>
+					<property name="margin">5</property>
 					<property name="fillflags">blend</property>
 					<property name="color" id="button_bg" group="normal">
 						<pattern>
 							<property name="type">radial</property>
-							<property name="start">[123,276]</property>
-							<property name="end">[123,276]</property>
+							<property name="start">[169,342]</property>
+							<property name="end">[169,342]</property>
 							<property name="steps">{0.100000,ff0000ff},{0.200000,ffff00ff},{0.400000,0000ffff},{0.600000,ffffffff},{0.800000,008000ff},{1.000000,ffff00ff},{2.000000,00000000},</property>
-							<property name="start_radius">82</property>
-							<property name="end_radius">35</property>
+							<property name="start_radius">85</property>
+							<property name="end_radius">36</property>
 						</pattern>
 					</property>
 					<property name="color" id="button_text" group="normal">000000ff</property>
 					<property name="text">Button radial pattern</property>
 					<property name="text_align">center_horizontal|center_vertical</property>
 				</widget>
-				<widget name="Label6" type="Label">
+				<widget name="Label7" type="Label">
 					<property name="x">252</property>
-					<property name="y">363</property>
+					<property name="y">391</property>
 					<property name="width">296</property>
 					<property name="height">77</property>
 					<property name="margin">10</property>
@@ -152,8 +174,8 @@
 					<property name="color" id="label_text" group="normal">
 						<pattern>
 							<property name="type">linear</property>
-							<property name="start">[262,401]</property>
-							<property name="end">[538,401]</property>
+							<property name="start">[262,429]</property>
+							<property name="end">[538,429]</property>
 							<property name="steps">{0.000000,ff0000ff},{0.250000,0000ffff},{0.750000,008000ff},{1.000000,ff0000ff},</property>
 						</pattern>
 					</property>
