@@ -287,7 +287,7 @@ void Theme::draw_box(Painter& painter,
         {
             auto bg_pattern = bg;
             bg_pattern.linear(Point(box.x(), box.y() + box.height() / 2.),
-                              Point(box.x() + box.width(), box.y() + box.height()));
+                              Point(box.x() + box.width(), box.y() + box.height() / 2.));
             painter.set(bg_pattern);
         }
         else if (bg.type() == Pattern::Type::radial)
