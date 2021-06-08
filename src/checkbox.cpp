@@ -80,10 +80,12 @@ void CheckBox::default_draw(const CheckBox& widget, Painter& painter, const Rect
 
     std::vector<detail::LayoutRect> rects;
 
+    auto w = std::min<DefaultDim>(b.width() - text_size.width() - widget.padding(), b.height());
+    if (w < 0)
+        w = b.width() * 0.15;
+
     rects.emplace_back(0,
-                       Rect(0, 0,
-                            std::min<DefaultDim>(b.width() - text_size.width() - widget.padding(), b.height()),
-                            std::min<DefaultDim>(b.width() - text_size.width() - widget.padding(), b.height())),
+                       Rect(0, 0, w, w),
                        0, 0, widget.padding() / 2);
     rects.emplace_back(0,
                        Rect(0, 0, text_size.width(), text_size.height()),
