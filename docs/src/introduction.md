@@ -69,7 +69,7 @@ This is a list of high level features generally supported and provided by EGT:
 - Anti-aliased 2D vector graphics.
 - Modern C++ design and simplicity.
 - Optimized for Microchip microprocessors running Linux.
-- DRM/KMS, X11, and fbdev backends.
+- DRM/KMS and X11 backends.
 - libinput, tslib, and evdev input support for mouse, keyboard, and touchscreen.
 - UTF-8 encoding with internationalization and localization support.
 - Support for libplanes and hardware LCD overlay planes.

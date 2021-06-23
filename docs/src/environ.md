@@ -40,7 +40,6 @@ EGT_DEBUG=1 EGT_KMS_BUFFERS=1 ./egt_space
     - kms
     - x11
     - sdl2
-    - fbdev
     - none
   </dd>
 

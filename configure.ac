@@ -619,12 +619,6 @@ if test "x${have_gstreamer}" = xyes; then
    AC_SUBST(include_capture, ["#define EGT_HAS_CAPTURE 1"])
 fi
 
-AC_CHECK_HEADER([linux/fb.h], [have_fbdev=yes], [have_fbdev=no])
-AM_CONDITIONAL([HAVE_FBDEV], [test "x${have_fbdev}" = xyes])
-if test "x${have_fbdev}" = xyes; then
-   AC_DEFINE(HAVE_FBDEV, 1, [Have fbdev support])
-fi
-
 AC_CHECK_HEADER([linux/input.h], [have_linux_input_h=yes], [have_linux_input_h=no])
 AM_CONDITIONAL([HAVE_LINUX_INPUT_H], [test "x${have_linux_input_h}" = xyes])
 if test "x${have_linux_input_h}" = xyes; then
@@ -823,7 +817,6 @@ echo "Display:"
 echo "  DRM/KMS                ${have_libplanes:-no}"
 echo "  X11                    ${have_x11:-no}"
 echo "  SDL2                   ${have_sdl2:-no}"
-echo "  fbdev                  ${have_fbdev:-no}"
 echo
 
 echo "Input:"

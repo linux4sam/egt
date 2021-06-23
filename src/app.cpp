@@ -36,10 +36,6 @@
 #include "egt/detail/screen/x11screen.h"
 #endif
 
-#ifdef HAVE_FBDEV
-#include "egt/detail/screen/framebuffer.h"
-#endif
-
 #ifdef HAVE_SDL2
 #include "egt/detail/screen/sdlscreen.h"
 #endif
@@ -239,9 +235,6 @@ void Application::setup_backend(bool primary)
 #endif
 #ifdef HAVE_SDL2
         {"sdl2", [this, &size]() { return std::make_unique<detail::SDLScreen>(*this, size); }},
-#endif
-#ifdef HAVE_FBDEV
-        {"fbdev", []() { return std::make_unique<detail::FrameBuffer>("/dev/fb0"); }},
 #endif
         {"memory", [&size]() { return std::make_unique<detail::MemoryScreen>(size); }},
     };

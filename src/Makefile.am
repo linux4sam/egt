@@ -353,14 +353,6 @@ nobase_libegtinclude_HEADERS += \
 ../include/egt/svgimage.h
 endif
 
-if HAVE_FBDEV
-libegt_la_SOURCES += \
-detail/screen/framebuffer.cpp
-
-nobase_libegtinclude_HEADERS += \
-../include/egt/detail/screen/framebuffer.h
-endif
-
 if HAVE_LINUX_INPUT_H
 libegt_la_SOURCES += \
 detail/input/inputevdev.cpp
