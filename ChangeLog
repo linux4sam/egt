@@ -1,0 +1,32 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+## [Unreleased]
+
+## [1.2] - 2020-06-28
+### Added
+- ImageLabel/ImageButton: add an option to keep the image ratio when the image
+  is auto-scaled.
+- Serialization/de-serialization: continue to improve the support but still
+  experimental.
+- The git commit id and the state of the tree used to build the library can be
+  displayed:
+  EGT_DEBUG=1 examples/basic/basic
+      633509063 [info] EGT Git Version b1fabd9d-dirty
+
+### Changed
+- ValueRangeWidget: change min and max value management. Switch to start and
+  end which removes the constraint start < end.
+
+### Fixed
+- Size of overlay plane windows is now updated when scaling happens.
+- Crashes with low-resolution screen.
+- Mpeg4 video decoding.
+- Font: check if the font requested is installed.
+- ComboBox: wrong rendering in some conditions.
+- ImageLabel/ImageButton: auto scale.
+- ScrolledView: event dispatching and background drawing.
+- Chart: display of the axis labels.
+
