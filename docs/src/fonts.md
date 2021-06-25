@@ -16,7 +16,7 @@ egt::v1::Widget::font() member function.
 
 @code{.cpp}
 egt::Button btn("Press Me");
-auto customfont = egt::Font("Serif", 25, egt::Font::weightid::bold, egt::Font::slantid::italic);
+auto customfont = egt::Font("Serif", 25, egt::Font::Weight::bold, egt::Font::Slant::italic);
 btn.font(customfont);
 @endcode
 
