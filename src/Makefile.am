@@ -15,7 +15,7 @@ endif
 # resulting in the error:
 #    expected unqualified-id before string constant
 # Workaround is to use DATAPATH instead.
-GIT_VERSION := $(shell cat ../include/egt/git.version 2> /dev/null)
+GIT_VERSION := $(shell cat $(top_builddir)/include/egt/git.version 2> /dev/null)
 CUSTOM_FLAGS += -DDATAPATH=\"$(datadir)\" -DSRCDIR=\"$(abs_top_srcdir)\" -DGIT_VERSION=\"${GIT_VERSION}\"
 
 CUSTOM_CXXFLAGS = -DEGT_DLL_EXPORTS -DFMT_HEADER_ONLY
@@ -430,8 +430,8 @@ checkheaders:
 		$(AM_CPPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(libegt_la_CXXFLAGS)
 
 $(top_builddir)/include/egt/git.version: .FORCE
-	@$(top_builddir)/scripts/git_version.sh > $(top_builddir)/include/egt/git.version
-	@$(shell touch $(top_builddir)/src/utils.cpp)
+	@$(top_srcdir)/scripts/git_version.sh > $(top_builddir)/include/egt/git.version
+	@$(shell touch $(top_srcdir)/src/utils.cpp)
 
 .PHONY: .FORCE
 .FORCE:
