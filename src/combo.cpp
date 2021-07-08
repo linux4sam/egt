@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "egt/app.h"
 #include "egt/combo.h"
 #include "egt/detail/imagecache.h"
 #include "egt/frame.h"
@@ -17,7 +18,7 @@ namespace egt
 inline namespace v1
 {
 
-static constexpr auto DEFAULT_COMBOBOX_SIZE = Size(200, 30);
+Size ComboBox::default_combobox_size_value;
 
 namespace detail
 {
@@ -264,12 +265,28 @@ void ComboBox::move(const Point& point)
         m_popup->smart_pos();
 }
 
+Size ComboBox::default_size()
+{
+    if (default_combobox_size_value.empty())
+    {
+        auto ss = egt::Application::instance().screen()->size();
+        default_combobox_size_value = Size(ss.width() * 0.25, ss.height() * 0.05);
+    }
+
+    return default_combobox_size_value;
+}
+
+void ComboBox::default_size(const Size& size)
+{
+    default_combobox_size_value = size;
+}
+
 Size ComboBox::min_size_hint() const
 {
     if (!m_min_size.empty())
         return m_min_size;
 
-    return DEFAULT_COMBOBOX_SIZE + Widget::min_size_hint();
+    return default_size() + Widget::min_size_hint();
 }
 
 void ComboBox::show_popup() const

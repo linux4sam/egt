@@ -96,6 +96,12 @@ public:
 
     void draw(Painter& painter, const Rect& rect) override;
 
+    /// Default combobox size.
+    static Size default_size();
+
+    /// Change default combobox size.
+    static void default_size(const Size& size);
+
     using Widget::min_size_hint;
 
     EGT_NODISCARD Size min_size_hint() const override;
@@ -171,6 +177,8 @@ protected:
     friend class detail::ComboBoxPopup;
 
 private:
+
+    static Size default_combobox_size_value;
 
     void initialize();
 
