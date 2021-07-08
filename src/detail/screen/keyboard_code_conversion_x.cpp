@@ -1230,6 +1230,22 @@ KeyboardCode DefaultKeyboardCodeFromHardwareKeycode(
     return kHardwareKeycodeMap[hardware_code];
 }
 
+Key::KeyState KeyStateFromXKeyEvent(const XEvent* xev)
+{
+    Key::KeyState state;
+
+    if (xev->xkey.state & ShiftMask)
+        state.set(Key::KeyMod::shift);
+
+    if (xev->xkey.state & ControlMask)
+        state.set(Key::KeyMod::control);
+
+    if (xev->xkey.state & LockMask)
+        state.set(Key::KeyMod::lock);
+
+    return state;
+}
+
 }
 }
 }

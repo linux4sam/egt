@@ -4,6 +4,7 @@
 #ifndef UI_EVENTS_KEYCODES_KEYBOARD_CODE_CONVERSION_X_H_
 #define UI_EVENTS_KEYCODES_KEYBOARD_CODE_CONVERSION_X_H_
 #include <stdint.h>
+#include <egt/event.h>
 #include <egt/keycode.h>
 typedef union _XEvent XEvent;
 typedef struct _XDisplay XDisplay;
@@ -30,6 +31,7 @@ unsigned int XKeyCodeForWindowsKeyCode(KeyboardCode key_code,
 // Converts an X keycode into ui::KeyboardCode.
 KeyboardCode
 DefaultKeyboardCodeFromHardwareKeycode(unsigned int hardware_code);
+Key::KeyState KeyStateFromXKeyEvent(const XEvent* xev);
 }
 }
 }

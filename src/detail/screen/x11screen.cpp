@@ -221,7 +221,8 @@ void X11Screen::handle_read(const asio::error_code& error)
 
                     const auto id = EventId::keyboard_repeat;
                     Event event(id, Key(detail::KeyboardCodeFromXKeyEvent(&e),
-                                        m_priv->keyboard.on_key(e.xkey.keycode, id)));
+                                        m_priv->keyboard.on_key(e.xkey.keycode, id),
+                                        detail::KeyStateFromXKeyEvent(&e)));
                     m_in.dispatch(event);
                     break;
                 }
@@ -231,7 +232,8 @@ void X11Screen::handle_read(const asio::error_code& error)
         {
             const auto id = e.type == KeyPress ? EventId::keyboard_down : EventId::keyboard_up;
             Event event(id, Key(detail::KeyboardCodeFromXKeyEvent(&e),
-                                m_priv->keyboard.on_key(e.xkey.keycode, id)));
+                                m_priv->keyboard.on_key(e.xkey.keycode, id),
+                                detail::KeyStateFromXKeyEvent(&e)));
             m_in.dispatch(event);
             break;
         }
