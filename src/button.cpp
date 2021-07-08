@@ -21,6 +21,7 @@ inline namespace v1
 {
 
 Size Button::default_button_size_value;
+AlignFlags Button::default_text_align_value = AlignFlag::center;
 
 Size Button::default_size()
 {
@@ -34,8 +35,6 @@ void Button::default_size(const Size& size)
 {
     default_button_size_value = size;
 }
-
-static AlignFlags default_text_align_value{AlignFlag::center};
 
 AlignFlags Button::default_text_align()
 {
