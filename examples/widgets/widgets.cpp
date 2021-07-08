@@ -332,58 +332,62 @@ struct SliderPage : public egt::NotebookTab
 {
     SliderPage()
     {
-        auto hsizer1 = std::make_shared<egt::BoxSizer>(egt::Orientation::flex);
-        add(egt::expand(hsizer1));
+        auto grid = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(3, 3));
+        grid->margin(5);
+        grid->horizontal_space(5);
+        grid->vertical_space(5);
+        add(egt::expand(grid));
 
-        auto slider1 = std::make_shared<egt::Slider>(egt::Rect(0, 0, 200, 80));
+        auto slider1 = std::make_shared<egt::Slider>();
         slider1->value(50);
-        hsizer1->add(slider1);
+        grid->add(egt::expand(slider1));
 
-        auto slider2 = std::make_shared<egt::Slider>(egt::Rect(0, 0, 80, 200), 0, 100, 0, egt::Orientation::vertical);
+        auto slider2 = std::make_shared<egt::Slider>(0, 100, 0, egt::Orientation::vertical);
         slider2->value(75);
-        hsizer1->add(slider2);
+        grid->add(egt::expand(slider2));
 
-        auto slider3 = std::make_shared<egt::SliderF>(egt::Rect(0, 0, 200, 80), 100, 0);
+        auto slider3 = std::make_shared<egt::SliderF>(100, 0);
         slider3->value(50);
         slider3->slider_flags().set({egt::SliderF::SliderFlag::round_handle,
                                      egt::SliderF::SliderFlag::show_label});
-        hsizer1->add(slider3);
+        grid->add(egt::expand(slider3));
 
-        auto slider4 = std::make_shared<egt::Slider>(egt::Rect(0, 0, 80, 200), 0, 100, 0, egt::Orientation::vertical);
+        auto slider4 = std::make_shared<egt::Slider>(0, 100, 0, egt::Orientation::vertical);
         slider4->value(75);
         slider4->slider_flags().set(egt::Slider::SliderFlag::round_handle);
         slider4->disable();
-        hsizer1->add(slider4);
+        grid->add(egt::expand(slider4));
 
-        auto slider5 = std::make_shared<egt::Slider>(egt::Rect(0, 0, 80, 200), 100, 200, 150, egt::Orientation::vertical);
-        slider5->value(180);
-        slider5->slider_flags().set({egt::Slider::SliderFlag::square_handle, egt::Slider::SliderFlag::show_labels});
-        hsizer1->add(slider5);
+        auto slider5 = std::make_shared<egt::Slider>();
+        slider5->orient(egt::Orientation::vertical);
+        slider5->live_update(true);
+        grid->add(egt::expand(slider5));
 
-        auto slider6 = std::make_shared<egt::Slider>(egt::Rect(0, 0, 200, 80), 100, 200, 150);
-        slider6->slider_flags().set({egt::Slider::SliderFlag::rectangle_handle,
+        auto slider6 = std::make_shared<egt::Slider>();
+        slider6->orient(egt::Orientation::vertical);
+        slider6->live_update(true);
+        grid->add(egt::expand(slider6));
+
+        slider5->on_value_changed([slider5, slider6]()
+        {
+            slider6->value(slider5->value());
+        });
+
+        slider6->on_value_changed([slider5, slider6]()
+        {
+            slider5->value(slider6->value());
+        });
+
+        auto slider7 = std::make_shared<egt::Slider>(100, 200, 150, egt::Orientation::vertical);
+        slider7->value(180);
+        slider7->margin(5);
+        slider7->slider_flags().set({egt::Slider::SliderFlag::square_handle, egt::Slider::SliderFlag::show_labels});
+        grid->add(egt::expand(slider7));
+
+        auto slider8 = std::make_shared<egt::Slider>(100, 200, 150);
+        slider8->slider_flags().set({egt::Slider::SliderFlag::rectangle_handle,
                                      egt::Slider::SliderFlag::show_labels});
-        hsizer1->add(slider6);
-
-        auto slider7 = std::make_shared<egt::Slider>(egt::Rect(0, 0, 80, 200));
-        slider7->orient(egt::Orientation::vertical);
-        slider7->live_update(true);
-        hsizer1->add(slider7);
-
-        auto slider8 = std::make_shared<egt::Slider>(egt::Rect(0, 0, 80, 200));
-        slider8->orient(egt::Orientation::vertical);
-        slider8->live_update(true);
-        hsizer1->add(slider8);
-
-        slider7->on_value_changed([slider7, slider8]()
-        {
-            slider8->value(slider7->value());
-        });
-
-        slider8->on_value_changed([slider7, slider8]()
-        {
-            slider7->value(slider8->value());
-        });
+        grid->add(egt::expand(slider8));
     }
 };
 
