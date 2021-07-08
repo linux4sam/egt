@@ -90,7 +90,7 @@ public:
      * Image returned will be the same size as the entire SVG.
      *
      * @param[in] id Optional id of the SVG element to render.  If no id is
-     *               specified, all elements in the SVG will be rendered. \n 
+     *               specified, all elements in the SVG will be rendered. \n
      *               Element IDs must follow the syntax of an URL fragment
      *               identifier.  For example, use "#right_blink" (hash right_blink)
      *               to obtain a handle on the SVG element with
@@ -120,7 +120,7 @@ public:
     /**
      * Get the position and size of an element in the SVG.
      *
-     * @param[in] id The id of the SVG element. \n 
+     * @param[in] id The id of the SVG element. \n
      *               Element IDs must follow the syntax of an URL fragment
      *               identifier.  For example, use "#right_blink" (hash right_blink)
      *               to obtain a handle on the SVG element with
@@ -131,7 +131,7 @@ public:
     /**
      * Test if an element exists in the SVG image.
      *
-     * @param[in] id The id of the SVG element. \n 
+     * @param[in] id The id of the SVG element. \n
      *               Element IDs must follow the syntax of an URL fragment
      *               identifier.  For example, use "#right_blink" (hash right_blink)
      *               to obtain a handle on the SVG element with

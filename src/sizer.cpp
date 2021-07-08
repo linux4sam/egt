@@ -44,7 +44,7 @@ enum
 };
 
 BoxSizer::BoxSizer(Serializer::Properties& props)
-	: Frame(props)
+    : Frame(props)
 {
     deserialize(props);
 }

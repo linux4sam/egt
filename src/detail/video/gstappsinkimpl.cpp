@@ -141,12 +141,12 @@ GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
                     if (Application::check_instance())
                     {
                         asio::post(Application::instance().event().io(), [impl, vs, b]()
-                                {
-                                if (vs.width() < b.width() || vs.height() < b.height())
+                        {
+                            if (vs.width() < b.width() || vs.height() < b.height())
                                 impl->resize(vs);
-                                else
+                            else
                                 impl->resize(b.size());
-                                });
+                        });
                     }
 
                     // drop this frame and continue
