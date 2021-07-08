@@ -766,12 +766,40 @@ void TextBox::handle_key(const Key& key)
     }
     case EKEY_LEFT:
     {
-        cursor_backward();
+        if (key.state.is_set(Key::KeyMod::shift))
+        {
+            selection_backward();
+        }
+        else if (m_select_len)
+        {
+            // Move the cursor to the beginning of the selection and deselect the text
+            cursor_set(m_select_start);
+            m_select_len = 0;
+            selection_damage();
+        }
+        else
+        {
+            cursor_backward();
+        }
         break;
     }
     case EKEY_RIGHT:
     {
-        cursor_forward();
+        if (key.state.is_set(Key::KeyMod::shift))
+        {
+            selection_forward();
+        }
+        else if (m_select_len)
+        {
+            // Move the cursor to the end of the selection and deselect the text
+            cursor_set(m_select_start + m_select_len);
+            m_select_len = 0;
+            selection_damage();
+        }
+        else
+        {
+            cursor_forward();
+        }
         break;
     }
     /// NOLINTNEXTLINE(bugprone-branch-clone)
@@ -1120,6 +1148,59 @@ void TextBox::selection(size_t pos, size_t length)
     {
         m_select_start = pos;
         m_select_len = length;
+        selection_damage();
+    }
+}
+
+void TextBox::selection_forward(size_t count)
+{
+    if (!m_select_len)
+        m_select_start = m_cursor_pos;
+
+    size_t select_end = m_select_start + m_select_len;
+    if (select_end == m_cursor_pos && m_select_len)
+    {
+        count = std::min(count, m_select_len);
+
+        // Reduce the selection from the left
+        m_select_start += count;
+        m_select_len -= count;
+        selection_damage();
+    }
+    else if (select_end < detail::utf8len(m_text))
+    {
+        count = std::min(count, detail::utf8len(m_text) - select_end);
+
+        // Extend the selection to the right
+        if (m_cursor_state)
+            hide_cursor();
+        m_select_len += count;
+        selection_damage();
+    }
+}
+
+void TextBox::selection_backward(size_t count)
+{
+    if (!m_select_len)
+        m_select_start = m_cursor_pos;
+
+    if (m_select_start == m_cursor_pos && m_select_len)
+    {
+        count = std::min(count, m_select_len);
+
+        // Reduce the selection from the right
+        m_select_len -= count;
+        selection_damage();
+    }
+    else if (m_select_start > 0)
+    {
+        count = std::min(count, m_select_start);
+
+        // Extend the selection to the left
+        if (m_cursor_state)
+            hide_cursor();
+        m_select_start -= count;
+        m_select_len += count;
         selection_damage();
     }
 }

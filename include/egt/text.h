@@ -319,6 +319,24 @@ public:
     void selection(size_t pos, size_t length);
 
     /**
+     * Extend the selection to the right if the cursor is at its beginning,
+     * otherwise reduce the selection from the left.
+     * In both cases, the selection length is updated by the specified count.
+     *
+     * @param count The number of characters to move.
+     */
+    void selection_forward(size_t count = 1);
+
+    /**
+     * Extend the selection to the left if the cursor is at its end,
+     * otherwise reduce the selection from the right.
+     * In both cases, the selection length is updated by the specified count.
+     *
+     * @param count The number of characters to move.
+     */
+    void selection_backward(size_t count = 1);
+
+    /**
      * Get the start position of the selection.
      */
     EGT_NODISCARD size_t selection_start() const
