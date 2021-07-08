@@ -159,6 +159,8 @@ protected:
 
 private:
 
+    static Size default_button_size_value;
+
     /**
      * Pointer to the group this button is a part of.
      * @todo This should be std::shared_ptr<ButtonGroup>

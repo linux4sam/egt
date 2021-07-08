@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "detail/utf8text.h"
+#include "egt/app.h"
 #include "egt/button.h"
 #include "egt/detail/alignment.h"
 #include "egt/detail/imagecache.h"
@@ -18,10 +19,14 @@ namespace egt
 {
 inline namespace v1
 {
-static Size default_button_size_value = Size(100, 30);
+
+Size Button::default_button_size_value;
 
 Size Button::default_size()
 {
+    if (default_button_size_value.empty())
+        default_button_size_value =  egt::Application::instance().screen()->size() * 0.12;
+
     return default_button_size_value;
 }
 
