@@ -10,7 +10,7 @@
  * @file
  * @brief Working with progress meters.
  */
-
+#include <egt/app.h>
 #include <egt/detail/alignment.h>
 #include <egt/detail/math.h>
 #include <egt/detail/meta.h>
@@ -224,18 +224,24 @@ public:
 };
 
 template <class T>
-Size ProgressBarType<T>::m_default_size{200, 30};
+Size ProgressBarType<T>::m_default_size;
 
 template <class T>
 Size ProgressBarType<T>::default_size()
 {
+    if (ProgressBarType<T>::m_default_size.empty())
+    {
+        auto ss = egt::Application::instance().screen()->size();
+        ProgressBarType<T>::m_default_size = Size(ss.width() * 0.25, ss.height() * 0.05);
+    }
+
     return ProgressBarType<T>::m_default_size;
 }
 
 template <class T>
 void ProgressBarType<T>::default_size(const Size& size)
 {
-    ProgressBarType<T>::default_progressbar_size_value = size;
+    ProgressBarType<T>::m_default_size = size;
 }
 
 /**
@@ -413,11 +419,16 @@ public:
 };
 
 template <class T>
-Size SpinProgressType<T>::m_default_size{100, 100};
+Size SpinProgressType<T>::m_default_size;
 
 template <class T>
 Size SpinProgressType<T>::default_size()
 {
+    if (SpinProgressType<T>::m_default_size.empty())
+    {
+        auto ss = egt::Application::instance().screen()->size();
+        SpinProgressType<T>::m_default_size = Size(ss.width() * 0.12, ss.height() * 0.20);
+    }
     return SpinProgressType<T>::m_default_size;
 }
 
@@ -616,11 +627,16 @@ public:
 };
 
 template <class T>
-Size LevelMeterType<T>::m_default_size{40, 100};
+Size LevelMeterType<T>::m_default_size;
 
 template <class T>
 Size LevelMeterType<T>::default_size()
 {
+    if (LevelMeterType<T>::m_default_size.empty())
+    {
+        auto ss = egt::Application::instance().screen()->size();
+        LevelMeterType<T>::m_default_size = Size(ss.width() * 0.05, ss.height() * 0.20);
+    }
     return LevelMeterType<T>::m_default_size;
 }
 
@@ -811,11 +827,17 @@ public:
 };
 
 template <class T>
-Size AnalogMeterType<T>::m_default_size{200, 100};
+Size AnalogMeterType<T>::m_default_size;
 
 template <class T>
 Size AnalogMeterType<T>::default_size()
 {
+
+    if (AnalogMeterType<T>::m_default_size.empty())
+    {
+        auto ss = egt::Application::instance().screen()->size();
+        AnalogMeterType<T>::m_default_size = Size(ss.width() * 0.25, ss.height() * 0.20);
+    }
     return AnalogMeterType<T>::m_default_size;
 }
 
