@@ -11,6 +11,7 @@
  * @brief Working with sliders.
  */
 
+#include <egt/app.h>
 #include <egt/detail/alignment.h>
 #include <egt/detail/enum.h>
 #include <egt/detail/math.h>
@@ -222,6 +223,21 @@ public:
     /// Get the current slider flags.
     SliderFlags& slider_flags() { return m_slider_flags; }
 
+    using ValueRangeWidget<T>::min_size_hint;
+
+    /// Default Slider size.
+    static Size default_size();
+    /// Change default Slider size.
+    static void default_size(const Size& size);
+
+    EGT_NODISCARD Size min_size_hint() const override
+    {
+        if (!this->m_min_size.empty())
+            return this->m_min_size;
+
+        return default_size() + Widget::min_size_hint();
+    }
+
     void serialize(Serializer& serializer) const override;
 
 protected:
@@ -333,6 +349,8 @@ protected:
     int m_start_offset{0};
 
 private:
+    /// Default size.
+    static Size m_default_size;
 
     void deserialize(Serializer::Properties& props) override;
 };
@@ -368,6 +386,27 @@ public:
         return "SliderF";
     }
 };
+
+template <class T>
+Size SliderType<T>::m_default_size;
+
+template <class T>
+Size SliderType<T>::default_size()
+{
+    if (SliderType<T>::m_default_size.empty())
+    {
+        auto ss = egt::Application::instance().screen()->size();
+        SliderType<T>::m_default_size = Size(ss.width() * 0.20, ss.height() * 0.10);
+    }
+
+    return SliderType<T>::m_default_size;
+}
+
+template <class T>
+void SliderType<T>::default_size(const Size& size)
+{
+    SliderType<T>::m_default_size = size;
+}
 
 template <class T>
 SliderType<T>::SliderType(const Rect& rect, T start, T end, T value,
