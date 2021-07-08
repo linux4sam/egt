@@ -12,6 +12,7 @@
  */
 
 #include <egt/detail/meta.h>
+#include <egt/flags.h>
 #include <egt/geometry.h>
 #include <egt/keycode.h>
 #include <iosfwd>
@@ -162,15 +163,25 @@ EGT_API std::ostream& operator<<(std::ostream& os, const Pointer& pointer);
  */
 struct EGT_API Key
 {
+    enum class KeyMod : uint32_t
+    {
+        shift = detail::bit(0),
+        control = detail::bit(1),
+        lock = detail::bit(2),
+    };
+
+    using KeyState = egt::Flags<KeyMod>;
+
     constexpr Key() noexcept = default;
 
     /**
      * @param[in] k Key code for the event.
      * @param[in] u Unicode value of the event.
      */
-    constexpr explicit Key(KeyboardCode k, uint32_t u = 0) noexcept
+    constexpr explicit Key(KeyboardCode k, uint32_t u = 0, const KeyState& s = {}) noexcept
         : keycode(k),
-          unicode(u)
+          unicode(u),
+          state(s)
     {}
 
     /**
@@ -190,6 +201,13 @@ struct EGT_API Key
      * 32 bit unicode code point.
      */
     uint32_t unicode{0};
+
+    /**
+     * Key state
+     *
+     * A bitmask of key modifiers such as SHIFT, CONTROL or LOCK keys.
+     */
+    KeyState state{};
 };
 
 static_assert(detail::rule_of_5<Key>(), "must fulfill rule of 5");
