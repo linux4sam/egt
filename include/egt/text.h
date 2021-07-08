@@ -17,6 +17,8 @@
 #include <egt/image.h>
 #include <egt/textwidget.h>
 #include <egt/timer.h>
+#include <egt/types.h>
+#include <list>
 #include <memory>
 #include <string>
 #include <vector>
@@ -25,6 +27,76 @@ namespace egt
 {
 inline namespace v1
 {
+
+
+class TextRect
+{
+public:
+
+    /// TextRect flags.
+    enum class TextRectFlag : uint32_t
+    {
+        /// Text is selected
+        selected = detail::bit(0),
+    };
+
+    /// TextRect flags.
+    using TextRectFlags = egt::Flags<TextRectFlag>;
+
+    TextRect(uint32_t behave,
+             const Rect& rect,
+             std::string text,
+             const cairo_text_extents_t& te,
+             const TextRectFlags& flags = {}) noexcept
+        : m_text(std::move(text)),
+          m_rect(rect),
+          m_text_rect_flags(flags),
+          m_behave(behave),
+          m_te(te)
+    {}
+
+    const std::string& text(void) const { return m_text; }
+    const Rect& rect(void) const { return m_rect; }
+    void rect(const Rect& r) { m_rect = r; }
+    const TextRectFlags& flags(void) const { return m_text_rect_flags; }
+    uint32_t behave(void) const { return m_behave; }
+    const cairo_text_extents_t& text_extents(void) const { return m_te; }
+    void select(void) { m_text_rect_flags.set(TextRectFlag::selected); }
+    void deselect(void) { m_text_rect_flags.clear(TextRectFlag::selected); }
+    bool is_selected(void) const { return m_text_rect_flags.is_set(TextRectFlag::selected); }
+
+    bool can_consolidate(const TextRect& r) const noexcept
+    {
+        return ((m_text_rect_flags == r.m_text_rect_flags) &&
+                (m_rect.y() == r.m_rect.y()) &&
+                (m_rect.height() == r.m_rect.height()) &&
+                ((m_rect.x() + m_rect.width()) == r.m_rect.x()) &&
+                (r.m_text != "\n"));
+    }
+
+    size_t length(void) const noexcept;
+    TextRect& consolidate(const TextRect& r, cairo_t* cr) noexcept;
+    TextRect split(size_t pos, cairo_t* cr) noexcept;
+
+private:
+
+    /// Text to be displayed
+    std::string m_text;
+
+    /// Rectangle where to display the text
+    Rect m_rect;
+
+    /// Flags tuning how the text is displayed
+    TextRectFlags m_text_rect_flags{};
+
+    /// Behavior flags of the object.
+    uint32_t m_behave{0};
+
+    /// Cairo text extents
+    cairo_text_extents_t m_te;
+};
+
+using TextRects = std::list<TextRect>;
 
 /**
  * Input text box.
@@ -324,6 +396,9 @@ protected:
     /// Validate the input against the validator pattern.
     bool validate_input(const std::string& str);
 
+    /// Compute damage rectangles for selection updates
+    void selection_damage();
+
     /// Timer for blinking the cursor.
     PeriodicTimer m_timer;
 
@@ -347,6 +422,14 @@ protected:
 
     /// Callbacks invoked to validate the input.
     ValidatorCallbackArray m_validator_callbacks;
+
+    /**
+     * Cairo context.
+     */
+    shared_cairo_t m_cr;
+
+    TextRects m_rects;
+    Rect m_cursor_rect;
 
     /**
      * Given text, return the number of UTF8 characters that will fit on a

@@ -44,7 +44,7 @@ static void run_and_apply(lay_context& ctx, lay_id parent,
     }
 }
 
-static uint32_t justify_to_contains(Justification justify, Orientation orient)
+uint32_t justify_to_contains(Justification justify, Orientation orient)
 {
     uint32_t contains = 0;
 
@@ -78,7 +78,7 @@ static uint32_t justify_to_contains(Justification justify, Orientation orient)
     return contains;
 }
 
-static uint32_t align_to_behave(const AlignFlags& align)
+uint32_t align_to_behave(const AlignFlags& align)
 {
     uint32_t behave = 0;
     if (align.is_set(AlignFlag::expand_horizontal))

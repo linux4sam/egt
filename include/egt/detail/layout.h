@@ -106,6 +106,16 @@ EGT_API void flex_layout(const Rect& parent,
                          Justification justify,
                          Orientation orient,
                          const AlignFlags& align);
+
+/**
+ * Compute lib lay contains from @justify and @orient parameters.
+ */
+EGT_API uint32_t justify_to_contains(Justification justify, Orientation orient);
+
+/**
+ * Compute lib lay behave from @align flags.
+ */
+EGT_API uint32_t align_to_behave(const AlignFlags& align);
 }
 }
 }
