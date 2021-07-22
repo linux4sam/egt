@@ -147,7 +147,10 @@ Size CheckBox::min_size_hint() const
         return s;
     }
 
-    return min_size;
+    /* if text is empty, use only 10% of min_size to
+     * draw checkbox alone.
+     */
+    return min_size * 0.10;
 }
 
 ToggleBox::ToggleBox(const Rect& rect) noexcept
