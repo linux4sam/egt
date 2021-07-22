@@ -135,7 +135,6 @@ template<class T>
 constexpr T normalize(T value, T min, T max, T target_min, T target_max)
 {
     assert(!float_equal(min, max));
-    assert(!float_equal(target_min, target_max));
     const auto r = ((value - min) / (max - min)) *
                    (target_max - target_min) + target_min;
     assert(!std::isnan(r));
