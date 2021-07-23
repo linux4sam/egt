@@ -12,6 +12,17 @@ if ! [ -x "$(command -v git)" ] ; then
     exit 0
 fi
 
+SRC_TREE=$1
+cd "$SRC_TREE"
+
+# Check the top-level directory of the git repository. If it returns a string,
+# it means the current directory is not the top-level one, don't use the git
+# commit id in this case as it's not related to EGT.
+if ! [ -z "$(git rev-parse --show-cdup 2>/dev/null)" ] ; then
+    echo "n/a"
+    exit 0
+fi
+
 GIT_COMMIT=$(git log -1 --pretty='%h' 2> /dev/null)
 if [ $? -ne 0 ] ; then
     echo "n/a"

@@ -430,7 +430,7 @@ checkheaders:
 		$(AM_CPPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(libegt_la_CXXFLAGS)
 
 $(top_builddir)/include/egt/git.version: .FORCE
-	@$(top_srcdir)/scripts/git_version.sh > $(top_builddir)/include/egt/git.version
+	@$(top_srcdir)/scripts/git_version.sh $(top_srcdir)> $(top_builddir)/include/egt/git.version
 	@$(shell touch $(top_srcdir)/src/utils.cpp)
 
 .PHONY: .FORCE
