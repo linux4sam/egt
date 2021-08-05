@@ -66,7 +66,7 @@ public:
     /// Default font slant
     static constexpr Font::Slant DEFAULT_SLANT = Font::Slant::normal;
 
-    constexpr Font() = default;
+    Font();
 
     /**
      * Create a font based on the supplied parameters.
@@ -83,7 +83,7 @@ public:
      * @param[in] size The size of the font.
      */
     explicit Font(const unsigned char* data, size_t len,
-                  Font::Size size = Font::DEFAULT_SIZE);
+                  Font::Size size);
 
     /**
      * Create a font based on the supplied parameters.
@@ -215,7 +215,7 @@ protected:
     std::string m_face{DEFAULT_FACE};
 
     /// Font size.
-    Font::Size m_size{DEFAULT_SIZE};
+    Font::Size m_size;
 
     /// Font weight.
     Font::Weight m_weight{DEFAULT_WEIGHT};
@@ -227,6 +227,9 @@ protected:
     mutable shared_cairo_scaled_font_t m_scaled_font;
     const unsigned char* m_data{nullptr};
     size_t m_len{0};
+
+private:
+    Font::Size default_font_size();
 };
 
 /// @private

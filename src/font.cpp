@@ -8,10 +8,12 @@
 #endif
 
 #include "detail/egtlog.h"
+#include "egt/app.h"
 #include "egt/canvas.h"
 #include "egt/detail/enum.h"
 #include "egt/font.h"
 #include "egt/respath.h"
+#include "egt/screen.h"
 #include "egt/serialize.h"
 #include <cairo-ft.h>
 #include <map>
@@ -24,7 +26,6 @@ inline namespace v1
 
 constexpr const char* Font::DEFAULT_FACE;
 constexpr Font::Weight Font::DEFAULT_WEIGHT;
-constexpr Font::Size Font::DEFAULT_SIZE;
 constexpr Font::Slant Font::DEFAULT_SLANT;
 
 static FT_Library ftlib{nullptr};
@@ -210,15 +211,20 @@ static shared_cairo_scaled_font_t create_scaled_font(cairo_t* cr, const Font& fo
 }
 #endif
 
+Font::Font()
+    : m_size(default_font_size())
+{}
+
 // NOLINTNEXTLINE(modernize-pass-by-value)
 Font::Font(const std::string& face)
-    : m_face(face)
+    : m_face(face),
+      m_size(default_font_size())
 {}
 
 Font::Font(const unsigned char* data, size_t len,
            Font::Size size)
     : m_face("MEMORY"),
-      m_size(size),
+      m_size(size <= 0 ? default_font_size() : size),
       m_data(data),
       m_len(len)
 {
@@ -243,12 +249,20 @@ Font::Font(Font::Size size, Font::Weight weight)
 {}
 
 Font::Font(Font::Weight weight)
-    : m_weight(weight)
+    : m_size(default_font_size()),
+      m_weight(weight)
 {}
 
 Font::Font(Font::Slant slant)
-    : m_slant(slant)
+    : m_size(default_font_size()),
+      m_slant(slant)
 {}
+
+Font::Size Font::default_font_size()
+{
+    auto ssize = egt::Application::instance().screen()->size();
+    return ssize.width() * 0.02;
+}
 
 template<>
 const std::pair<Font::Weight, char const*> detail::EnumStrings<Font::Weight>::data[] =
