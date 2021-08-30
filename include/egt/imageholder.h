@@ -32,8 +32,6 @@ public:
     ImageHolder(const ImageHolder& rhs)
         : m_widget(*static_cast<T*>(this)),
           m_image(rhs.m_image),
-          m_auto_scale_image(rhs.m_auto_scale_image),
-          m_keep_image_ratio(rhs.m_keep_image_ratio),
           m_show_label(rhs.m_show_label),
           m_image_align(rhs.m_image_align)
     {}
@@ -41,8 +39,6 @@ public:
     ImageHolder(ImageHolder&& rhs)
         : m_widget(*static_cast<T*>(this)),
           m_image(std::move(rhs.m_image)),
-          m_auto_scale_image(rhs.m_auto_scale_image),
-          m_keep_image_ratio(rhs.m_keep_image_ratio),
           m_show_label(rhs.m_show_label),
           m_image_align(std::move(rhs.m_image_align))
     {}
@@ -53,8 +49,6 @@ public:
         {
             // Keep m_widget unchanged
             m_image = rhs.m_image;
-            m_auto_scale_image = rhs.m_auto_scale_image;
-            m_keep_image_ratio = rhs.m_keep_image_ratio;
             m_show_label = rhs.m_show_label;
             m_image_align = rhs.m_image_align;
         }
@@ -67,8 +61,6 @@ public:
         {
             // Keep m_widget unchanged
             m_image = std::move(rhs.m_image);
-            m_auto_scale_image = rhs.m_auto_scale_image;
-            m_keep_image_ratio = rhs.m_keep_image_ratio;
             m_show_label = rhs.m_show_label;
             m_image_align = std::move(rhs.m_image_align);
         }
@@ -133,7 +125,10 @@ public:
      */
     void auto_scale_image(bool enable)
     {
-        m_auto_scale_image = enable;
+        if (enable)
+            m_image_align.set(AlignFlag::expand);
+        else
+            m_image_align.clear(AlignFlag::expand);
     }
 
     /**
@@ -141,7 +136,7 @@ public:
      */
     bool auto_scale_image() const
     {
-        return m_auto_scale_image;
+        return m_image_align.is_set(AlignFlag::expand);
     }
 
     /**
@@ -152,7 +147,7 @@ public:
      */
     void keep_image_ratio(bool enable)
     {
-        m_keep_image_ratio = enable;
+        image().keep_image_ratio(enable);
     }
 
     /**
@@ -160,7 +155,7 @@ public:
      */
     bool keep_image_ratio() const
     {
-        return m_keep_image_ratio;
+        return image().keep_image_ratio();
     }
 
     /**
@@ -250,58 +245,7 @@ public:
         }
         else if (!image().empty())
         {
-            auto max_image_size = image().size();
-
-            if (auto_scale_image())
-            {
-                /*
-                 * If auto scale is enabled, we need to give the expected size of
-                 * the image to the align algorithm.
-                 */
-                max_image_size.width(widget.content_area().width());
-                max_image_size.height(widget.content_area().height());
-            }
-
-            auto target = detail::align_algorithm(max_image_size,
-                                                  widget.content_area(),
-                                                  image_align());
-
-            /*
-             * Better to do it with target rect. Depending on the align flags, the
-             * target size can be different from the max_image_size.
-             */
-            if (auto_scale_image())
-            {
-                const auto hs = static_cast<float>(target.width()) /
-                                static_cast<float>(image().size_orig().width());
-                const auto vs = static_cast<float>(target.height()) /
-                                static_cast<float>(image().size_orig().height());
-
-                // This check avoid rounding issues.
-                if (image().size() != target.size())
-                {
-                    if (keep_image_ratio())
-                    {
-                        if (hs < vs)
-                            image().scale(hs);
-                        else
-                            image().scale(vs);
-                        /*
-                         * Need to update the alignment as the image size is
-                         * probably no longer the max size due to the scaling with
-                         * ratio preservation.
-                         */
-                        target = detail::align_algorithm(image().size(),
-                                                         widget.content_area(),
-                                                         image_align());
-                    }
-                    else
-                    {
-                        image().scale(hs, vs);
-                    }
-                }
-            }
-
+            auto target = image().align(widget.content_area(), image_align());
             painter.draw(target.point());
             painter.draw(image());
         }
@@ -390,17 +334,11 @@ protected:
     /// The image. Allowed to be empty.
     Image m_image;
 
-    /// When true, the image is scaled to fit within the label box.
-    bool m_auto_scale_image{true};
-
-    /// When true, the image ratio is kept while scaled.
-    bool m_keep_image_ratio{true};
-
     /// When true, the label text is shown.
     bool m_show_label{true};
 
     /// Alignment of the image relative to the text.
-    AlignFlags m_image_align{AlignFlag::left};
+    AlignFlags m_image_align{AlignFlag::left | AlignFlag::expand};
 };
 
 }

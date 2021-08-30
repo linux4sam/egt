@@ -207,6 +207,31 @@ public:
     EGT_NODISCARD Size size_orig() const { return m_orig_size; }
 
     /**
+     * Get the position and size of the image once aligned inside the bounding
+     * area.
+     */
+    EGT_NODISCARD Rect align(const Rect& bounding, const AlignFlags& align);
+
+    /**
+     * Enable/disable ratio preservation while scaling the image.
+     *
+     * If enabled, the original image ratio won't be changed during the image
+     * auto scale operation. By default, set to true.
+     */
+    void keep_image_ratio(bool enable)
+    {
+        m_keep_image_ratio = enable;
+    }
+
+    /**
+     * Get the keep image ratio state.
+     */
+    bool keep_image_ratio() const
+    {
+        return m_keep_image_ratio;
+    }
+
+    /**
      * This function must be called any time the surface is going to be
      * modified.  It's safe to call this function when not necessary, and in
      * any event it will ensure this Image contains a unique copy of the
@@ -258,6 +283,9 @@ protected:
 
     /// Original image size.
     Size m_orig_size;
+
+    /// Keep the image ratio when the aligned with AlignFlag::expand.
+    bool m_keep_image_ratio{true};
 
     /// Internal pattern representation.
     mutable shared_cairo_pattern_t m_pattern;
