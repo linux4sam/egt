@@ -206,7 +206,8 @@ ImageButton::ImageButton(const Image& image,
                          const std::string& text,
                          const Rect& rect,
                          const AlignFlags& text_align) noexcept
-    : Button(text, rect, text_align)
+    : Button(text, rect, text_align),
+      ImageHolder(*static_cast<Widget*>(this))
 {
     name("ImageButton" + std::to_string(m_widgetid));
 
@@ -235,7 +236,8 @@ ImageButton::ImageButton(Frame& parent,
 }
 
 ImageButton::ImageButton(Serializer::Properties& props) noexcept
-    : Button(props)
+    : Button(props),
+      ImageHolder(*static_cast<Widget*>(this))
 {
     name("ImageButton" + std::to_string(m_widgetid));
 
@@ -247,43 +249,7 @@ ImageButton::ImageButton(Serializer::Properties& props) noexcept
 
 Size ImageButton::min_size_hint() const
 {
-    if (!m_min_size.empty())
-        return m_min_size;
-
-    Rect size = Button::min_size_hint() - Size(moat() * 2, moat() * 2);
-
-    if (!m_image.size().empty())
-    {
-        if (image_align().is_set(AlignFlag::left) ||
-            image_align().is_set(AlignFlag::right))
-        {
-            size += Size(m_image.width(), 0);
-        }
-        else if (image_align().is_set(AlignFlag::top) ||
-                 image_align().is_set(AlignFlag::bottom))
-        {
-            size += Size(0, m_image.height());
-        }
-
-        size = Rect::merge(size, m_image.size());
-    }
-
-    auto res = size.size() + Size(moat() * 2, moat() * 2);
-    return res;
-}
-
-void ImageButton::do_set_image(const Image& image)
-{
-    if (size().empty() && !image.empty())
-        resize(image.size());
-
-    m_image = image;
-    damage();
-}
-
-void ImageButton::image(const Image& image)
-{
-    do_set_image(image);
+    return ImageHolder::min_size_hint();
 }
 
 void ImageButton::draw(Painter& painter, const Rect& rect)
@@ -293,136 +259,21 @@ void ImageButton::draw(Painter& painter, const Rect& rect)
 
 void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect& rect)
 {
-    detail::ignoreparam(rect);
-
-    widget.draw_box(painter, Palette::ColorId::button_bg, Palette::ColorId::border);
-
-    if (!widget.text().empty())
-    {
-        std::string text;
-        if (widget.show_label())
-            text = widget.text();
-
-        if (!widget.image().empty())
-        {
-            detail::draw_text(painter,
-                              widget.content_area(),
-                              text,
-                              widget.font(),
-                              TextBox::TextFlags({TextBox::TextFlag::multiline, TextBox::TextFlag::word_wrap}),
-                              widget.text_align(),
-                              Justification::middle,
-                              widget.color(Palette::ColorId::button_text),
-                              widget.image_align(),
-                              widget.image());
-        }
-        else
-        {
-            detail::draw_text(painter,
-                              widget.content_area(),
-                              text,
-                              widget.font(),
-                              TextBox::TextFlags({TextBox::TextFlag::multiline, TextBox::TextFlag::word_wrap}),
-                              widget.text_align(),
-                              Justification::middle,
-                              widget.color(Palette::ColorId::button_text));
-        }
-    }
-    else if (!widget.image().empty())
-    {
-        auto max_image_size = widget.image().size();
-
-        if (widget.auto_scale_image())
-        {
-            /*
-             * If auto scale is enabled, we need to give the expected size of
-             * the image to the align algorithm.
-             */
-            max_image_size.width(widget.content_area().width());
-            max_image_size.height(widget.content_area().height());
-        }
-
-
-        auto target = detail::align_algorithm(max_image_size,
-                                              widget.content_area(),
-                                              widget.image_align());
-
-        /*
-         * Better to do it with target rect. Depending on the align flags, the
-         * target size can be different from the max_image_size.
-         */
-        if (widget.auto_scale_image())
-        {
-            const auto hs = static_cast<float>(target.width()) /
-                            static_cast<float>(widget.image().size_orig().width());
-            const auto vs = static_cast<float>(target.height()) /
-                            static_cast<float>(widget.image().size_orig().height());
-
-            // This check avoid rounding issues.
-            if (widget.image().size() != target.size())
-            {
-                if (widget.keep_image_ratio())
-                {
-                    if (hs < vs)
-                        widget.image().scale(hs);
-                    else
-                        widget.image().scale(vs);
-                    /*
-                     * Need to update the alignment as the image size is
-                     * probably no longer the max size due to the scaling with
-                     * ratio preservation.
-                     */
-                    target = detail::align_algorithm(widget.image().size(),
-                                                     widget.content_area(),
-                                                     widget.image_align());
-                }
-                else
-                {
-                    widget.image().scale(hs, vs);
-                }
-            }
-        }
-
-        painter.draw(target.point());
-        painter.draw(widget.image());
-    }
-}
-
-void ImageButton::show_label(bool value)
-{
-    if (detail::change_if_diff<>(m_show_label, value))
-        damage();
+    widget.ImageHolder::default_draw(painter,
+                                     rect,
+                                     Palette::ColorId::button_bg,
+                                     Palette::ColorId::border,
+                                     Palette::ColorId::button_text);
 }
 
 void ImageButton::serialize(Serializer& serializer) const
 {
-    Button::serialize(serializer);
-
-    serializer.add_property("showlabel", show_label());
-    if (!m_image.empty())
-        m_image.serialize("image", serializer);
-
-    // TODO m_image_align
+    ImageHolder::serialize(serializer);
 }
 
 void ImageButton::deserialize(Serializer::Properties& props)
 {
-    // TODO proper loading of all image properties
-    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
-    {
-        switch (detail::hash(std::get<0>(p)))
-        {
-        case detail::hash("showlabel"):
-            show_label(detail::from_string(std::get<1>(p)));
-            break;
-        case detail::hash("image"):
-            m_image.deserialize(std::get<0>(p), std::get<1>(p), std::get<2>(p));
-            break;
-        default:
-            return false;
-        }
-        return true;
-    }), props.end());
+    ImageHolder::deserialize(props);
 }
 
 }

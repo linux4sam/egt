@@ -198,6 +198,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/grid.h \
 ../include/egt/image.h \
 ../include/egt/input.h \
+../include/egt/imageholder.h \
 ../include/egt/keycode.h \
 ../include/egt/label.h \
 ../include/egt/list.h \

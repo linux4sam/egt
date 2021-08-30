@@ -13,6 +13,7 @@
 
 #include <egt/detail/meta.h>
 #include <egt/image.h>
+#include <egt/imageholder.h>
 #include <egt/textwidget.h>
 #include <memory>
 #include <string>
@@ -126,7 +127,7 @@ protected:
  *
  * @ingroup controls
  */
-class EGT_API ImageLabel : public Label
+class EGT_API ImageLabel : public Label, public ImageHolder<ImageLabel, Label>
 {
 public:
 
@@ -195,146 +196,7 @@ public:
 
     EGT_NODISCARD Size min_size_hint() const override;
 
-    /**
-     * Set a new Image.
-     *
-     * @param[in] image The new image to use.
-     */
-    void image(const Image& image);
-
-    /**
-     * Scale the image.
-     *
-     * Change the scale of the image.
-     *
-     * This scales relative to the original size of the image.  Not the result
-     * of any subsequent Image::resize() or Image::scale() call.
-     *
-     * @see Image::scale().
-     *
-     * @param[in] hscale Horizontal scale [0.0 - 1.0], with 1.0 being 100%.
-     * @param[in] vscale Vertical scale [0.0 - 1.0], with 1.0 being 100%.
-     * @param[in] approximate Approximate the scale to increase image cache
-     *            hit efficiency.
-     */
-    void scale_image(float hscale, float vscale,
-                     bool approximate = false)
-    {
-        m_image.scale(hscale, vscale, approximate);
-        parent_layout();
-    }
-
-    /**
-     * Scale the image.
-     *
-     * @param[in] scale Vertical and horizontal scale [0.0 - 1.0], with 1.0 being 100%.
-     * @param[in] approximate Approximate the scale to increase image cache
-     *            hit efficiency.
-     *
-     * @warning This does not damage the widget.
-     */
-    void scale_image(float scale, bool approximate = false)
-    {
-        scale_image(scale, scale, approximate);
-    }
-
-    /**
-     * Enable/disable the auto scale of the image.
-     *
-     * If enabled, the image will be automatically scaled to fit within the
-     * label box. By default, set to true.
-     */
-    void auto_scale_image(bool enable)
-    {
-        m_auto_scale_image = enable;
-    }
-
-    /**
-     * Get the auto scale image state.
-     */
-    bool auto_scale_image() const
-    {
-        return m_auto_scale_image;
-    }
-
-    /**
-     * Enable/disable ratio preservation while scaling the image.
-     *
-     * If enabled, the original image ratio won't be changed during the image
-     * auto scale operation. By default, set to true.
-     */
-    void keep_image_ratio(bool enable)
-    {
-        m_keep_image_ratio = enable;
-    }
-
-    /**
-     * Get the keep image ratio state.
-     */
-    bool keep_image_ratio() const
-    {
-        return m_keep_image_ratio;
-    }
-
-    /**
-     * Get a const reference of the image.
-     */
-    EGT_NODISCARD const Image& image() const { return m_image; }
-
-    /**
-     * Get a non-const reference to the image.
-     */
-    Image& image() { return m_image; }
-
-    /**
-     * Set the alignment of the image relative to the text.
-     *
-     * @param[in] align Only left, right, top, and bottom alignments are supported.
-     */
-    void image_align(const AlignFlags& align)
-    {
-        if (detail::change_if_diff<>(m_image_align, align))
-            damage();
-    }
-
-    /**
-     * Get the image alignment.
-     */
-    EGT_NODISCARD AlignFlags image_align() const { return m_image_align; }
-
-    /**
-     * Enable/disable showing the label text.
-     *
-     * @param[in] value When true, the label text is shown.
-     */
-    void show_label(bool value);
-
-    /**
-     * Get the show label state.
-     */
-    EGT_NODISCARD bool show_label() const { return m_show_label; }
-
     void serialize(Serializer& serializer) const override;
-
-protected:
-
-    /// @private
-    void do_set_image(const Image& image);
-
-    /// The image. Allowed to be empty.
-    Image m_image;
-
-    /// When true, the image is scaled to fit within the label box.
-    bool m_auto_scale_image{true};
-
-    /// When true, the image ratio is kept while scaled.
-    bool m_keep_image_ratio{true};
-
-    /// When true, the label text is shown.
-    bool m_show_label{true};
-
-    /// Alignment of the image relative to the text.
-    AlignFlags m_image_align{AlignFlag::left};
 
 private:
 
