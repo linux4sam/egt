@@ -16,7 +16,8 @@ mresg_v_GEN_0 = @echo "  GEN     " $@;
 
 i18n_SOURCES = i18n.cpp
 i18n_DEPENDENCIES = build-mo.stamp
-i18n_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+i18n_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
+	-DEXAMPLEDATA=\"$(datadir)/egt/examples/i18n\"
 i18n_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 i18ndir = $(prefix)/share/egt/examples/i18n
 i18n_DATA = $(wildcard $(top_srcdir)/examples/i18n/*.png) \

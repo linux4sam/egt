@@ -6,18 +6,40 @@
 #include <egt/detail/meta.h>
 #include <egt/ui>
 #include <iostream>
+#include <locale>
 #include <libintl.h>
 #include <string>
 #include <utf8.h>
 
-/**
- * This is a wrapper around gettext().
- */
 #define _(String) gettext(String)
+
+static std::string get_translated_string(const std::locale& loc)
+{
+    std::string ts;
+    std::cout.imbue(loc);
+    auto& facet = std::use_facet<std::messages<char>>(loc);
+    auto cat = facet.open("i18n", loc);
+    if (cat < 0)
+    {
+        std::cout << "Could not open \"i18n\" message catalog\n";
+    }
+    else
+    {
+        ts = facet.get(cat, 0, 0, "Hello World");
+        std::cout << "\"Hello World\" in "
+                  << "\"" << loc.name().c_str() << "\"" << " : "
+                  << ts << '\n';
+    }
+    facet.close(cat);
+    return ts;
+}
 
 int main(int argc, char** argv)
 {
     egt::Application app(argc, argv, "i18n");
+#ifdef EXAMPLEDATA
+    egt::add_search_path(EXAMPLEDATA);
+#endif
 
     egt::Drawer<egt::Label>::draw([](egt::Label & widget, egt::Painter & painter, const egt::Rect & rect)
     {
@@ -49,13 +71,18 @@ int main(int argc, char** argv)
     });
 
     egt::TopWindow window;
+    egt::VerticalBoxSizer vsizer;
+    vsizer.margin(10);
 
     auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_black.png;128"));
     logo->margin(10);
     logo->align(egt::AlignFlag::center | egt::AlignFlag::bottom);
     window.add(logo);
 
-    egt::VerticalBoxSizer vsizer;
+    auto next = std::make_shared<egt::ImageButton>(egt::Image("icon:arrow_right.png;64"));
+    next->fill_flags().clear();
+    next->align(egt::AlignFlag::right | egt::AlignFlag::center);
+    window.add(next);
 
     std::vector<std::string> variations =
     {
@@ -82,11 +109,11 @@ int main(int argc, char** argv)
         if (index == static_cast<int>(variations.size()) - 1)
             label->font(egt::Font("Noto Color Emoji", 16));
         else if (index == 4)
-            label->font(egt::Font("Lohit Devanagari", 30, egt::Font::Weight::bold));
+            label->font(egt::Font("Lohit Devanagari", 30));
         else if (index == 1)
             label->font(egt::Font("Noto Sans CJK SC", 30));
         else
-            label->font(egt::Font(30));
+            label->font(egt::Font("Free Sans", 30));
 
         vsizer.add(label);
         index++;
@@ -122,6 +149,150 @@ int main(int argc, char** argv)
     sequence.add(out);
     sequence.add(delay);
     sequence.start();
+
+    egt::HorizontalBoxSizer hsizer;
+    hsizer.hide();
+    window.add(egt::expand(hsizer));
+
+    auto label = std::make_shared<egt::Label>(_("Hello World"));
+    label->font(egt::Font("Free Sans", 40, egt::Font::Weight::bold));
+    hsizer.add(egt::expand(label));
+
+    egt::VerticalBoxSizer ts_sizer;
+    hsizer.add(ts_sizer);
+
+    auto english = std::make_shared<egt::RadioBox>(ts_sizer, "English");
+    egt::left(english);
+    english->on_checked_changed([&]()
+    {
+        if (english->checked())
+        {
+            std::locale loc_en("en_US.utf8");
+            label->font(egt::Font("Free Sans", 40, egt::Font::Weight::bold));
+            label->text(get_translated_string(loc_en));
+        }
+    });
+
+    auto french = std::make_shared<egt::RadioBox>(ts_sizer, "French");
+    egt::left(french);
+    french->on_checked_changed([&]()
+    {
+        if (french->checked())
+        {
+            std::locale loc_fr("fr_FR.utf8");
+            label->font(egt::Font("Free Sans", 40, egt::Font::Weight::bold));
+            label->text(get_translated_string(loc_fr));
+        }
+    });
+
+    auto german = std::make_shared<egt::RadioBox>(ts_sizer, "German");
+    egt::left(german);
+    german->on_checked_changed([&]()
+    {
+        if (german->checked())
+        {
+            std::locale loc_de("de_DE.utf8");
+            label->font(egt::Font("Free Sans", 40, egt::Font::Weight::bold));
+            label->text(get_translated_string(loc_de));
+        }
+    });
+
+    auto spanish = std::make_shared<egt::RadioBox>(ts_sizer, "Spanish");
+    egt::left(spanish);
+    spanish->on_checked_changed([&]()
+    {
+        if (spanish->checked())
+        {
+            std::locale loc_es("es_ES.utf8");
+            label->font(egt::Font("Free Sans", 40, egt::Font::Weight::bold));
+            label->text(get_translated_string(loc_es));
+        }
+    });
+
+    auto hindi = std::make_shared<egt::RadioBox>(ts_sizer, "Hindi");
+    egt::left(hindi);
+    hindi->on_checked_changed([&]()
+    {
+        if (hindi->checked())
+        {
+            std::locale loc_hi("hi_IN.utf8");
+            label->font(egt::Font("Lohit Devanagari", 40, egt::Font::Weight::bold));
+            label->text(get_translated_string(loc_hi));
+        }
+    });
+
+    auto chinese = std::make_shared<egt::RadioBox>(ts_sizer, "Chinese");
+    egt::left(chinese);
+    chinese->on_checked_changed([&]()
+    {
+        if (chinese->checked())
+        {
+            std::locale loc_zh("zh_CN.utf8");
+            label->font(egt::Font("Noto Sans CJK SC", 40, egt::Font::Weight::bold));
+            label->text(get_translated_string(loc_zh));
+        }
+    });
+
+    auto radiobox_group = std::make_unique<egt::ButtonGroup>(true);
+    radiobox_group->add(english);
+    radiobox_group->add(french);
+    radiobox_group->add(german);
+    radiobox_group->add(spanish);
+    radiobox_group->add(hindi);
+    radiobox_group->add(chinese);
+
+    static bool flag = true;
+    next->on_click([&](egt::Event&)
+    {
+        if (flag)
+        {
+            sequence.stop();
+            vsizer.hide();
+            hsizer.show();
+            next->image(egt::Image(egt::Image("icon:arrow_left.png;64")));
+            next->align(egt::AlignFlag::left | egt::AlignFlag::center);
+            flag = false;
+            std::string lang = std::getenv("LANG");
+            if (!lang.empty())
+            {
+                if (lang.compare(0, 3, "fr_") == 0)
+                {
+                    french->checked(true);
+                }
+                else if (lang.compare(0, 3, "de_") == 0)
+                {
+                    german->checked(true);
+                }
+                else if (lang.compare(0, 3, "es_") == 0)
+                {
+                    spanish->checked(true);
+                }
+                else if (lang.compare(0, 5, "hi_IN") == 0)
+                {
+                    hindi->checked(true);
+                }
+                else if (lang.compare(0, 3, "zh_") == 0)
+                {
+                    chinese->checked(true);
+                }
+                else
+                {
+                    english->checked(true);
+                }
+            }
+
+        }
+        else
+        {
+            hsizer.hide();
+            next->image(egt::Image(egt::Image("icon:arrow_right.png;64")));
+            next->align(egt::AlignFlag::right | egt::AlignFlag::center);
+            flag = true;
+            vsizer.show();
+            sequence.start();
+        }
+        next->zorder_top();
+    });
 
     window.show();
 
