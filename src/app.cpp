@@ -160,7 +160,7 @@ void Application::setup_locale(const std::string& name)
     if (!name.empty())
     {
         setlocale(LC_ALL, "");
-#ifdef HAVE_LIBINTL_H
+#ifdef HAVE_LIBINTL
         bindtextdomain(name.c_str(), (std::string(DATAPATH) + "/locale/").c_str());
         textdomain(name.c_str());
 #endif
