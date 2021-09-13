@@ -63,6 +63,7 @@ int main(int argc, char** argv)
         "EGT支持所有語言",
         "EGT prend en charge toutes les langues",
         "EGT unterstützt alle Sprachen",
+        "ईजीटी सभी भाषाओं का समर्थन करता है",
         "EGT soporta todos los idiomas",
         ""
     };
@@ -80,8 +81,12 @@ int main(int argc, char** argv)
         std::string face;
         if (index == static_cast<int>(variations.size()) - 1)
             label->font(egt::Font("Noto Color Emoji", 16));
-        else
+        else if (index == 4)
+            label->font(egt::Font("Lohit Devanagari", 30, egt::Font::Weight::bold));
+        else if (index == 1)
             label->font(egt::Font("Noto Sans CJK SC", 30));
+        else
+            label->font(egt::Font(30));
 
         vsizer.add(label);
         index++;

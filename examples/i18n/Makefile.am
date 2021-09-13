@@ -23,9 +23,9 @@ i18n_DATA = $(wildcard $(top_srcdir)/examples/i18n/*.png) \
 	$(top_srcdir)/examples/i18n/i18n.xml
 i18n_LDFLAGS = $(AM_LDFLAGS)
 
-LINGUAS = de es fr zh
+LINGUAS = de es fr zh hi
 
-EXTRA_DIST = de.po es.po fr.po zh.po i18n.xml
+EXTRA_DIST = de.po es.po fr.po zh.po hi.po i18n.xml
 
 localedir = $(datadir)/locale
 
