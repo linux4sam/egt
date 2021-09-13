@@ -20,3 +20,6 @@ msgstr ""
 #: i18n.cpp:13
 msgid "Hello World"
 msgstr "Hola Mundo"
+
+msgid "EGT supports all languages"
+msgstr "EGT admite todos los idiomas"
