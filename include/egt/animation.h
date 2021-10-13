@@ -337,32 +337,43 @@ public:
         if (!animation)
             return;
 
-        const auto i = std::find_if(m_animations.begin(), m_animations.end(),
-                                    [&animation](const auto & ptr)
-        {
-            return ptr.get() == animation.get();
-        });
+        m_animations.push_back(animation);
 
-        if (i == m_animations.end())
+        auto weak_animation = std::weak_ptr<detail::AnimationBase>(animation);
+        animation->add_callback([this, weak_animation](EasingScalar)
         {
-            m_animations.push_back(animation);
-
-            auto weak_animation = std::weak_ptr<detail::AnimationBase>(animation);
-            animation->add_callback([this, weak_animation](EasingScalar)
+            auto animation = weak_animation.lock();
+            if (animation)
             {
-                auto animation = weak_animation.lock();
-                if (animation)
-                {
-                    // when the animation ever completes, we go next
-                    if (!animation->running())
-                        next();
-                }
-            });
-        }
+                // when the animation ever completes, we go next
+                if (!animation->running())
+                    next();
+            }
+        });
     }
 
     /**
-     * Remove a sub animation from the sequence.
+     * Remove the last sub animation from the sequence.
+     */
+    void removeLast()
+    {
+        if (!m_animations.empty())
+            m_animations.pop_back();
+    }
+
+    /**
+     * Remove the sub animation at the given position from the sequence.
+     *
+     * @param pos Position of the sub animation to remove. pos starts from 0.
+     */
+    void removeAt(size_t pos)
+    {
+        if (pos < m_animations.size())
+            m_animations.erase(m_animations.begin() + pos);
+    }
+
+    /**
+     * Remove the first occurence of a sub animation from the sequence.
      *
      * @param animation The animation.
      */
