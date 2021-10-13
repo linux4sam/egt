@@ -803,6 +803,16 @@ public:
      */
     void padding(DefaultDim padding)
     {
+        /*
+         * If autoresize is set and the widget size is the minimum size,
+         * discard padding increases. The content area can't be reduced more,
+         * so it will increase the widget box.
+         */
+        if (padding > m_padding)
+            if (autoresize())
+                if (size() == min_size_hint())
+                    return;
+
         if (detail::change_if_diff<>(m_padding, padding))
         {
             damage();
@@ -824,6 +834,16 @@ public:
      */
     void margin(DefaultDim margin)
     {
+        /*
+         * If autoresize is set and the widget size is the minimum size,
+         * discard margin increases. The content area can't be reduced more,
+         * so it will increase the widget box.
+         */
+        if (margin > m_margin)
+            if (autoresize())
+                if (size() == min_size_hint())
+                    return;
+
         if (detail::change_if_diff<>(m_margin, margin))
         {
             damage();
@@ -845,6 +865,16 @@ public:
      */
     void border(DefaultDim border)
     {
+        /*
+         * If autoresize is set and the widget size is the minimum size,
+         * discard border increases. The content area can't be reduced more,
+         * so it will increase the widget box.
+         */
+        if (border > m_border)
+            if (autoresize())
+                if (size() == min_size_hint())
+                    return;
+
         if (detail::change_if_diff<>(m_border, border))
         {
             damage();
