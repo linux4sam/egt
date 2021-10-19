@@ -5,6 +5,7 @@
  */
 #include "detail/egtlog.h"
 #include "detail/dump.h"
+#include "egt/app.h"
 #include "egt/detail/layout.h"
 #include "egt/detail/math.h"
 #include "egt/frame.h"
@@ -417,6 +418,21 @@ void Frame::draw(Painter& painter, const Rect& rect)
                          margin(),
                          border_radius(),
                          border_flags());
+    }
+    else if (Application::instance().is_composer())
+    {
+        constexpr static Color composer_border = Palette::black;
+        constexpr static Color composer_bg = Color(0x00000020);
+
+        theme().draw_box(painter,
+                         {Theme::FillFlag::blend},
+                         to_child(box()),
+                         composer_border,
+                         composer_bg,
+                         1,
+                         0,
+                         0,
+                         {});
     }
 
     if (m_children.empty())
