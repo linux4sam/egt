@@ -154,6 +154,12 @@ public:
      */
     EGT_NODISCARD virtual bool have_planes() const { return false; }
 
+    /**
+     * Returns true if this is a screen used with the Microchip Graphic
+     * Composer.
+     */
+    EGT_NODISCARD virtual bool is_composer() const { return false; }
+
     virtual ~Screen() noexcept = default;
 
 protected:

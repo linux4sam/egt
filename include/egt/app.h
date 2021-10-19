@@ -76,6 +76,11 @@ public:
     static bool check_instance();
 
     /**
+     * Check whether the application runs under the Microchip Graphic Composer.
+     */
+    EGT_NODISCARD bool is_composer() const;
+
+    /**
      * Run the application.
      *
      * This will initialize the application and start running the event loop.

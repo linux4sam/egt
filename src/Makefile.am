@@ -67,6 +67,7 @@ detail/input/inputkeyboard.h \
 detail/layout.cpp \
 detail/mousegesture.cpp \
 detail/priorityqueue.h \
+detail/screen/composerscreen.cpp \
 detail/screen/flipthread.h \
 detail/screen/memoryscreen.cpp \
 detail/spriteimpl.h \
@@ -179,6 +180,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/detail/math.h \
 ../include/egt/detail/meta.h \
 ../include/egt/detail/mousegesture.h \
+../include/egt/detail/screen/composerscreen.h \
 ../include/egt/detail/screen/memoryscreen.h \
 ../include/egt/detail/string.h \
 ../include/egt/detail/stringhash.h \

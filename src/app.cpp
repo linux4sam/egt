@@ -10,6 +10,7 @@
 #include "detail/egtlog.h"
 #include "egt/app.h"
 #include "egt/detail/filesystem.h"
+#include "egt/detail/screen/composerscreen.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/detail/screen/memoryscreen.h"
 #include "egt/detail/string.h"
@@ -237,6 +238,7 @@ void Application::setup_backend(bool primary)
         {"sdl2", [this, &size]() { return std::make_unique<detail::SDLScreen>(*this, size); }},
 #endif
         {"memory", [&size]() { return std::make_unique<detail::MemoryScreen>(size); }},
+        {"composer", [&size]() { return std::make_unique<detail::ComposerScreen>(size); }},
     };
 
     if (backend != "none")
@@ -362,6 +364,11 @@ void Application::signal_handler(const asio::error_code& error, int signum)
 
     m_signals.async_wait(std::bind(&Application::signal_handler, this,
                                    std::placeholders::_1, std::placeholders::_2));
+}
+
+bool Application::is_composer() const
+{
+    return m_screen->is_composer();
 }
 
 int Application::run()
