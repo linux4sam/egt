@@ -810,7 +810,8 @@ public:
          */
         if (padding > m_padding)
             if (autoresize())
-                if (size() == min_size_hint())
+                if (width() <= min_size_hint().width()
+                    || height() <= min_size_hint().height())
                     return;
 
         if (detail::change_if_diff<>(m_padding, padding))
@@ -841,7 +842,8 @@ public:
          */
         if (margin > m_margin)
             if (autoresize())
-                if (size() == min_size_hint())
+                if (width() <= min_size_hint().width()
+                    || height() <= min_size_hint().height())
                     return;
 
         if (detail::change_if_diff<>(m_margin, margin))
@@ -872,7 +874,8 @@ public:
          */
         if (border > m_border)
             if (autoresize())
-                if (size() == min_size_hint())
+                if (width() <= min_size_hint().width()
+                    || height() <= min_size_hint().height())
                     return;
 
         if (detail::change_if_diff<>(m_border, border))
