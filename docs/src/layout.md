@@ -35,6 +35,11 @@ In the case of a background color, it goes to the inside edge of the border.
 The widget box itself has no width.  If any of the other properties like margin,
 border, or padding are set to zero they have no width.
 
+The autoresize option may change the behavior of the widget box. If this option
+is set, the minimum size of the widget box is the minimum hint size. It means
+that increase of the border, margin, or padding may increases the size of the
+box widget to fulfill this constraint.
+
 @section layout_intro Layout
 
 There are two main ways to layout widgets: @b Fixed and @b Fluid.  These are not
