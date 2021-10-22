@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
+### Added
+- TextBox: performance optimization for text rendering.
+- i18n example uses gettext and provides a new window with runtime translation.
+- AnimationSequence: addition of removeLast and removeAt methods. Now,
+  AnimationSequence allows to use several times the same sub animation.
+
+### Changed
+- Default widget and font size based on the screen size instead of an arbitrary
+  value.
+
+### Fixed
+- Git commit id was incorrect when EGT was built from Buildroot.
+
 
 ## [1.2] - 2020-06-28
 ### Added
