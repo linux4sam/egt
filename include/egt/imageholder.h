@@ -266,13 +266,12 @@ protected:
         m_widget.damage();
     }
 
-    Size min_size_hint() const
+    Size min_size_hint(Size min_size_constraint = Size()) const
     {
         if (!m_widget.m_min_size.empty())
             return m_widget.m_min_size;
 
-        Rect size = static_cast<U&>(m_widget).U::min_size_hint() -
-                    Size(m_widget.moat() * 2, m_widget.moat() * 2);
+        Rect size = min_size_constraint - Size(m_widget.moat() * 2, m_widget.moat() * 2);
 
         if (!m_image.size().empty())
         {

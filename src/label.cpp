@@ -168,7 +168,14 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
 
 Size ImageLabel::min_size_hint() const
 {
-    return ImageHolder::min_size_hint();
+    /*
+     * If there is no text, the min size hint should be the image size, if not
+     * expanded, plus the moat. If there is text, text size must be added.
+     */
+    if (text().empty())
+        return ImageHolder::min_size_hint(Size(moat() * 2, moat() * 2));
+    else
+        return ImageHolder::min_size_hint(Label::min_size_hint());
 }
 
 void ImageLabel::serialize(Serializer& serializer) const

@@ -249,7 +249,14 @@ ImageButton::ImageButton(Serializer::Properties& props) noexcept
 
 Size ImageButton::min_size_hint() const
 {
-    return ImageHolder::min_size_hint();
+    /*
+     * If there is no text, the min size hint should be the image size, if not
+     * expanded, plus the moat. If there is text, text size must be added.
+     */
+    if (text().empty())
+        return ImageHolder::min_size_hint(Size(moat() * 2, moat() * 2));
+    else
+        return ImageHolder::min_size_hint(Button::min_size_hint());
 }
 
 void ImageButton::draw(Painter& painter, const Rect& rect)
