@@ -228,8 +228,14 @@ void Window::create_impl(const Rect& rect,
                          PixelFormat format_hint,
                          WindowHint hint)
 {
-    detail::ignoreparam(format_hint);
-    detail::ignoreparam(hint);
+    m_format_hint = format_hint;
+    m_hint = hint;
+    if (Application::instance().is_composer())
+    {
+        // Force pixel format and window hint
+        format_hint = DEFAULT_FORMAT;
+        hint = WindowHint::software;
+    }
 
     if (!Application::instance().m_main_window)
     {
@@ -343,6 +349,8 @@ void Window::background(const Image& image)
 void Window::serialize(Serializer& serializer) const
 {
     serializer.add_property("show", visible());
+    serializer.add_property("pixelformat", detail::enum_to_string<PixelFormat>(m_format_hint));
+    serializer.add_property("windowhint", detail::enum_to_string<WindowHint>(m_hint));
     Frame::serialize(serializer);
 }
 
