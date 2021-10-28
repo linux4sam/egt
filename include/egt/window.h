@@ -172,6 +172,44 @@ public:
         return PixelFormat::invalid;
     }
 
+    /**
+     * Set the pixel format hint of the window.
+     *
+     * The new value is taken into account only by Window::serialize() but
+     * has no dynamic effect on the window once created.
+     */
+    void format_hint(PixelFormat format_hint)
+    {
+        m_format_hint = format_hint;
+    }
+
+    /**
+     * Get the pixel format hint of the window.
+     *
+     * This is the value that would be used if Window::serialize() were called
+     * but not necessarily the actuel pixel format of the window: for this
+     * later value, call Window::format() instead.
+     */
+    EGT_NODISCARD PixelFormat format_hint() const { return m_format_hint; }
+
+    /**
+     * Set the window hint.
+     *
+     * The new value is taken into account only by Window::serialize() but
+     * has no dynamic effect on the window once created.
+     */
+    void window_hint(WindowHint hint)
+    {
+        m_hint = hint;
+    }
+
+    /**
+     * Get the window hint.
+     *
+     * This is the value that would be used if Window::serialize() were called
+     * but it doesn't necessarily match the actual type of Window::m_impl.
+     */
+    EGT_NODISCARD WindowHint window_hint() const { return m_hint; }
 
     void serialize(Serializer& serializer) const override;
 
@@ -257,6 +295,12 @@ protected:
 
     /// Optional background image.
     std::unique_ptr<ImageLabel> m_background;
+
+    /// @private
+    PixelFormat m_format_hint;
+
+    /// @private
+    WindowHint m_hint;
 
     friend class detail::WindowImpl;
     friend class detail::PlaneWindow;
