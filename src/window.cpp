@@ -342,8 +342,8 @@ void Window::background(const Image& image)
 
 void Window::serialize(Serializer& serializer) const
 {
-    Frame::serialize(serializer);
     serializer.add_property("show", visible());
+    Frame::serialize(serializer);
 }
 
 void Window::deserialize(Serializer::Properties& props)
