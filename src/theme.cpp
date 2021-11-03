@@ -74,6 +74,7 @@ Theme::Theme()
         },
         {
             Palette::GroupId::disabled, {
+                {Palette::ColorId::cursor, Palette::red},
                 {Palette::ColorId::bg, Palette::white},
                 {Palette::ColorId::text, Color(0x989a9aff)},
                 {Palette::ColorId::text_highlight, Palette::hotpink},
@@ -87,6 +88,7 @@ Theme::Theme()
         },
         {
             Palette::GroupId::active, {
+                {Palette::ColorId::cursor, Palette::red},
                 {Palette::ColorId::bg, Palette::white},
                 {Palette::ColorId::text, Palette::black},
                 {Palette::ColorId::text_highlight, Palette::hotpink},
@@ -100,6 +102,7 @@ Theme::Theme()
         },
         {
             Palette::GroupId::checked, {
+                {Palette::ColorId::cursor, Palette::red},
                 {Palette::ColorId::bg, Palette::white},
                 {Palette::ColorId::text, Palette::black},
                 {Palette::ColorId::text_highlight, Palette::hotpink},
