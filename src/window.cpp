@@ -349,7 +349,6 @@ void Window::background(const Image& image)
 
 void Window::serialize(Serializer& serializer) const
 {
-    serializer.add_property("show", visible());
     serializer.add_property("pixelformat", detail::enum_to_string<PixelFormat>(m_format_hint));
     serializer.add_property("windowhint", detail::enum_to_string<WindowHint>(m_hint));
     Frame::serialize(serializer);
