@@ -315,7 +315,7 @@ public:
     /**
      * Deserialize theme properties.
      */
-    virtual void deserialize(Serializer::Properties& props);
+    void deserialize(Serializer::Properties& props);
 
     virtual ~Theme() noexcept = default;
 

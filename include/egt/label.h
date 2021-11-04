@@ -200,7 +200,7 @@ public:
 
 private:
 
-    void deserialize(Serializer::Properties& props) override;
+    void deserialize(Serializer::Properties& props);
 };
 
 }

@@ -1528,7 +1528,7 @@ private:
     /**
      * Deserialize widget properties.
      */
-    virtual void deserialize(Serializer::Properties& props);
+    void deserialize(Serializer::Properties& props);
 
     friend class Frame;
     template<class T, class U> friend class ImageHolder;

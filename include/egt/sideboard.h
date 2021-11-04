@@ -120,7 +120,7 @@ protected:
 private:
     void initialize();
 
-    void deserialize(Serializer::Properties& props) override;
+    void deserialize(Serializer::Properties& props);
 };
 
 /// Overloaded std::ostream insertion operator

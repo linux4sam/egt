@@ -166,7 +166,7 @@ private:
     /// Default size.
     static Size m_default_size;
 
-    void deserialize(Serializer::Properties& props) override;
+    void deserialize(Serializer::Properties& props);
 };
 
 template <class T>
@@ -383,7 +383,7 @@ private:
     /// Default size.
     static Size m_default_size;
 
-    void deserialize(Serializer::Properties& props) override;
+    void deserialize(Serializer::Properties& props);
 };
 
 /**
@@ -591,7 +591,7 @@ private:
     /// Default size.
     static Size m_default_size;
 
-    void deserialize(Serializer::Properties& props) override;
+    void deserialize(Serializer::Properties& props);
 };
 
 /**
