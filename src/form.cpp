@@ -40,14 +40,17 @@ Form::Form(Frame& parent, const std::string& title) noexcept
     parent.add(*this);
 }
 
-Form::Form(Serializer::Properties& props) noexcept
-    : Frame(props),
+Form::Form(Serializer::Properties& props, bool is_derived) noexcept
+    : Frame(props, true),
       m_vsizer(Orientation::vertical, Justification::start)
 {
     name("Form" + std::to_string(m_widgetid));
 
     m_vsizer.align(AlignFlag::expand);
     add(m_vsizer);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 void Form::add_group(const std::string& caption)

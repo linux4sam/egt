@@ -63,7 +63,16 @@ public:
     /**
      * @param[in] props array of widget arguments and its properties.
      */
-    Frame(Serializer::Properties& props) noexcept;
+    Frame(Serializer::Properties& props) noexcept
+        : Frame(props, false)
+    {
+    }
+
+protected:
+
+    Frame(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
 
     Frame(const Frame&) = delete;
     Frame& operator=(const Frame&) = delete;

@@ -209,11 +209,14 @@ Sprite::Sprite(const Image& image, const Size& frame_size,
     create_impl(image, frame_size, frame_count, frame_point);
 }
 
-Sprite::Sprite(Serializer::Properties& props) noexcept
-    : Window(props)
+Sprite::Sprite(Serializer::Properties& props, bool is_derived) noexcept
+    : Window(props, true)
 {
     name("Sprite" + std::to_string(m_widgetid));
     fill_flags().clear();
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 void Sprite::init(const Image& image, const Size& frame_size,

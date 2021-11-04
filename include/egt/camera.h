@@ -104,7 +104,16 @@ public:
      *
      * @param[in] props list of widget argument and its properties.
      */
-    CameraWindow(Serializer::Properties& props);
+    CameraWindow(Serializer::Properties& props)
+        : CameraWindow(props, false)
+    {
+    }
+
+protected:
+
+    CameraWindow(Serializer::Properties& props, bool is_derived);
+
+public:
 
     CameraWindow(const CameraWindow&) = delete;
     CameraWindow& operator=(const CameraWindow&) = delete;

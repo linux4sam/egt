@@ -48,8 +48,8 @@ ListBox::ListBox(const ItemArray& items, const Rect& rect) noexcept
         add_item_private(i);
 }
 
-ListBox::ListBox(Serializer::Properties& props) noexcept
-    : Frame(props),
+ListBox::ListBox(Serializer::Properties& props, bool is_derived) noexcept
+    : Frame(props, true),
       m_view(*this, ScrolledView::Policy::never),
       m_sizer(Orientation::vertical, Justification::start)
 {
@@ -70,6 +70,9 @@ ListBox::ListBox(Serializer::Properties& props) noexcept
     }
 
     deserialize(props);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 ListBox::ListBox(Frame& parent, const ItemArray& items, const Rect& rect) noexcept

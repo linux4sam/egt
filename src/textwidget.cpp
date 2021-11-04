@@ -24,10 +24,13 @@ TextWidget::TextWidget(std::string text,
       m_text(std::move(text))
 {}
 
-TextWidget::TextWidget(Serializer::Properties& props) noexcept
-    : Widget(props)
+TextWidget::TextWidget(Serializer::Properties& props, bool is_derived) noexcept
+    : Widget(props, true)
 {
     deserialize(props);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 void TextWidget::clear()

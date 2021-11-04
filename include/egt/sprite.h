@@ -85,7 +85,16 @@ public:
     /**
      * @param[in] props list of widget argument and its properties.
      */
-    explicit Sprite(Serializer::Properties& props) noexcept;
+    explicit Sprite(Serializer::Properties& props) noexcept
+        : Sprite(props, false)
+    {
+    }
+
+protected:
+
+    explicit Sprite(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
 
     Sprite(const Sprite&) = delete;
     Sprite& operator=(const Sprite&) = delete;

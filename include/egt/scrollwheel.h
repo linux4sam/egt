@@ -78,7 +78,16 @@ public:
     /**
      * @param[in] props list of widget argument and its properties.
      */
-    explicit Scrollwheel(Serializer::Properties& props) noexcept;
+    explicit Scrollwheel(Serializer::Properties& props) noexcept
+        : Scrollwheel(props, false)
+    {
+    }
+
+protected:
+
+    explicit Scrollwheel(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
 
     /**
      * @param[in] min The range minimum value.

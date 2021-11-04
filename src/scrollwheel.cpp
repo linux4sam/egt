@@ -157,8 +157,8 @@ Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step) noexcept
     });
 }
 
-Scrollwheel::Scrollwheel(Serializer::Properties& props) noexcept
-    : StaticGrid(props),
+Scrollwheel::Scrollwheel(Serializer::Properties& props, bool is_derived) noexcept
+    : StaticGrid(props, true),
       m_button_up(Image("res:internal_arrow_up")),
       m_button_down(Image("res:internal_arrow_down"))
 {
@@ -217,6 +217,9 @@ Scrollwheel::Scrollwheel(Serializer::Properties& props) noexcept
     });
 
     deserialize(props);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 void Scrollwheel::orient(Orientation orient)

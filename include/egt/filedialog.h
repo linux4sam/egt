@@ -77,7 +77,16 @@ public:
      *
      * @param[in] props list of widget argument and its properties.
      */
-    explicit FileDialog(Serializer::Properties& props) noexcept;
+    explicit FileDialog(Serializer::Properties& props) noexcept
+        : FileDialog(props, false)
+    {
+    }
+
+protected:
+
+    explicit FileDialog(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
 
     /**
      * Show the Widget.
@@ -152,7 +161,16 @@ public:
      *
      * @param[in] props list of widget argument and its properties.
      */
-    explicit FileOpenDialog(Serializer::Properties& props) noexcept;
+    explicit FileOpenDialog(Serializer::Properties& props) noexcept
+        : FileOpenDialog(props, false)
+    {
+    }
+
+protected:
+
+    explicit FileOpenDialog(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
 
     /**
      * Return file selected in file open dialog window.
@@ -210,7 +228,16 @@ public:
      *
      * @param[in] props list of widget argument and its properties.
      */
-    explicit FileSaveDialog(Serializer::Properties& props) noexcept;
+    explicit FileSaveDialog(Serializer::Properties& props) noexcept
+        : FileSaveDialog(props, false)
+    {
+    }
+
+protected:
+
+    explicit FileSaveDialog(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
 
     /**
      * Show the Widget.

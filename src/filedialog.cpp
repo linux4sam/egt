@@ -47,8 +47,8 @@ void FileDialog::initialize()
     });
 }
 
-FileDialog::FileDialog(Serializer::Properties& props) noexcept
-    : Dialog(props),
+FileDialog::FileDialog(Serializer::Properties& props, bool is_derived) noexcept
+    : Dialog(props, true),
       m_flist(std::make_shared<egt::ListBox>())
 {
     name("FileDialog" + std::to_string(m_widgetid));
@@ -56,6 +56,9 @@ FileDialog::FileDialog(Serializer::Properties& props) noexcept
     initialize();
 
     deserialize(props);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 bool FileDialog::list_files(const std::string& filepath)
@@ -181,11 +184,14 @@ FileOpenDialog::FileOpenDialog(const std::string& filepath, const Rect& rect) no
     initialize();
 }
 
-FileOpenDialog::FileOpenDialog(Serializer::Properties& props) noexcept
-    : FileDialog(props)
+FileOpenDialog::FileOpenDialog(Serializer::Properties& props, bool is_derived) noexcept
+    : FileDialog(props, true)
 {
     name("FileOpenDialog" + std::to_string(m_widgetid));
     initialize();
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 FileOpenDialog::FileOpenDialog(const Rect& rect) noexcept
@@ -227,12 +233,15 @@ FileSaveDialog::FileSaveDialog(const std::string& filepath, const Rect& rect) no
     initialize();
 }
 
-FileSaveDialog::FileSaveDialog(Serializer::Properties& props) noexcept
-    : FileDialog(props),
+FileSaveDialog::FileSaveDialog(Serializer::Properties& props, bool is_derived) noexcept
+    : FileDialog(props, true),
       m_fsave_box("", Size(box().width() * 0.50, box().height() * 0.15))
 {
     name("FileSaveDialog" + std::to_string(m_widgetid));
     initialize();
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 FileSaveDialog::FileSaveDialog(const Rect& rect) noexcept

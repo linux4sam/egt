@@ -151,8 +151,8 @@ VirtualKeyboard::VirtualKeyboard(const Rect& rect) noexcept
 }, rect)
 {}
 
-VirtualKeyboard::VirtualKeyboard(Serializer::Properties& props) noexcept
-    : Frame(props)
+VirtualKeyboard::VirtualKeyboard(Serializer::Properties& props, bool is_derived) noexcept
+    : Frame(props, true)
 {
     name("VirtualKeyboard" + std::to_string(m_widgetid));
 
@@ -165,6 +165,9 @@ VirtualKeyboard::VirtualKeyboard(Serializer::Properties& props) noexcept
     };
 
     initialize(keys);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 void VirtualKeyboard::resize(const Size& s)

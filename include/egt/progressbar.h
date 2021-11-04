@@ -71,14 +71,26 @@ public:
      * @param[in] props list of widget argument and its properties.
      */
     explicit ProgressBarType(Serializer::Properties& props) noexcept
-        : ValueRangeWidget<T>(props)
+        : ProgressBarType(props, false)
+    {
+    }
+
+protected:
+
+    explicit ProgressBarType(Serializer::Properties& props, bool is_derived) noexcept
+        : ValueRangeWidget<T>(props, true)
     {
         this->name("ProgressBar" + std::to_string(this->m_widgetid));
         this->fill_flags(Theme::FillFlag::blend);
         this->border(this->theme().default_border());
 
         deserialize(props);
+
+        if (!is_derived)
+            this->deserialize_leaf(props);
     }
+
+public:
 
     void draw(Painter& painter, const Rect& rect) override
     {
@@ -288,14 +300,25 @@ public:
      * @param[in] props list of widget argument and its properties.
      */
     explicit SpinProgressType(Serializer::Properties& props) noexcept
-        : ValueRangeWidget<T>(props)
+        : SpinProgressType(props, false)
+    {
+    }
+
+protected:
+
+    explicit SpinProgressType(Serializer::Properties& props, bool is_derived) noexcept
+        : ValueRangeWidget<T>(props, true)
     {
         this->name("SpinProgress" + std::to_string(this->m_widgetid));
         this->fill_flags(Theme::FillFlag::blend);
 
         deserialize(props);
+
+        if (!is_derived)
+            this->deserialize_leaf(props);
     }
 
+public:
 
     void draw(Painter& painter, const Rect& rect) override
     {
@@ -509,14 +532,26 @@ public:
      * @param[in] props list of widget argument and its properties.
      */
     explicit LevelMeterType(Serializer::Properties& props) noexcept
-        : ValueRangeWidget<T>(props)
+        : LevelMeterType(props, false)
+    {
+    }
+
+protected:
+
+    explicit LevelMeterType(Serializer::Properties& props, bool is_derived) noexcept
+        : ValueRangeWidget<T>(props, true)
     {
         this->name("LevelMeter" + std::to_string(this->m_widgetid));
         this->fill_flags(Theme::FillFlag::blend);
         this->padding(2);
 
         deserialize(props);
+
+        if (!is_derived)
+            this->deserialize_leaf(props);
     }
+
+public:
 
     void draw(Painter& painter, const Rect& rect) override
     {
@@ -707,11 +742,23 @@ public:
      * @param[in] props list of widget argument and its properties.
      */
     explicit AnalogMeterType(Serializer::Properties& props) noexcept
-        : ValueRangeWidget<T>(props)
+        : AnalogMeterType(props, false)
+    {
+    }
+
+protected:
+
+    explicit AnalogMeterType(Serializer::Properties& props, bool is_derived) noexcept
+        : ValueRangeWidget<T>(props, true)
     {
         this->name("AnalogMeter" + std::to_string(this->m_widgetid));
         this->fill_flags(Theme::FillFlag::blend);
+
+        if (!is_derived)
+            this->deserialize_leaf(props);
     }
+
+public:
 
     void draw(Painter& painter, const Rect& rect) override
     {

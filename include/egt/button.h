@@ -106,7 +106,16 @@ public:
     /**
      * @param[in] props list of widget argument and its properties.
      */
-    explicit Button(Serializer::Properties& props) noexcept;
+    explicit Button(Serializer::Properties& props) noexcept
+        : Button(props, false)
+    {
+    }
+
+protected:
+
+    explicit Button(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
 
     Button(const Button&) = delete;
     Button& operator=(const Button&) = delete;
@@ -250,7 +259,16 @@ public:
     /**
      * @param[in] props list of arguments and its properties.
      */
-    explicit ImageButton(Serializer::Properties& props) noexcept;
+    explicit ImageButton(Serializer::Properties& props) noexcept
+        : ImageButton(props, false)
+    {
+    }
+
+protected:
+
+    explicit ImageButton(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
 
     void draw(Painter& painter, const Rect& rect) override;
 

@@ -55,8 +55,8 @@ ScrolledView::ScrolledView(Frame& parent,
     parent.add(*this);
 }
 
-ScrolledView::ScrolledView(Serializer::Properties& props) noexcept
-    : Frame(props),
+ScrolledView::ScrolledView(Serializer::Properties& props, bool is_derived) noexcept
+    : Frame(props, true),
       m_hslider(100, 0, 0, Orientation::horizontal),
       m_vslider(100, 0, 0, Orientation::vertical)
 {
@@ -69,6 +69,9 @@ ScrolledView::ScrolledView(Serializer::Properties& props) noexcept
                                   Slider::SliderFlag::consistent_line});
 
     resize_slider();
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 void ScrolledView::draw(Painter& painter, const Rect& rect)

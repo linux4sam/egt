@@ -51,8 +51,8 @@ Window::Window(const Rect& rect,
     Application::instance().m_windows.push_back(this);
 }
 
-Window::Window(Serializer::Properties& props)
-    : Frame(props)
+Window::Window(Serializer::Properties& props, bool is_derived)
+    : Frame(props, true)
 {
     flags().set({Widget::Flag::window, Widget::Flag::invisible});
 
@@ -85,7 +85,8 @@ Window::Window(Serializer::Properties& props)
     // save off the new window to the window list
     Application::instance().m_windows.push_back(this);
 
-    deserialize(props);
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 Window::Window(Frame& parent,
@@ -352,23 +353,6 @@ void Window::serialize(Serializer& serializer) const
     serializer.add_property("pixelformat", detail::enum_to_string<PixelFormat>(m_format_hint));
     serializer.add_property("windowhint", detail::enum_to_string<WindowHint>(m_hint));
     Frame::serialize(serializer);
-}
-
-void Window::deserialize(Serializer::Properties& props)
-{
-    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
-    {
-        if (std::get<0>(p) == "show")
-        {
-            auto enable =  detail::from_string(std::get<1>(p));
-            if (enable)
-                show();
-            else
-                hide();
-            return true;
-        }
-        return false;
-    }), props.end());
 }
 
 Window::Window(Window&&) noexcept = default;

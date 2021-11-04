@@ -24,14 +24,17 @@ StaticGrid::StaticGrid(const Rect& rect, const GridSize& size)
     reallocate(size);
 }
 
-StaticGrid::StaticGrid(Serializer::Properties& props)
-    : Frame(props)
+StaticGrid::StaticGrid(Serializer::Properties& props, bool is_derived)
+    : Frame(props, true)
 {
     name("StaticGrid" + std::to_string(m_widgetid));
 
     reallocate(GridSize(1, 1));
 
     deserialize(props);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 void StaticGrid::reallocate(const GridSize& size)
@@ -371,10 +374,13 @@ void StaticGrid::deserialize(Serializer::Properties& props)
 
 }
 
-SelectableGrid::SelectableGrid(Serializer::Properties& props)
-    : StaticGrid(props)
+SelectableGrid::SelectableGrid(Serializer::Properties& props, bool is_derived)
+    : StaticGrid(props, true)
 {
     deserialize(props);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 void SelectableGrid::handle(Event& event)

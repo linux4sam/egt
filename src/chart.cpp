@@ -20,13 +20,16 @@ LineChart::LineChart(const Rect& rect)
     name("LineChart" + std::to_string(m_widgetid));
 }
 
-LineChart::LineChart(Serializer::Properties& props)
-    : ChartBase(props),
+LineChart::LineChart(Serializer::Properties& props, bool is_derived)
+    : ChartBase(props, true),
       m_impl(std::make_unique<detail::PlPlotLineChart>(*this))
 {
     name("LineChart" + std::to_string(m_widgetid));
 
     deserialize(props);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 void LineChart::draw(Painter& painter, const Rect& rect)
@@ -285,13 +288,16 @@ PointChart::PointChart(const Rect& rect)
     name("PointChart" + std::to_string(m_widgetid));
 }
 
-PointChart::PointChart(Serializer::Properties& props)
-    : ChartBase(props),
+PointChart::PointChart(Serializer::Properties& props, bool is_derived)
+    : ChartBase(props, true),
       m_impl(std::make_unique<detail::PlPlotPointChart>(*this))
 {
     name("PointChart" + std::to_string(m_widgetid));
 
     deserialize(props);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 void PointChart::draw(Painter& painter, const Rect& rect)
@@ -537,13 +543,16 @@ BarChart::BarChart(const Rect& rect)
     name("BarChart" + std::to_string(m_widgetid));
 }
 
-BarChart::BarChart(Serializer::Properties& props)
-    : ChartBase(props),
+BarChart::BarChart(Serializer::Properties& props, bool is_derived)
+    : ChartBase(props, true),
       m_impl(std::make_unique<detail::PlPlotBarChart>(*this))
 {
     name("BarChart" + std::to_string(m_widgetid));
 
     deserialize(props);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 BarChart::BarChart(const Rect& rect, std::unique_ptr<detail::PlPlotImpl>&& impl)
@@ -554,7 +563,7 @@ BarChart::BarChart(const Rect& rect, std::unique_ptr<detail::PlPlotImpl>&& impl)
 }
 
 BarChart::BarChart(Serializer::Properties& props, std::unique_ptr<detail::PlPlotImpl>&& impl)
-    : ChartBase(props),
+    : ChartBase(props, true),
       m_impl(std::move(impl))
 {
     name("BarChart" + std::to_string(m_widgetid));
@@ -841,10 +850,13 @@ HorizontalBarChart::HorizontalBarChart(const Rect& rect)
     name("HorizontalBarChart" + std::to_string(m_widgetid));
 }
 
-HorizontalBarChart::HorizontalBarChart(Serializer::Properties& props)
+HorizontalBarChart::HorizontalBarChart(Serializer::Properties& props, bool is_derived)
     : BarChart(props, std::make_unique<detail::PlPlotHBarChart>(*this))
 {
     name("HorizontalBarChart" + std::to_string(m_widgetid));
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 HorizontalBarChart::HorizontalBarChart(HorizontalBarChart&&) noexcept = default;
@@ -859,13 +871,16 @@ PieChart::PieChart(const Rect& rect)
     name("PieChart" + std::to_string(m_widgetid));
 }
 
-PieChart::PieChart(Serializer::Properties& props)
-    : Widget(props),
+PieChart::PieChart(Serializer::Properties& props, bool is_derived)
+    : Widget(props, true),
       m_impl(std::make_unique<detail::PlPlotPieChart>(*this))
 {
     name("PieChart" + std::to_string(m_widgetid));
 
     deserialize(props);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 void PieChart::draw(Painter& painter, const Rect& rect)

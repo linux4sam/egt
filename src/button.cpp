@@ -80,8 +80,8 @@ Button::Button(Frame& parent,
     parent.add(*this);
 }
 
-Button::Button(Serializer::Properties& props) noexcept
-    : TextWidget(props)
+Button::Button(Serializer::Properties& props, bool is_derived) noexcept
+    : TextWidget(props, true)
 {
     name("Button" + std::to_string(m_widgetid));
 
@@ -89,6 +89,9 @@ Button::Button(Serializer::Properties& props) noexcept
     border_radius(4.0);
 
     grab_mouse(true);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 void Button::handle(Event& event)
@@ -235,8 +238,8 @@ ImageButton::ImageButton(Frame& parent,
     parent.add(*this);
 }
 
-ImageButton::ImageButton(Serializer::Properties& props) noexcept
-    : Button(props),
+ImageButton::ImageButton(Serializer::Properties& props, bool is_derived) noexcept
+    : Button(props, true),
       ImageHolder(*static_cast<Widget*>(this))
 {
     name("ImageButton" + std::to_string(m_widgetid));
@@ -245,6 +248,9 @@ ImageButton::ImageButton(Serializer::Properties& props) noexcept
         image_align(AlignFlag::center);
 
     deserialize(props);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 Size ImageButton::min_size_hint() const

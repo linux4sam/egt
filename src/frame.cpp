@@ -27,13 +27,16 @@ Frame::Frame(const Rect& rect, const Widget::Flags& flags) noexcept
     m_damage.reserve(10);
 }
 
-Frame::Frame(Serializer::Properties& props) noexcept
-    : Widget(props)
+Frame::Frame(Serializer::Properties& props, bool is_derived) noexcept
+    : Widget(props, true)
 {
     flags().set(Widget::Flag::frame);
 
     name("Frame" + std::to_string(m_widgetid));
     m_damage.reserve(10);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 Frame::Frame(Frame& parent, const Rect& rect, const Widget::Flags& flags) noexcept

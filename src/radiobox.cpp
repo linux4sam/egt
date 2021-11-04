@@ -36,8 +36,8 @@ RadioBox::RadioBox(Frame& parent,
     parent.add(*this);
 }
 
-RadioBox::RadioBox(Serializer::Properties& props) noexcept
-    : Button(props)
+RadioBox::RadioBox(Serializer::Properties& props, bool is_derived) noexcept
+    : Button(props, true)
 {
     name("RadioBox" + std::to_string(m_widgetid));
 
@@ -46,6 +46,9 @@ RadioBox::RadioBox(Serializer::Properties& props) noexcept
     text_align(AlignFlag::left | AlignFlag::center);
 
     grab_mouse(true);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 void RadioBox::handle(Event& event)
