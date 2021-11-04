@@ -76,7 +76,7 @@ private:
     /**
      * Deserialize widget properties.
      */
-    void deserialize(Serializer::Properties& props) override;
+    void deserialize(Serializer::Properties& props);
 };
 
 /**
@@ -142,7 +142,7 @@ private:
     /**
      * Deserialize widget properties.
      */
-    void deserialize(Serializer::Properties& props) override;
+    void deserialize(Serializer::Properties& props);
 };
 
 /**

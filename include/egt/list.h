@@ -170,7 +170,7 @@ private:
 
     void add_item_private(const std::shared_ptr<StringItem>& item);
 
-    void deserialize(Serializer::Properties& props) override;
+    void deserialize(Serializer::Properties& props);
 };
 
 }
