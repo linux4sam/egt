@@ -103,11 +103,23 @@ public:
      * @param[in] props list of widget argument and its properties.
      */
     explicit RadialType(Serializer::Properties& props) noexcept
-        : Widget(props)
+        : RadialType(props, false)
+    {
+    }
+
+protected:
+
+    explicit RadialType(Serializer::Properties& props, bool is_derived) noexcept
+        : Widget(props, true)
     {
         this->name("Radial" + std::to_string(m_widgetid));
         this->grab_mouse(true);
+
+        if (!is_derived)
+            deserialize_leaf(props);
     }
+
+public:
 
     /**
      * Add a range value to the radial.

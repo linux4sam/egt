@@ -77,7 +77,16 @@ public:
     /**
      * @param[in] props list of widget argument and its properties.
      */
-    explicit BoxSizer(Serializer::Properties& props);
+    explicit BoxSizer(Serializer::Properties& props)
+        : BoxSizer(props, false)
+    {
+    }
+
+protected:
+
+    explicit BoxSizer(Serializer::Properties& props, bool is_derived);
+
+public:
 
     void layout() override;
 
@@ -191,8 +200,21 @@ public:
     {}
 
     explicit HorizontalBoxSizer(Serializer::Properties& props)
-        : BoxSizer(props)
-    {}
+        : HorizontalBoxSizer(props, false)
+    {
+    }
+
+protected:
+
+    explicit HorizontalBoxSizer(Serializer::Properties& props, bool is_derived)
+        : BoxSizer(props, true)
+    {
+        if (!is_derived)
+            deserialize_leaf(props);
+    }
+
+public:
+
     /**
      * @param[in] parent The parent Frame.
      * @param[in] justify Justification of child widgets.
@@ -219,8 +241,20 @@ public:
     {}
 
     explicit VerticalBoxSizer(Serializer::Properties& props)
-        : BoxSizer(props)
-    {}
+        : VerticalBoxSizer(props, false)
+    {
+    }
+
+protected:
+
+    explicit VerticalBoxSizer(Serializer::Properties& props, bool is_derived)
+        : BoxSizer(props, true)
+    {
+        if (!is_derived)
+            deserialize_leaf(props);
+    }
+
+public:
 
     /**
      * @param[in] parent The parent Frame.
@@ -256,8 +290,18 @@ public:
     {}
 
     explicit FlexBoxSizer(Serializer::Properties& props)
-        : BoxSizer(props)
-    {}
+        : FlexBoxSizer(props, false)
+    {
+    }
+
+protected:
+
+    explicit FlexBoxSizer(Serializer::Properties& props, bool is_derived)
+        : BoxSizer(props, true)
+    {
+        if (!is_derived)
+            deserialize_leaf(props);
+    }
 };
 
 }

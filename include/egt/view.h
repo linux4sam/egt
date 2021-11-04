@@ -84,7 +84,16 @@ public:
     /**
      * @param[in] props list of widget argument and its properties.
      */
-    explicit ScrolledView(Serializer::Properties& props) noexcept;
+    explicit ScrolledView(Serializer::Properties& props) noexcept
+        : ScrolledView(props, false)
+    {
+    }
+
+protected:
+
+    explicit ScrolledView(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
 
     void handle(Event& event) override;
 

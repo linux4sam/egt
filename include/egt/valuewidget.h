@@ -128,10 +128,22 @@ public:
      * @param[in] props list of widget argument and its properties.
      */
     explicit ValueRangeWidget(Serializer::Properties& props)
-        : Widget(props)
+        : ValueRangeWidget(props, false)
+    {
+    }
+
+protected:
+
+    explicit ValueRangeWidget(Serializer::Properties& props, bool is_derived)
+        : Widget(props, true)
     {
         deserialize(props);
+
+        if (!is_derived)
+            deserialize_leaf(props);
     }
+
+public:
 
     /**
      * Set value.

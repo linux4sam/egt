@@ -91,7 +91,16 @@ public:
     /**
      * @param[in] props list of widget argument and its properties.
      */
-    explicit StaticGrid(Serializer::Properties& props);
+    explicit StaticGrid(Serializer::Properties& props)
+        : StaticGrid(props, false)
+    {
+    }
+
+protected:
+
+    explicit StaticGrid(Serializer::Properties& props, bool is_derived);
+
+public:
 
     using Frame::add;
 
@@ -331,7 +340,16 @@ public:
     /**
      * @param[in] props list of widget argument and its properties.
      */
-    explicit SelectableGrid(Serializer::Properties& props);
+    explicit SelectableGrid(Serializer::Properties& props)
+        : SelectableGrid(props, false)
+    {
+    }
+
+protected:
+
+    explicit SelectableGrid(Serializer::Properties& props, bool is_derived);
+
+public:
 
     using StaticGrid::StaticGrid;
 

@@ -42,8 +42,20 @@ public:
     }
 
     explicit PopupType(Serializer::Properties& props) noexcept
-        : T(props)
-    {}
+        : PopupType(props, false)
+    {
+    }
+
+protected:
+
+    explicit PopupType(Serializer::Properties& props, bool is_derived) noexcept
+        : T(props, true)
+    {
+        if (!is_derived)
+            T::deserialize_leaf(props);
+    }
+
+public:
 
     /**
      * Show the window centered.

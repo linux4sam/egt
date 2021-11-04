@@ -102,14 +102,17 @@ VideoWindow::VideoWindow(const Rect& rect, const std::string& uri,
     }
 }
 
-VideoWindow::VideoWindow(Serializer::Properties& props)
-    : Window(props)
+VideoWindow::VideoWindow(Serializer::Properties& props, bool is_derived)
+    : Window(props, true)
 {
     fill_flags().clear();
 
     create_impl(box().size());
 
     deserialize(props);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 void VideoWindow::create_impl(const Size& size)

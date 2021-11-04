@@ -27,13 +27,16 @@ CircleWidget::CircleWidget(Frame& parent, const Circle& circle)
     parent.add(*this);
 }
 
-CircleWidget::CircleWidget(Serializer::Properties& props)
-    : Widget(props)
+CircleWidget::CircleWidget(Serializer::Properties& props, bool is_derived)
+    : Widget(props, true)
 {
     name("CircleWidget" + std::to_string(m_widgetid));
     fill_flags(Theme::FillFlag::blend);
 
     deserialize(props);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 void CircleWidget::draw(Painter& painter, const Rect&)
@@ -83,10 +86,13 @@ void RectangleWidget::draw(Painter& painter, const Rect&)
 
 }
 
-LineWidget::LineWidget(Serializer::Properties& props)
-    : Widget(props)
+LineWidget::LineWidget(Serializer::Properties& props, bool is_derived)
+    : Widget(props, true)
 {
     deserialize(props);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 void LineWidget::draw(Painter& painter, const Rect&)

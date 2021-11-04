@@ -78,7 +78,7 @@ Widget::Widget(const Rect& rect, const Widget::Flags& flags) noexcept
     });
 }
 
-Widget::Widget(Serializer::Properties& props) noexcept
+Widget::Widget(Serializer::Properties& props, bool is_derived) noexcept
     : m_widgetid(global_widget_id++)
 {
     deserialize(props);
@@ -99,6 +99,9 @@ Widget::Widget(Serializer::Properties& props) noexcept
     {
         m_focus = false;
     });
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 Widget::Widget(Frame& parent, const Rect& rect, const Widget::Flags& flags) noexcept
@@ -725,6 +728,23 @@ void Widget::serialize(Serializer& serializer) const
         if (!m_font)
             m_theme->font().serialize("font", serializer);
     }
+}
+
+void Widget::deserialize_leaf(Serializer::Properties& props)
+{
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
+    {
+        if (std::get<0>(p) == "show")
+        {
+            auto enable =  detail::from_string(std::get<1>(p));
+            if (enable)
+                show();
+            else
+                hide();
+            return true;
+        }
+        return false;
+    }), props.end());
 }
 
 void Widget::deserialize(Serializer::Properties& props)

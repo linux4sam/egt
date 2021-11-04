@@ -104,7 +104,16 @@ public:
      *
      * @param[in] props list of widget argument and its properties.
      */
-    LineChart(Serializer::Properties& props);
+    LineChart(Serializer::Properties& props)
+        : LineChart(props, false)
+    {
+    }
+
+protected:
+
+    LineChart(Serializer::Properties& props, bool is_derived);
+
+public:
 
     LineChart(const LineChart&) = delete;
     LineChart& operator=(const LineChart&) = delete;
@@ -290,7 +299,16 @@ public:
      *
      * @param[in] props list of widget argument and its properties.
      */
-    PointChart(Serializer::Properties& props);
+    PointChart(Serializer::Properties& props)
+        : PointChart(props, false)
+    {
+    }
+
+protected:
+
+    PointChart(Serializer::Properties& props, bool is_derived);
+
+public:
 
     PointChart(const PointChart&) = delete;
     PointChart& operator=(const PointChart&) = delete;
@@ -462,7 +480,16 @@ public:
      *
      * @param[in] props list of widget argument and its properties.
      */
-    BarChart(Serializer::Properties& props);
+    BarChart(Serializer::Properties& props)
+        : BarChart(props, false)
+    {
+    }
+
+protected:
+
+    BarChart(Serializer::Properties& props, bool is_derived);
+
+public:
 
     BarChart(const BarChart&) = delete;
     BarChart& operator=(const BarChart&) = delete;
@@ -654,7 +681,16 @@ public:
      *
      * @param[in] props list of widget argument and its properties.
      */
-    HorizontalBarChart(Serializer::Properties& props);
+    HorizontalBarChart(Serializer::Properties& props)
+        : HorizontalBarChart(props, false)
+    {
+    }
+
+protected:
+
+    HorizontalBarChart(Serializer::Properties& props, bool is_derived);
+
+public:
 
     HorizontalBarChart(const HorizontalBarChart&) = delete;
     HorizontalBarChart& operator=(const HorizontalBarChart&) = delete;
@@ -689,7 +725,16 @@ public:
      *
      * @param[in] props list of widget argument and its properties.
      */
-    PieChart(Serializer::Properties& props);
+    PieChart(Serializer::Properties& props)
+        : PieChart(props, false)
+    {
+    }
+
+protected:
+
+    PieChart(Serializer::Properties& props, bool is_derived);
+
+public:
 
     PieChart(const PieChart&) = delete;
     PieChart& operator=(const PieChart&) = delete;

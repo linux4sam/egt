@@ -208,7 +208,16 @@ public:
     /**
      * @param[in] props list of widget argument and its properties.
      */
-    explicit TextBox(Serializer::Properties& props) noexcept;
+    explicit TextBox(Serializer::Properties& props) noexcept
+        : TextBox(props, false)
+    {
+    }
+
+protected:
+
+    explicit TextBox(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
 
     TextBox(const TextBox&) = delete;
     TextBox& operator=(const TextBox&) = delete;

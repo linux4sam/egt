@@ -49,8 +49,8 @@ SideBoard::SideBoard(PositionFlag position,
     initialize();
 }
 
-SideBoard::SideBoard(Serializer::Properties& props) noexcept
-    : Window(props)
+SideBoard::SideBoard(Serializer::Properties& props, bool is_derived) noexcept
+    : Window(props, true)
 {
     m_oanim.duration(std::chrono::milliseconds(1000));
     m_canim.duration(std::chrono::milliseconds(1000));
@@ -60,6 +60,9 @@ SideBoard::SideBoard(Serializer::Properties& props) noexcept
     initialize();
 
     deserialize(props);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 void SideBoard::initialize()

@@ -47,7 +47,16 @@ public:
     /**
      * @param[in] props list of widget argument and its properties.
      */
-    explicit Form(Serializer::Properties& props) noexcept;
+    explicit Form(Serializer::Properties& props) noexcept
+        : Form(props, false)
+    {
+    }
+
+protected:
+
+    explicit Form(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
 
     /**
      * Add a group to the Form.

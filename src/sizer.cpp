@@ -43,10 +43,13 @@ enum
     LAY_BREAK = 0x200
 };
 
-BoxSizer::BoxSizer(Serializer::Properties& props)
-    : Frame(props)
+BoxSizer::BoxSizer(Serializer::Properties& props, bool is_derived)
+    : Frame(props, true)
 {
     deserialize(props);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 void BoxSizer::layout()

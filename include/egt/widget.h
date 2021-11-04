@@ -174,7 +174,16 @@ public:
     /**
      * @param[in] props list of widget argument and its properties.
      */
-    explicit Widget(Serializer::Properties& props) noexcept;
+    explicit Widget(Serializer::Properties& props) noexcept
+        : Widget(props, false)
+    {
+    }
+
+protected:
+
+    explicit Widget(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
 
     Widget(const Widget&) = delete;
     Widget& operator=(const Widget&) = delete;
@@ -1425,6 +1434,18 @@ protected:
      * Status for whether this widget is currently performing layout.
      */
     bool m_in_layout{false};
+
+    /**
+     * Deserialize widget properties that require to call overridden methods.
+     *
+     * Should be called at the end of all
+     * T::T(Serializer::Properties& props, bool is_derived) constructors,
+     * if and only if 'is_derived' is 'false'.
+     *
+     * Indeed, we wait for an object to be entirely constructed so the expected
+     * virtual/overridden methods are executed.
+     */
+    void deserialize_leaf(Serializer::Properties& props);
 
 private:
 

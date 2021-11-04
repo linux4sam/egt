@@ -100,7 +100,16 @@ public:
      *
      * @param[in] props list of widget argument and its properties.
      */
-    VideoWindow(Serializer::Properties& props);
+    VideoWindow(Serializer::Properties& props)
+        : VideoWindow(props, false)
+    {
+    }
+
+protected:
+
+    VideoWindow(Serializer::Properties& props, bool is_derived);
+
+public:
 
     VideoWindow(const VideoWindow&) = delete;
     VideoWindow& operator=(const VideoWindow&) = delete;

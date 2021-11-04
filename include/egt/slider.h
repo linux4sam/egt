@@ -134,7 +134,16 @@ public:
     /**
      * @param[in] props list of widget argument and its properties.
      */
-    explicit SliderType(Serializer::Properties& props) noexcept;
+    explicit SliderType(Serializer::Properties& props) noexcept
+        : SliderType(props, false)
+    {
+    }
+
+protected:
+
+    explicit SliderType(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
 
     void handle(Event& event) override
     {
@@ -422,8 +431,8 @@ SliderType<T>::SliderType(const Rect& rect, T start, T end, T value,
 }
 
 template <class T>
-SliderType<T>::SliderType(Serializer::Properties& props) noexcept
-    : ValueRangeWidget<T>(props)
+SliderType<T>::SliderType(Serializer::Properties& props, bool is_derived) noexcept
+    : ValueRangeWidget<T>(props, true)
 {
 
     this->name("Slider" + std::to_string(this->m_widgetid));
@@ -433,6 +442,9 @@ SliderType<T>::SliderType(Serializer::Properties& props) noexcept
     this->border_radius(4.0);
 
     deserialize(props);
+
+    if (!is_derived)
+        this->deserialize_leaf(props);
 }
 
 

@@ -679,14 +679,17 @@ TextBox::TextBox(Frame& parent,
     parent.add(*this);
 }
 
-TextBox::TextBox(Serializer::Properties& props) noexcept
-    : TextWidget(props),
+TextBox::TextBox(Serializer::Properties& props, bool is_derived) noexcept
+    : TextWidget(props, true),
       m_timer(std::chrono::seconds(1))
 {
     name("TextBox" + std::to_string(m_widgetid));
     initialize();
 
     deserialize(props);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 void TextBox::initialize()

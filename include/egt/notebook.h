@@ -39,13 +39,25 @@ public:
     }
 
     explicit NotebookTab(Serializer::Properties& props) noexcept
-        : Frame(props)
+        : NotebookTab(props, false)
+    {
+    }
+
+protected:
+
+    explicit NotebookTab(Serializer::Properties& props, bool is_derived) noexcept
+        : Frame(props, true)
     {
         name("NotebookTab" + std::to_string(m_widgetid));
 
         // tabs are not transparent by default
         fill_flags(Theme::FillFlag::solid);
+
+        if (!is_derived)
+            deserialize_leaf(props);
     }
+
+public:
 
     /**
      * @return true if allowed to leave, false otherwise.
@@ -101,7 +113,16 @@ public:
     /**
      * @param[in] props list of widget argument and its properties.
      */
-    explicit Notebook(Serializer::Properties& props) noexcept;
+    explicit Notebook(Serializer::Properties& props) noexcept
+        : Notebook(props, false)
+    {
+    }
+
+protected:
+
+    explicit Notebook(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
 
     using Frame::add;
 

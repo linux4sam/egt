@@ -67,7 +67,16 @@ public:
     /**
      * @param[in] props list of widget argument and its properties.
      */
-    explicit Dialog(Serializer::Properties& props) noexcept;
+    explicit Dialog(Serializer::Properties& props) noexcept
+        : Dialog(props, false)
+    {
+    }
+
+protected:
+
+    explicit Dialog(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
 
     /**
      * Set the title info for this dialog.

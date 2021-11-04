@@ -58,7 +58,16 @@ public:
     /**
      * @param[in] props list of widget argument and its properties.
      */
-    explicit CheckBox(Serializer::Properties& props) noexcept;
+    explicit CheckBox(Serializer::Properties& props) noexcept
+        : CheckBox(props, false)
+    {
+    }
+
+protected:
+
+    explicit CheckBox(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
 
     void handle(Event& event) override;
 
@@ -100,7 +109,16 @@ public:
     /**
      * @param[in] props list of widget argument and its properties.
      */
-    explicit ToggleBox(Serializer::Properties& props) noexcept;
+    explicit ToggleBox(Serializer::Properties& props) noexcept
+        : ToggleBox(props, false)
+    {
+    }
+
+protected:
+
+    explicit ToggleBox(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
 
     void draw(Painter& painter, const Rect& rect) override;
 

@@ -51,7 +51,16 @@ public:
     /**
      * @param[in] props list of widget argument and its properties.
      */
-    explicit RadioBox(Serializer::Properties& props) noexcept;
+    explicit RadioBox(Serializer::Properties& props) noexcept
+        : RadioBox(props, false)
+    {
+    }
+
+protected:
+
+    explicit RadioBox(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
 
     void handle(Event& event) override;
 

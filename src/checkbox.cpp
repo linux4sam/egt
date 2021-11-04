@@ -38,8 +38,8 @@ CheckBox::CheckBox(Frame& parent,
     parent.add(*this);
 }
 
-CheckBox::CheckBox(Serializer::Properties& props) noexcept
-    : Button(props)
+CheckBox::CheckBox(Serializer::Properties& props, bool is_derived) noexcept
+    : Button(props, true)
 {
     name("CheckBox" + std::to_string(m_widgetid));
 
@@ -48,6 +48,9 @@ CheckBox::CheckBox(Serializer::Properties& props) noexcept
     text_align(AlignFlag::left | AlignFlag::center);
 
     grab_mouse(true);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 
 void CheckBox::handle(Event& event)
@@ -169,8 +172,8 @@ ToggleBox::ToggleBox(Frame& parent, const Rect& rect) noexcept
     parent.add(*this);
 }
 
-ToggleBox::ToggleBox(Serializer::Properties& props) noexcept
-    : CheckBox(props)
+ToggleBox::ToggleBox(Serializer::Properties& props, bool is_derived) noexcept
+    : CheckBox(props, true)
 {
     name("ToggleBox" + std::to_string(m_widgetid));
 
@@ -179,6 +182,9 @@ ToggleBox::ToggleBox(Serializer::Properties& props) noexcept
     border_radius(4.0);
 
     deserialize(props);
+
+    if (!is_derived)
+        deserialize_leaf(props);
 }
 void ToggleBox::draw(Painter& painter, const Rect& rect)
 {

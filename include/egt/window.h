@@ -106,7 +106,16 @@ public:
      *
      * @param[in] props list of widget argument and its properties.
      */
-    explicit Window(Serializer::Properties& props);
+    explicit Window(Serializer::Properties& props)
+        : Window(props, false)
+    {
+    }
+
+protected:
+
+    explicit Window(Serializer::Properties& props, bool is_derived);
+
+public:
 
     Window(const Window&) = delete;
     Window& operator=(const Window&) = delete;
@@ -304,10 +313,6 @@ protected:
 
     friend class detail::WindowImpl;
     friend class detail::PlaneWindow;
-
-private:
-
-    void deserialize(Serializer::Properties& props);
 };
 
 /**

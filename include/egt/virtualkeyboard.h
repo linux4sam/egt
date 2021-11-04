@@ -191,7 +191,16 @@ public:
     /**
      * @param[in] props list of widget argument and its properties.
      */
-    explicit VirtualKeyboard(Serializer::Properties& props) noexcept;
+    explicit VirtualKeyboard(Serializer::Properties& props) noexcept
+        : VirtualKeyboard(props, false)
+    {
+    }
+
+protected:
+
+    explicit VirtualKeyboard(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
 
     void resize(const Size& s) override;
 

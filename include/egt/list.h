@@ -91,7 +91,16 @@ public:
     /**
      * @param[in] props list of widget argument and its properties.
      */
-    explicit ListBox(Serializer::Properties& props) noexcept;
+    explicit ListBox(Serializer::Properties& props) noexcept
+        : ListBox(props, false)
+    {
+    }
+
+protected:
+
+    explicit ListBox(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
 
     void handle(Event& event) override;
 
