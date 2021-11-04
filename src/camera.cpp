@@ -87,8 +87,8 @@ void CameraWindow::stop()
 
 void CameraWindow::serialize(Serializer& serializer) const
 {
-    Window::serialize(serializer);
     serializer.add_property("device", device());
+    Window::serialize(serializer);
 }
 
 void CameraWindow::deserialize(Serializer::Properties& props)
