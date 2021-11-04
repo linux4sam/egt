@@ -467,11 +467,11 @@ void SelectableGrid::selected(size_t column, size_t row)
 
 void SelectableGrid::serialize(Serializer& serializer) const
 {
-    StaticGrid::serialize(serializer);
-
     serializer.add_property("selected_column", static_cast<int>(m_selected_column));
     serializer.add_property("selected_row", static_cast<int>(m_selected_row));
     serializer.add_property("selection_highlight", selection_highlight());
+
+    StaticGrid::serialize(serializer);
 }
 
 void SelectableGrid::deserialize(Serializer::Properties& props)

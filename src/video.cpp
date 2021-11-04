@@ -239,10 +239,10 @@ bool VideoWindow::has_audio() const
 
 void VideoWindow::serialize(Serializer& serializer) const
 {
-    Window::serialize(serializer);
     serializer.add_property("uri", m_uri);
     serializer.add_property("loopback", loopback());
     serializer.add_property("volume", volume());
+    Window::serialize(serializer);
 }
 
 void VideoWindow::deserialize(Serializer::Properties& props)

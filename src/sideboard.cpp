@@ -215,9 +215,9 @@ const std::pair<SideBoard::PositionFlag, char const*> detail::EnumStrings<SideBo
 
 void SideBoard::serialize(Serializer& serializer) const
 {
-    Window::serialize(serializer);
-
     serializer.add_property("position", detail::enum_to_string(position()));
+
+    Window::serialize(serializer);
 }
 
 void SideBoard::deserialize(Serializer::Properties& props)

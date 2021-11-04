@@ -160,8 +160,8 @@ void FileDialog::show_centered()
 
 void FileDialog::serialize(Serializer& serializer) const
 {
-    Popup::serialize(serializer);
     serializer.add_property("filepath", m_filepath);
+    Popup::serialize(serializer);
 }
 
 void FileDialog::deserialize(Serializer::Properties& props)
