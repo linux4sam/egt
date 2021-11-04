@@ -663,6 +663,7 @@ std::string Widget::type() const
 
 void Widget::serialize(Serializer& serializer) const
 {
+    serializer.add_property("show", visible());
     if (x())
         serializer.add_property("x", x());
     if (y())
