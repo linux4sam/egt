@@ -2,6 +2,9 @@
 <egt>
 	<widgets>
 		<widget name="Window0" type="TopWindow">
+			<property name="show">true</property>
+			<property name="pixelformat">argb8888</property>
+			<property name="windowhint">automatic</property>
 			<property name="width">800</property>
 			<property name="height">480</property>
 			<property name="fillflags">solid</property>
@@ -83,7 +86,7 @@ Label Text</property>
 					<property name="text_align">center_horizontal|center_vertical</property>
 					<property name="showlabel">true</property>
 					<property name="image">icon:camera.png</property>
-					<property name="image_align">left</property>
+					<property name="image_align">left|expand_horizontal|expand_vertical</property>
 				</widget>
 				<widget name="ImageLabel9" type="ImageLabel">
 					<property name="x">270</property>
@@ -121,7 +124,7 @@ Label Text</property>
 					<property name="text_align">center_horizontal|center_vertical|bottom</property>
 					<property name="showlabel">true</property>
 					<property name="image">icon:camera.png</property>
-					<property name="image_align">left</property>
+					<property name="image_align">left|expand_horizontal|expand_vertical</property>
 				</widget>
 				<widget name="ImageLabel12" type="ImageLabel">
 					<property name="x">270</property>
@@ -133,8 +136,8 @@ Label Text</property>
 					<property name="fillflags">blend</property>
 					<property name="text_align">center_horizontal|center_vertical</property>
 					<property name="showlabel">true</property>
-					<property name="image">icon:camera.png</property>
-					<property name="image_align">center_horizontal|center_vertical</property>
+					<property name="image" hscale="2.750000" vscale="2.750000">icon:camera.png</property>
+					<property name="image_align">center_horizontal|center_vertical|expand_horizontal|expand_vertical</property>
 				</widget>
 			</widget>
 		</widget>

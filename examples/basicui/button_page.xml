@@ -2,6 +2,9 @@
 <egt>
 	<widgets>
 		<widget name="Window0" type="TopWindow">
+			<property name="show">true</property>
+			<property name="pixelformat">argb8888</property>
+			<property name="windowhint">automatic</property>
 			<property name="width">800</property>
 			<property name="height">480</property>
 			<property name="fillflags">solid</property>
@@ -50,6 +53,7 @@
 					<property name="text_align">center_horizontal|center_vertical</property>
 					<property name="showlabel">true</property>
 					<property name="image">icon:calculator.png</property>
+					<property name="image_align">left|expand_horizontal|expand_vertical</property>
 				</widget>
 				<widget name="ImageButton5" type="ImageButton">
 					<property name="x">5</property>
@@ -63,6 +67,7 @@
 					<property name="text_align">center_horizontal|center_vertical|left</property>
 					<property name="showlabel">true</property>
 					<property name="image">icon:calculator.png</property>
+					<property name="image_align">left|expand_horizontal|expand_vertical</property>
 				</widget>
 				<widget name="ImageButton6" type="ImageButton">
 					<property name="x">270</property>
@@ -76,6 +81,7 @@
 					<property name="text_align">center_horizontal|center_vertical|right</property>
 					<property name="showlabel">true</property>
 					<property name="image">icon:calculator.png</property>
+					<property name="image_align">left|expand_horizontal|expand_vertical</property>
 				</widget>
 				<widget name="ImageButton7" type="ImageButton">
 					<property name="x">535</property>
@@ -89,6 +95,7 @@
 					<property name="text_align">center_horizontal|center_vertical|top</property>
 					<property name="showlabel">true</property>
 					<property name="image">icon:calculator.png</property>
+					<property name="image_align">left|expand_horizontal|expand_vertical</property>
 				</widget>
 				<widget name="ImageButton8" type="ImageButton">
 					<property name="x">5</property>
@@ -102,6 +109,7 @@
 					<property name="text_align">center_horizontal|center_vertical|bottom</property>
 					<property name="showlabel">true</property>
 					<property name="image">icon:calculator.png</property>
+					<property name="image_align">right</property>
 				</widget>
 				<widget name="ImageButton9" type="ImageButton">
 					<property name="x">270</property>
@@ -113,7 +121,8 @@
 					<property name="fillflags">blend</property>
 					<property name="text_align">center_horizontal|center_vertical</property>
 					<property name="showlabel">true</property>
-					<property name="image">icon:calculator.png</property>
+					<property name="image" hscale="2.312500" vscale="2.312500">icon:calculator.png</property>
+					<property name="image_align">center_horizontal|center_vertical|expand_horizontal|expand_vertical</property>
 				</widget>
 				<widget name="Button10" type="Button">
 					<property name="x">535</property>

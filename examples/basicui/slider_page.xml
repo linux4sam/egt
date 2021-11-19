@@ -2,20 +2,28 @@
 <egt>
 	<widgets>
 		<widget name="Window0" type="TopWindow">
+			<property name="show">true</property>
+			<property name="pixelformat">argb8888</property>
+			<property name="windowhint">automatic</property>
 			<property name="width">800</property>
 			<property name="height">480</property>
 			<property name="fillflags">solid</property>
-			<widget name="BoxSizer1" type="BoxSizer">
-				<property name="orient">flex</property>
-				<property name="justify">middle</property>
+			<widget name="StaticGrid1" type="StaticGrid">
+				<property name="column_priority">false</property>
+				<property name="n_col">3</property>
+				<property name="n_row">3</property>
+				<property name="horizontal_space">5</property>
+				<property name="vertical_space">5</property>
 				<property name="width">800</property>
-				<property name="height">840</property>
+				<property name="height">480</property>
 				<property name="align">expand_horizontal|expand_vertical</property>
+				<property name="margin">5</property>
 				<widget name="Slider2" type="Slider">
-					<property name="x">80</property>
-					<property name="y">60</property>
-					<property name="width">200</property>
-					<property name="height">80</property>
+					<property name="x">5</property>
+					<property name="y">5</property>
+					<property name="width">260</property>
+					<property name="height">153</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
 					<property name="grab_mouse">true</property>
 					<property name="fillflags">blend</property>
 					<property name="value" starting="0" ending="100">50</property>
@@ -23,9 +31,11 @@
 					<property name="orient">horizontal</property>
 				</widget>
 				<widget name="Slider3" type="Slider">
-					<property name="x">280</property>
-					<property name="width">80</property>
-					<property name="height">200</property>
+					<property name="x">270</property>
+					<property name="y">5</property>
+					<property name="width">260</property>
+					<property name="height">153</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
 					<property name="grab_mouse">true</property>
 					<property name="fillflags">blend</property>
 					<property name="value" starting="0" ending="100">75</property>
@@ -33,20 +43,23 @@
 					<property name="orient">vertical</property>
 				</widget>
 				<widget name="Slider4" type="SliderF">
-					<property name="x">360</property>
-					<property name="y">60</property>
-					<property name="width">200</property>
-					<property name="height">80</property>
+					<property name="x">535</property>
+					<property name="y">5</property>
+					<property name="width">260</property>
+					<property name="height">153</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
 					<property name="grab_mouse">true</property>
 					<property name="fillflags">blend</property>
-					<property name="value" starting="0" ending="100">50.000000</property>
+					<property name="value" starting="100" ending="0">50.000000</property>
 					<property name="sliderflags">rectangle_handle|round_handle|show_label</property>
 					<property name="orient">horizontal</property>
 				</widget>
 				<widget name="Slider5" type="Slider">
-					<property name="x">560</property>
-					<property name="width">80</property>
-					<property name="height">200</property>
+					<property name="x">5</property>
+					<property name="y">163</property>
+					<property name="width">260</property>
+					<property name="height">153</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
 					<property name="disabled">true</property>
 					<property name="grab_mouse">true</property>
 					<property name="fillflags">blend</property>
@@ -55,47 +68,53 @@
 					<property name="orient">vertical</property>
 				</widget>
 				<widget name="Slider6" type="Slider">
-					<property name="x">640</property>
-					<property name="width">80</property>
-					<property name="height">200</property>
+					<property name="x">270</property>
+					<property name="y">163</property>
+					<property name="width">260</property>
+					<property name="height">153</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
 					<property name="grab_mouse">true</property>
+					<property name="fillflags">blend</property>
+					<property name="value" starting="0" ending="100">0</property>
+					<property name="sliderflags">rectangle_handle</property>
+					<property name="orient">vertical</property>
+				</widget>
+				<widget name="Slider7" type="Slider">
+					<property name="x">535</property>
+					<property name="y">163</property>
+					<property name="width">260</property>
+					<property name="height">153</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
+					<property name="grab_mouse">true</property>
+					<property name="fillflags">blend</property>
+					<property name="value" starting="0" ending="100">0</property>
+					<property name="sliderflags">rectangle_handle</property>
+					<property name="orient">vertical</property>
+				</widget>
+				<widget name="Slider8" type="Slider">
+					<property name="x">5</property>
+					<property name="y">321</property>
+					<property name="width">260</property>
+					<property name="height">154</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
+					<property name="grab_mouse">true</property>
+					<property name="margin">5</property>
 					<property name="fillflags">blend</property>
 					<property name="value" starting="100" ending="200">180</property>
 					<property name="sliderflags">rectangle_handle|square_handle|show_labels</property>
 					<property name="orient">vertical</property>
 				</widget>
-				<widget name="Slider7" type="Slider">
-					<property name="x">220</property>
-					<property name="y">260</property>
-					<property name="width">200</property>
-					<property name="height">80</property>
+				<widget name="Slider9" type="Slider">
+					<property name="x">270</property>
+					<property name="y">321</property>
+					<property name="width">260</property>
+					<property name="height">154</property>
+					<property name="align">expand_horizontal|expand_vertical</property>
 					<property name="grab_mouse">true</property>
 					<property name="fillflags">blend</property>
 					<property name="value" starting="100" ending="200">150</property>
 					<property name="sliderflags">rectangle_handle|show_labels</property>
 					<property name="orient">horizontal</property>
-				</widget>
-				<widget name="Slider8" type="Slider">
-					<property name="x">420</property>
-					<property name="y">200</property>
-					<property name="width">80</property>
-					<property name="height">200</property>
-					<property name="grab_mouse">true</property>
-					<property name="fillflags">blend</property>
-					<property name="value" starting="0" ending="100">0</property>
-					<property name="sliderflags">rectangle_handle</property>
-					<property name="orient">vertical</property>
-				</widget>
-				<widget name="Slider9" type="Slider">
-					<property name="x">500</property>
-					<property name="y">200</property>
-					<property name="width">80</property>
-					<property name="height">200</property>
-					<property name="grab_mouse">true</property>
-					<property name="fillflags">blend</property>
-					<property name="value" starting="0" ending="100">0</property>
-					<property name="sliderflags">rectangle_handle</property>
-					<property name="orient">vertical</property>
 				</widget>
 			</widget>
 		</widget>

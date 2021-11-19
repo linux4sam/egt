@@ -2,6 +2,9 @@
 <egt>
 	<widgets>
 		<widget name="Window0" type="TopWindow">
+			<property name="show">true</property>
+			<property name="pixelformat">argb8888</property>
+			<property name="windowhint">automatic</property>
 			<property name="width">800</property>
 			<property name="height">480</property>
 			<property name="fillflags">solid</property>
@@ -17,6 +20,7 @@
 					<property name="height">100</property>
 					<property name="margin">10</property>
 					<property name="fillflags">blend</property>
+					<property name="radius">50.000000</property>
 				</widget>
 				<widget name="LineWidget3" type="LineWidget">
 					<property name="x">300</property>
