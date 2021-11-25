@@ -1304,6 +1304,28 @@ public:
     }
 
     /**
+     * Reset the widget's Font.
+     *
+     * This is the inverse of setting a custom font for this widget instance
+     * with font().
+     */
+    void reset_font()
+    {
+        if (m_font)
+        {
+            m_font.reset();
+            damage();
+            layout();
+            parent_layout();
+        }
+    }
+
+    /**
+     * Check whether the widget has a custom Font.
+     */
+    bool has_font() const { return (bool)m_font; }
+
+    /**
      * Get the boolean checked state of the a widget.
      *
      * @return true if checked.
