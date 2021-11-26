@@ -1278,13 +1278,7 @@ public:
      * This will return any font set on the widget instance, or default to the
      * widget Theme font.
      */
-    EGT_NODISCARD const Font& font() const
-    {
-        if (m_font)
-            return *m_font;
-
-        return theme().font();
-    }
+    EGT_NODISCARD const Font& font() const;
 
     /**
      * Set the widget Font.
