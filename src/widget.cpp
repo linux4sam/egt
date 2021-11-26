@@ -916,5 +916,19 @@ Point Widget::display_to_local(const DisplayPoint& p)
     return p2 - point();
 }
 
+const Font& Widget::font() const
+{
+    if (m_font)
+        return *m_font;
+
+    if (m_theme)
+        return m_theme->font();
+
+    if (parent())
+        return parent()->font();
+
+    return global_theme().font();
+}
+
 }
 }
