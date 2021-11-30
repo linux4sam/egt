@@ -40,12 +40,12 @@ SvgImage::SvgImage(const std::string& uri, const SizeF& size)
 
 SvgImage::operator Image() const
 {
-    return do_render();
+    return Image(do_render(), m_uri);
 }
 
 Image SvgImage::render(const std::string& id, const RectF& rect) const
 {
-    return do_render(id, rect);
+    return Image(do_render(id, rect), m_uri);
 }
 
 RectF SvgImage::id_box(const std::string& id) const
