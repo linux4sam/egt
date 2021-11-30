@@ -24,6 +24,8 @@ namespace egt
 inline namespace v1
 {
 
+class SvgImage;
+
 /**
  * Raster image resource used for drawing or displaying.
  *
@@ -289,6 +291,22 @@ protected:
 
     /// Internal pattern representation.
     mutable shared_cairo_pattern_t m_pattern;
+
+private:
+    /**
+     * Private constructor to internally convert a SvgImage instance
+     * into an Image instance.
+     *
+     * @param surface The surface created by the SvgImage instance.
+     * @param uri The original URI copied from the SvgImage instance.
+     */
+    Image(shared_cairo_surface_t surface, const std::string& uri)
+        : Image(surface)
+    {
+        m_uri = uri;
+    }
+
+    friend class SvgImage;
 };
 
 static_assert(detail::rule_of_5<Image>(), "must fulfill rule of 5");
