@@ -173,6 +173,9 @@ void Image::serialize(const std::string& name, Serializer& serializer) const
     if (!detail::float_equal(vscale(), 1.0f))
         attrs.emplace_back("vscale", std::to_string(vscale()));
 
+    if (!keep_image_ratio())
+        attrs.emplace_back("keep_image_ratio", detail::to_string(keep_image_ratio()));
+
     if (!m_uri.empty())
         serializer.add_property(name, m_uri, attrs);
 
@@ -196,6 +199,11 @@ void Image::deserialize(const std::string& name, const std::string& value,
     [](const auto & element) { return element.first == "vscale";});
     if (v != attrs.end())
         vscale = std::stod(v->second);
+
+    const auto r = std::find_if(attrs.begin(), attrs.end(),
+    [](const auto & element) { return element.first == "keep_image_ratio";});
+    if (r != attrs.end())
+        keep_image_ratio(egt::detail::from_string(r->second));
 
     load(value, hscale, vscale);
 }
