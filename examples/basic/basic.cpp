@@ -11,7 +11,8 @@ int main(int argc, char** argv)
     egt::Application app(argc, argv);
 
     egt::TopWindow window;
-    egt::Button button(window, "Press Me");
+    egt::TextBox button(window);
+    button.on_gain_focus.invoke();
     egt::center(button);
     window.show();
 
