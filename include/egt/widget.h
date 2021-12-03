@@ -1136,6 +1136,11 @@ public:
      */
     void reset_theme();
 
+    /**
+     * Check whether the widget has a custom Theme.
+     */
+    bool has_theme() const { return (bool) m_theme; }
+
 
     /**
      * Move this widgets zorder down relative to other widgets with the same
