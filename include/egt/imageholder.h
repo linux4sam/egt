@@ -70,6 +70,85 @@ public:
     virtual ~ImageHolder() = default;
 
     /**
+     * Get the URI of the current image.
+     */
+    EGT_NODISCARD std::string uri() const
+    {
+        return m_image.uri();
+    }
+
+    /**
+     * Load a new Image from an uri.
+     *
+     * @param[in] uri The URI of the image to load.
+     */
+    void uri(const std::string& uri)
+    {
+        m_image.uri(uri);
+        refresh();
+    }
+
+    /**
+     * Reset the URI, therefore clear the current image, if any.
+     */
+    void reset_uri()
+    {
+        m_image.reset_uri();
+        refresh();
+    }
+
+    /**
+     * Get the horizontal scale value.
+     */
+    EGT_NODISCARD float hscale() const { return m_image.hscale(); }
+
+    /**
+     * Set the horizontal scale value.
+     */
+    void hscale(float hscale)
+    {
+        m_image.scale(hscale, m_image.vscale());
+        refresh();
+    }
+
+    /**
+     * Get the vertical scale value.
+     */
+    EGT_NODISCARD float vscale() const { return m_image.vscale(); }
+
+    /**
+     * Set the vertical scale value.
+     */
+    void vscale(float vscale)
+    {
+        m_image.scale(m_image.hscale(), vscale);
+        refresh();
+    }
+
+    /**
+     * Scale the image in both direction with the same ratio.
+     */
+    void scale(float scale)
+    {
+        m_image.scale(scale);
+        refresh();
+    }
+
+    /**
+     * Scale the image in both direction.
+     */
+    void scale(const SizeF& scale)
+    {
+        m_image.scale(scale.width(), scale.height());
+        refresh();
+    }
+
+    /**
+     * Get both scale values.
+     */
+    EGT_NODISCARD SizeF scale() const { return SizeF(hscale(), vscale()); }
+
+    /**
      * Set a new Image.
      *
      * @param[in] image The new image to use.
