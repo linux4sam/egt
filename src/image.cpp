@@ -61,7 +61,7 @@ void Image::handle_surface_changed()
                        std::ceil(cairo_image_surface_get_height(m_surface.get()) / m_vscale));
 }
 
-void Image::load(const std::string& uri, float hscale, float vscale)
+void Image::load(const std::string& uri, float hscale, float vscale, bool approximate)
 {
     bool do_update = false;
 
@@ -72,7 +72,7 @@ void Image::load(const std::string& uri, float hscale, float vscale)
     {
         if (!uri.empty())
         {
-            m_surface = detail::image_cache().get(uri, hscale, vscale, false);
+            m_surface = detail::image_cache().get(uri, hscale, vscale, approximate);
             handle_surface_changed();
         }
         else
@@ -87,17 +87,7 @@ void Image::load(const std::string& uri, float hscale, float vscale)
 
 void Image::scale(float hscale, float vscale, bool approximate)
 {
-    if (m_uri.empty())
-        return;
-
-    if (!detail::float_equal(m_hscale, hscale) ||
-        !detail::float_equal(m_vscale, vscale))
-    {
-        m_surface = detail::image_cache().get(m_uri, hscale, vscale, approximate);
-        m_hscale = hscale;
-        m_vscale = vscale;
-        m_pattern.reset();
-    }
+    load(m_uri, hscale, vscale, approximate);
 }
 
 Rect Image::align(const Rect& bounding, const AlignFlags& align)

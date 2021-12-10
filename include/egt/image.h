@@ -76,8 +76,9 @@ public:
      * @param uri Resource path. @see @ref resources
      * @param hscale Horizontal scale of the image, with 1.0 being 100%.
      * @param vscale Vertical scale of the image, with 1.0 being 100%.
+     * @param approx Approximate the scale to increase image cache hit efficiency.
      */
-    void load(const std::string& uri, float hscale = 1.0, float vscale = 1.0);
+    void load(const std::string& uri, float hscale = 1.0, float vscale = 1.0, bool approx = false);
 
     /**
      * @param surface A pre-existing surface.
@@ -138,7 +139,6 @@ public:
             float hs = static_cast<float>(size.width()) / static_cast<float>(m_orig_size.width());
             float vs = static_cast<float>(size.height()) / static_cast<float>(m_orig_size.height());
             scale(hs, vs);
-            m_pattern.reset();
         }
     }
 
