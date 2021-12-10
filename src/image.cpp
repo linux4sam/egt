@@ -22,13 +22,8 @@ Image::Image(const std::string& uri, float scale)
 
 Image::Image(const std::string& uri,
              float hscale, float vscale)
-    : m_uri(uri)
 {
-    if (!uri.empty())
-    {
-        m_surface = detail::image_cache().get(uri, hscale, vscale, false);
-        handle_surface_changed();
-    }
+    load(uri, hscale, vscale);
 }
 
 Image::Image(shared_cairo_surface_t surface)
