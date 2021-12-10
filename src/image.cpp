@@ -87,43 +87,54 @@ void Image::scale(float hscale, float vscale, bool approximate)
 
 Rect Image::align(const Rect& bounding, const AlignFlags& align)
 {
+    /*
+     * This first call of detail::align_algorithm() takes into account the
+     * AlignFlag::expand flag, but is not aware of the keep_image_ratio()
+     * boolean.
+     */
     auto target = detail::align_algorithm(size(), bounding, align);
 
     /*
-     * Better to do it with target rect. Depending on the align flags, the
-     * target size can be different from the size().
+     * Resize the previously computed expanded box if the keep_image_ratio()
+     * boolean is true set aside the AlignFlag::expand flag being set.
      */
-    if (align.is_set(AlignFlag::expand))
+    if (align.is_set(AlignFlag::expand) && keep_image_ratio())
     {
         const auto hs = static_cast<float>(target.width()) /
                         static_cast<float>(size_orig().width());
         const auto vs = static_cast<float>(target.height()) /
                         static_cast<float>(size_orig().height());
 
-        // This check avoid rounding issues.
-        if (size() != target.size())
-        {
-            if (keep_image_ratio())
-            {
-                if (hs < vs)
-                    scale(hs);
-                else
-                    scale(vs);
-                /*
-                 * Need to update the alignment as the image size has probably
-                 * changed due to the scaling with ratio preservation.
-                 * Also clear the AlignFlag::expand since the image should not
-                 * be streched.
-                 */
-                AlignFlags align2 = align;
-                align2.clear(AlignFlag::expand);
-                target = detail::align_algorithm(size(), bounding, align2);
-            }
-            else
-            {
-                scale(hs, vs);
-            }
-        }
+        auto size = target.size();
+        if (hs < vs)
+            size.height(std::ceil(static_cast<float>(size_orig().height()) * hs));
+        else
+            size.width(std::ceil(static_cast<float>(size_orig().width()) * vs));
+
+        /*
+         * Need to update the aligment as the size has probably changed due
+         * to the above scaling.
+         * Also clear the AlignFlag::expand to prevent detail::align_algorithm()
+         * from computing again the expanded size without taking into account
+         * the keep_image_ratio() boolean.
+         */
+        AlignFlags align2 = align;
+        align2.clear(AlignFlag::expand);
+        target = detail::align_algorithm(size, bounding, align2);
+    }
+
+    /*
+     * Better to do it with target rect. Depending on the align flags, the
+     * target size can be different from the size().
+     */
+    if (size() != target.size())
+    {
+        const auto hs = static_cast<float>(target.width()) /
+                        static_cast<float>(size_orig().width());
+        const auto vs = static_cast<float>(target.height()) /
+                        static_cast<float>(size_orig().height());
+
+        scale(hs, vs);
     }
 
     return target;
