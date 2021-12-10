@@ -129,6 +129,7 @@ public:
             m_image_align.set(AlignFlag::expand);
         else
             m_image_align.clear(AlignFlag::expand);
+        refresh();
     }
 
     /**
@@ -148,6 +149,7 @@ public:
     void keep_image_ratio(bool enable)
     {
         image().keep_image_ratio(enable);
+        refresh();
     }
 
     /**
@@ -255,6 +257,12 @@ protected:
     explicit ImageHolder(Widget& widget) noexcept
         : m_widget(widget)
     {}
+
+    void refresh()
+    {
+        m_widget.damage();
+        m_widget.layout();
+    }
 
     /// @private
     void do_set_image(const Image& image)
