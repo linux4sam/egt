@@ -88,8 +88,14 @@ void Image::load(const std::string& uri, float hscale, float vscale)
 
             m_orig_size = Size(std::ceil(cairo_image_surface_get_width(m_surface.get())),
                                std::ceil(cairo_image_surface_get_height(m_surface.get())));
-            m_pattern.reset();
         }
+        else
+        {
+            m_surface.reset();
+            m_surface_local.reset();
+            m_orig_size = Size();
+        }
+        m_pattern.reset();
     }
 }
 

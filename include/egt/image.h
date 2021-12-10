@@ -248,6 +248,10 @@ public:
         return m_uri;
     }
 
+    void uri(const std::string& uri) { load(uri, m_hscale, m_vscale); }
+
+    void reset_uri() { uri({}); }
+
     Image crop(const RectF& rect);
 
     Image crop(const Rect& rect)
