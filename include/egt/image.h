@@ -271,6 +271,7 @@ public:
                      const Serializer::Attributes& attrs);
 
 protected:
+    void handle_surface_changed();
 
     /// If a URI was used, the URI.
     std::string m_uri;

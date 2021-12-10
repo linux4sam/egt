@@ -16,16 +16,8 @@ inline namespace v1
 {
 
 Image::Image(const std::string& uri, float scale)
-    : m_uri(uri)
+    : Image(uri, scale, scale)
 {
-    if (!uri.empty())
-    {
-        m_surface = detail::image_cache().get(uri, scale, scale, false);
-        assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
-
-        m_orig_size = Size(std::ceil(cairo_image_surface_get_width(m_surface.get())),
-                           std::ceil(cairo_image_surface_get_height(m_surface.get())));
-    }
 }
 
 Image::Image(const std::string& uri,
@@ -35,20 +27,14 @@ Image::Image(const std::string& uri,
     if (!uri.empty())
     {
         m_surface = detail::image_cache().get(uri, hscale, vscale, false);
-        assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
-
-        m_orig_size = Size(std::ceil(cairo_image_surface_get_width(m_surface.get())),
-                           std::ceil(cairo_image_surface_get_height(m_surface.get())));
+        handle_surface_changed();
     }
 }
 
 Image::Image(shared_cairo_surface_t surface)
     : m_surface(std::move(surface))
 {
-    assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
-
-    m_orig_size = Size(std::ceil(cairo_image_surface_get_width(m_surface.get())),
-                       std::ceil(cairo_image_surface_get_height(m_surface.get())));
+    handle_surface_changed();
 }
 
 Image::Image(cairo_surface_t* surface)
@@ -57,14 +43,16 @@ Image::Image(cairo_surface_t* surface)
                                            cairo_image_surface_get_height(surface)),
                 cairo_surface_destroy)
 {
-    assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
-
-    m_orig_size = Size(std::ceil(cairo_image_surface_get_width(m_surface.get())),
-                       std::ceil(cairo_image_surface_get_height(m_surface.get())));
+    handle_surface_changed();
 }
 
 Image::Image(const unsigned char* data, size_t len)
     : m_surface(detail::load_image_from_memory(data, len))
+{
+    handle_surface_changed();
+}
+
+void Image::handle_surface_changed()
 {
     assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
 
@@ -84,10 +72,7 @@ void Image::load(const std::string& uri, float hscale, float vscale)
         if (!uri.empty())
         {
             m_surface = detail::image_cache().get(uri, hscale, vscale, false);
-            assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
-
-            m_orig_size = Size(std::ceil(cairo_image_surface_get_width(m_surface.get())),
-                               std::ceil(cairo_image_surface_get_height(m_surface.get())));
+            handle_surface_changed();
         }
         else
         {
