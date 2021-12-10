@@ -351,10 +351,20 @@ protected:
         m_widget.damage();
     }
 
-    Size min_size_hint(Size min_size_constraint = Size()) const
+    Size min_size_hint() const
     {
         if (!m_widget.m_min_size.empty())
             return m_widget.m_min_size;
+
+        Size min_size_constraint;
+        T& text_widget = static_cast<T&>(m_widget);
+        if (show_label() && !text_widget.text().empty())
+            min_size_constraint = text_widget.T::min_size_hint();
+        else
+            min_size_constraint = m_widget.Widget::min_size_hint();
+
+        if (!show_label() && auto_scale_image())
+            return min_size_constraint;
 
         Rect size = min_size_constraint - Size(m_widget.moat() * 2, m_widget.moat() * 2);
 
