@@ -25,7 +25,7 @@ namespace egt
 inline namespace v1
 {
 
-template<class T, class U>
+template<class T>
 class ImageHolder
 {
 public:
@@ -380,7 +380,7 @@ protected:
 
     void serialize(Serializer& serializer) const
     {
-        static_cast<U&>(m_widget).U::serialize(serializer);
+        static_cast<T&>(m_widget).T::serialize(serializer);
 
         serializer.add_property("showlabel", show_label());
         if (!m_image.empty())

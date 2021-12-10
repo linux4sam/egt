@@ -201,7 +201,7 @@ private:
  *
  * @ingroup controls
  */
-class EGT_API ImageButton : public Button, public ImageHolder<ImageButton, Button>
+class EGT_API ImageButton : public Button, public ImageHolder<Button>
 {
 public:
 

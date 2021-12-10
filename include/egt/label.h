@@ -136,7 +136,7 @@ protected:
  *
  * @ingroup controls
  */
-class EGT_API ImageLabel : public Label, public ImageHolder<ImageLabel, Label>
+class EGT_API ImageLabel : public Label, public ImageHolder<Label>
 {
 public:
 
