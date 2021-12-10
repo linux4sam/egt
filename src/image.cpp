@@ -74,7 +74,12 @@ Image::Image(const unsigned char* data, size_t len)
 
 void Image::load(const std::string& uri, float hscale, float vscale)
 {
-    if (detail::change_if_diff<>(m_uri, uri))
+    bool do_update = false;
+
+    do_update |= detail::change_if_diff<>(m_uri, uri);
+    do_update |= detail::change_if_diff<>(m_hscale, hscale);
+    do_update |= detail::change_if_diff<>(m_vscale, vscale);
+    if (do_update)
     {
         if (!uri.empty())
         {
