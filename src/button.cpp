@@ -215,7 +215,10 @@ ImageButton::ImageButton(const Image& image,
     name("ImageButton" + std::to_string(m_widgetid));
 
     if (text.empty())
+    {
+        show_label(false);
         image_align(AlignFlag::center | AlignFlag::expand);
+    }
     do_set_image(image);
 }
 

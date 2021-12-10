@@ -293,11 +293,9 @@ public:
 
         widget.draw_box(painter, id_bg, id_border);
 
-        if (!widget.text().empty())
+        if (show_label())
         {
-            std::string text;
-            if (show_label())
-                text = widget.text();
+            const std::string& text = widget.text();
 
             if (!image().empty())
             {

@@ -123,7 +123,10 @@ ImageLabel::ImageLabel(const Image& image,
     name("ImageLabel" + std::to_string(m_widgetid));
 
     if (text.empty())
+    {
+        show_label(false);
         image_align(AlignFlag::center | AlignFlag::expand);
+    }
     do_set_image(image);
 }
 
