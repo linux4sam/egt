@@ -176,6 +176,10 @@ public:
      * A default keyboard with a Qwerty layout.
      *
      * @param[in] rect Rect of the Keyboard.
+     *
+     * @warning Due to the way the VirtualKeyboard is designed, only one
+     * instance of the default VirtualKeyboard can be instantiated.
+     * Instantiating a second one will cause an assertion.
      */
     explicit VirtualKeyboard(const Rect& rect = {}) noexcept;
 
@@ -341,6 +345,8 @@ PopupVirtualKeyboard*& popup_virtual_keyboard();
 
 /**
  * Default panel defined for VirtualKeyboard.
+ * @warning PanelKeys is static. So, it can be used only once. Otherwise, an
+ * assertion will occur as the Keys already get a parent.
  * @{
  */
 VirtualKeyboard::PanelKeys& multichoice_e();
