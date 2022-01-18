@@ -161,10 +161,10 @@ void Image::serialize(const std::string& name, Serializer& serializer) const
     Serializer::Attributes attrs;
 
     if (!detail::float_equal(hscale(), 1.0f))
-        attrs.emplace_back("hscale", std::to_string(hscale()));
+        attrs.emplace_back("hscale", detail::to_string(hscale()));
 
     if (!detail::float_equal(vscale(), 1.0f))
-        attrs.emplace_back("vscale", std::to_string(vscale()));
+        attrs.emplace_back("vscale", detail::to_string(vscale()));
 
     if (!keep_image_ratio())
         attrs.emplace_back("keep_image_ratio", detail::to_string(keep_image_ratio()));

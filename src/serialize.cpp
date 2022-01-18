@@ -42,13 +42,13 @@ void Serializer::add_property(const std::string& name, const AlignFlags& value,
 void Serializer::add_property(const std::string& name, float value,
                               const Attributes& attrs)
 {
-    add_property(name, std::to_string(value), attrs);
+    add_property(name, detail::to_string(value), attrs);
 }
 
 void Serializer::add_property(const std::string& name, double value,
                               const Attributes& attrs)
 {
-    add_property(name, std::to_string(value), attrs);
+    add_property(name, detail::to_string(value), attrs);
 }
 
 void Serializer::add_property(const std::string& name, bool value,
@@ -217,7 +217,7 @@ void OstreamWidgetSerializer::add_property(const std::string& name, const Patter
             out << " steps=[";
             for (auto& s : steps)
             {
-                out << "{" << std::to_string(s.first) << "," << s.second.hex().c_str() << "}";
+                out << "{" << detail::to_string(s.first) << "," << s.second.hex().c_str() << "}";
 
                 if (++count <= (steps.size() - 1))
                     out << ",";
@@ -452,7 +452,7 @@ void XmlWidgetSerializer::add_property(const std::string& name, const Pattern& v
             std::string tmp;
             for (auto& s : steps)
             {
-                tmp = tmp + m_impl->doc.allocate_string(std::string("{" + std::to_string(s.first) + "," + s.second.hex().c_str() + "},").c_str());
+                tmp = tmp + m_impl->doc.allocate_string(std::string("{" + detail::to_string(s.first) + "," + s.second.hex().c_str() + "},").c_str());
             }
             stepsnode->value(m_impl->doc.allocate_string(tmp.c_str()));
         }
