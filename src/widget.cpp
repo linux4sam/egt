@@ -686,6 +686,8 @@ void Widget::serialize(Serializer& serializer) const
         serializer.add_property("margin", margin());
     if (border())
         serializer.add_property("border", border());
+    if (!detail::float_equal(border_radius(), 0))
+        serializer.add_property("border_radius", border_radius());
     if (xratio())
         serializer.add_property("ratio:x", xratio());
     if (yratio())
@@ -778,6 +780,9 @@ void Widget::deserialize(Serializer::Properties& props)
             break;
         case detail::hash("border"):
             border(std::stoi(value));
+            break;
+        case detail::hash("border_radius"):
+            border_radius(std::stof(value));
             break;
         case detail::hash("fillflags"):
             m_fill_flags.from_string(value);
