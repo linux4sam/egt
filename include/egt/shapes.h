@@ -206,7 +206,6 @@ protected:
         : Widget(props, true)
     {
         name("RectangleWidget" + std::to_string(m_widgetid));
-        fill_flags(Theme::FillFlag::blend);
 
         if (!is_derived)
             deserialize_leaf(props);
