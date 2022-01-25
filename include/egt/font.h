@@ -253,6 +253,23 @@ inline bool EGT_API operator!=(const Font& lhs, const Font& rhs)
     return !(lhs == rhs);
 }
 
+/**
+ * Get the global Font.
+ *
+ * @return Reference to the global font.
+ */
+EGT_API const Font* global_font();
+
+/**
+ * Set the global Font.
+ */
+EGT_API void global_font(std::unique_ptr<Font>&& font);
+
+/**
+ * Reset global Font.
+ */
+EGT_API void reset_global_font();
+
 }
 }
 

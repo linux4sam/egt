@@ -30,6 +30,23 @@ constexpr Font::Slant Font::DEFAULT_SLANT;
 
 static FT_Library ftlib{nullptr};
 
+static std::unique_ptr<Font> the_global_font;
+
+const Font* global_font()
+{
+    return the_global_font.get();
+}
+
+void global_font(std::unique_ptr<Font>&& font)
+{
+    the_global_font = std::move(font);
+}
+
+void reset_global_font()
+{
+    the_global_font.reset(nullptr);
+}
+
 static bool init_freetype()
 {
     if (!ftlib)

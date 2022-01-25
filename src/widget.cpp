@@ -920,11 +920,11 @@ const Font& Widget::font() const
     if (m_font)
         return *m_font;
 
-    if (m_theme)
-        return m_theme->font();
-
     if (parent())
         return parent()->font();
+
+    if (global_font())
+        return *global_font();
 
     return global_theme().font();
 }
