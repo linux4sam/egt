@@ -730,6 +730,11 @@ public:
     void reset_palette();
 
     /**
+     * Check whether the widget has a custom palette.
+     */
+    EGT_NODISCARD bool has_palette() const { return (bool)m_palette; }
+
+    /**
      * Get a Widget color.
      *
      * This will return a color for the Palette::GroupId reflecting the current
