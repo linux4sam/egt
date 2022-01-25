@@ -411,7 +411,13 @@ const Pattern& Widget::color(Palette::ColorId id, Palette::GroupId group) const
             return *color;
     }
 
-    return default_palette().color(id, group);
+    if (parent())
+        return parent()->color(id, group);
+
+    if (global_palette())
+        return global_palette()->color(id, group);
+
+    return global_theme().palette().color(id, group);
 }
 
 void Widget::color(Palette::ColorId id,
@@ -435,7 +441,10 @@ void Widget::color(Palette::ColorId id,
 
 const Palette& Widget::default_palette() const
 {
-    return theme().palette();
+    if (global_palette())
+        return *global_palette();
+
+    return global_theme().palette();
 }
 
 Frame* Widget::parent()

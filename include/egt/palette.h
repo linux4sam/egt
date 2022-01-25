@@ -364,6 +364,23 @@ EGT_API std::ostream& operator<<(std::ostream& os, const Palette::ColorId& color
 /// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Palette::GroupId& group);
 
+/**
+ * Get the global Palette.
+ *
+ * @return Reference to the current global Palette.
+ */
+EGT_API const Palette* global_palette();
+
+/**
+ * Set the global Palette.
+ */
+EGT_API void global_palette(std::unique_ptr<Palette>&& palette);
+
+/**
+ * Reset the global Palette.
+ */
+EGT_API void reset_global_palette();
+
 }
 }
 

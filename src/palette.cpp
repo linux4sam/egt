@@ -15,6 +15,23 @@ namespace egt
 inline namespace v1
 {
 
+static std::unique_ptr<Palette> the_global_palette;
+
+void reset_global_palette()
+{
+    the_global_palette.reset(nullptr);
+}
+
+void global_palette(std::unique_ptr<Palette>&& palette)
+{
+    the_global_palette = std::move(palette);
+}
+
+const Palette* global_palette()
+{
+    return the_global_palette.get();
+}
+
 namespace detail
 {
 // constexpr version of std::find()
