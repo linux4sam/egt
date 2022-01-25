@@ -722,6 +722,14 @@ public:
     void palette(const Palette& palette);
 
     /**
+     * Get the widget palette.
+     *
+     * This will return any palette set on the widget instance, or default to the
+     * global palette.
+     */
+    EGT_NODISCARD const Palette& palette() const;
+
+    /**
      * Clear the widget instance palette.
      *
      * This will clear the widget instance's palette.  Meaning, for all colors
@@ -1400,15 +1408,6 @@ protected:
      * Set this widget's parent.
      */
     virtual void set_parent(Frame* parent);
-
-    /**
-     * Get a reference to the default palette.
-     *
-     * This returns the palette of the theme assigned to the widget.
-     *
-     * This is the same as calling theme().palette().
-     */
-    EGT_NODISCARD const Palette& default_palette() const;
 
     /**
      * Get the local box which is the same size as box(), but with the

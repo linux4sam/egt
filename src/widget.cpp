@@ -439,8 +439,14 @@ void Widget::color(Palette::ColorId id,
     }
 }
 
-const Palette& Widget::default_palette() const
+const Palette& Widget::palette() const
 {
+    if (m_palette)
+        return *m_palette;
+
+    if (parent())
+        return parent()->palette();
+
     if (global_palette())
         return *global_palette();
 
