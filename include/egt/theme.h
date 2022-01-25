@@ -383,7 +383,7 @@ EGT_API Theme& global_theme();
  *
  * @note This will destroy any pre-existing theme instance.
  */
-EGT_API void global_theme(std::shared_ptr<Theme> theme);
+EGT_API void global_theme(std::unique_ptr<Theme>&& theme);
 
 }
 }

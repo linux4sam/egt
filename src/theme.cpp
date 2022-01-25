@@ -18,29 +18,25 @@ inline namespace v1
 
 std::vector<DrawerReset::ResetFunction> DrawerReset::m_reset_list;
 
-static std::shared_ptr<Theme> the_global_theme;
+static std::unique_ptr<Theme> the_global_theme;
 
 Theme& global_theme()
 {
     if (!the_global_theme)
     {
-        the_global_theme = std::make_shared<Theme>();
+        the_global_theme = std::make_unique<Theme>();
         the_global_theme->apply();
     }
 
     return *the_global_theme;
 }
 
-void global_theme(std::shared_ptr<Theme> theme)
+void global_theme(std::unique_ptr<Theme>&& theme)
 {
-    assert(theme);
-    if (theme)
-    {
-        the_global_theme = std::move(theme);
+    the_global_theme = std::move(theme);
 
-        if (the_global_theme)
-            the_global_theme->apply();
-    }
+    if (the_global_theme)
+        the_global_theme->apply();
 }
 
 static Pattern pattern(const Color& color)
