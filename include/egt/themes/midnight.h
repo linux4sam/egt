@@ -18,6 +18,13 @@ inline namespace v1
  */
 class EGT_API MidnightTheme : public Theme
 {
+public:
+    MidnightTheme()
+        : Theme("MidnightTheme")
+    {}
+
+    ~MidnightTheme() = default;
+
 protected:
 
     void init_palette() override

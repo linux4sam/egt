@@ -18,6 +18,14 @@ inline namespace v1
  */
 class EGT_API SkyTheme : public Theme
 {
+public:
+
+    SkyTheme()
+        : Theme("SkyTheme")
+    {}
+
+    ~SkyTheme() = default;
+
 protected:
 
     void init_palette() override

@@ -19,6 +19,13 @@ inline namespace v1
  */
 class EGT_API LapisTheme : public Theme
 {
+public:
+    LapisTheme()
+        : Theme("LapisTheme")
+    {}
+
+    ~LapisTheme() = default;
+
 protected:
 
     void init_palette() override

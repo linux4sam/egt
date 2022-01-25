@@ -51,6 +51,10 @@ static Pattern pattern(const Color& color)
 }
 
 Theme::Theme()
+    : Theme("DefaultTheme")
+{}
+
+Theme::Theme(const std::string& name)
     : m_palette
 {
     {
@@ -111,7 +115,8 @@ Theme::Theme()
             }
         }
     }
-}
+},
+m_name(name)
 {}
 
 Theme::Theme(Serializer::Properties& props) noexcept

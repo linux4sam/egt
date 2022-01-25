@@ -18,6 +18,13 @@ inline namespace v1
  */
 class EGT_API ShamrockTheme : public Theme
 {
+public:
+    ShamrockTheme()
+        : Theme("ShamrockTheme")
+    {}
+
+    ~ShamrockTheme() = default;
+
 protected:
 
     void init_palette() override

@@ -195,6 +195,19 @@ public:
     Theme(Theme&&) noexcept = default;
     Theme& operator=(Theme&&) noexcept = default;
 
+    /// Get the name of the Object.
+    EGT_NODISCARD const std::string& name() const { return m_name; }
+
+    /**
+     * Set the name of the Object.
+     *
+     * Assigns a human readable name to an Object that can then be used to
+     * find timers by name or debug.
+     *
+     * @param[in] name Name to set for the Object.
+     */
+    void name(const std::string& name) { m_name = name; }
+
     /**
      * Get a reference to the theme Palette.
      */
@@ -321,6 +334,8 @@ public:
 
 protected:
 
+    explicit Theme(const std::string& name);
+
     inline void rounded_box(Painter& painter, const Rect& box, float border_radius) const
     {
         rounded_box(painter, RectF(box.x(), box.y(), box.width(), box.height()), border_radius);
@@ -330,6 +345,9 @@ protected:
 
     /// Palette instance used by the theme.
     Palette m_palette;
+
+    /// A user defined name for the Object.
+    std::string m_name;
 
     /// Default font instance used by the theme.
     Font m_font;
