@@ -1113,47 +1113,11 @@ public:
     /**
      * Get the Widget Theme.
      *
-     * If a custom Theme was set for the instance, it will be returned.
-     * Otherwise, if this widget has a parent it will walk up the tree looking
-     * for a widget that has a Theme set.  If no widget is found with a theme,
-     * the global_theme() will be returned.
-     *
-     * What this means is themes are inherited from widget parents.  For
-     * example, if you set a custom theme on a egt::TopWindow, all of its
-     * children will inherit and use the theme by default.
+     * A global_theme() will be returned.
      *
      * @see @ref colors_themes
      */
     EGT_NODISCARD const Theme& theme() const;
-
-    /**
-     * Set the Widget's theme to a new theme.
-     *
-     * @note It stores a copy of the theme. It means that future updates of the
-     * theme won't impact the widget theme.
-     *
-     * @see @ref colors_themes
-     *
-     * @todo This does not call Theme::apply() which creates an inconsistency
-     * with global_theme().
-     */
-    void theme(const Theme& theme);
-
-    /**
-     * Reset the Widget's Theme to the default Theme.
-     *
-     * This is the inverse of setting a custom theme for this widget instance
-     * with theme().
-     *
-     * @see @ref colors_themes
-     */
-    void reset_theme();
-
-    /**
-     * Check whether the widget has a custom Theme.
-     */
-    bool has_theme() const { return (bool) m_theme; }
-
 
     /**
      * Move this widgets zorder down relative to other widgets with the same
@@ -1554,14 +1518,6 @@ private:
      * Fill flags.
      */
     Theme::FillFlags m_fill_flags{};
-
-    /**
-     * Instance theme for the widget.
-     *
-     * @note This should not be accessed directly.  Always use the access
-     * functions because this is not set until it is modified.
-     */
-    std::unique_ptr<Theme> m_theme;
 
     /**
      * Font instance for the widget.

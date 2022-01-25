@@ -545,21 +545,6 @@ void Widget::walk(const WalkCallback& callback, int level)
     callback(this, level);
 }
 
-void Widget::theme(const Theme& theme)
-{
-    m_theme = std::make_unique<Theme>(theme);
-    damage();
-}
-
-void Widget::reset_theme()
-{
-    if (m_theme)
-    {
-        m_theme.reset();
-        damage();
-    }
-}
-
 void Widget::draw_box(Painter& painter, Palette::ColorId bg,
                       Palette::ColorId border) const
 {
@@ -574,12 +559,6 @@ void Widget::draw_circle(Painter& painter, Palette::ColorId bg,
 
 const Theme& Widget::theme() const
 {
-    if (m_theme)
-        return *m_theme;
-
-    if (parent())
-        return parent()->theme();
-
     return global_theme();
 }
 
