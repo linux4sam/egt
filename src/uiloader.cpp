@@ -24,60 +24,6 @@ static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
 {
     auto wname = node->first_attribute("name");
 
-    Serializer::Properties tprops;
-    std::string ttype;
-    auto wtheme = node->first_node("theme");
-    if (wtheme)
-    {
-        for (auto tprop = wtheme->first_node("property"); tprop; tprop = tprop->next_sibling("property"))
-        {
-            auto tname = tprop->first_attribute("name");
-            if (!tname)
-            {
-                detail::warn("property with no theme name");
-                continue;
-            }
-
-            std::string pname = tname->value();
-            std::string pvalue;
-            Serializer::Attributes tattrs;
-            if (pname == "color")
-            {
-                auto tpattern = tprop->first_node("pattern");
-                if (tpattern)
-                {
-                    for (auto tpprop = tpattern->first_node("property"); tpprop; tpprop = tpprop->next_sibling("property"))
-                    {
-                        auto tppname = tpprop->first_attribute("name");
-                        if (!tppname)
-                        {
-                            detail::warn("pattern with no name");
-                            continue;
-                        }
-                        tattrs.emplace_back(tppname->value(), tpprop->value());
-                    }
-                }
-                else
-                {
-                    pvalue = tprop->value();
-                }
-            }
-            else
-            {
-                detail::error("invalid theme property : {} = {}", pname, tprop->value());
-                return nullptr;
-            }
-
-            for (const rapidxml::xml_attribute<>* attr = tprop->first_attribute(); attr;
-                 attr = attr->next_attribute())
-            {
-                tattrs.emplace_back(attr->name(), attr->value());
-            }
-
-            tprops.emplace_back(std::make_tuple(pname, pvalue, tattrs));
-        }
-    }
-
     Serializer::Properties props;
     if (node->first_node("property"))
     {
@@ -143,13 +89,6 @@ static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
             {
                 detail::warn("unhandled {} property : {}", instance->type(), std::get<0>(p));
             }
-        }
-
-        if (wtheme)
-        {
-            egt::Theme dtheme(tprops);
-            dtheme.apply();
-            instance->theme(dtheme);
         }
 
         return std::static_pointer_cast<Widget>(instance);

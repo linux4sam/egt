@@ -119,12 +119,6 @@ Theme::Theme(const std::string& name)
 m_name(name)
 {}
 
-Theme::Theme(Serializer::Properties& props) noexcept
-    : Theme()
-{
-    deserialize(props);
-}
-
 void Theme::init_palette()
 {}
 
@@ -136,32 +130,6 @@ void Theme::init_draw()
 void Theme::init_font()
 {
     m_font = Font();
-}
-
-void Theme::serialize(Serializer& serializer) const
-{
-    m_palette.serialize("color", serializer);
-}
-
-void Theme::deserialize(Serializer::Properties& props)
-{
-    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
-    {
-        bool ret = true;
-        auto value = std::get<1>(p);
-        switch (detail::hash(std::get<0>(p)))
-        {
-        case detail::hash("color"):
-        {
-            m_palette.deserialize(std::get<0>(p), value, std::get<2>(p));
-            break;
-        }
-        default:
-            ret = false;
-            break;
-        }
-        return ret;
-    }), props.end());
 }
 
 void Theme::rounded_box(Painter& painter, const RectF& box, float border_radius) const

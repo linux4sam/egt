@@ -188,8 +188,6 @@ public:
 
     Theme();
 
-    explicit Theme(Serializer::Properties& props) noexcept;
-
     Theme(const Theme&) = default;
     Theme& operator=(const Theme&) = default;
     Theme(Theme&&) noexcept = default;
@@ -319,16 +317,6 @@ public:
         init_font();
         init_draw();
     }
-
-    /**
-     * Serialize theme to a specified serializer.
-     */
-    virtual void serialize(Serializer& serializer) const;
-
-    /**
-     * Deserialize theme properties.
-     */
-    void deserialize(Serializer::Properties& props);
 
     virtual ~Theme() noexcept = default;
 

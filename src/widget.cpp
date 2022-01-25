@@ -713,22 +713,6 @@ void Widget::serialize(Serializer& serializer) const
     {
         m_palette->serialize("color", serializer);
     }
-    if (m_theme)
-    {
-        // add new node theme
-        serializer.add_node("theme");
-        m_theme->serialize(serializer);
-
-        // return back widget node to add other widget properties.
-        serializer.previous_node();
-
-        /*
-         * widget font can be set either through theme or through m_font
-         * if m_font is set ignore theme font.
-         */
-        if (!m_font)
-            m_theme->font().serialize("font", serializer);
-    }
 }
 
 void Widget::deserialize_leaf(Serializer::Properties& props)
