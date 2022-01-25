@@ -322,6 +322,14 @@ public:
     void clear();
 
     /**
+     * Returns true if the palette is empty.
+     */
+    EGT_NODISCARD bool empty() const
+    {
+        return m_colors.empty();
+    }
+
+    /**
      * Check if a color exists in the palette.
      *
      * @param id Color id.
