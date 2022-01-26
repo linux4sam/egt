@@ -311,9 +311,6 @@ void Theme::draw_circle(Painter& painter, const Widget& widget,
 {
     const auto& type = widget.fill_flags();
 
-    if (type.empty())
-        return;
-
     Palette::GroupId group = Palette::GroupId::normal;
     if (widget.disabled())
         group = Palette::GroupId::disabled;
@@ -339,7 +336,7 @@ void Theme::draw_circle(Painter& painter,
                         DefaultDim border_width,
                         DefaultDim margin_width) const
 {
-    if (type.empty())
+    if (type.empty() && !border_width)
         return;
 
     auto box = rect;
