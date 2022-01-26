@@ -355,7 +355,6 @@ void Theme::draw_circle(Painter& painter,
         box -= Size(border_width, border_width);
     }
 
-    assert(!box.empty());
     if (box.empty())
         return;
 
