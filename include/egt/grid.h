@@ -234,6 +234,25 @@ public:
     }
 
     /**
+     * Get the GridSize.
+     */
+    EGT_NODISCARD GridSize grid_size() const
+    {
+        return m_grid_size;
+    }
+
+    /**
+     * Set the GridSize.
+     */
+    void grid_size(const GridSize size)
+    {
+        if (detail::change_if_diff<>(m_grid_size, size))
+        {
+            reallocate(size);
+        }
+    }
+
+    /**
      * Set the horizontal space i.e. the space between rows.
      */
     void horizontal_space(DefaultDim space)
