@@ -249,6 +249,7 @@ public:
         if (detail::change_if_diff<>(m_grid_size, size))
         {
             reallocate(size);
+            damage();
         }
     }
 
