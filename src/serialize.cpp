@@ -93,6 +93,7 @@ void OstreamWidgetSerializer::reset()
     m_impl->current = &m_impl->doc;
     m_impl->doc.clear();
     m_impl->stack.clear();
+    m_impl->current->value = "egt";
     m_impl->stack.push_back(m_impl->current);
 }
 
@@ -136,6 +137,40 @@ bool OstreamWidgetSerializer::add(const Widget* widget, int level)
     {
         while (static_cast<int>(m_impl->stack.size()) - 1 > level)
             m_impl->stack.pop_back();
+    }
+
+    if (m_level == 0)
+    {
+        m_impl->stack.back()->children.emplace_back();
+        m_impl->current = &m_impl->stack.back()->children.back();
+
+        //start with egt node
+        m_impl->current->value = "egt";
+        m_impl->stack.push_back(m_impl->current);
+        previous_node();
+
+        //Add global theme
+        add_node("theme");
+        std::ostringstream out;
+        out << "type"  << "=" << global_theme().name();
+        m_impl->current->attrs.push_back(out.str());
+        previous_node();
+
+        // Add global palette
+        if (global_palette())
+        {
+            add_node("palette");
+            global_palette()->serialize("color", *this);
+            previous_node();
+        }
+
+        // Add global font
+        if (global_font())
+        {
+            add_node("font");
+            global_font()->serialize("font", *this);
+            previous_node();
+        }
     }
 
     m_impl->stack.back()->children.emplace_back();
@@ -317,6 +352,32 @@ void XmlWidgetSerializer::reset()
     auto root = m_impl->doc.allocate_node(rapidxml::node_element, "egt");
     m_impl->doc.append_node(root);
 
+    auto theme = m_impl->doc.allocate_node(rapidxml::node_element, "theme");
+    root->append_node(theme);
+    auto node = m_impl->doc.allocate_node(rapidxml::node_element, "property");
+    node->value(m_impl->doc.allocate_string(global_theme().name().c_str()));
+    node->append_attribute(m_impl->doc.allocate_attribute("name",
+                           m_impl->doc.allocate_string("type")));
+    theme->append_node(node);
+
+    if (global_palette())
+    {
+        m_impl->current = m_impl->doc.allocate_node(rapidxml::node_element, "palette");
+        root->append_node(m_impl->current);
+        m_impl->stack.push_back(m_impl->current);
+        global_palette()->serialize("color", *this);
+        m_impl->stack.pop_back();
+    }
+
+    if (global_font())
+    {
+        m_impl->current = m_impl->doc.allocate_node(rapidxml::node_element, "font");
+        root->append_node(m_impl->current);
+        m_impl->stack.push_back(m_impl->current);
+        global_font()->serialize("font", *this);
+        m_impl->stack.pop_back();
+    }
+
     auto widgets = m_impl->doc.allocate_node(rapidxml::node_element, "widgets");
     root->append_node(widgets);
     m_impl->stack.push_back(widgets);
@@ -413,6 +474,7 @@ void XmlWidgetSerializer::add_property(const std::string& name, const Pattern& v
     if (value.type() == Pattern::Type::solid)
     {
         node->value(m_impl->doc.allocate_string(value.first().hex().c_str()));
+        m_impl->current->append_node(node);
     }
     else
     {
@@ -514,8 +576,9 @@ void XmlWidgetSerializer::add_property(const std::string& name, const Pattern& v
             patternnode->append_node(eradius);
         }
         --m_level;
+        m_impl->current->append_node(node);
+        m_impl->stack.pop_back();
     }
-    m_impl->current->append_node(node);
 }
 
 void XmlWidgetSerializer::write(const std::string& filename)
