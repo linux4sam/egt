@@ -251,6 +251,17 @@ public:
     EGT_NODISCARD size_t max_length() const { return m_max_len;}
 
     /**
+     * Set the text flags.
+     *
+     * @param[in] text_flags Text flags.
+     */
+    void text_flags(const TextFlags& text_flags)
+    {
+        if (detail::change_if_diff<>(m_text_flags, text_flags))
+            damage();
+    }
+
+    /**
      * Get a const ref of the flags.
      */
     EGT_NODISCARD const TextFlags& text_flags() const { return m_text_flags; }
