@@ -31,7 +31,6 @@ CircleWidget::CircleWidget(Serializer::Properties& props, bool is_derived)
     : Widget(props, true)
 {
     name("CircleWidget" + std::to_string(m_widgetid));
-    fill_flags(Theme::FillFlag::blend);
 
     deserialize(props);
 
