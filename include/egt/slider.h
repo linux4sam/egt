@@ -211,6 +211,11 @@ public:
     }
 
     /**
+     *  get live update value.
+     */
+    EGT_NODISCARD bool live_update() const { return m_live_update; }
+
+    /**
      * Get the Orientation.
      */
     EGT_NODISCARD Orientation orient() const { return m_orient; }
