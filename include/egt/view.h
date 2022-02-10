@@ -167,6 +167,34 @@ public:
     }
 
     /**
+     * Get the horizontal policy.
+     */
+    EGT_NODISCARD Policy hpolicy() const { return m_horizontal_policy; }
+
+    /**
+     * Set the horizontal policy.
+     */
+    void hpolicy(Policy policy)
+    {
+        if (detail::change_if_diff<>(m_horizontal_policy, policy))
+            layout();
+    }
+
+    /**
+     * Get the vertical policy.
+     */
+    EGT_NODISCARD Policy vpolicy() const { return m_vertical_policy; }
+
+    /**
+     * Set the vertical policy.
+     */
+    void vpolicy(Policy policy)
+    {
+        if (detail::change_if_diff<>(m_vertical_policy, policy))
+            layout();
+    }
+
+    /**
      * Get the slider dimension.
      */
     EGT_NODISCARD DefaultDim slider_dim() const { return m_slider_dim; }
