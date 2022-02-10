@@ -137,6 +137,11 @@ public:
     EGT_NODISCARD Point offset_max() const;
 
     /**
+     * Get the horizontal offset.
+     */
+    int hoffset() const { return m_offset.x(); }
+
+    /**
      * Set the horizontal offset.
      *
      * @note The offset moves in the negative direction from zero.
@@ -145,6 +150,11 @@ public:
     {
         this->offset(Point(offset, m_offset.y()));
     }
+
+    /**
+     * Get the vertical offset.
+     */
+    int voffset() const { return m_offset.y(); }
 
     /**
      * Set the vertical offset.
