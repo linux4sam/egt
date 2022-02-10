@@ -279,24 +279,21 @@ Point ScrolledView::offset_max() const
 
 void ScrolledView::offset(Point offset)
 {
-    if (hscrollable() || vscrollable())
+    auto offmax = offset_max();
+    if (offset.x() > 0)
+        offset.x(0);
+    else if (offset.x() < offmax.x())
+        offset.x(offmax.x());
+
+    if (offset.y() > 0)
+        offset.y(0);
+    else if (offset.y() < offmax.y())
+        offset.y(offmax.y());
+
+    if (detail::change_if_diff<>(m_offset, offset))
     {
-        auto offmax = offset_max();
-        if (offset.x() > 0)
-            offset.x(0);
-        else if (offset.x() < offmax.x())
-            offset.x(offmax.x());
-
-        if (offset.y() > 0)
-            offset.y(0);
-        else if (offset.y() < offmax.y())
-            offset.y(offmax.y());
-
-        if (detail::change_if_diff<>(m_offset, offset))
-        {
-            update_sliders();
-            damage();
-        }
+        update_sliders();
+        damage();
     }
 }
 
