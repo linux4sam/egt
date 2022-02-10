@@ -213,6 +213,11 @@ public:
      */
     void serialize(Serializer& serializer) const override;
 
+    /**
+     * Resume deserializing of the widget after its children have been deserialized.
+     */
+    void post_deserialize(Serializer::Properties& props) override;
+
     static std::string policy2str(Policy policy);
     static Policy str2policy(const std::string& str);
 

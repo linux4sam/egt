@@ -84,6 +84,10 @@ void ScrolledView::serialize(Serializer& serializer) const
         serializer.add_property("horizontal_policy", policy2str(hpolicy()));
     if (vpolicy() != Policy::as_needed)
         serializer.add_property("vertical_policy", policy2str(vpolicy()));
+    if (hoffset())
+        serializer.add_property("horizontal_offset", hoffset());
+    if (voffset())
+        serializer.add_property("vertical_offset", voffset());
 
     Frame::serialize(serializer);
 }
@@ -98,6 +102,22 @@ void ScrolledView::deserialize(Serializer::Properties& props)
             hpolicy(str2policy(value));
         else if (name == "vertical_policy")
             vpolicy(str2policy(value));
+        else
+            return false;
+        return true;
+    }), props.end());
+}
+
+void ScrolledView::post_deserialize(Serializer::Properties& props)
+{
+    props.erase(std::remove_if(props.begin(), props.end(), [&](const auto & p)
+    {
+        const auto& name = std::get<0>(p);
+        const auto& value = std::get<1>(p);
+        if (name == "horizontal_offset")
+            hoffset(std::stoi(value));
+        else if (name == "vertical_offset")
+            voffset(std::stoi(value));
         else
             return false;
         return true;
