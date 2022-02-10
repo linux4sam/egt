@@ -208,6 +208,14 @@ public:
             damage();
     }
 
+    /**
+     * Serialize the widget to the specified serializer.
+     */
+    void serialize(Serializer& serializer) const override;
+
+    static std::string policy2str(Policy policy);
+    static Policy str2policy(const std::string& str);
+
 protected:
 
     /// Horizontal scrollable
@@ -247,6 +255,9 @@ protected:
 
     /// Resize the slider whenever the size of this changes.
     void resize_slider();
+
+    /// Deserialize ScrolledView properties.
+    void deserialize(Serializer::Properties& props);
 
     /// Horizontal scrollable
     bool m_hscrollable{false};

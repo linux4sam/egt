@@ -72,8 +72,36 @@ ScrolledView::ScrolledView(Serializer::Properties& props, bool is_derived) noexc
 
     resize_slider();
 
+    deserialize(props);
+
     if (!is_derived)
         deserialize_leaf(props);
+}
+
+void ScrolledView::serialize(Serializer& serializer) const
+{
+    if (hpolicy() != Policy::as_needed)
+        serializer.add_property("horizontal_policy", policy2str(hpolicy()));
+    if (vpolicy() != Policy::as_needed)
+        serializer.add_property("vertical_policy", policy2str(vpolicy()));
+
+    Frame::serialize(serializer);
+}
+
+void ScrolledView::deserialize(Serializer::Properties& props)
+{
+    props.erase(std::remove_if(props.begin(), props.end(), [&](const auto & p)
+    {
+        const auto& name = std::get<0>(p);
+        const auto& value = std::get<1>(p);
+        if (name == "horizontal_policy")
+            hpolicy(str2policy(value));
+        else if (name == "vertical_policy")
+            vpolicy(str2policy(value));
+        else
+            return false;
+        return true;
+    }), props.end());
 }
 
 void ScrolledView::draw(Painter& painter, const Rect& rect)
@@ -385,6 +413,31 @@ void ScrolledView::handle(Event& event)
     default:
         break;
     }
+}
+
+std::string ScrolledView::policy2str(Policy policy)
+{
+    switch (policy)
+    {
+    default:
+    case Policy::as_needed:
+        return "as_needed";
+    case Policy::never:
+        return "never";
+    case Policy::always:
+        return "always";
+    }
+
+    return "as_needed";
+}
+
+ScrolledView::Policy ScrolledView::str2policy(const std::string& str)
+{
+    if (str == "never")
+        return Policy::never;
+    if (str == "always")
+        return Policy::always;
+    return Policy::as_needed;
 }
 
 }
