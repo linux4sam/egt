@@ -23,8 +23,8 @@ ScrolledView::ScrolledView(const Rect& rect,
                            Policy horizontal_policy,
                            Policy vertical_policy) noexcept
     : Frame(rect),
-      m_hslider(100, 0, 0, Orientation::horizontal),
-      m_vslider(100, 0, 0, Orientation::vertical),
+      m_hslider(0, 100, 0, Orientation::horizontal),
+      m_vslider(0, 100, 0, Orientation::vertical),
       m_horizontal_policy(horizontal_policy),
       m_vertical_policy(vertical_policy)
 {
@@ -34,6 +34,7 @@ ScrolledView::ScrolledView(const Rect& rect,
                                   Slider::SliderFlag::consistent_line});
 
     m_vslider.slider_flags().set({Slider::SliderFlag::rectangle_handle,
+                                  Slider::SliderFlag::inverted,
                                   Slider::SliderFlag::consistent_line});
 
     resize_slider();
@@ -57,8 +58,8 @@ ScrolledView::ScrolledView(Frame& parent,
 
 ScrolledView::ScrolledView(Serializer::Properties& props, bool is_derived) noexcept
     : Frame(props, true),
-      m_hslider(100, 0, 0, Orientation::horizontal),
-      m_vslider(100, 0, 0, Orientation::vertical)
+      m_hslider(0, 100, 0, Orientation::horizontal),
+      m_vslider(0, 100, 0, Orientation::vertical)
 {
     name("ScrolledView" + std::to_string(m_widgetid));
 
@@ -66,6 +67,7 @@ ScrolledView::ScrolledView(Serializer::Properties& props, bool is_derived) noexc
                                   Slider::SliderFlag::consistent_line});
 
     m_vslider.slider_flags().set({Slider::SliderFlag::rectangle_handle,
+                                  Slider::SliderFlag::inverted,
                                   Slider::SliderFlag::consistent_line});
 
     resize_slider();

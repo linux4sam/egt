@@ -72,6 +72,7 @@ const std::pair<SliderBase::SliderFlag, char const*> detail::EnumStrings<SliderB
     {SliderBase::SliderFlag::round_handle, "round_handle"},
     {SliderBase::SliderFlag::show_labels, "show_labels"},
     {SliderBase::SliderFlag::show_label, "show_label"},
+    {SliderBase::SliderFlag::inverted, "inverted"},
     {SliderBase::SliderFlag::consistent_line, "consistent_line"},
 };
 

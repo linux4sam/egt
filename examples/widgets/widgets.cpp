@@ -388,6 +388,12 @@ struct SliderPage : public egt::NotebookTab
         slider8->slider_flags().set({egt::Slider::SliderFlag::rectangle_handle,
                                      egt::Slider::SliderFlag::show_labels});
         grid->add(egt::expand(slider8));
+
+        auto slider9 = std::make_shared<egt::Slider>(0, 100);
+        slider9->value(50);
+        slider9->slider_flags().set({egt::Slider::SliderFlag::show_label,
+                                     egt::Slider::SliderFlag::inverted});
+        grid->add(egt::expand(slider9));
     }
 };
 

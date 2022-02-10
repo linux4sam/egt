@@ -52,6 +52,12 @@ struct SliderBase
         /// Show value label.
         show_label = detail::bit(4),
 
+        /**
+         * Horizontal slider origin (value start()), is to the left. Vertical is at
+         * the botton. Setting this flag will flip this origin.
+         */
+        inverted = detail::bit(5),
+
         /// Solid color line.
         consistent_line = detail::bit(6),
     };
@@ -165,12 +171,18 @@ public:
             if (m_orient == Orientation::horizontal)
             {
                 const auto diff = event.pointer().point - event.pointer().drag_start;
-                update_value(to_value(m_start_offset + diff.x()));
+                if (slider_flags().is_set(SliderFlag::inverted))
+                    update_value(to_value(m_start_offset - diff.x()));
+                else
+                    update_value(to_value(m_start_offset + diff.x()));
             }
             else
             {
                 const auto diff = event.pointer().point - event.pointer().drag_start;
-                update_value(to_value(m_start_offset - diff.y()));
+                if (slider_flags().is_set(SliderFlag::inverted))
+                    update_value(to_value(m_start_offset + diff.y()));
+                else
+                    update_value(to_value(m_start_offset - diff.y()));
             }
             break;
         default:
@@ -583,6 +595,8 @@ Rect SliderType<T>::handle_box(T value) const
     if (m_orient == Orientation::horizontal)
     {
         auto xv = b.x() + to_offset(value);
+        if (slider_flags().is_set(SliderFlag::inverted))
+            xv = b.x() + b.width() - to_offset(value) - dimw;
 
         if (slider_flags().is_set(SliderFlag::show_labels) ||
             slider_flags().is_set(SliderFlag::show_label))
@@ -603,6 +617,8 @@ Rect SliderType<T>::handle_box(T value) const
     else
     {
         auto yv = b.y() + b.height() - to_offset(value) - dimh;
+        if (slider_flags().is_set(SliderFlag::inverted))
+            yv = b.y() + to_offset(value);
 
         if (slider_flags().is_set(SliderFlag::show_labels) ||
             slider_flags().is_set(SliderFlag::show_label))
@@ -678,6 +694,9 @@ void SliderType<T>::draw_line(Painter& painter, float xp, float yp)
 
         painter.line_width(handle_rect.width() / 5.0);
     }
+
+    if (slider_flags().is_set(SliderFlag::inverted))
+        std::swap(a1, b2);
 
     if (slider_flags().is_set(SliderFlag::consistent_line))
     {
