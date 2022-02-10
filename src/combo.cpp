@@ -221,9 +221,12 @@ void ComboBox::set_parent(Frame* parent)
     if (!Application::instance().main_window())
         throw std::runtime_error("no main window");
 
-    Application::instance().main_window()->add(m_popup);
+    if (!m_popup->parent())
+    {
+        Application::instance().main_window()->add(m_popup);
 
-    m_popup->special_child_draw_callback(parent->special_child_draw_callback());
+        m_popup->special_child_draw_callback(parent->special_child_draw_callback());
+    }
 }
 
 void ComboBox::handle(Event& event)
