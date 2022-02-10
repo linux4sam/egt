@@ -36,7 +36,8 @@ static const std::pair<const std::string, std::function<std::unique_ptr<egt::The
 
 template <class T>
 static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
-        const std::shared_ptr<Frame>& parent)
+        const std::shared_ptr<Frame>& parent,
+        Serializer::Properties& saved_props)
 {
     auto wname = node->first_attribute("name");
 
@@ -99,13 +100,7 @@ static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
         if (wname)
             instance->name(wname->value());
 
-        if (!props.empty())
-        {
-            for (auto& p : props)
-            {
-                detail::warn("unhandled {} property : {}", instance->type(), std::get<0>(p));
-            }
-        }
+        saved_props = std::move(props);
 
         return std::static_pointer_cast<Widget>(instance);
     }
@@ -114,7 +109,8 @@ static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
 
 using CreateFunction =
     std::function<std::shared_ptr<Widget>(rapidxml::xml_node<>* widget,
-            const std::shared_ptr<Frame>& parent)>;
+            const std::shared_ptr<Frame>& parent,
+            Serializer::Properties& saved_props)>;
 
 static const std::pair<std::string, CreateFunction> allocators[] =
 {
@@ -191,6 +187,7 @@ static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node,
         const std::shared_ptr<Frame>& parent = nullptr)
 {
     std::shared_ptr<Widget> result;
+    Serializer::Properties props;
     std::string ttype;
 
     auto type = node->first_attribute("type");
@@ -207,7 +204,7 @@ static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node,
     {
         if (i.first == ttype)
         {
-            result = i.second(node, parent);
+            result = i.second(node, parent, props);
             found = true;
         }
     }
@@ -224,7 +221,7 @@ static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node,
             if (ttype == name)
             {
                 found = true;
-                result = x.second(node, parent);
+                result = x.second(node, parent, props);
                 break;
             }
         }
@@ -239,6 +236,16 @@ static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node,
     for (auto child = node->first_node("widget"); child; child = child->next_sibling("widget"))
     {
         parse_widget(child, std::dynamic_pointer_cast<Frame>(result));
+    }
+
+    result->post_deserialize(props);
+
+    if (!props.empty())
+    {
+        for (auto& p : props)
+        {
+            detail::warn("unhandled {} property : {}", result->type(), std::get<0>(p));
+        }
     }
 
     return result;

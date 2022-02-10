@@ -1345,6 +1345,11 @@ public:
      */
     virtual void serialize(Serializer& serializer) const;
 
+    /**
+     * Resume deserializing of the widget after its children have been deserialized.
+     */
+    virtual void post_deserialize(Serializer::Properties& props) { detail::ignoreparam(props); }
+
     ~Widget() noexcept override;
 
 protected:
