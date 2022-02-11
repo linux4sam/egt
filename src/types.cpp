@@ -150,13 +150,21 @@ std::string gstreamer_format(PixelFormat format)
 std::string demangle(const char* name)
 {
 #ifdef HAVE_CXXABI_H
+    std::string str(name);
     int status = -4;
-    std::unique_ptr<char, void(*)(void*)> res {abi::__cxa_demangle(name, nullptr, nullptr, &status), std::free};
-    return (status == 0) ? res.get() : name;
+    auto realname = abi::__cxa_demangle(name, nullptr, nullptr, &status);
+    if (status == 0)
+        str = realname;
+    free(realname);
+    return str;
 #elif defined(HAVE_CXA_DEMANGLE)
+    std::string str(name);
     int status = -4;
-    std::unique_ptr<char, void(*)(void*)> res {__cxa_demangle(name, nullptr, nullptr, &status), std::free};
-    return (status == 0) ? res.get() : name;
+    auto realname = __cxa_demangle(name, nullptr, nullptr, &status);
+    if (status == 0)
+        str = realname;
+    free(realname);
+    return str;
 #endif
 
     return name;
