@@ -13,11 +13,11 @@
 
 #include <egt/detail/meta.h>
 #include <egt/widgetflags.h>
+#include <list>
 #include <memory>
 #include <ostream>
 #include <string>
 #include <utility>
-#include <vector>
 
 namespace egt
 {
@@ -41,9 +41,9 @@ public:
     Serializer& operator=(Serializer&&) noexcept = default;
 
     /// Attributes array type.
-    using Attributes = std::vector<std::pair<std::string, std::string>>;
+    using Attributes = std::list<std::pair<std::string, std::string>>;
 
-    using Properties = std::vector<std::tuple<std::string, std::string, Serializer::Attributes>>;
+    using Properties = std::list<std::tuple<std::string, std::string, Serializer::Attributes>>;
 
     /// Add a widget to the serializer.
     virtual bool add(const Widget* widget, int level = 0) = 0;
