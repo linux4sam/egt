@@ -356,7 +356,32 @@ public:
     /// Invoked when the selection changes.
     Signal<> on_selected_changed;
     /** @} */
+    /**
+     * @param[in] size Rows and columns.
+     */
+    explicit SelectableGrid(const GridSize& size = GridSize(1, 1));
 
+    /**
+     * @param[in] rect Initial rectangle of the widget.
+     * @param[in] size Rows and columns.
+     */
+    explicit SelectableGrid(const Rect& rect,
+                            const GridSize& size = GridSize(1, 1));
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] rect Initial rectangle of the widget.
+     * @param[in] size Rows and columns.
+     */
+    SelectableGrid(Frame& parent, const Rect& rect,
+                   const GridSize& size = GridSize(1, 1));
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] size Rows and columns.
+     */
+    explicit SelectableGrid(Frame& parent,
+                            const GridSize& size = GridSize(1, 1));
     /**
      * @param[in] props list of widget argument and its properties.
      */
@@ -364,14 +389,6 @@ public:
         : SelectableGrid(props, false)
     {
     }
-
-protected:
-
-    explicit SelectableGrid(Serializer::Properties& props, bool is_derived);
-
-public:
-
-    using StaticGrid::StaticGrid;
 
     void draw(Painter& painter, const Rect& rect) override;
 
@@ -420,6 +437,8 @@ protected:
     size_t m_selected_row{0};
     /// Dimension of the highlight border.
     DefaultDim m_selection_highlight{5};
+
+    explicit SelectableGrid(Serializer::Properties& props, bool is_derived);
 
 private:
 
