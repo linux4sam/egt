@@ -154,6 +154,9 @@ void StaticGrid::add(const std::shared_ptr<Widget>& widget)
 
     assert(!widget->parent() && "widget already has parent!");
 
+    if (widget->align().empty())
+        widget->align(egt::AlignFlag::center);
+
     if (m_column_priority)
     {
         int c = 0;
@@ -212,6 +215,9 @@ void StaticGrid::add(const std::shared_ptr<Widget>& widget)
 
 void StaticGrid::add(const std::shared_ptr<Widget>& widget, size_t column, size_t row)
 {
+    if (widget->align().empty())
+        widget->align(egt::AlignFlag::center);
+
     Frame::add(widget);
 
     if (column >= m_cells.size())
