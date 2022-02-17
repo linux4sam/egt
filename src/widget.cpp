@@ -299,9 +299,14 @@ void Widget::autoresize(bool value)
     if (flags().is_set(Widget::Flag::no_autoresize) == value)
     {
         if (value)
+        {
             flags().clear(Widget::Flag::no_autoresize);
+            layout();
+        }
         else
+        {
             flags().set(Widget::Flag::no_autoresize);
+        }
     }
 }
 
