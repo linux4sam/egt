@@ -34,6 +34,8 @@ public:
     EGT_NODISCARD bool is_composer() const override { return true; }
 
     EGT_NODISCARD unsigned char* get_pixmap();
+
+    void resize(const Size& size);
 };
 
 }
