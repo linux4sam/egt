@@ -107,7 +107,7 @@ public:
                                               widget.starting(),
                                               widget.ending(), 0, b.width());
 
-        if (width > 0.f)
+        if ((width > 0.0f) && b.height())
         {
             widget.theme().draw_box(painter,
                                     Theme::FillFlag::blend,
