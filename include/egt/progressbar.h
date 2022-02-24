@@ -628,7 +628,8 @@ public:
      */
     void num_bars(size_t bars)
     {
-        m_num_bars = bars;
+        if (bars && detail::change_if_diff(m_num_bars, bars))
+            this->damage();
     }
 
     /**
