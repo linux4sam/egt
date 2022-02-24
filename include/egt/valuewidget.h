@@ -187,23 +187,51 @@ public:
     /**
      * Set the start value.
      *
+     * start value cannot be the same as end value.
+     *
      * @param[in] v The start value.
      */
     void starting(T v)
     {
-        if (detail::change_if_diff<>(m_start, v))
+        if (!detail::float_equal(static_cast<float>(v), static_cast<float>(m_end))
+            && detail::change_if_diff<>(m_start, v))
+        {
+            T value = m_value;
+            if (m_start < m_end)
+                value = detail::clamp<T>(value, m_start, m_end);
+            else
+                value = detail::clamp<T>(value, m_end, m_start);
+
+            bool ret = detail::change_if_diff<T>(m_value, value);
             damage();
+            if (ret)
+                on_value_changed.invoke();
+        }
     }
 
     /**
      * Set the end value.
      *
+     * end value cannot be the same as start value.
+     *
      * @param[in] v The end value.
      */
     void ending(T v)
     {
-        if (detail::change_if_diff<>(m_end, v))
+        if (!detail::float_equal(static_cast<float>(v), static_cast<float>(m_end))
+            && detail::change_if_diff<>(m_end, v))
+        {
+            T value = m_value;
+            if (m_start < m_end)
+                value = detail::clamp<T>(value, m_start, m_end);
+            else
+                value = detail::clamp<T>(value, m_end, m_start);
+
+            bool ret = detail::change_if_diff<T>(m_value, value);
             damage();
+            if (ret)
+                on_value_changed.invoke();
+        }
     }
 
     /**
