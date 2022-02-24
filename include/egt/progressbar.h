@@ -607,19 +607,22 @@ public:
                            widget.num_bars(), 0);
         const auto barheight = b.height() / widget.num_bars();
 
-        for (size_t i = 0; i < widget.num_bars(); i++)
+        if (static_cast<DefaultDim>(barheight) > widget.padding())
         {
-            auto color = widget.color(Palette::ColorId::button_fg, Palette::GroupId::disabled);
-            if (i >= limit)
-                color = widget.color(Palette::ColorId::button_fg);
+            for (size_t i = 0; i < widget.num_bars(); i++)
+            {
+                auto color = widget.color(Palette::ColorId::button_fg, Palette::GroupId::disabled);
+                if (i >= limit)
+                    color = widget.color(Palette::ColorId::button_fg);
 
-            Rect rect(b.x(),  b.y() + i * barheight, b.width(), barheight - widget.padding());
+                Rect rect(b.x(),  b.y() + i * barheight, b.width(), barheight - widget.padding());
 
-            widget.theme().draw_box(painter,
-                                    Theme::FillFlag::blend,
-                                    rect,
-                                    widget.color(Palette::ColorId::border),
-                                    color);
+                widget.theme().draw_box(painter,
+                                        Theme::FillFlag::blend,
+                                        rect,
+                                        widget.color(Palette::ColorId::border),
+                                        color);
+            }
         }
     }
 
