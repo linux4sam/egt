@@ -369,7 +369,12 @@ public:
         float linew = dim / 10.0f;
         float radius = dim / 2.0f - (linew / 2.0f);
         auto angle1 = detail::to_radians<float>(180, 0);
-        auto angle2 = detail::to_radians<float>(180, widget.value() / 100.0f * 360.0f);
+
+        auto min = std::min(widget.starting(), widget.ending());
+        auto max = std::max(widget.starting(), widget.ending());
+        auto angle2 = detail::to_radians<float>(180.0f,
+                                                detail::normalize_to_angle(static_cast<float>(widget.value()),
+                                                        static_cast<float>(min), static_cast<float>(max), 0.0f, 360.0f, true));
 
         painter.line_width(linew);
         painter.set(widget.color(Palette::ColorId::button_fg, Palette::GroupId::disabled));
