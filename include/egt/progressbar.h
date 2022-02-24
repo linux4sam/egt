@@ -829,18 +829,19 @@ public:
                                -(hw + 10.0f) * yangle));
             painter.stroke();
 
-            const auto text = std::to_string(tick);
+            int text = static_cast<int>(detail::normalize<float>(tick, 0, 100, widget.starting(), widget.ending()));
             painter.set(widget.color(Palette::ColorId::text));
-            const auto size = painter.text_size(text);
+            const auto size = painter.text_size(std::to_string(text));
             painter.draw(Point(-(hw + 30.0f) * xangle - size.width() / 2.0f,
                                -(hw + 30.0f) * yangle - size.height() / 2.0f));
-            painter.draw(text);
+            painter.draw(std::to_string(text));
             painter.stroke();
         }
 
         // needle
-        const auto dest = Point((-hw - 15.0f) * std::cos(detail::pi<float>() * widget.value() * 0.01f),
-                                (-hw - 15.0f) * std::sin(detail::pi<float>() * widget.value() * 0.01f));
+        auto avalue = detail::normalize<float>(widget.value(), widget.starting(), widget.ending(), 0, 100);
+        const auto dest = Point((-hw - 15.0f) * std::cos(detail::pi<float>() * avalue * 0.01f),
+                                (-hw - 15.0f) * std::sin(detail::pi<float>() * avalue * 0.01f));
 
         painter.set(widget.color(Palette::ColorId::button_fg));
         painter.line_width(tick_width * 2.0f);
