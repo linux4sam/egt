@@ -118,7 +118,14 @@ public:
 
         if (widget.show_label())
         {
-            std::string text = std::to_string(widget.value()) + "%";
+            std::string text = std::to_string(widget.value());
+            if (widget.show_percentage())
+            {
+                auto percentage = detail::normalize<float>(widget.value(),
+                                  widget.starting(),
+                                  widget.ending(), 0, 100);
+                text = std::to_string(static_cast<int>(percentage)) + "%";
+            }
             auto f = TextWidget::scale_font(Size(b.width() * 0.75,
                                                  b.height() * 0.75),
                                             text, widget.font());
@@ -166,6 +173,25 @@ public:
      */
     EGT_NODISCARD bool show_label() const { return m_show_label; }
 
+    /**
+     * Enable/disable showing the label text in percentage.
+     *
+     * @param[in] value When true, the label text is shown in percentage
+     */
+    void show_percentage(bool enable)
+    {
+        if (m_show_percentage != enable)
+        {
+            m_show_percentage = enable;
+            this->damage();
+        }
+    }
+
+    /**
+     * Get the show label in percentage.
+     */
+    EGT_NODISCARD bool show_percentage() const { return m_show_percentage; }
+
     void serialize(Serializer& serializer) const override;
 
 protected:
@@ -173,6 +199,11 @@ protected:
      * When true, the label text is shown.
      */
     bool m_show_label{true};
+
+    /**
+     * When true, the value is displayed in percentage.
+     */
+    bool m_show_percentage{false};
 
 private:
     /// Default size.
