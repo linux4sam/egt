@@ -141,6 +141,24 @@ public:
     void add_item(const std::shared_ptr<StringItem>& item);
 
     /**
+     * Add a new item to the end of the list.
+     *
+     * @param item The item.
+     *
+     * @warning This does not manage the lifetime of StringItem. It is up to
+     * the caller to make sure this StringItem is available for as long as the
+     * instance of this class is around.
+     */
+    void add_item(StringItem& item)
+    {
+        // Nasty, but it gets the job done.  If a widget is passed in as a
+        // reference, we don't own it, so create a "pointless" shared_ptr that
+        // will not delete it.
+        auto i = std::shared_ptr<StringItem>(&item, [](StringItem*) {});
+        add_item(i);
+    }
+
+    /**
      * Get the currently selected index item from list.
      */
     EGT_NODISCARD std::shared_ptr<StringItem> item_at(size_t index) const;
