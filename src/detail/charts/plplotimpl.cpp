@@ -349,7 +349,10 @@ void PlPlotImpl::resize()
 void PlPlotImpl::bank(float bank)
 {
     if (detail::change_if_diff<float>(m_bank, bank))
+    {
+        plplot_verify_viewport();
         invoke_damage();
+    }
 }
 
 void PlPlotImpl::plplot_box(bool xtick_label, bool ytick_label)
