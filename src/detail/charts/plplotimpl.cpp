@@ -80,8 +80,9 @@ ChartBase::DataArray PlPlotImpl::data() const
     ChartBase::DataArray data;
     if (!m_xdata.empty() && (!m_ydata.empty()))
     {
-        std::transform(m_xdata.begin(), m_xdata.end(), m_ydata.begin(), std::back_inserter(data),
-        [](int x, int y) { return std::make_pair(x, y); });
+        int size = std::min(m_xdata.size(), m_ydata.size());
+        for (int i = 0; i < size; i++)
+            data.emplace_back(m_xdata[i], m_ydata[i]);
     }
     return data;
 }
