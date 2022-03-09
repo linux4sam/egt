@@ -435,13 +435,13 @@ void PointChart::serialize(Serializer& serializer) const
 
     auto pt = point_type();
     if (pt == egt::PointChart::PointType::star)
-        serializer.add_property("linetype", "star");
+        serializer.add_property("pointtype", "star");
     else if (pt == egt::PointChart::PointType::dot)
-        serializer.add_property("linetype", "dot");
+        serializer.add_property("pointtype", "dot");
     else if (pt == egt::PointChart::PointType::cross)
-        serializer.add_property("linetype", "cross");
+        serializer.add_property("pointtype", "cross");
     else if (pt == egt::PointChart::PointType::circle)
-        serializer.add_property("linetype", "circle");
+        serializer.add_property("pointtype", "circle");
 
     serializer.add_property("gridwidth", grid_width());
 
