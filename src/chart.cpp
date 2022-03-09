@@ -141,6 +141,11 @@ void LineChart::bank(float bank)
     m_impl->bank(bank);
 }
 
+float LineChart::bank() const
+{
+    return m_impl->bank();
+}
+
 void LineChart::serialize(Serializer& serializer) const
 {
     ChartBase::serialize(serializer);
@@ -377,6 +382,11 @@ void PointChart::resize(const Size& size)
 void PointChart::bank(float bank)
 {
     m_impl->bank(bank);
+}
+
+float PointChart::bank() const
+{
+    return m_impl->bank();
 }
 
 void PointChart::grid_style(GridFlag flag)
@@ -683,6 +693,11 @@ void BarChart::resize(const Size& size)
 void BarChart::bank(float bank)
 {
     m_impl->bank(bank);
+}
+
+float BarChart::bank() const
+{
+    return m_impl->bank();
 }
 
 

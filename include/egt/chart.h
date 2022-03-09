@@ -254,6 +254,11 @@ public:
      */
     void bank(float bank);
 
+    /**
+     * Get bank percent set beyond min and maximum values.
+     */
+    EGT_NODISCARD float bank() const;
+
     void serialize(Serializer& serializer) const override;
 
     ~LineChart() override;
@@ -434,6 +439,11 @@ public:
      * Add a percent bank beyond the min and maximum values.
      */
     void bank(float bank);
+
+    /**
+     * Get bank percent set beyond min and maximum values.
+     */
+    EGT_NODISCARD float bank() const;
 
     void serialize(Serializer& serializer) const override;
 
@@ -637,6 +647,11 @@ public:
      * Add a percent bank beyond the min and maximum values.
      */
     void bank(float bank);
+
+    /**
+     * Get bank percent set beyond min and maximum values.
+     */
+    EGT_NODISCARD float bank() const;
 
     void serialize(Serializer& serializer) const override;
 

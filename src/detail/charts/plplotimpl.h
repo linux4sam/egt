@@ -110,6 +110,11 @@ public:
 
     void bank(float bank);
 
+    float bank() const
+    {
+        return m_bank;
+    }
+
     virtual void invoke_damage() = 0;
 
     virtual ~PlPlotImpl();
