@@ -254,7 +254,8 @@ void PlPlotImpl::grid_style(ChartBase::GridFlag flag)
 
 void PlPlotImpl::grid_width(int val)
 {
-    m_grid_width = val;
+    if (detail::change_if_diff<>(m_grid_width, val))
+        invoke_damage();
 }
 
 void PlPlotImpl::line_width(int val)
