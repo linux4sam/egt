@@ -273,7 +273,7 @@ public:
     void show_label(bool value)
     {
         if (detail::change_if_diff<>(m_show_label, value))
-            m_widget.damage();
+            refresh();
     }
 
     /**
