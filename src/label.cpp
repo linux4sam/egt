@@ -180,6 +180,19 @@ Size ImageLabel::min_size_hint() const
     return ImageHolder::min_size_hint();
 }
 
+void ImageLabel::text(const std::string& text)
+{
+    if (detail::change_if_diff<>(m_text, text))
+    {
+        if (text.empty())
+            show_label(false);
+        else
+            show_label(true);
+    }
+
+    Label::text(text);
+}
+
 void ImageLabel::serialize(Serializer& serializer) const
 {
     ImageHolder::serialize(serializer);

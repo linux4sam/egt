@@ -272,6 +272,17 @@ public:
 
     void draw(Painter& painter, const Rect& rect) override;
 
+    using Button::text;
+    /**
+     * Set the text.
+     *
+     * It sets show_label to true if the string is not empty, to false
+     * otherwise.
+     *
+     * @param str The text string to set.
+     */
+    void text(const std::string& text) override;
+
     /// Default draw method for the widget.
     static void default_draw(ImageButton& widget, Painter& painter, const Rect& rect);
 
