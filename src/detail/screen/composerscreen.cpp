@@ -24,7 +24,8 @@ ComposerScreen::ComposerScreen(const Size& size)
 
 void ComposerScreen::resize(const Size& size)
 {
-    init(size);
+    if (m_size != size)
+        init(size);
 }
 
 unsigned char* ComposerScreen::get_pixmap()
