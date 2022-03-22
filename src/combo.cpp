@@ -382,6 +382,7 @@ void ComboBox::deserialize(Serializer::Properties& props)
             Image image;
             AlignFlags text_align;
             auto attrs = std::get<2>(p);
+            bool is_selected = false;
             for (const auto& i : attrs)
             {
                 if (i.first == "image")
@@ -391,10 +392,12 @@ void ComboBox::deserialize(Serializer::Properties& props)
                     text_align = AlignFlags(i.second);
 
                 if (i.first == "selected" && detail::from_string(i.second))
-                    selected(item_count() - 1);
+                    is_selected = true;
             }
 
             add_item(std::make_shared<StringItem>(std::get<1>(p), image, Rect(), text_align));
+            if (is_selected)
+                selected(item_count() - 1);
             return true;
         }
         return false;
