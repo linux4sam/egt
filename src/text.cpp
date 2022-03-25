@@ -850,9 +850,12 @@ constexpr static auto CURSOR_Y_OFFSET = 2.;
 
 void TextBox::draw(Painter& painter, const Rect& rect)
 {
-    if (m_cr.get() != painter.context().get())
+    if ((m_cr.get() != painter.context().get()) ||
+        m_textbox_rect != content_area())
     {
         m_cr = painter.context();
+
+        m_textbox_rect = content_area();
 
         prepare_text(m_rects,
                      m_cr.get(),

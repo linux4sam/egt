@@ -489,6 +489,8 @@ private:
     /// Maximum text length, or zero.
     size_t m_max_len{0};
 
+    Rect m_textbox_rect;
+
     /// Gain focus registration.
     Signal<>::RegisterHandle m_gain_focus_reg{};
 
