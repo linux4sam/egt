@@ -76,6 +76,8 @@ public:
      */
     void serialize(Serializer& serializer) const override;
 
+    void resize(const Size& size) override;
+
 protected:
 
     /// @private

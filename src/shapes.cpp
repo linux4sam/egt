@@ -57,6 +57,12 @@ void CircleWidget::serialize(Serializer& serializer) const
     serializer.add_property("radius", std::min(box().width(), box().height()) / 2.);
 }
 
+void CircleWidget::resize(const Size& size)
+{
+    Widget::resize(size);
+    m_radius = std::min(width(), height()) / 2;
+}
+
 void CircleWidget::deserialize(Serializer::Properties& props)
 {
     props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
