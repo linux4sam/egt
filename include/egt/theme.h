@@ -362,6 +362,12 @@ protected:
     virtual void init_draw();
 };
 
+/// BorderFlags operator
+inline Theme::BorderFlags operator|(Theme::BorderFlag lhs, Theme::BorderFlag rhs)
+{
+        return {lhs, rhs};
+}
+
 /// Enum string conversion map
 template<>
 EGT_API const std::pair<Theme::FillFlag, char const*> detail::EnumStrings<Theme::FillFlag>::data[2];
