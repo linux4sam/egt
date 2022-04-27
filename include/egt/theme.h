@@ -173,6 +173,8 @@ public:
      *
      * If no flags are specified, the default assumption is that all flags are
      * drawn.
+     * The drop_shadow flag prevails over other flags. If it is set, top, right,
+     * bottom, and left flags are ignored.
      */
     enum class BorderFlag : uint32_t
     {
