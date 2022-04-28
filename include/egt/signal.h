@@ -30,6 +30,11 @@ class Signal
 {
 public:
 
+    enum
+    {
+        INVALID_HANDLE = 0,
+    };
+
     /**
      * Event handler callback function.
      */
@@ -146,7 +151,7 @@ private:
     /**
      * Counter used to generate unique handles for each callback registration.
      */
-    RegisterHandle m_handle_counter{0};
+    RegisterHandle m_handle_counter{INVALID_HANDLE};
 
     /**
      * Manages metadata about a registered callback.
