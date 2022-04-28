@@ -932,7 +932,7 @@ Size AnalogMeterType<T>::default_size()
 template <class T>
 void AnalogMeterType<T>::default_size(const Size& size)
 {
-    AnalogMeterType<T>::default_analogmeter_size_value = size;
+    AnalogMeterType<T>::m_default_size = size;
 }
 
 }
