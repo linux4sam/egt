@@ -14,6 +14,7 @@
 #include <egt/detail/alignment.h>
 #include <egt/detail/math.h>
 #include <egt/detail/meta.h>
+#include <egt/detail/screen/composerscreen.h>
 #include <egt/frame.h>
 #include <egt/painter.h>
 #include <egt/serialize.h>
@@ -208,6 +209,9 @@ protected:
 private:
     /// Default size.
     static Size m_default_size;
+    static Signal<>::RegisterHandle m_default_size_handle;
+    static void register_handler();
+    static void unregister_handler();
 
     void deserialize(Serializer::Properties& props);
 };
@@ -270,10 +274,33 @@ template <class T>
 Size ProgressBarType<T>::m_default_size;
 
 template <class T>
+Signal<>::RegisterHandle ProgressBarType<T>::m_default_size_handle = Signal<>::INVALID_HANDLE;
+
+template <class T>
+void ProgressBarType<T>::register_handler()
+{
+    if (m_default_size_handle == Signal<>::INVALID_HANDLE)
+    {
+        m_default_size_handle = detail::ComposerScreen::register_screen_resize_hook([]()
+            {
+                m_default_size.clear();
+            });
+    }
+}
+
+template <class T>
+void ProgressBarType<T>::unregister_handler()
+{
+    detail::ComposerScreen::unregister_screen_resize_hook(m_default_size_handle);
+    m_default_size_handle = Signal<>::INVALID_HANDLE;
+}
+
+template <class T>
 Size ProgressBarType<T>::default_size()
 {
     if (ProgressBarType<T>::m_default_size.empty())
     {
+        register_handler();
         auto ss = egt::Application::instance().screen()->size();
         ProgressBarType<T>::m_default_size = Size(ss.width() * 0.25, ss.height() * 0.05);
     }
@@ -284,6 +311,9 @@ Size ProgressBarType<T>::default_size()
 template <class T>
 void ProgressBarType<T>::default_size(const Size& size)
 {
+    if (!size.empty())
+        unregister_handler();
+
     ProgressBarType<T>::m_default_size = size;
 }
 
@@ -441,6 +471,9 @@ protected:
 private:
     /// Default size.
     static Size m_default_size;
+    static Signal<>::RegisterHandle m_default_size_handle;
+    static void register_handler();
+    static void unregister_handler();
 
     void deserialize(Serializer::Properties& props);
 };
@@ -481,10 +514,33 @@ template <class T>
 Size SpinProgressType<T>::m_default_size;
 
 template <class T>
+Signal<>::RegisterHandle SpinProgressType<T>::m_default_size_handle = Signal<>::INVALID_HANDLE;
+
+template <class T>
+void SpinProgressType<T>::register_handler()
+{
+    if (m_default_size_handle == Signal<>::INVALID_HANDLE)
+    {
+        m_default_size_handle = detail::ComposerScreen::register_screen_resize_hook([]()
+            {
+                m_default_size.clear();
+            });
+    }
+}
+
+template <class T>
+void SpinProgressType<T>::unregister_handler()
+{
+    detail::ComposerScreen::unregister_screen_resize_hook(m_default_size_handle);
+    m_default_size_handle = Signal<>::INVALID_HANDLE;
+}
+
+template <class T>
 Size SpinProgressType<T>::default_size()
 {
     if (SpinProgressType<T>::m_default_size.empty())
     {
+        register_handler();
         auto ss = egt::Application::instance().screen()->size();
         SpinProgressType<T>::m_default_size = Size(ss.width() * 0.12, ss.height() * 0.20);
     }
@@ -494,6 +550,9 @@ Size SpinProgressType<T>::default_size()
 template <class T>
 void SpinProgressType<T>::default_size(const Size& size)
 {
+    if (!size.empty())
+        unregister_handler();
+
     SpinProgressType<T>::m_default_size = size;
 }
 
@@ -665,6 +724,9 @@ protected:
 private:
     /// Default size.
     static Size m_default_size;
+    static Signal<>::RegisterHandle m_default_size_handle;
+    static void register_handler();
+    static void unregister_handler();
 
     void deserialize(Serializer::Properties& props);
 };
@@ -705,10 +767,33 @@ template <class T>
 Size LevelMeterType<T>::m_default_size;
 
 template <class T>
+Signal<>::RegisterHandle LevelMeterType<T>::m_default_size_handle = Signal<>::INVALID_HANDLE;
+
+template <class T>
+void LevelMeterType<T>::register_handler()
+{
+    if (m_default_size_handle == Signal<>::INVALID_HANDLE)
+    {
+        m_default_size_handle = detail::ComposerScreen::register_screen_resize_hook([]()
+            {
+                m_default_size.clear();
+            });
+    }
+}
+
+template <class T>
+void LevelMeterType<T>::unregister_handler()
+{
+    detail::ComposerScreen::unregister_screen_resize_hook(m_default_size_handle);
+    m_default_size_handle = Signal<>::INVALID_HANDLE;
+}
+
+template <class T>
 Size LevelMeterType<T>::default_size()
 {
     if (LevelMeterType<T>::m_default_size.empty())
     {
+        register_handler();
         auto ss = egt::Application::instance().screen()->size();
         LevelMeterType<T>::m_default_size = Size(ss.width() * 0.05, ss.height() * 0.20);
     }
@@ -718,6 +803,9 @@ Size LevelMeterType<T>::default_size()
 template <class T>
 void LevelMeterType<T>::default_size(const Size& size)
 {
+    if (!size.empty())
+        unregister_handler();
+
     LevelMeterType<T>::m_default_size = size;
 }
 
@@ -880,6 +968,9 @@ private:
 
     /// Default size.
     static Size m_default_size;
+    static Signal<>::RegisterHandle m_default_size_handle;
+    static void register_handler();
+    static void unregister_handler();
 };
 
 /**
@@ -918,11 +1009,33 @@ template <class T>
 Size AnalogMeterType<T>::m_default_size;
 
 template <class T>
+Signal<>::RegisterHandle AnalogMeterType<T>::m_default_size_handle = Signal<>::INVALID_HANDLE;
+
+template <class T>
+void AnalogMeterType<T>::register_handler()
+{
+    if (m_default_size_handle == Signal<>::INVALID_HANDLE)
+    {
+        m_default_size_handle = detail::ComposerScreen::register_screen_resize_hook([]()
+            {
+                m_default_size.clear();
+            });
+    }
+}
+
+template <class T>
+void AnalogMeterType<T>::unregister_handler()
+{
+    detail::ComposerScreen::unregister_screen_resize_hook(m_default_size_handle);
+    m_default_size_handle = Signal<>::INVALID_HANDLE;
+}
+
+template <class T>
 Size AnalogMeterType<T>::default_size()
 {
-
     if (AnalogMeterType<T>::m_default_size.empty())
     {
+        register_handler();
         auto ss = egt::Application::instance().screen()->size();
         AnalogMeterType<T>::m_default_size = Size(ss.width() * 0.25, ss.height() * 0.20);
     }
@@ -932,6 +1045,9 @@ Size AnalogMeterType<T>::default_size()
 template <class T>
 void AnalogMeterType<T>::default_size(const Size& size)
 {
+    if (!size.empty())
+        unregister_handler();
+
     AnalogMeterType<T>::m_default_size = size;
 }
 
