@@ -148,7 +148,7 @@ public:
     /**
      * Set the size of the font.
      */
-    void size(const Font::Size& s) { m_size = s; direct_allocate(); }
+    void size(const Font::Size& s) { m_use_default_size = false; m_size = s; direct_allocate(); }
 
     /**
      * Get the weight of the font.
@@ -190,6 +190,15 @@ public:
                      const Serializer::Attributes& attrs);
 
     /**
+     * Recompute the font size from the screen size but only if it has not been
+     * defined by the user.
+     *
+     * @note Called from ComposerScreen::resize() for the theme and global fonts
+     * or from Widget::on_screen_resized() for local fonts.
+     */
+    void on_screen_resized();
+
+    /**
      * Clears any internal font cache.
      *
      * This will cause any new requests for fonts to be re-generated.
@@ -227,6 +236,9 @@ protected:
     mutable shared_cairo_scaled_font_t m_scaled_font;
     const unsigned char* m_data{nullptr};
     size_t m_len{0};
+
+    /// Use default size.
+    bool m_use_default_size{true};
 
 private:
     Font::Size default_font_size();

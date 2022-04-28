@@ -599,5 +599,13 @@ Frame::~Frame() noexcept
     remove_all_basic();
 }
 
+void Frame::on_screen_resized()
+{
+    Widget::on_screen_resized();
+
+    for (auto& child : m_children)
+        child->on_screen_resized();
+}
+
 }
 }

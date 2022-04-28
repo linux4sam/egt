@@ -243,7 +243,8 @@ Font::Font(const unsigned char* data, size_t len,
     : m_face("MEMORY"),
       m_size(size <= 0 ? default_font_size() : size),
       m_data(data),
-      m_len(len)
+      m_len(len),
+      m_use_default_size(size <= 0)
 {
     direct_allocate();
 }
@@ -253,16 +254,19 @@ Font::Font(const std::string& face, Font::Size size, Font::Weight weight, Font::
     : m_face(face),
       m_size(size),
       m_weight(weight),
-      m_slant(slant)
+      m_slant(slant),
+      m_use_default_size(false)
 {}
 
 Font::Font(Font::Size size)
-    : m_size(size)
+    : m_size(size),
+      m_use_default_size(false)
 {}
 
 Font::Font(Font::Size size, Font::Weight weight)
     : m_size(size),
-      m_weight(weight)
+      m_weight(weight),
+      m_use_default_size(false)
 {}
 
 Font::Font(Font::Weight weight)
@@ -435,6 +439,15 @@ void Font::shutdown_fonts()
 void Font::direct_allocate()
 {
     m_scaled_font.reset();
+}
+
+void Font::on_screen_resized()
+{
+    if (m_use_default_size)
+    {
+        m_size = default_font_size();
+        direct_allocate();
+    }
 }
 
 }

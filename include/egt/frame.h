@@ -481,6 +481,9 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
+    /// Overridden to be called recursively on all children.
+    void on_screen_resized() override;
+
 protected:
 
     /// @private

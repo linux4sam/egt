@@ -918,5 +918,16 @@ const Font& Widget::font() const
     return global_theme().font();
 }
 
+void Widget::on_screen_resized()
+{
+    if (m_font)
+    {
+        m_font->on_screen_resized();
+        damage();
+        layout();
+        parent_layout();
+    }
+}
+
 }
 }

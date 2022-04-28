@@ -4,7 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "detail/egtlog.h"
+#include "egt/app.h"
 #include "egt/detail/screen/composerscreen.h"
+#include "egt/font.h"
+#include "egt/theme.h"
+#include "egt/window.h"
 
 namespace egt
 {
@@ -31,6 +35,13 @@ void ComposerScreen::resize(const Size& size)
         init(size);
 
         on_screen_resized.invoke();
+
+        global_theme().font().on_screen_resized();
+
+        if (global_font())
+            const_cast<Font*>(global_font())->on_screen_resized();
+
+        Application::instance().main_window()->on_screen_resized();
     }
 }
 

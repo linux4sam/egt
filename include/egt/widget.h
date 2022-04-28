@@ -1341,6 +1341,26 @@ public:
     }
 
     /**
+     * Called from ComposerScreen::resize().
+     *
+     * @note Widgets can be copied, moved or destroyed. Therefore their
+     * life cycle is more complex than static data (default font size, default
+     * widget sizes). If the ComposerScreen::on_screen_resized signal had been
+     * used to manage widgets when the screen is resized, then we would have to
+     * register a hook from any constructor, forcing us to explicitly define
+     * copy and move constructors instead of using default implementation of
+     * those constructors. We would also have to register that hook from the
+     * copy and move assignment operators and finally unregister it from the
+     * widget destructor.
+     *
+     * This would have required too many changes to accurately handle all widget
+     * life cycles, so instead we call this virtual method on the main window
+     * from ComposerScreen::resize() to recursively scan and progress the whole
+     * widget tree.
+     */
+    virtual void on_screen_resized();
+
+    /**
      * Serialize the widget to the specified serializer.
      */
     virtual void serialize(Serializer& serializer) const;
