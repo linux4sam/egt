@@ -6,6 +6,7 @@
 #include "egt/app.h"
 #include "egt/combo.h"
 #include "egt/detail/imagecache.h"
+#include "egt/detail/screen/composerscreen.h"
 #include "egt/frame.h"
 #include "egt/image.h"
 #include "egt/painter.h"
@@ -19,6 +20,7 @@ inline namespace v1
 {
 
 Size ComboBox::default_combobox_size_value;
+Signal<>::RegisterHandle ComboBox::default_combobox_size_handle = Signal<>::INVALID_HANDLE;
 
 namespace detail
 {
@@ -271,10 +273,28 @@ void ComboBox::move(const Point& point)
         m_popup->smart_pos();
 }
 
+void ComboBox::register_handler()
+{
+    if (default_combobox_size_handle == Signal<>::INVALID_HANDLE)
+    {
+        default_combobox_size_handle = detail::ComposerScreen::register_screen_resize_hook([]()
+            {
+                default_combobox_size_value.clear();
+            });
+    }
+}
+
+void ComboBox::unregister_handler()
+{
+    detail::ComposerScreen::unregister_screen_resize_hook(default_combobox_size_handle);
+    default_combobox_size_handle = Signal<>::INVALID_HANDLE;
+}
+
 Size ComboBox::default_size()
 {
     if (default_combobox_size_value.empty())
     {
+        register_handler();
         auto ss = egt::Application::instance().screen()->size();
         default_combobox_size_value = Size(ss.width() * 0.25, ss.height() * 0.05);
     }
@@ -284,6 +304,9 @@ Size ComboBox::default_size()
 
 void ComboBox::default_size(const Size& size)
 {
+    if (!size.empty())
+        unregister_handler();
+
     default_combobox_size_value = size;
 }
 

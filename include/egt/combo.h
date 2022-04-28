@@ -206,6 +206,9 @@ protected:
 private:
 
     static Size default_combobox_size_value;
+    static Signal<>::RegisterHandle default_combobox_size_handle;
+    static void register_handler();
+    static void unregister_handler();
 
     void initialize();
 
