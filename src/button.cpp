@@ -9,6 +9,7 @@
 #include "egt/detail/alignment.h"
 #include "egt/detail/imagecache.h"
 #include "egt/detail/meta.h"
+#include "egt/detail/screen/composerscreen.h"
 #include "egt/frame.h"
 #include "egt/painter.h"
 #include "egt/serialize.h"
@@ -21,18 +22,42 @@ inline namespace v1
 {
 
 Size Button::default_button_size_value;
+Signal<>::RegisterHandle Button::default_button_size_handle = Signal<>::INVALID_HANDLE;
 AlignFlags Button::default_text_align_value = AlignFlag::center;
+
+void Button::register_handler()
+{
+    if (default_button_size_handle == Signal<>::INVALID_HANDLE)
+    {
+        default_button_size_handle = detail::ComposerScreen::register_screen_resize_hook([]()
+            {
+                default_button_size_value.clear();
+            });
+    }
+}
+
+void Button::unregister_handler()
+{
+    detail::ComposerScreen::unregister_screen_resize_hook(default_button_size_handle);
+    default_button_size_handle = Signal<>::INVALID_HANDLE;
+}
 
 Size Button::default_size()
 {
     if (default_button_size_value.empty())
+    {
+        register_handler();
         default_button_size_value =  egt::Application::instance().screen()->size() * 0.12;
+    }
 
     return default_button_size_value;
 }
 
 void Button::default_size(const Size& size)
 {
+    if (!size.empty())
+        unregister_handler();
+
     default_button_size_value = size;
 }
 

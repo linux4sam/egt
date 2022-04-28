@@ -170,6 +170,9 @@ protected:
 private:
 
     static Size default_button_size_value;
+    static Signal<>::RegisterHandle default_button_size_handle;
+    static void register_handler();
+    static void unregister_handler();
 
     static AlignFlags default_text_align_value;
 
