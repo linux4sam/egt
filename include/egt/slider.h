@@ -16,6 +16,7 @@
 #include <egt/detail/enum.h>
 #include <egt/detail/math.h>
 #include <egt/detail/meta.h>
+#include <egt/detail/screen/composerscreen.h>
 #include <egt/flags.h>
 #include <egt/frame.h>
 #include <egt/painter.h>
@@ -377,6 +378,9 @@ protected:
 private:
     /// Default size.
     static Size m_default_size;
+    static Signal<>::RegisterHandle m_default_size_handle;
+    static void register_handler();
+    static void unregister_handler();
 
     void deserialize(Serializer::Properties& props);
 };
@@ -417,10 +421,33 @@ template <class T>
 Size SliderType<T>::m_default_size;
 
 template <class T>
+Signal<>::RegisterHandle SliderType<T>::m_default_size_handle = Signal<>::INVALID_HANDLE;
+
+template <class T>
+void SliderType<T>::register_handler()
+{
+    if (m_default_size_handle == Signal<>::INVALID_HANDLE)
+    {
+        m_default_size_handle = detail::ComposerScreen::register_screen_resize_hook([]()
+            {
+                m_default_size.clear();
+            });
+     }
+}
+
+template <class T>
+void SliderType<T>::unregister_handler()
+{
+    detail::ComposerScreen::unregister_screen_resize_hook(m_default_size_handle);
+    m_default_size_handle = Signal<>::INVALID_HANDLE;
+}
+
+template <class T>
 Size SliderType<T>::default_size()
 {
     if (SliderType<T>::m_default_size.empty())
     {
+        register_handler();
         auto ss = egt::Application::instance().screen()->size();
         SliderType<T>::m_default_size = Size(ss.width() * 0.20, ss.height() * 0.10);
     }
@@ -431,6 +458,9 @@ Size SliderType<T>::default_size()
 template <class T>
 void SliderType<T>::default_size(const Size& size)
 {
+    if (!size.empty())
+        unregister_handler();
+
     SliderType<T>::m_default_size = size;
 }
 
