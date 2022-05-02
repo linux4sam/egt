@@ -477,7 +477,9 @@ static void tag_line(const AlignFlags& text_align,
                      Widget& parent,
                      cairo_t* cr)
 {
-    if (text_align.is_set(AlignFlag::left))
+    /* Currently AlignFlag::expand_horizontal is left-aligned. */
+    if (text_align.is_set(AlignFlag::left) ||
+        text_align.is_set(AlignFlag::expand_horizontal))
         tag_left_aligned_line(prev, prev_pos, next, next_pos, parent, cr);
     else if (text_align.is_set(AlignFlag::right))
         tag_right_aligned_line(prev, prev_pos, next, next_pos, parent, cr);
