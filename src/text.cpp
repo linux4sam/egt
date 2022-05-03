@@ -1041,6 +1041,7 @@ void TextBox::text(const std::string& str)
 
 void TextBox::clear()
 {
+    m_rects.clear();
     selection_clear();
     cursor_begin();
     TextWidget::clear();
