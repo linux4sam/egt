@@ -26,7 +26,7 @@
 #include <clocale>
 #include <csignal>
 #include <iostream>
-#ifdef HAVE_LIBINTL_H
+#ifdef HAVE_LIBINTL
 #include <libintl.h>
 #endif
 #include <regex>
