@@ -142,12 +142,12 @@ std::string exe_pwd()
 
 std::string cwd()
 {
-#ifdef HAVE_EXPERIMENTAL_FILESYSTEM
-    return fs::current_path();
-#elif defined(HAVE_WINDOWS_H)
+#if defined(HAVE_WINDOWS_H)
     char buff[PATH_MAX] {};
     if (_getcwd(buff, PATH_MAX))
         return std::string(buff);
+#elif HAVE_EXPERIMENTAL_FILESYSTEM
+    return fs::current_path();
 #else
     std::unique_ptr<char, decltype(std::free)*> d(get_current_dir_name(), std::free);
     if (d)
