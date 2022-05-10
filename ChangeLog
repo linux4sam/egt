@@ -5,11 +5,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.3.2] - 2022-05-10
+### Fixed
+- CameraImpl: with new version of GStreamer, devnode can be empty. If it's the
+case, fallback to /dev/video0. This is a temporary workaround.
+
+
 ## [1.3.1] - 2022-05-03
 ### Fixed
 - Textbox: non left-aligned text rendering fixed and clear method fixed.
-- CameraImpl: with new version of GStreamer, devnode can be empty. If it's the
-case, fallback to /dev/video0. This is a temporary workaround.
+
 
 ## [1.3] - 2021-12-10
 ### Added
