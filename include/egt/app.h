@@ -76,6 +76,19 @@ public:
     static bool check_instance();
 
     /**
+     * Reset the resources search paths optionally adding extra paths.
+     *
+     * @param[in] extra_paths An optional list of extra search paths.
+     *
+     * The current search paths list is cleared then filled with:
+     * 1 - paths from the EGT_SEARCH_PATH env variable
+     * 2 - paths from extra_paths
+     * 3 - the current working directory
+     * 4 - the application directory
+     */
+    static void setup_search_paths(const std::vector<std::string>& extra_paths = {});
+
+    /**
      * Check whether the application runs under the Microchip Graphic Composer.
      */
     EGT_NODISCARD bool is_composer() const;
@@ -180,8 +193,6 @@ protected:
     static void setup_logging();
     /// @private
     static void setup_locale(const std::string& name);
-    /// @private
-    static void setup_search_paths();
     /// @private
     void setup_backend(bool primary);
     /// @private

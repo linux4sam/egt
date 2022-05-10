@@ -30,6 +30,11 @@ inline namespace v1
 EGT_API void add_search_path(const std::string& path);
 
 /**
+ * Clear all search paths for files.
+ */
+EGT_API void clear_search_paths();
+
+/**
  * Given a file path, try to find it related to any added search paths.
  *
  *

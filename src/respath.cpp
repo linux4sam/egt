@@ -43,6 +43,11 @@ void add_search_path(const std::string& path)
         image_paths.push_back(newpath);
 }
 
+void clear_search_paths(void)
+{
+    image_paths.clear();
+}
+
 static std::string resolve_file_path(const std::string& filename,
                                      const std::vector<std::string>& search)
 {

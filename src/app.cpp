@@ -178,8 +178,11 @@ void Application::setup_logging()
     }
 }
 
-void Application::setup_search_paths()
+void Application::setup_search_paths(const std::vector<std::string>& extra_paths)
 {
+    // clear the current search paths
+    clear_search_paths();
+
     // any added search paths take priority
     auto path = getenv("EGT_SEARCH_PATH");
     if (path && strlen(path))
@@ -190,6 +193,10 @@ void Application::setup_search_paths()
         for (auto& token : tokens)
             add_search_path(token);
     }
+
+    // add extra search paths
+    for (auto& path : extra_paths)
+        add_search_path(path);
 
     // search cwd
     add_search_path(detail::cwd());
