@@ -30,9 +30,9 @@ void Button::register_handler()
     if (default_button_size_handle == Signal<>::INVALID_HANDLE)
     {
         default_button_size_handle = detail::ComposerScreen::register_screen_resize_hook([]()
-            {
-                default_button_size_value.clear();
-            });
+        {
+            default_button_size_value.clear();
+        });
     }
 }
 

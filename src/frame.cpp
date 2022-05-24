@@ -428,14 +428,14 @@ void Frame::draw(Painter& painter, const Rect& rect)
         constexpr static Color composer_bg = Color(0x00000020);
 
         theme().draw_box(painter,
-                         {Theme::FillFlag::blend},
-                         to_child(box()),
-                         composer_border,
-                         composer_bg,
-                         1,
-                         0,
-                         0,
-                         {});
+        {Theme::FillFlag::blend},
+        to_child(box()),
+        composer_border,
+        composer_bg,
+        1,
+        0,
+        0,
+        {});
     }
 
     if (m_children.empty())

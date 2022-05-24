@@ -205,7 +205,7 @@ void Window::resize(const Size& size)
 {
     // cannot resize if we are screen
     if (egt_unlikely(Application::instance().m_main_window == this &&
-		     !Application::instance().screen()->is_composer()))
+                     !Application::instance().screen()->is_composer()))
         return;
 
     if (m_impl)

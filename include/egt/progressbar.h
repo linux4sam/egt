@@ -282,9 +282,9 @@ void ProgressBarType<T>::register_handler()
     if (m_default_size_handle == Signal<>::INVALID_HANDLE)
     {
         m_default_size_handle = detail::ComposerScreen::register_screen_resize_hook([]()
-            {
-                m_default_size.clear();
-            });
+        {
+            m_default_size.clear();
+        });
     }
 }
 
@@ -522,9 +522,9 @@ void SpinProgressType<T>::register_handler()
     if (m_default_size_handle == Signal<>::INVALID_HANDLE)
     {
         m_default_size_handle = detail::ComposerScreen::register_screen_resize_hook([]()
-            {
-                m_default_size.clear();
-            });
+        {
+            m_default_size.clear();
+        });
     }
 }
 
@@ -775,9 +775,9 @@ void LevelMeterType<T>::register_handler()
     if (m_default_size_handle == Signal<>::INVALID_HANDLE)
     {
         m_default_size_handle = detail::ComposerScreen::register_screen_resize_hook([]()
-            {
-                m_default_size.clear();
-            });
+        {
+            m_default_size.clear();
+        });
     }
 }
 
@@ -1017,9 +1017,9 @@ void AnalogMeterType<T>::register_handler()
     if (m_default_size_handle == Signal<>::INVALID_HANDLE)
     {
         m_default_size_handle = detail::ComposerScreen::register_screen_resize_hook([]()
-            {
-                m_default_size.clear();
-            });
+        {
+            m_default_size.clear();
+        });
     }
 }
 

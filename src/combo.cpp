@@ -278,9 +278,9 @@ void ComboBox::register_handler()
     if (default_combobox_size_handle == Signal<>::INVALID_HANDLE)
     {
         default_combobox_size_handle = detail::ComposerScreen::register_screen_resize_hook([]()
-            {
-                default_combobox_size_value.clear();
-            });
+        {
+            default_combobox_size_value.clear();
+        });
     }
 }
 

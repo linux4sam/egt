@@ -429,10 +429,10 @@ void SliderType<T>::register_handler()
     if (m_default_size_handle == Signal<>::INVALID_HANDLE)
     {
         m_default_size_handle = detail::ComposerScreen::register_screen_resize_hook([]()
-            {
-                m_default_size.clear();
-            });
-     }
+        {
+            m_default_size.clear();
+        });
+    }
 }
 
 template <class T>
