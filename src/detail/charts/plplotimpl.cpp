@@ -109,7 +109,7 @@ void PlPlotImpl::add_data(const ChartBase::DataArray& data)
     }
 }
 
-void PlPlotImpl::data(const ChartBase::StringDataArray& data)
+void PlPlotImpl::data(const BarChart::StringDataArray& data)
 {
     if (change_if_diff(m_ydata, m_sdata, data))
     {
@@ -121,9 +121,9 @@ void PlPlotImpl::data(const ChartBase::StringDataArray& data)
     }
 }
 
-ChartBase::StringDataArray PlPlotImpl::sdata() const
+BarChart::StringDataArray PlPlotImpl::sdata() const
 {
-    ChartBase::StringDataArray data;
+    BarChart::StringDataArray data;
     if (!m_ydata.empty() && (!m_sdata.empty()))
     {
         std::transform(m_ydata.begin(), m_ydata.end(), m_sdata.begin(), std::back_inserter(data),
@@ -143,7 +143,7 @@ size_t PlPlotImpl::data_size() const
     return 0;
 }
 
-void PlPlotImpl::add_data(const ChartBase::StringDataArray& data)
+void PlPlotImpl::add_data(const BarChart::StringDataArray& data)
 {
     if (!data.empty())
     {

@@ -46,11 +46,11 @@ public:
 
     void add_data(const ChartBase::DataArray& data);
 
-    void data(const ChartBase::StringDataArray& data);
+    void data(const BarChart::StringDataArray& data);
 
-    ChartBase::StringDataArray sdata() const;
+    BarChart::StringDataArray sdata() const;
 
-    void add_data(const ChartBase::StringDataArray& data);
+    void add_data(const BarChart::StringDataArray& data);
 
     void remove_data(uint32_t count);
 

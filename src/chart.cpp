@@ -13,121 +13,82 @@ namespace egt
 inline namespace v1
 {
 
-LineChart::LineChart(const Rect& rect)
-    : ChartBase(rect),
-      m_impl(std::make_unique<detail::PlPlotLineChart>(*this))
+void ChartBase::draw(Painter& painter, const Rect& rect)
 {
-    name("LineChart" + std::to_string(m_widgetid));
+    m_impl->draw(painter, rect);
 }
 
-LineChart::LineChart(Serializer::Properties& props, bool is_derived)
-    : ChartBase(props, true),
-      m_impl(std::make_unique<detail::PlPlotLineChart>(*this))
-{
-    name("LineChart" + std::to_string(m_widgetid));
-
-    deserialize(props);
-
-    if (!is_derived)
-        deserialize_leaf(props);
-}
-
-void LineChart::draw(Painter& painter, const Rect& rect)
-{
-    return m_impl->draw(painter, rect);
-}
-
-void LineChart::data(const DataArray& data)
+void ChartBase::data(const ChartBase::DataArray& data)
 {
     m_impl->data(data);
 }
 
-ChartBase::DataArray LineChart::data() const
-{
-    return m_impl->data();
-}
-
-size_t LineChart::data_size() const
-{
-    return m_impl->data_size();
-}
-
-void LineChart::add_data(const DataArray& data)
+void ChartBase::add_data(const ChartBase::DataArray& data)
 {
     m_impl->add_data(data);
 }
 
-void LineChart::remove_data(uint32_t count)
+ChartBase::DataArray ChartBase::data() const
+{
+    return m_impl->data();
+}
+
+size_t ChartBase::data_size() const
+{
+    return m_impl->data_size();
+}
+
+void ChartBase::remove_data(uint32_t count)
 {
     m_impl->remove_data(count);
 }
 
-void LineChart::clear()
+void ChartBase::clear()
 {
     m_impl->clear();
 }
 
-void LineChart::grid_style(GridFlag flag)
+void ChartBase::grid_style(ChartBase::GridFlag flag)
 {
     m_impl->grid_style(flag);
 }
 
-ChartBase::GridFlag LineChart::grid_style() const
+ChartBase::GridFlag ChartBase::grid_style() const
 {
     return static_cast<ChartBase::GridFlag>(m_impl->grid_style());
 }
 
-void LineChart::grid_width(const int val)
+void ChartBase::grid_width(const int val)
 {
     m_impl->grid_width(val);
 }
 
-int LineChart::grid_width() const
+int ChartBase::grid_width() const
 {
     return m_impl->grid_width();
 }
 
-void LineChart::line_width(const int val)
-{
-    m_impl->line_width(val);
-}
-
-int LineChart::line_width() const
-{
-    return m_impl->line_width();
-}
-
-void LineChart::line_style(LinePattern pattern)
-{
-    m_impl->line_style(static_cast<int>(pattern));
-}
-
-LineChart::LinePattern LineChart::line_style() const
-{
-    return static_cast<LineChart::LinePattern>(m_impl->line_style());
-}
-
-void LineChart::label(const std::string& xlabel, const std::string& ylabel, const std::string& title)
+void ChartBase::label(const std::string& xlabel, const std::string& ylabel, const std::string& title)
 {
     m_impl->label(xlabel, ylabel, title);
 }
 
-std::string LineChart::xlabel() const
+std::string ChartBase::xlabel() const
 {
     return m_impl->xlabel();
 }
 
-std::string LineChart::ylabel() const
+std::string ChartBase::ylabel() const
 {
     return m_impl->ylabel();
 }
 
-std::string LineChart::title() const
+std::string ChartBase::title() const
 {
     return m_impl->title();
 }
 
-void LineChart::resize(const Size& size)
+void ChartBase::resize(const Size& size)
 {
     if (size != this->size())
     {
@@ -136,19 +97,19 @@ void LineChart::resize(const Size& size)
     }
 }
 
-void LineChart::bank(float bank)
+void ChartBase::bank(float bank)
 {
     m_impl->bank(bank);
 }
 
-float LineChart::bank() const
+float ChartBase::bank() const
 {
     return m_impl->bank();
 }
 
-void LineChart::serialize(Serializer& serializer) const
+void ChartBase::serialize(Serializer& serializer) const
 {
-    ChartBase::serialize(serializer);
+    Widget::serialize(serializer);
 
     serializer.add_property("xlabel", xlabel());
 
@@ -157,28 +118,18 @@ void LineChart::serialize(Serializer& serializer) const
     serializer.add_property("title", title());
 
     auto gflag = grid_style();
-    if (gflag == egt::ChartBase::GridFlag::none)
+    if (gflag == GridFlag::none)
         serializer.add_property("gridflags", "none");
-    else if (gflag == egt::ChartBase::GridFlag::box)
+    else if (gflag == GridFlag::box)
         serializer.add_property("gridflags", "box");
-    else if (gflag == egt::ChartBase::GridFlag::box_ticks)
+    else if (gflag == GridFlag::box_ticks)
         serializer.add_property("gridflags", "box_ticks");
-    else if (gflag == egt::ChartBase::GridFlag::box_ticks_coord)
+    else if (gflag == GridFlag::box_ticks_coord)
         serializer.add_property("gridflags", "box_ticks_coord");
-    else if (gflag == egt::ChartBase::GridFlag::box_major_ticks_coord)
+    else if (gflag == GridFlag::box_major_ticks_coord)
         serializer.add_property("gridflags", "box_major_ticks_coord");
-    else if (gflag == egt::ChartBase::GridFlag::box_minor_ticks_coord)
+    else if (gflag == GridFlag::box_minor_ticks_coord)
         serializer.add_property("gridflags", "box_minor_ticks_coord");
-
-    auto lp = line_style();
-    if (lp == egt::LineChart::LinePattern::solid)
-        serializer.add_property("linetype", "solid");
-    else if (lp == egt::LineChart::LinePattern::dotted)
-        serializer.add_property("linetype", "dotted");
-    else if (lp == egt::LineChart::LinePattern::dashes)
-        serializer.add_property("linetype", "dashes");
-
-    serializer.add_property("linewidth", line_width());
 
     serializer.add_property("gridwidth", grid_width());
 
@@ -193,7 +144,7 @@ void LineChart::serialize(Serializer& serializer) const
     }
 }
 
-void LineChart::deserialize(Serializer::Properties& props)
+void ChartBase::deserialize(Serializer::Properties& props)
 {
     props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
     {
@@ -223,7 +174,7 @@ void LineChart::deserialize(Serializer::Properties& props)
             detail::tokenize(value, ',', tokens);
             if (tokens.size() == 2)
             {
-                egt::ChartBase::DataArray data_item;
+                DataArray data_item;
                 data_item.push_back(std::make_pair(std::stod(tokens[0]), std::stod(tokens[1])));
                 add_data(data_item);
             }
@@ -236,22 +187,104 @@ void LineChart::deserialize(Serializer::Properties& props)
         case detail::hash("gridflags"):
         {
             if (value == "none")
-                grid_style(egt::ChartBase::GridFlag::none);
+                grid_style(GridFlag::none);
             else if (value == "box")
-                grid_style(egt::ChartBase::GridFlag::box);
+                grid_style(GridFlag::box);
             else if (value == "box_ticks")
-                grid_style(egt::ChartBase::GridFlag::box_ticks);
+                grid_style(GridFlag::box_ticks);
             else if (value == "box_ticks_coord")
-                grid_style(egt::ChartBase::GridFlag::box_ticks_coord);
+                grid_style(GridFlag::box_ticks_coord);
             else if (value == "box_major_ticks_coord")
-                grid_style(egt::ChartBase::GridFlag::box_major_ticks_coord);
+                grid_style(GridFlag::box_major_ticks_coord);
             else if (value == "box_minor_ticks_coord")
-                grid_style(egt::ChartBase::GridFlag::box_minor_ticks_coord);
+                grid_style(GridFlag::box_minor_ticks_coord);
             else
                 egt::detail::warn("unhandled property {}", name);
 
             break;
         }
+        case detail::hash("gridwidth"):
+        {
+            grid_width(std::stoi(value));
+            break;
+        }
+        default:
+            return false;
+        }
+        return true;
+    }), props.end());
+}
+
+LineChart::LineChart(const Rect& rect)
+    : ChartBase(rect)
+{
+    name("LineChart" + std::to_string(m_widgetid));
+
+    create_impl();
+}
+
+LineChart::LineChart(Serializer::Properties& props, bool is_derived)
+    : ChartBase(props, true)
+{
+    name("LineChart" + std::to_string(m_widgetid));
+
+    create_impl();
+
+    deserialize(props);
+
+    if (!is_derived)
+        deserialize_leaf(props);
+}
+
+void LineChart::create_impl()
+{
+    m_impl = std::make_unique<detail::PlPlotLineChart>(*this);
+}
+
+void LineChart::line_width(const int val)
+{
+    m_impl->line_width(val);
+}
+
+int LineChart::line_width() const
+{
+    return m_impl->line_width();
+}
+
+void LineChart::line_style(LineChart::LinePattern pattern)
+{
+    m_impl->line_style(static_cast<int>(pattern));
+}
+
+LineChart::LinePattern LineChart::line_style() const
+{
+    return static_cast<LineChart::LinePattern>(m_impl->line_style());
+}
+
+void LineChart::serialize(Serializer& serializer) const
+{
+    ChartBase::serialize(serializer);
+
+    auto lp = line_style();
+    if (lp == egt::LineChart::LinePattern::solid)
+        serializer.add_property("linetype", "solid");
+    else if (lp == egt::LineChart::LinePattern::dotted)
+        serializer.add_property("linetype", "dotted");
+    else if (lp == egt::LineChart::LinePattern::dashes)
+        serializer.add_property("linetype", "dashes");
+
+    serializer.add_property("linewidth", line_width());
+}
+
+void LineChart::deserialize(Serializer::Properties& props)
+{
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
+    {
+        auto name = std::get<0>(p);
+        auto value = std::get<1>(p);
+
+        switch (detail::hash(name))
+        {
         case detail::hash("linetype"):
         {
             if (value == "solid")
@@ -269,35 +302,34 @@ void LineChart::deserialize(Serializer::Properties& props)
             line_width(std::stoi(value));
             break;
         }
-        case detail::hash("gridwidth"):
-        {
-            grid_width(std::stoi(value));
-            break;
-        }
         default:
             return false;
         }
         return true;
     }), props.end());
+
+    ChartBase::deserialize(props);
 }
 
 LineChart::LineChart(LineChart&&) noexcept = default;
 LineChart& LineChart::operator=(LineChart&&) noexcept = default;
-
 LineChart::~LineChart() = default;
 
+
 PointChart::PointChart(const Rect& rect)
-    : ChartBase(rect),
-      m_impl(std::make_unique<detail::PlPlotPointChart>(*this))
+    : ChartBase(rect)
 {
     name("PointChart" + std::to_string(m_widgetid));
+
+    create_impl();
 }
 
 PointChart::PointChart(Serializer::Properties& props, bool is_derived)
-    : ChartBase(props, true),
-      m_impl(std::make_unique<detail::PlPlotPointChart>(*this))
+    : ChartBase(props, true)
 {
     name("PointChart" + std::to_string(m_widgetid));
+
+    create_impl();
 
     deserialize(props);
 
@@ -305,39 +337,9 @@ PointChart::PointChart(Serializer::Properties& props, bool is_derived)
         deserialize_leaf(props);
 }
 
-void PointChart::draw(Painter& painter, const Rect& rect)
+void PointChart::create_impl()
 {
-    m_impl->draw(painter, rect);
-}
-
-void PointChart::data(const DataArray& data)
-{
-    m_impl->data(data);
-}
-
-ChartBase::DataArray PointChart::data() const
-{
-    return m_impl->data();
-}
-
-size_t PointChart::data_size() const
-{
-    return m_impl->data_size();
-}
-
-void PointChart::add_data(const DataArray& data)
-{
-    m_impl->add_data(data);
-}
-
-void PointChart::remove_data(uint32_t count)
-{
-    m_impl->remove_data(count);
-}
-
-void PointChart::clear()
-{
-    m_impl->clear();
+    m_impl = std::make_unique<detail::PlPlotPointChart>(*this);
 }
 
 void PointChart::point_type(const PointType ptype)
@@ -350,88 +352,9 @@ PointChart::PointType PointChart::point_type() const
     return static_cast<PointChart::PointType>(m_impl->point_type());
 }
 
-void PointChart::label(const std::string& xlabel, const std::string& ylabel, const std::string& title)
-{
-    m_impl->label(xlabel, ylabel, title);
-}
-
-std::string PointChart::xlabel() const
-{
-    return m_impl->xlabel();
-}
-
-std::string PointChart::ylabel() const
-{
-    return m_impl->ylabel();
-}
-
-std::string PointChart::title() const
-{
-    return m_impl->title();
-}
-
-void PointChart::resize(const Size& size)
-{
-    if (size != this->size())
-    {
-        m_impl->resize();
-        Widget::resize(size);
-    }
-}
-
-void PointChart::bank(float bank)
-{
-    m_impl->bank(bank);
-}
-
-float PointChart::bank() const
-{
-    return m_impl->bank();
-}
-
-void PointChart::grid_style(GridFlag flag)
-{
-    m_impl->grid_style(flag);
-}
-
-ChartBase::GridFlag PointChart::grid_style() const
-{
-    return static_cast<ChartBase::GridFlag>(m_impl->grid_style());
-}
-
-void PointChart::grid_width(const int val)
-{
-    m_impl->grid_width(val);
-}
-
-int PointChart::grid_width() const
-{
-    return m_impl->grid_width();
-}
-
 void PointChart::serialize(Serializer& serializer) const
 {
     ChartBase::serialize(serializer);
-
-    serializer.add_property("xlabel", xlabel());
-
-    serializer.add_property("ylabel", ylabel());
-
-    serializer.add_property("title", title());
-
-    auto gflag = grid_style();
-    if (gflag == egt::ChartBase::GridFlag::none)
-        serializer.add_property("gridflags", "none");
-    else if (gflag == egt::ChartBase::GridFlag::box)
-        serializer.add_property("gridflags", "box");
-    else if (gflag == egt::ChartBase::GridFlag::box_ticks)
-        serializer.add_property("gridflags", "box_ticks");
-    else if (gflag == egt::ChartBase::GridFlag::box_ticks_coord)
-        serializer.add_property("gridflags", "box_ticks_coord");
-    else if (gflag == egt::ChartBase::GridFlag::box_major_ticks_coord)
-        serializer.add_property("gridflags", "box_major_ticks_coord");
-    else if (gflag == egt::ChartBase::GridFlag::box_minor_ticks_coord)
-        serializer.add_property("gridflags", "box_minor_ticks_coord");
 
     auto pt = point_type();
     if (pt == egt::PointChart::PointType::star)
@@ -442,18 +365,6 @@ void PointChart::serialize(Serializer& serializer) const
         serializer.add_property("pointtype", "cross");
     else if (pt == egt::PointChart::PointType::circle)
         serializer.add_property("pointtype", "circle");
-
-    serializer.add_property("gridwidth", grid_width());
-
-    ChartBase::DataArray items = data();
-    if (!items.empty())
-    {
-        for (auto& elem : items)
-        {
-            auto value = fmt::format("{},{}", detail::to_string(elem.first), detail::to_string(elem.second));
-            serializer.add_property("item", value);
-        }
-    }
 }
 
 void PointChart::deserialize(Serializer::Properties& props)
@@ -465,56 +376,6 @@ void PointChart::deserialize(Serializer::Properties& props)
 
         switch (detail::hash(name))
         {
-        case detail::hash("xlabel"):
-        {
-            label(value, ylabel(), title());
-            break;
-        }
-        case detail::hash("ylabel"):
-        {
-            label(xlabel(), value, title());
-            break;
-        }
-        case detail::hash("title"):
-        {
-            label(xlabel(), ylabel(), value);
-            break;
-        }
-        case detail::hash("item"):
-        {
-            std::vector<std::string> tokens;
-            detail::tokenize(value, ',', tokens);
-            if (tokens.size() == 2)
-            {
-                egt::ChartBase::DataArray data_item;
-                data_item.push_back(std::make_pair(std::stod(tokens[0]), std::stod(tokens[1])));
-                add_data(data_item);
-            }
-            else
-            {
-                egt::detail::warn("unhandled property {} : values {}", name, value);
-            }
-            break;
-        }
-        case detail::hash("gridflags"):
-        {
-            if (value == "none")
-                grid_style(egt::ChartBase::GridFlag::none);
-            else if (value == "box")
-                grid_style(egt::ChartBase::GridFlag::box);
-            else if (value == "box_ticks")
-                grid_style(egt::ChartBase::GridFlag::box_ticks);
-            else if (value == "box_ticks_coord")
-                grid_style(egt::ChartBase::GridFlag::box_ticks_coord);
-            else if (value == "box_major_ticks_coord")
-                grid_style(egt::ChartBase::GridFlag::box_major_ticks_coord);
-            else if (value == "box_minor_ticks_coord")
-                grid_style(egt::ChartBase::GridFlag::box_minor_ticks_coord);
-            else
-                egt::detail::warn("unhandled property {}", name);
-
-            break;
-        }
         case detail::hash("pointtype"):
         {
             if (value == "star")
@@ -530,16 +391,13 @@ void PointChart::deserialize(Serializer::Properties& props)
 
             break;
         }
-        case detail::hash("gridwidth"):
-        {
-            grid_width(std::stoi(value));
-            break;
-        }
         default:
             return false;
         }
         return true;
     }), props.end());
+
+    ChartBase::deserialize(props);
 }
 
 PointChart::PointChart(PointChart&&) noexcept = default;
@@ -547,17 +405,19 @@ PointChart& PointChart::operator=(PointChart&&) noexcept = default;
 PointChart::~PointChart() = default;
 
 BarChart::BarChart(const Rect& rect)
-    : ChartBase(rect),
-      m_impl(std::make_unique<detail::PlPlotBarChart>(*this))
+    : ChartBase(rect)
 {
     name("BarChart" + std::to_string(m_widgetid));
+
+    create_impl();
 }
 
 BarChart::BarChart(Serializer::Properties& props, bool is_derived)
-    : ChartBase(props, true),
-      m_impl(std::make_unique<detail::PlPlotBarChart>(*this))
+    : ChartBase(props, true)
 {
     name("BarChart" + std::to_string(m_widgetid));
+
+    create_impl();
 
     deserialize(props);
 
@@ -566,24 +426,26 @@ BarChart::BarChart(Serializer::Properties& props, bool is_derived)
 }
 
 BarChart::BarChart(const Rect& rect, std::unique_ptr<detail::PlPlotImpl>&& impl)
-    : ChartBase(rect),
-      m_impl(std::move(impl))
+    : ChartBase(rect)
 {
     name("BarChart" + std::to_string(m_widgetid));
+
+    m_impl = std::move(impl);
 }
 
 BarChart::BarChart(Serializer::Properties& props, std::unique_ptr<detail::PlPlotImpl>&& impl)
-    : ChartBase(props, true),
-      m_impl(std::move(impl))
+    : ChartBase(props, true)
 {
     name("BarChart" + std::to_string(m_widgetid));
+
+    m_impl = std::move(impl);
 
     deserialize(props);
 }
 
-void BarChart::draw(Painter& painter, const Rect& rect)
+void BarChart::create_impl()
 {
-    m_impl->draw(painter, rect);
+    m_impl = std::make_unique<detail::PlPlotBarChart>(*this);
 }
 
 void BarChart::bar_style(BarPattern pattern)
@@ -596,54 +458,9 @@ BarChart::BarPattern BarChart::bar_style() const
     return static_cast<BarChart::BarPattern>(m_impl->line_style());
 }
 
-void BarChart::label(const std::string& xlabel, const std::string& ylabel, const std::string& title)
-{
-    m_impl->label(xlabel, ylabel, title);
-}
-
-std::string BarChart::xlabel() const
-{
-    return m_impl->xlabel();
-}
-
-std::string BarChart::ylabel() const
-{
-    return m_impl->ylabel();
-}
-
-std::string BarChart::title() const
-{
-    return m_impl->title();
-}
-
-void BarChart::data(const DataArray& data)
-{
-    m_impl->data(data);
-}
-
-ChartBase::DataArray BarChart::data() const
-{
-    return m_impl->data();
-}
-
-size_t BarChart::data_size() const
-{
-    return m_impl->data_size();
-}
-
-void BarChart::add_data(const DataArray& data)
-{
-    m_impl->add_data(data);
-}
-
 void BarChart::data(const StringDataArray& data)
 {
     m_impl->data(data);
-}
-
-ChartBase::StringDataArray BarChart::sdata() const
-{
-    return m_impl->sdata();
 }
 
 void BarChart::add_data(const StringDataArray& data)
@@ -651,79 +468,14 @@ void BarChart::add_data(const StringDataArray& data)
     m_impl->add_data(data);
 }
 
-void BarChart::remove_data(uint32_t count)
+BarChart::StringDataArray BarChart::sdata() const
 {
-    m_impl->remove_data(count);
+    return m_impl->sdata();
 }
-
-void BarChart::clear()
-{
-    m_impl->clear();
-}
-
-void BarChart::grid_style(GridFlag flag)
-{
-    m_impl->grid_style(flag);
-}
-
-ChartBase::GridFlag BarChart::grid_style() const
-{
-    return static_cast<ChartBase::GridFlag>(m_impl->grid_style());
-}
-
-void BarChart::grid_width(const int val)
-{
-    m_impl->grid_width(val);
-}
-
-int BarChart::grid_width() const
-{
-    return m_impl->grid_width();
-}
-
-void BarChart::resize(const Size& size)
-{
-    if (size != this->size())
-    {
-        m_impl->resize();
-        Widget::resize(size);
-    }
-}
-
-void BarChart::bank(float bank)
-{
-    m_impl->bank(bank);
-}
-
-float BarChart::bank() const
-{
-    return m_impl->bank();
-}
-
 
 void BarChart::serialize(Serializer& serializer) const
 {
     ChartBase::serialize(serializer);
-
-    serializer.add_property("xlabel", xlabel());
-
-    serializer.add_property("ylabel", ylabel());
-
-    serializer.add_property("title", title());
-
-    auto gflag = grid_style();
-    if (gflag == egt::ChartBase::GridFlag::none)
-        serializer.add_property("gridflags", "none");
-    else if (gflag == egt::ChartBase::GridFlag::box)
-        serializer.add_property("gridflags", "box");
-    else if (gflag == egt::ChartBase::GridFlag::box_ticks)
-        serializer.add_property("gridflags", "box_ticks");
-    else if (gflag == egt::ChartBase::GridFlag::box_ticks_coord)
-        serializer.add_property("gridflags", "box_ticks_coord");
-    else if (gflag == egt::ChartBase::GridFlag::box_major_ticks_coord)
-        serializer.add_property("gridflags", "box_major_ticks_coord");
-    else if (gflag == egt::ChartBase::GridFlag::box_minor_ticks_coord)
-        serializer.add_property("gridflags", "box_minor_ticks_coord");
 
     auto pt = bar_style();
     if (pt == egt::BarChart::BarPattern::solid)
@@ -735,27 +487,13 @@ void BarChart::serialize(Serializer& serializer) const
     else if (pt == egt::BarChart::BarPattern::boxes)
         serializer.add_property("bartype", "boxes");
 
-    serializer.add_property("gridwidth", grid_width());
-
-    ChartBase::DataArray items = data();
-    if (!items.empty())
+    BarChart::StringDataArray sitems = sdata();
+    if (!sitems.empty())
     {
-        for (auto& elem : items)
+        for (auto& selem : sitems)
         {
-            auto value = fmt::format("{},{}", detail::to_string(elem.first), detail::to_string(elem.second));
+            auto value = fmt::format("{},{}", detail::to_string(selem.first), detail::to_string(selem.second));
             serializer.add_property("item", value);
-        }
-    }
-    else
-    {
-        ChartBase::StringDataArray sitems = sdata();
-        if (!sitems.empty())
-        {
-            for (auto& selem : sitems)
-            {
-                auto value = fmt::format("{},{}", detail::to_string(selem.first), detail::to_string(selem.second));
-                serializer.add_property("item", value);
-            }
         }
     }
 }
@@ -769,21 +507,6 @@ void BarChart::deserialize(Serializer::Properties& props)
 
         switch (detail::hash(name))
         {
-        case detail::hash("xlabel"):
-        {
-            label(value, ylabel(), title());
-            break;
-        }
-        case detail::hash("ylabel"):
-        {
-            label(xlabel(), value, title());
-            break;
-        }
-        case detail::hash("title"):
-        {
-            label(xlabel(), ylabel(), value);
-            break;
-        }
         case detail::hash("item"):
         {
             std::vector<std::string> tokens;
@@ -798,7 +521,7 @@ void BarChart::deserialize(Serializer::Properties& props)
                 }
                 catch (const std::exception& e)
                 {
-                    ChartBase::StringDataArray sdata_item;
+                    BarChart::StringDataArray sdata_item;
                     sdata_item.push_back(std::make_pair(std::stod(tokens[0]), tokens[1]));
                     add_data(sdata_item);
                 }
@@ -807,25 +530,6 @@ void BarChart::deserialize(Serializer::Properties& props)
             {
                 egt::detail::warn("unhandled property {} : values {}", name, value);
             }
-            break;
-        }
-        case detail::hash("gridflags"):
-        {
-            if (value == "none")
-                grid_style(egt::ChartBase::GridFlag::none);
-            else if (value == "box")
-                grid_style(egt::ChartBase::GridFlag::box);
-            else if (value == "box_ticks")
-                grid_style(egt::ChartBase::GridFlag::box_ticks);
-            else if (value == "box_ticks_coord")
-                grid_style(egt::ChartBase::GridFlag::box_ticks_coord);
-            else if (value == "box_major_ticks_coord")
-                grid_style(egt::ChartBase::GridFlag::box_major_ticks_coord);
-            else if (value == "box_minor_ticks_coord")
-                grid_style(egt::ChartBase::GridFlag::box_minor_ticks_coord);
-            else
-                egt::detail::warn("unhandled property {}", name);
-
             break;
         }
         case detail::hash("bartype"):
@@ -843,16 +547,13 @@ void BarChart::deserialize(Serializer::Properties& props)
 
             break;
         }
-        case detail::hash("gridwidth"):
-        {
-            grid_width(std::stoi(value));
-            break;
-        }
         default:
             return false;
         }
         return true;
     }), props.end());
+
+    ChartBase::deserialize(props);
 }
 
 BarChart::BarChart(BarChart&&) noexcept = default;
@@ -913,7 +614,7 @@ std::string PieChart::title() const
     return m_impl->title();
 }
 
-void PieChart::data(const StringDataArray& data)
+void PieChart::data(const PieChart::StringDataArray& data)
 {
     m_impl->data(data);
 }
@@ -928,7 +629,7 @@ size_t PieChart::data_size() const
     return m_impl->data_size();
 }
 
-void PieChart::add_data(const StringDataArray& data)
+void PieChart::add_data(const PieChart::StringDataArray& data)
 {
     m_impl->add_data(data);
 }
@@ -958,7 +659,7 @@ void PieChart::serialize(Serializer& serializer) const
 
     serializer.add_property("title", title());
 
-    StringDataArray items = sdata();
+    PieChart::StringDataArray items = sdata();
     if (!items.empty())
     {
         for (auto& elem : items)
@@ -989,7 +690,7 @@ void PieChart::deserialize(Serializer::Properties& props)
             detail::tokenize(value, ',', tokens);
             if (tokens.size() == 2)
             {
-                StringDataArray data_item;
+                PieChart::StringDataArray data_item;
                 data_item.push_back(std::make_pair(std::stod(tokens[0]), tokens[1]));
                 add_data(data_item);
             }
