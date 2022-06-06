@@ -46,11 +46,11 @@ static const std::vector<std::pair<egt::EasingFunc, std::string>> easing_functio
     {egt::easing_cubic_bezier(), "cubic bezier"}
 };
 
-static egt::LineChart::DataArray create_data(const egt::EasingFunc& easing)
+static egt::ChartItemArray create_data(const egt::EasingFunc& easing)
 {
-    egt::LineChart::DataArray data;
+    egt::ChartItemArray data;
     for (float i = 0.; i <= 1.; i += .001)
-        data.emplace_back(i, egt::detail::interpolate(easing, i, 0.f, 100.f));
+        data.add(i, egt::detail::interpolate(easing, i, 0.f, 100.f));
     return data;
 }
 

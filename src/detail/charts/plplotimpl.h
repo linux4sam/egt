@@ -38,19 +38,13 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) = 0;
 
-    void data(const ChartBase::DataArray& data);
+    void data(const ChartItemArray& data);
 
-    ChartBase::DataArray data() const;
+    void add_data(const ChartItemArray& data);
+
+    ChartItemArray data() const;
 
     size_t data_size() const;
-
-    void add_data(const ChartBase::DataArray& data);
-
-    void data(const BarChart::StringDataArray& data);
-
-    BarChart::StringDataArray sdata() const;
-
-    void add_data(const BarChart::StringDataArray& data);
 
     void remove_data(uint32_t count);
 

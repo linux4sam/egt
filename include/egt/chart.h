@@ -25,6 +25,93 @@ class PlPlotImpl;
 class PlPlotPieChart;
 }
 
+class ChartItemArray
+{
+public:
+    ChartItemArray()
+    {}
+
+    using DataArray = std::deque<std::pair<double, double>>;
+
+    using StringDataArray = std::deque<std::pair<double, std::string>>;
+
+    bool add(const double& data, const double& data1)
+    {
+        /**
+         * both m_sdata and m_data cannot exist together
+         */
+        if (m_sdata.empty())
+        {
+            m_data.emplace_back(std::make_pair(data, data1));
+            return true;
+        }
+        return false;
+    }
+
+    bool add(const double& data, const std::string& data1)
+    {
+        /**
+         * both m_sdata and m_data cannot exist together
+         */
+        if (m_data.empty())
+        {
+            m_sdata.emplace_back(std::make_pair(data, data1));
+            return true;
+        }
+        return false;
+    }
+
+    void data(DataArray& data)
+    {
+        m_data = data;
+    }
+
+    void data(StringDataArray& data)
+    {
+        m_sdata = data;
+    }
+
+    DataArray get_data()
+    {
+        return m_data;
+    }
+
+    StringDataArray get_sdata()
+    {
+        return m_sdata;
+    }
+
+    DataArray get_data() const
+    {
+        return m_data;
+    }
+
+    StringDataArray get_sdata() const
+    {
+        return m_sdata;
+    }
+
+    EGT_NODISCARD bool IsStringArray() const
+    {
+        if (!m_sdata.empty())
+            return true;
+
+        return false;
+    }
+
+    void clear()
+    {
+        m_data.clear();
+        m_sdata.clear();
+    }
+
+    ~ChartItemArray() = default;
+
+private:
+    DataArray m_data;
+    StringDataArray m_sdata;
+};
+
 /**
  * Abstract base chart class.
  */
@@ -53,9 +140,6 @@ public:
         box_minor_ticks_coord = 3,
     };
 
-    /// A data pair array.
-    using DataArray = std::deque<std::pair<double, double>>;
-
     void draw(Painter& painter, const Rect& rect) override;
 
     virtual void create_impl() = 0;
@@ -65,21 +149,21 @@ public:
      *
      * @param[in] data is a data items for Chart.
      */
-    void data(const DataArray& data);
+    void data(const ChartItemArray& data);
 
     /**
      * Add data items to an existing array.
      *
      * @param[in] data is a data items for Chart.
      */
-    void add_data(const DataArray& data);
+    void add_data(const ChartItemArray& data);
 
     /**
      * Get the data points set for Chart.
      *
      * @return DataArray set for Chart.
      */
-    DataArray data() const;
+    ChartItemArray data() const;
 
     /**
     * Get the number of data points.
@@ -361,9 +445,6 @@ public:
         boxes = 7,
     };
 
-    /// A data pair array for strings.
-    using StringDataArray = std::deque<std::pair<double, std::string>>;
-
     /**
      * Construct a BarChart with the specified size.
      *
@@ -389,29 +470,6 @@ public:
     BarChart& operator=(BarChart&&) noexcept;
 
     void create_impl() override;
-
-    using ChartBase::data;
-    /**
-     * Set a new set of string array data to BarChart.
-     *
-     * @param[in] data is a data items for BarChart.
-     */
-    void data(const StringDataArray& data);
-
-    using ChartBase::add_data;
-    /**
-     * Add data items to an existing string array.
-     *
-     * @param[in] data is a data items for BarChart.
-     */
-    void add_data(const StringDataArray& data);
-
-    /**
-     * Get the data points set for BarChart.
-     *
-     * @return StringDataArray set for BarChart.
-     */
-    StringDataArray sdata() const;
 
     /**
      * Set bar style.
@@ -497,10 +555,6 @@ public:
 class EGT_API PieChart: public Widget
 {
 public:
-
-    /// A data pair array for strings.
-    using StringDataArray = BarChart::StringDataArray;
-
     /**
      * Construct a PieChart with the specified size.
      *
@@ -542,14 +596,14 @@ public:
      *
      * @param[in] data is a data items for PieChart.
      */
-    void data(const StringDataArray& data);
+    void data(const ChartItemArray& data);
 
     /**
      * Get the data points set for PieChart.
      *
      * @return StringDataArray set for PieChart.
      */
-    StringDataArray sdata() const;
+    ChartItemArray data() const;
 
     /**
      * Get the number of data points.
@@ -561,7 +615,7 @@ public:
      *
      * @param[in] data is a data items for PieChart.
      */
-    void add_data(const StringDataArray& data);
+    void add_data(const ChartItemArray& data);
 
     /**
      * Remove data items from top in an array.

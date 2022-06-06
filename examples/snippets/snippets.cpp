@@ -326,7 +326,7 @@ static const std::pair<std::string, std::function<int(egt::Application& app)>> e
             } theme;
 
             theme.apply();
-            window.theme(theme);
+            egt::global_theme(std::make_unique<egt::Theme>(theme));
 
             egt::Button button0(window, "Button");
             center(left(button0));
@@ -344,7 +344,7 @@ static const std::pair<std::string, std::function<int(egt::Application& app)>> e
             /// @[theme2]
             egt::TopWindow window;
 
-            auto theme = window.theme();
+            auto theme = egt::global_theme();
             theme.palette().set(egt::Palette::ColorId::button_bg,
                                 egt::Palette::GroupId::normal,
                                 egt::Palette::green);
@@ -352,7 +352,7 @@ static const std::pair<std::string, std::function<int(egt::Application& app)>> e
                                 egt::Palette::GroupId::normal,
                                 egt::Palette::blue);
 
-            window.theme(theme);
+            egt::global_theme(std::make_unique<egt::Theme>(theme));
 
             egt::Button button0(window, "Button");
             center(left(button0));

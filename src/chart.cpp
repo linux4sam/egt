@@ -18,17 +18,17 @@ void ChartBase::draw(Painter& painter, const Rect& rect)
     m_impl->draw(painter, rect);
 }
 
-void ChartBase::data(const ChartBase::DataArray& data)
+void ChartBase::data(const ChartItemArray& data)
 {
     m_impl->data(data);
 }
 
-void ChartBase::add_data(const ChartBase::DataArray& data)
+void ChartBase::add_data(const ChartItemArray& data)
 {
     m_impl->add_data(data);
 }
 
-ChartBase::DataArray ChartBase::data() const
+ChartItemArray ChartBase::data() const
 {
     return m_impl->data();
 }
@@ -90,17 +90,17 @@ std::string ChartBase::title() const
 
 void ChartBase::xlabel(const std::string& xlabel)
 {
-	m_impl->label(xlabel, ylabel(), title());
+    m_impl->label(xlabel, ylabel(), title());
 }
 
 void ChartBase::ylabel(const std::string& ylabel)
 {
-	m_impl->label(xlabel(), ylabel, title());
+    m_impl->label(xlabel(), ylabel, title());
 }
 
 void ChartBase::title(const std::string& title)
 {
-	m_impl->label(xlabel(), ylabel(), title);
+    m_impl->label(xlabel(), ylabel(), title);
 }
 
 void ChartBase::resize(const Size& size)
@@ -148,10 +148,10 @@ void ChartBase::serialize(Serializer& serializer) const
 
     serializer.add_property("gridwidth", grid_width());
 
-    ChartBase::DataArray items = data();
-    if (!items.empty())
+    ChartItemArray items = data();
+    if (!items.get_data().empty())
     {
-        for (auto& elem : items)
+        for (auto& elem : items.get_data())
         {
             auto value = fmt::format("{},{}", detail::to_string(elem.first), detail::to_string(elem.second));
             serializer.add_property("item", value);
@@ -189,8 +189,8 @@ void ChartBase::deserialize(Serializer::Properties& props)
             detail::tokenize(value, ',', tokens);
             if (tokens.size() == 2)
             {
-                DataArray data_item;
-                data_item.push_back(std::make_pair(std::stod(tokens[0]), std::stod(tokens[1])));
+                ChartItemArray data_item;
+                data_item.add(std::stod(tokens[0]), std::stod(tokens[1]));
                 add_data(data_item);
             }
             else
@@ -473,21 +473,6 @@ BarChart::BarPattern BarChart::bar_style() const
     return static_cast<BarChart::BarPattern>(m_impl->line_style());
 }
 
-void BarChart::data(const StringDataArray& data)
-{
-    m_impl->data(data);
-}
-
-void BarChart::add_data(const StringDataArray& data)
-{
-    m_impl->add_data(data);
-}
-
-BarChart::StringDataArray BarChart::sdata() const
-{
-    return m_impl->sdata();
-}
-
 void BarChart::serialize(Serializer& serializer) const
 {
     ChartBase::serialize(serializer);
@@ -502,10 +487,10 @@ void BarChart::serialize(Serializer& serializer) const
     else if (pt == egt::BarChart::BarPattern::boxes)
         serializer.add_property("bartype", "boxes");
 
-    BarChart::StringDataArray sitems = sdata();
-    if (!sitems.empty())
+    ChartItemArray sitems = data();
+    if (!sitems.get_sdata().empty())
     {
-        for (auto& selem : sitems)
+        for (auto& selem : sitems.get_sdata())
         {
             auto value = fmt::format("{},{}", detail::to_string(selem.first), detail::to_string(selem.second));
             serializer.add_property("item", value);
@@ -524,21 +509,20 @@ void BarChart::deserialize(Serializer::Properties& props)
         {
         case detail::hash("item"):
         {
+            ChartItemArray data;
             std::vector<std::string> tokens;
             detail::tokenize(value, ',', tokens);
             if (tokens.size() == 2)
             {
                 try
                 {
-                    egt::ChartBase::DataArray data_item;
-                    data_item.push_back(std::make_pair(std::stod(tokens[0]), std::stod(tokens[1])));
-                    add_data(data_item);
+                    data.add(std::stod(tokens[0]), std::stod(tokens[1]));
+                    add_data(data);
                 }
                 catch (const std::exception& e)
                 {
-                    BarChart::StringDataArray sdata_item;
-                    sdata_item.push_back(std::make_pair(std::stod(tokens[0]), tokens[1]));
-                    add_data(sdata_item);
+                    data.add(std::stod(tokens[0]), tokens[1]);
+                    add_data(data);
                 }
             }
             else
@@ -629,14 +613,14 @@ std::string PieChart::title() const
     return m_impl->title();
 }
 
-void PieChart::data(const PieChart::StringDataArray& data)
+void PieChart::data(const ChartItemArray& data)
 {
     m_impl->data(data);
 }
 
-PieChart::StringDataArray PieChart::sdata() const
+ChartItemArray PieChart::data() const
 {
-    return m_impl->sdata();
+    return m_impl->data();
 }
 
 size_t PieChart::data_size() const
@@ -644,7 +628,7 @@ size_t PieChart::data_size() const
     return m_impl->data_size();
 }
 
-void PieChart::add_data(const PieChart::StringDataArray& data)
+void PieChart::add_data(const ChartItemArray& data)
 {
     m_impl->add_data(data);
 }
@@ -674,10 +658,10 @@ void PieChart::serialize(Serializer& serializer) const
 
     serializer.add_property("title", title());
 
-    PieChart::StringDataArray items = sdata();
-    if (!items.empty())
+    ChartItemArray items = data();
+    if (!items.get_sdata().empty())
     {
-        for (auto& elem : items)
+        for (auto& elem : items.get_sdata())
         {
             auto value = fmt::format("{},{}", detail::to_string(elem.first), detail::to_string(elem.second));
             serializer.add_property("item", value);
@@ -705,8 +689,8 @@ void PieChart::deserialize(Serializer::Properties& props)
             detail::tokenize(value, ',', tokens);
             if (tokens.size() == 2)
             {
-                PieChart::StringDataArray data_item;
-                data_item.push_back(std::make_pair(std::stod(tokens[0]), tokens[1]));
+                ChartItemArray data_item;
+                data_item.add(std::stod(tokens[0]), tokens[1]);
                 add_data(data_item);
             }
             else

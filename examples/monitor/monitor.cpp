@@ -104,19 +104,25 @@ int main(int argc, char** argv)
         static const int chart_limit = 30;
 
         auto i1 = tools.usage();
-        line1.add_data({{sample_counter, i1}});
+        egt::ChartItemArray data1;
+        data1.add(sample_counter, i1);
+        line1.add_data(data1);
         while (line1.data_size() > chart_limit)
             line1.remove_data(1);
         label3.text(egt::detail::format(i1, 0));
 
         auto i2 = dist(e1);
-        line2.add_data({{sample_counter, i2}});
+        egt::ChartItemArray data2;
+        data2.add(sample_counter, i2);
+        line2.add_data(data2);
         while (line2.data_size() > chart_limit)
             line2.remove_data(1);
         label4.text(egt::detail::format(i2, 0));
 
         auto i3 = dist(e1);
-        line3.add_data({{sample_counter, i3}});
+        egt::ChartItemArray data3;
+        data3.add(sample_counter, i3);
+        line3.add_data(data3);
         while (line3.data_size() > chart_limit)
             line3.remove_data(1);
         label5.text(egt::detail::format(i3, 0));

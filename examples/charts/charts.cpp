@@ -66,12 +66,12 @@ struct PiePage : public egt::NotebookTab
         auto pie = std::make_shared<egt::PieChart>();
         pie->title("Pie Chart");
 
-        egt::PieChart::StringDataArray data;
+        egt::ChartItemArray data;
         const int pdata[] = { 5, 10, 15, 20, 4, 8, 16, 12};
         size_t count = 0;
         for (auto& i : pdata)
         {
-            data.push_back(make_pair(i, ("label" + std::to_string(count++))));
+            data.add(i, ("label" + std::to_string(count++)));
         }
         pie->data(data);
         sizer->add(egt::expand(pie));
@@ -88,10 +88,10 @@ struct PiePage : public egt::NotebookTab
             static bool btn_flag = true;
             if (btn_flag)
             {
-                egt::PieChart::StringDataArray data1;
+                egt::ChartItemArray data1;
                 static size_t i = 1;
-                data1.push_back(std::make_pair(random_item(1, 25), "label" + std::to_string(++i)));
-                data1.push_back(std::make_pair(random_item(1, 10), "label" + std::to_string(++i)));
+                data1.add(random_item(1, 25), "label" + std::to_string(++i));
+                data1.add(random_item(1, 10), "label" + std::to_string(++i));
                 pie->add_data(data1);
                 btn1->image(egt::Image("file:rm.png"));
                 btn_flag = false;
@@ -151,10 +151,10 @@ struct Points : public egt::NotebookTab
         auto csizer = std::make_shared<egt::HorizontalBoxSizer>();
         sizer->add(expand_horizontal(csizer));
 
-        egt::PointChart::DataArray data;
+        egt::ChartItemArray data;
         for (int i = 0; i < 101; i++)
         {
-            data.push_back(std::make_pair(i, random_item(1, 100)));
+            data.add(i, random_item(1, 100));
         }
         point->data(data);
 
@@ -167,11 +167,11 @@ struct Points : public egt::NotebookTab
             static bool btn_flag = true;
             if (btn_flag)
             {
-                egt::PointChart::DataArray data1;
+                egt::ChartItemArray data1;
                 static int n = 101;
                 for (int i = n ; i < (n + 10); i++)
                 {
-                    data1.push_back(std::make_pair(i, random_item(1, 125)));
+                    data1.add(i, random_item(1, 125));
                 }
                 point->add_data(data1);
                 n += 10;
@@ -234,20 +234,20 @@ struct HorizontalBarPage : public egt::NotebookTab
         if (sdata)
         {
             bar->label("Sales", "Months", "Horizontal BarChart-2");
-            egt::HorizontalBarChart::StringDataArray str_data;
+            egt::ChartItemArray str_data;
             for (const auto& i : months)
             {
-                str_data.push_back(std::make_pair(random_item(1, 50), i));
+                str_data.add(random_item(1, 50), i);
             }
             bar->data(str_data);
         }
         else
         {
             bar->label("Sales", "Years", "Horizontal Bar Chart");
-            egt::HorizontalBarChart::DataArray data;
+            egt::ChartItemArray data;
             for (int i = 0; i < 10; i++)
             {
-                data.push_back(std::make_pair(random_item(1, 50), (2010 + i)));
+                data.add(random_item(1, 50), (2010 + i));
             }
             bar->data(data);
         }
@@ -263,9 +263,9 @@ struct HorizontalBarPage : public egt::NotebookTab
             {
                 if (sdata)
                 {
-                    egt::HorizontalBarChart::StringDataArray data1;
+                    egt::ChartItemArray data1;
                     static size_t i = 0;
-                    data1.push_back(std::make_pair(random_item(1, 150), months[i++]));
+                    data1.add(random_item(1, 150), months[i++]);
                     bar->add_data(data1);
 
                     if (i >= egt::detail::size(months))
@@ -273,9 +273,9 @@ struct HorizontalBarPage : public egt::NotebookTab
                 }
                 else
                 {
-                    egt::BarChart::DataArray data1;
+                    egt::ChartItemArray data1;
                     static int year = 2010;
-                    data1.push_back(std::make_pair(random_item(1, 50), year));
+                    data1.add(random_item(1, 50), year);
                     bar->add_data(data1);
                     year++;
                 }
@@ -305,20 +305,20 @@ struct VerticalBarPage : public egt::NotebookTab
         if (sdata)
         {
             bar->label("Months", "Sales", "Vertical Bar Chart-2");
-            egt::BarChart::StringDataArray str_data;
+            egt::ChartItemArray str_data;
             for (const auto& i : months)
             {
-                str_data.push_back(std::make_pair(random_item(1, 50), i));
+                str_data.add(random_item(1, 50), i);
             }
             bar->data(str_data);
         }
         else
         {
             bar->label("Year", "Sales", "Vertical Bar Chart");
-            egt::BarChart::DataArray data;
+            egt::ChartItemArray data;
             for (int i = 0; i < 10; i++)
             {
-                data.push_back(std::make_pair((1980 + i), random_item(1, 50)));
+                data.add((1980 + i), random_item(1, 50));
             }
             bar->data(data);
         }
@@ -335,8 +335,8 @@ struct VerticalBarPage : public egt::NotebookTab
                 if (sdata)
                 {
                     static size_t i = 0;
-                    egt::BarChart::StringDataArray str_data1;
-                    str_data1.push_back(std::make_pair(random_item(1, 50), months[i++]));
+                    egt::ChartItemArray str_data1;
+                    str_data1.add(random_item(1, 50), months[i++]);
                     bar->add_data(str_data1);
 
                     if (i >= egt::detail::size(months))
@@ -344,9 +344,9 @@ struct VerticalBarPage : public egt::NotebookTab
                 }
                 else
                 {
-                    egt::BarChart::DataArray data1;
+                    egt::ChartItemArray data1;
                     static int year = 1990;
-                    data1.push_back(std::make_pair(year, random_item(1, 50)));
+                    data1.add(year, random_item(1, 50));
                     bar->add_data(data1);
                     year++;
                 }
@@ -428,18 +428,18 @@ struct LineChartPage : public egt::NotebookTab
 
         sizer->add(egt::expand(line));
 
-        egt::LineChart::DataArray data;
+        egt::ChartItemArray data;
         for (auto i = 0; i < 6283; i += 200)
         {
             if (type == LineChartType::Cosine)
             {
                 line->label("x-axis", "y-axis", "Cosine Chart");
-                data.push_back(std::make_pair(i / 1000., std::cos(i / 1000.)));
+                data.add((i / 1000.), std::cos(i / 1000.));
             }
             else if (type == LineChartType::Sine)
             {
                 line->label("x-axis", "y-axis", "Sine Chart");
-                data.push_back(std::make_pair(i / 1000., std::sin(i / 1000.)));
+                data.add((i / 1000.), std::sin(i / 1000.));
             }
         }
         line->data(data);
@@ -453,14 +453,14 @@ struct LineChartPage : public egt::NotebookTab
             static bool btn_flag = true;
             if (btn_flag)
             {
-                egt::LineChart::DataArray data1;
+                egt::ChartItemArray data1;
                 if (type == LineChartType::Cosine)
                 {
                     static int ci = 6283;
                     static int csize = 4;
                     for (; ci < 3141 * csize; ci += 200)
                     {
-                        data1.push_back(std::make_pair(ci / 1000., std::cos(ci / 1000.)));
+                        data1.add((ci / 1000.), std::cos(ci / 1000.));
                     }
                     line->add_data(data1);
                     csize ++;
@@ -471,7 +471,7 @@ struct LineChartPage : public egt::NotebookTab
                     static int ssize = 4;
                     for (; si < 3141 * ssize; si += 200)
                     {
-                        data1.push_back(std::make_pair(si / 1000., std::sin(si / 1000.)));
+                        data1.add((si / 1000.), std::sin(si / 1000.));
                     }
                     line->add_data(data1);
                     ssize ++;

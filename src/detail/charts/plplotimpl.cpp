@@ -63,73 +63,86 @@ inline bool change_if_diff(T1& first, T2& second, const T3& to)
     return diff;
 }
 
-void PlPlotImpl::data(const ChartBase::DataArray& data)
+void PlPlotImpl::data(const ChartItemArray& data)
 {
-    if (change_if_diff(m_xdata, m_ydata, data))
+    if (data.IsStringArray())
     {
-        m_sdata.clear();
-
-        plplot_verify_viewport();
-
-        invoke_damage();
+        auto sdata = data.get_sdata();
+        if (change_if_diff(m_ydata, m_sdata, sdata))
+        {
+            m_xdata.clear();
+            plplot_verify_viewport();
+            invoke_damage();
+        }
+    }
+    else
+    {
+        auto cdata = data.get_data();
+        if (change_if_diff(m_xdata, m_ydata, cdata))
+        {
+            m_sdata.clear();
+            plplot_verify_viewport();
+            invoke_damage();
+        }
     }
 }
 
-ChartBase::DataArray PlPlotImpl::data() const
+ChartItemArray PlPlotImpl::data() const
 {
-    ChartBase::DataArray data;
+    ChartItemArray data;
     if (!m_xdata.empty() && (!m_ydata.empty()))
     {
         int size = std::min(m_xdata.size(), m_ydata.size());
         for (int i = 0; i < size; i++)
-            data.emplace_back(m_xdata[i], m_ydata[i]);
+            data.add(m_xdata[i], m_ydata[i]);
+    }
+    else if (!m_ydata.empty() && (!m_sdata.empty()))
+    {
+        int size = std::min(m_ydata.size(), m_sdata.size());
+        for (int i = 0; i < size; i++)
+            data.add(m_ydata[i], m_sdata[i]);
     }
     return data;
 }
 
-void PlPlotImpl::add_data(const ChartBase::DataArray& data)
+void PlPlotImpl::add_data(const ChartItemArray& data)
 {
-    if (!data.empty())
+    if ((!data.get_data().empty()) || (!data.get_sdata().empty()))
     {
-        /**
-         * clear m_sdata both m_sdata and m_xdata cannot
-         * exist together
-         */
-        m_sdata.clear();
 
-        for (auto& elem : data)
+        if (!data.IsStringArray())
         {
-            m_xdata.push_back(elem.first);
-            m_ydata.push_back(elem.second);
+            /**
+             * clear m_sdata both m_sdata and m_xdata cannot
+             * exist together
+             */
+            m_sdata.clear();
+
+            for (auto& elem : data.get_data())
+            {
+                m_xdata.push_back(elem.first);
+                m_ydata.push_back(elem.second);
+            }
+        }
+        else
+        {
+            /**
+             * clear m_xdata both m_sdata and m_xdata cannot
+             * exist together
+             */
+            m_xdata.clear();
+
+            for (auto& elem : data.get_sdata())
+            {
+                m_sdata.push_back(elem.second);
+                m_ydata.push_back(elem.first);
+            }
         }
 
         plplot_verify_viewport();
-
         invoke_damage();
     }
-}
-
-void PlPlotImpl::data(const BarChart::StringDataArray& data)
-{
-    if (change_if_diff(m_ydata, m_sdata, data))
-    {
-        m_xdata.clear();
-
-        plplot_verify_viewport();
-
-        invoke_damage();
-    }
-}
-
-BarChart::StringDataArray PlPlotImpl::sdata() const
-{
-    BarChart::StringDataArray data;
-    if (!m_ydata.empty() && (!m_sdata.empty()))
-    {
-        std::transform(m_ydata.begin(), m_ydata.end(), m_sdata.begin(), std::back_inserter(data),
-        [](int x, std::string str) { return std::make_pair(x, str); });
-    }
-    return data;
+    return;
 }
 
 size_t PlPlotImpl::data_size() const
@@ -141,28 +154,6 @@ size_t PlPlotImpl::data_size() const
         return m_sdata.size();
 
     return 0;
-}
-
-void PlPlotImpl::add_data(const BarChart::StringDataArray& data)
-{
-    if (!data.empty())
-    {
-        /**
-         * clear m_xdata both m_sdata and m_xdata cannot
-         * exist together
-         */
-        m_xdata.clear();
-
-        for (auto& elem : data)
-        {
-            m_sdata.push_back(elem.second);
-            m_ydata.push_back(elem.first);
-        }
-
-        plplot_verify_viewport();
-
-        invoke_damage();
-    }
 }
 
 void PlPlotImpl::remove_data(uint32_t count)
