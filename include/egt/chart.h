@@ -148,6 +148,20 @@ public:
     std::string title() const;
 
     /**
+     * Set chart x-axis label.
+     */
+    void xlabel(const std::string& xlabel);
+    /**
+     * Set chart y-axis label.
+     */
+    void ylabel(const std::string& ylabel);
+
+    /**
+     * Set chart title.
+     */
+    void title(const std::string& title);
+
+    /**
      * Resize the Chart.
      *
      * Change width and height of the Chart.

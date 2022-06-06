@@ -88,6 +88,21 @@ std::string ChartBase::title() const
     return m_impl->title();
 }
 
+void ChartBase::xlabel(const std::string& xlabel)
+{
+	m_impl->label(xlabel, ylabel(), title());
+}
+
+void ChartBase::ylabel(const std::string& ylabel)
+{
+	m_impl->label(xlabel(), ylabel, title());
+}
+
+void ChartBase::title(const std::string& title)
+{
+	m_impl->label(xlabel(), ylabel(), title);
+}
+
 void ChartBase::resize(const Size& size)
 {
     if (size != this->size())
