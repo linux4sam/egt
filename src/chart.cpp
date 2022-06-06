@@ -326,10 +326,7 @@ void LineChart::deserialize(Serializer::Properties& props)
     ChartBase::deserialize(props);
 }
 
-LineChart::LineChart(LineChart&&) noexcept = default;
-LineChart& LineChart::operator=(LineChart&&) noexcept = default;
 LineChart::~LineChart() = default;
-
 
 PointChart::PointChart(const Rect& rect)
     : ChartBase(rect)
@@ -415,8 +412,6 @@ void PointChart::deserialize(Serializer::Properties& props)
     ChartBase::deserialize(props);
 }
 
-PointChart::PointChart(PointChart&&) noexcept = default;
-PointChart& PointChart::operator=(PointChart&&) noexcept = default;
 PointChart::~PointChart() = default;
 
 BarChart::BarChart(const Rect& rect)
@@ -555,8 +550,6 @@ void BarChart::deserialize(Serializer::Properties& props)
     ChartBase::deserialize(props);
 }
 
-BarChart::BarChart(BarChart&&) noexcept = default;
-BarChart& BarChart::operator=(BarChart&&) noexcept = default;
 BarChart::~BarChart() = default;
 
 HorizontalBarChart::HorizontalBarChart(const Rect& rect)
@@ -573,9 +566,6 @@ HorizontalBarChart::HorizontalBarChart(Serializer::Properties& props, bool is_de
     if (!is_derived)
         deserialize_leaf(props);
 }
-
-HorizontalBarChart::HorizontalBarChart(HorizontalBarChart&&) noexcept = default;
-HorizontalBarChart& HorizontalBarChart::operator=(HorizontalBarChart&&) noexcept = default;
 
 HorizontalBarChart::~HorizontalBarChart() = default;
 
@@ -705,9 +695,6 @@ void PieChart::deserialize(Serializer::Properties& props)
         return true;
     }), props.end());
 }
-
-PieChart::PieChart(PieChart&&) noexcept = default;
-PieChart& PieChart::operator=(PieChart&&) noexcept = default;
 
 PieChart::~PieChart() = default;
 

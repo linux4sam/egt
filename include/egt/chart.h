@@ -310,8 +310,8 @@ public:
 
     LineChart(const LineChart&) = delete;
     LineChart& operator=(const LineChart&) = delete;
-    LineChart(LineChart&&) noexcept;
-    LineChart& operator=(LineChart&&) noexcept;
+    LineChart(LineChart&&) noexcept = default;
+    LineChart& operator=(LineChart&&) noexcept = default;
 
     void create_impl() override;
 
@@ -394,8 +394,8 @@ public:
 
     PointChart(const PointChart&) = delete;
     PointChart& operator=(const PointChart&) = delete;
-    PointChart(PointChart&&) noexcept;
-    PointChart& operator=(PointChart&&) noexcept;
+    PointChart(PointChart&&) noexcept = default;
+    PointChart& operator=(PointChart&&) noexcept = default;
 
     void create_impl() override;
 
@@ -466,8 +466,8 @@ public:
 
     BarChart(const BarChart&) = delete;
     BarChart& operator=(const BarChart&) = delete;
-    BarChart(BarChart&&) noexcept;
-    BarChart& operator=(BarChart&&) noexcept;
+    BarChart(BarChart&&) noexcept = default;
+    BarChart& operator=(BarChart&&) noexcept = default;
 
     void create_impl() override;
 
@@ -540,8 +540,8 @@ public:
 
     HorizontalBarChart(const HorizontalBarChart&) = delete;
     HorizontalBarChart& operator=(const HorizontalBarChart&) = delete;
-    HorizontalBarChart(HorizontalBarChart&&) noexcept;
-    HorizontalBarChart& operator=(HorizontalBarChart&&) noexcept;
+    HorizontalBarChart(HorizontalBarChart&&) noexcept = default;
+    HorizontalBarChart& operator=(HorizontalBarChart&&) noexcept = default;
 
     ~HorizontalBarChart() override;
 };
@@ -574,8 +574,8 @@ public:
 
     PieChart(const PieChart&) = delete;
     PieChart& operator=(const PieChart&) = delete;
-    PieChart(PieChart&&) noexcept;
-    PieChart& operator=(PieChart&&) noexcept;
+    PieChart(PieChart&&) noexcept = default;
+    PieChart& operator=(PieChart&&) noexcept = default;
 
     void draw(Painter& painter, const Rect& rect) override;
 
