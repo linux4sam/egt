@@ -384,6 +384,8 @@ void Sound::play(bool repeat)
                 const auto count = m_impl->in.gcount() / 2;
                 if (!m_impl->in)
                 {
+                    if (!m_impl->in.bad())
+                        m_impl->in.clear();
                     break;
                 }
 #endif
