@@ -104,8 +104,9 @@ public:
 
     /**
      * Calls EventLoop::quit() by default.
+     * Allow non-zero exit value
      */
-    virtual void quit();
+    virtual void quit(const int exit_value = 0);
 
     /**
      * Get a reference to the application event loop instance.

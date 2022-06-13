@@ -30,7 +30,9 @@ struct EventLoop::EventLoopImpl
 EventLoop::EventLoop(const Application& app) noexcept
     : m_impl(std::make_unique<EventLoopImpl>()),
       m_app(app)
-{}
+{
+    m_exit_value = -1;
+}
 
 asio::io_context& EventLoop::io()
 {
@@ -88,8 +90,9 @@ int EventLoop::wait()
     return ret;
 }
 
-void EventLoop::quit()
+void EventLoop::quit(const int exit_value)
 {
+    m_exit_value = exit_value;
     m_do_quit = true;
     m_impl->m_io.stop();
 }
@@ -172,7 +175,7 @@ int EventLoop::run()
 
     EGTLOG_TRACE("EventLoop::run() exiting");
 
-    return 0;
+    return m_exit_value;
 }
 
 void EventLoop::add_idle_callback(IdleCallback func)
