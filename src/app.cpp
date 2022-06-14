@@ -383,9 +383,9 @@ int Application::run()
     return m_event.run();
 }
 
-void Application::quit()
+void Application::quit(int exit_value)
 {
-    m_event.quit();
+    m_event.quit(exit_value);
 }
 
 void Application::paint_to_file(const std::string& filename)

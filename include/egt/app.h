@@ -103,9 +103,10 @@ public:
     virtual int run();
 
     /**
-     * Calls EventLoop::quit() by default.
+     * Calls EventLoop::quit(exit_value) by default.
+     * Allow non-zero exit value
      */
-    virtual void quit();
+    virtual void quit(int exit_value = 0);
 
     /**
      * Get a reference to the application event loop instance.

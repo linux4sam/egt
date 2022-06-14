@@ -95,8 +95,9 @@ public:
      * Quit the event loop.
      *
      * This will cause the run() function to return.
+     * @note Allow optional non-zero exit value
      */
-    void quit();
+    void quit(int);
 
     /**
      * Event callback function definition.
@@ -131,6 +132,9 @@ protected:
 
     /// Used internally to determine whether the event loop should exit.
     bool m_do_quit{false};
+
+    /// Return value when application quits
+    int m_exit_value;
 
     /// Application reference.
     const Application& m_app;
