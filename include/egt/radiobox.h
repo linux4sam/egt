@@ -83,6 +83,22 @@ public:
      */
     EGT_NODISCARD bool show_label() const { return m_show_label; }
 
+    /**
+     * Set the alignment of the image relative to the text.
+     *
+     * @param[in] align Only left, right, top, and bottom alignments are supported.
+     */
+    void radiobox_align(const AlignFlags& align)
+    {
+        if (detail::change_if_diff<>(m_radiobox_align, align))
+            damage();
+    }
+
+    /**
+     * Get the image alignment.
+     */
+    EGT_NODISCARD AlignFlags radiobox_align() const { return m_radiobox_align; }
+
 protected:
 
     explicit RadioBox(Serializer::Properties& props, bool is_derived) noexcept;
@@ -102,6 +118,8 @@ public:
 
 private:
     bool m_show_label{true};
+    /// Alignment of the radiobox relative to the text.
+    AlignFlags m_radiobox_align{AlignFlag::left};
 };
 
 }
