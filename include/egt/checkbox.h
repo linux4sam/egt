@@ -78,6 +78,17 @@ public:
      */
     static void default_draw(const CheckBox& widget, Painter& painter, const Rect& rect);
 
+    using Button::text;
+    /**
+     * Set the text.
+     *
+     * It sets show_label to true if the string is not empty, to false
+     * otherwise.
+     *
+     * @param str The text string to set.
+     */
+    void text(const std::string& text) override;
+
     using Button::min_size_hint;
 
     EGT_NODISCARD Size min_size_hint() const override;
