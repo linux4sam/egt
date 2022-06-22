@@ -115,13 +115,17 @@ void RadioBox::default_draw(const RadioBox& widget, Painter& painter, const Rect
             painter.fill();
         }
 
-        // text
-        painter.set(widget.color(Palette::ColorId::label_text));
         Rect target = detail::align_algorithm(text_size,
                                               text,
                                               widget.text_align());
-        painter.draw(target.point());
-        painter.draw(widget.text());
+        detail::draw_text(painter,
+                          target,
+                          widget.text(),
+                          widget.font(),
+                          TextBox::TextFlags({TextBox::TextFlag::multiline, TextBox::TextFlag::word_wrap}),
+                          widget.text_align(),
+                          Justification::middle,
+                          widget.color(Palette::ColorId::label_text));
     }
     else
     {
