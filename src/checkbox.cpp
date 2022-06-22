@@ -49,6 +49,8 @@ CheckBox::CheckBox(Serializer::Properties& props, bool is_derived) noexcept
 
     grab_mouse(true);
 
+    deserialize(props);
+
     if (!is_derived)
         deserialize_leaf(props);
 }
@@ -245,6 +247,34 @@ Size CheckBox::min_size_hint() const
      * draw checkbox alone.
      */
     return min_size * 0.10;
+}
+
+void CheckBox::serialize(Serializer& serializer) const
+{
+    Button::serialize(serializer);
+
+    serializer.add_property("show_label", show_label());
+    if (!checkbox_align().empty())
+        serializer.add_property("checkbox_align", checkbox_align());
+}
+
+void CheckBox::deserialize(Serializer::Properties& props)
+{
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
+    {
+        switch (detail::hash(std::get<0>(p)))
+        {
+        case detail::hash("show_label"):
+            show_label(egt::detail::from_string(std::get<1>(p)));
+            break;
+        case detail::hash("checkbox_align"):
+            checkbox_align(AlignFlags(std::get<1>(p)));
+            break;
+        default:
+            return false;
+        }
+        return true;
+    }), props.end());
 }
 
 ToggleBox::ToggleBox(const Rect& rect) noexcept

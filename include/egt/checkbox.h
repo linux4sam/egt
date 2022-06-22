@@ -67,6 +67,8 @@ protected:
 
     explicit CheckBox(Serializer::Properties& props, bool is_derived) noexcept;
 
+    void serialize(Serializer& serializer) const override;
+
 public:
 
     void handle(Event& event) override;
@@ -129,6 +131,8 @@ private:
     bool m_show_label{true};
     /// Alignment of the checkbox relative to the text.
     AlignFlags m_checkbox_align{AlignFlag::left};
+
+    void deserialize(Serializer::Properties& props);
 };
 
 /**
