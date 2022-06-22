@@ -109,8 +109,26 @@ public:
      */
     EGT_NODISCARD bool show_label() const { return m_show_label; }
 
+    /**
+     * Set the alignment of the checkbox relative to the text.
+     *
+     * @param[in] align Only left, right, top, and bottom alignments are supported.
+     */
+    void checkbox_align(const AlignFlags& align)
+    {
+        if (detail::change_if_diff<>(m_checkbox_align, align))
+            damage();
+    }
+
+    /**
+     * Get the image alignment.
+     */
+    EGT_NODISCARD AlignFlags checkbox_align() const { return m_checkbox_align; }
+
 private:
     bool m_show_label{true};
+    /// Alignment of the checkbox relative to the text.
+    AlignFlags m_checkbox_align{AlignFlag::left};
 };
 
 /**
