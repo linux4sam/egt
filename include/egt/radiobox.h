@@ -56,6 +56,22 @@ public:
     {
     }
 
+    /**
+     * Enable/disable showing the label text.
+     *
+     * @param[in] value When true, the label text is shown.
+     */
+    void show_label(bool value)
+    {
+        if (detail::change_if_diff<>(m_show_label, value))
+            damage();
+    }
+
+    /**
+     * Get the show label state.
+     */
+    EGT_NODISCARD bool show_label() const { return m_show_label; }
+
 protected:
 
     explicit RadioBox(Serializer::Properties& props, bool is_derived) noexcept;
@@ -72,6 +88,9 @@ public:
     using Button::min_size_hint;
 
     EGT_NODISCARD Size min_size_hint() const override;
+
+private:
+    bool m_show_label{true};
 };
 
 }

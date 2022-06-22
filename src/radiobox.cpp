@@ -79,48 +79,80 @@ void RadioBox::default_draw(const RadioBox& widget, Painter& painter, const Rect
 
     auto b = widget.content_area();
 
-    painter.set(widget.font());
-    auto text_size = painter.text_size(widget.text());
-
-    std::vector<detail::LayoutRect> rects;
-
-    auto circle_diameter = std::min<DefaultDim>(b.width() - text_size.width(), b.height());
-    if (circle_diameter < 0)
-        circle_diameter = b.width() * 0.15;
-
-    rects.emplace_back(0,
-                       Rect(0, 0, circle_diameter, circle_diameter),
-                       0, 0, widget.padding() / 2);
-    rects.emplace_back(0,
-                       Rect(0, 0, text_size.width(), text_size.height()),
-                       widget.padding() / 2);
-
-    detail::flex_layout(b, rects, Justification::start, Orientation::horizontal);
-
-    auto handle = rects[0].rect + b.point();
-    auto text = rects[1].rect + b.point();
-
-    painter.draw(Circle(handle.center(),
-                        (std::min(handle.width(), handle.height()) - widget.theme().default_border() * 2) / 2.));
-    painter.set(widget.color(Palette::ColorId::button_fg));
-    painter.line_width(widget.theme().default_border());
-    painter.stroke();
-
-    if (widget.checked())
+    if (widget.show_label())
     {
-        painter.draw(Circle(handle.center(),
-                            (std::min(handle.width(), handle.height()) - widget.theme().default_border() * 2) / 2. / 2.));
-        painter.fill();
-    }
+        painter.set(widget.font());
+        auto text_size = painter.text_size(widget.text());
 
-    // text
-    painter.set(widget.color(Palette::ColorId::label_text));
-    Rect target = detail::align_algorithm(text_size,
-                                          text,
-                                          widget.text_align());
-    painter.draw(target.point());
-    painter.draw(widget.text());
+        std::vector<detail::LayoutRect> rects;
+
+        auto circle_diameter = std::min<DefaultDim>(b.width() - text_size.width(), b.height());
+        if (circle_diameter < 0)
+            circle_diameter = b.width() * 0.15;
+
+        rects.emplace_back(0,
+                           Rect(0, 0, circle_diameter, circle_diameter),
+                           0, 0, widget.padding() / 2);
+        rects.emplace_back(0,
+                           Rect(0, 0, text_size.width(), text_size.height()),
+                           widget.padding() / 2);
+
+        detail::flex_layout(b, rects, Justification::start, Orientation::horizontal);
+
+        auto handle = rects[0].rect + b.point();
+        auto text = rects[1].rect + b.point();
+
+        painter.draw(Circle(handle.center(),
+                            (std::min(handle.width(), handle.height()) - widget.theme().default_border() * 2) / 2.));
+        painter.set(widget.color(Palette::ColorId::button_fg));
+        painter.line_width(widget.theme().default_border());
+        painter.stroke();
+
+        if (widget.checked())
+        {
+            painter.draw(Circle(handle.center(),
+                                (std::min(handle.width(), handle.height()) - widget.theme().default_border() * 2) / 2. / 2.));
+            painter.fill();
+        }
+
+        // text
+        painter.set(widget.color(Palette::ColorId::label_text));
+        Rect target = detail::align_algorithm(text_size,
+                                              text,
+                                              widget.text_align());
+        painter.draw(target.point());
+        painter.draw(widget.text());
+    }
+    else
+    {
+        auto circle_diameter = std::min<DefaultDim>(b.width(), b.height());
+        if (circle_diameter < 0)
+            circle_diameter = b.width() * 0.15;
+
+        std::vector<detail::LayoutRect> rects;
+        rects.emplace_back(0,
+                           Rect(0, 0, circle_diameter, circle_diameter),
+                           0, 0, widget.padding() / 2);
+
+        detail::flex_layout(b, rects, Justification::middle, Orientation::horizontal);
+
+        auto handle = rects[0].rect + b.point();
+
+        painter.draw(Circle(handle.center(),
+                            (std::min(handle.width(), handle.height()) - widget.theme().default_border() * 2) / 2.));
+        painter.set(widget.color(Palette::ColorId::button_fg));
+        painter.line_width(widget.theme().default_border());
+        painter.stroke();
+
+        if (widget.checked())
+        {
+            painter.draw(Circle(handle.center(),
+                                (std::min(handle.width(), handle.height()) - widget.theme().default_border() * 2) / 2. / 2.));
+            painter.fill();
+        }
+    }
 }
+
 
 Size RadioBox::min_size_hint() const
 {
