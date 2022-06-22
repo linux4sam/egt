@@ -103,6 +103,8 @@ protected:
 
     explicit RadioBox(Serializer::Properties& props, bool is_derived) noexcept;
 
+    void serialize(Serializer& serializer) const override;
+
 public:
 
     void handle(Event& event) override;
@@ -120,6 +122,8 @@ private:
     bool m_show_label{true};
     /// Alignment of the radiobox relative to the text.
     AlignFlags m_radiobox_align{AlignFlag::left};
+
+    void deserialize(Serializer::Properties& props);
 };
 
 }

@@ -9,6 +9,7 @@
 #include "egt/frame.h"
 #include "egt/painter.h"
 #include "egt/radiobox.h"
+#include "egt/serialize.h"
 
 namespace egt
 {
@@ -46,6 +47,8 @@ RadioBox::RadioBox(Serializer::Properties& props, bool is_derived) noexcept
     text_align(AlignFlag::left | AlignFlag::center);
 
     grab_mouse(true);
+
+    deserialize(props);
 
     if (!is_derived)
         deserialize_leaf(props);
@@ -235,6 +238,34 @@ Size RadioBox::min_size_hint() const
 
     // NOLINTNEXTLINE(bugprone-parent-virtual-call)
     return default_size() + Widget::min_size_hint();
+}
+
+void RadioBox::serialize(Serializer& serializer) const
+{
+    Button::serialize(serializer);
+
+    serializer.add_property("show_label", show_label());
+    if (!radiobox_align().empty())
+        serializer.add_property("radiobox_align", radiobox_align());
+}
+
+void RadioBox::deserialize(Serializer::Properties& props)
+{
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
+    {
+        switch (detail::hash(std::get<0>(p)))
+        {
+        case detail::hash("show_label"):
+            show_label(egt::detail::from_string(std::get<1>(p)));
+            break;
+        case detail::hash("radiobox_align"):
+            radiobox_align(AlignFlags(std::get<1>(p)));
+            break;
+        default:
+            return false;
+        }
+        return true;
+    }), props.end());
 }
 
 }
