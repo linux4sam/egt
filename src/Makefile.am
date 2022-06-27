@@ -425,8 +425,17 @@ checkheaders:
 		$(AM_CPPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(libegt_la_CXXFLAGS)
 
 $(top_builddir)/include/egt/git.version: .FORCE
-	@$(top_srcdir)/scripts/git_version.sh $(top_srcdir)> $(top_builddir)/include/egt/git.version
-	@$(shell touch $(top_srcdir)/src/utils.cpp)
+	@switch_user="eval"; \
+	if test -d "$(top_srcdir)/.git"; then \
+		if test $$(id -u) -eq 0; then \
+			if test $$(id -u) -ne $$(stat -c %u $(top_srcdir)/.git); then \
+				git_tree_user=$$(stat -c %U $(top_srcdir)/.git); \
+				switch_user="su $$git_tree_user -c"; \
+			fi \
+		fi \
+	fi; \
+	$$switch_user '$(top_srcdir)/scripts/git_version.sh $(top_srcdir) > $(top_builddir)/include/egt/git.version'; \
+	$$switch_user 'touch $(top_srcdir)/src/utils.cpp';
 
 .PHONY: .FORCE
 .FORCE:
