@@ -97,7 +97,7 @@ public:
      * This will cause the run() function to return.
      * @note Allow optional non-zero exit value
      */
-    void quit(int);
+    void quit(int exit_value = 0);
 
     /**
      * Event callback function definition.
