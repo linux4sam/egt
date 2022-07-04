@@ -402,7 +402,7 @@ if OS_WIN32
 libegt_la_LIBADD += -lws2_32 -lintl
 endif
 
-libegt_la_LDFLAGS = $(AM_LDFLAGS) @LIBEGT_EXTRA_LDFLAGS@ -version-info 3:1:0 -no-undefined
+libegt_la_LDFLAGS = $(AM_LDFLAGS) @LIBEGT_EXTRA_LDFLAGS@ -version-info 4:0:0 -no-undefined
 
 pkgconfigdir = @pkgconfigdir@
 pkgconfig_DATA = $(top_builddir)/libegt.pc
