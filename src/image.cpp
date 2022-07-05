@@ -117,10 +117,13 @@ Rect Image::align(const Rect& bounding, const AlignFlags& align)
          * Also clear the AlignFlag::expand to prevent detail::align_algorithm()
          * from computing again the expanded size without taking into account
          * the keep_image_ratio() boolean.
+         * If there is no alignment flag, the align algorithm won't force the
+         * target inside the bounding so be sure that the position of the
+         * original rect is set.
          */
         AlignFlags align2 = align;
         align2.clear(AlignFlag::expand);
-        target = detail::align_algorithm(size, bounding, align2);
+        target = detail::align_algorithm(Rect(target.point(), size), bounding, align2);
     }
 
     /*
