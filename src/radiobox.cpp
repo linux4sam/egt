@@ -200,6 +200,7 @@ void RadioBox::default_draw(const RadioBox& widget, Painter& painter, const Rect
 
     if (widget.checked())
     {
+        painter.set(widget.color(Palette::ColorId::button_fg));
         painter.draw(Circle(handle.center(),
                             (std::min(handle.width(), handle.height()) - widget.theme().default_border() * 2) / 2. / 2.));
         painter.fill();
