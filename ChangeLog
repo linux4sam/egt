@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
+### Added
+- Application: allow non-zero exit values.
+- ComposerScreen: introduce a new backend for the Microchip Graphics Composer.
+- Global Palette/Font:  setters and getters added, reset function added as well.
+- ProgressBar: can display a percentage of the progression instead of the basic
+value.
+- SliderType: introduce the inverted flag to change slider direction of
+progression.
+
+### Changed
+- To get detailed API changes, check the 'API Changes' page in the documentation.
+- ImageButton/Label: show_label is automatically set to false if text string is
+empty, otherwise it is set to true.
+- Serialization/de-serialization: improvements for the composer
+- Widget: removal of local theme support. There is only a global theme.
+
+### Fixed
+- CircleWidget: radius now updated on resize.
+- Git commit id with a newer version of git was set to n/a.
+  fix clear()
+- Sound: the same file can be played several times when using ifstream instead of
+  libsndfile.
+
+## [1.3.2] - 2022-05-10
+### Changed
+- Gstcameraimpl: default device node is /dev/video0.
+
+## [1.3.1] - 2022-05-03
+### Fixed
+- TextBox: text display issue when moved/resized non left-aligned texts rendering,
 
 ## [1.3] - 2021-12-10
 ### Added
