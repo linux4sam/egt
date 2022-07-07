@@ -179,17 +179,13 @@ void CheckBox::default_draw(const CheckBox& widget, Painter& painter, const Rect
                                 Palette::transparent,
                                 border);
         // text
-        Rect target = detail::align_algorithm(text_size,
+        painter.set(widget.color(Palette::ColorId::label_text));
+        auto size = painter.text_size(widget.text());
+        Rect target = detail::align_algorithm(size,
                                               text,
                                               widget.text_align());
-        detail::draw_text(painter,
-                          target,
-                          widget.text(),
-                          widget.font(),
-                          TextBox::TextFlags({TextBox::TextFlag::multiline, TextBox::TextFlag::word_wrap}),
-                          widget.text_align(),
-                          Justification::middle,
-                          widget.color(Palette::ColorId::label_text));
+        painter.draw(target.point());
+        painter.draw(widget.text());
     }
     else
     {
