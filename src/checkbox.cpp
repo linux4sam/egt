@@ -71,15 +71,15 @@ void CheckBox::handle(Event& event)
 
 void CheckBox::text(const std::string& text)
 {
-    if (detail::change_if_diff<>(m_text, text))
+    if (m_text != text)
     {
         if (text.empty())
             show_label(false);
         else
             show_label(true);
-
-        damage();
     }
+
+    Button::text(text);
 }
 
 void CheckBox::draw(Painter& painter, const Rect& rect)
