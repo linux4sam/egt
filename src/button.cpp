@@ -302,7 +302,7 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
 
 void ImageButton::text(const std::string& text)
 {
-    if (detail::change_if_diff<>(m_text, text))
+    if (m_text != text)
     {
         if (text.empty())
             show_label(false);
