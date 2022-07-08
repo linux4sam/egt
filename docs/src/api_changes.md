@@ -5,6 +5,32 @@
 Here, you can find the API changes from the version 1.0. In addition, some hints
 are provided to help you update your code.
 
+@section v1_3 1.3
+
+@subsection animationsequence AnimationSequence
+
+@li Add removeLast() method to remove the last sub animation from the sequence.
+
+@li Add removeAt() method to remove the sub animation at the given position from
+the sequence.
+
+@subsection combobox ComboBox
+
+@li Add default_size() setter and getter.
+
+@subsection image Image
+
+@li Add keep_image_ratio() setter and getter.
+
+@subsection slider SliderType
+
+@li Add min_size_hint() getter.
+
+@subsection textbox TextBox
+
+@li Add selection_forward() and selection_backward() method to extend the
+selection.
+
 @section v1_2 1.2
 
 @subsection rangevalue RangeValue
