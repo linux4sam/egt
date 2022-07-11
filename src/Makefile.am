@@ -430,7 +430,11 @@ $(top_builddir)/include/egt/git.version: .FORCE
 		if test $$(id -u) -eq 0; then \
 			if test $$(id -u) -ne $$(stat -c %u $(top_srcdir)/.git); then \
 				git_tree_user=$$(stat -c %U $(top_srcdir)/.git); \
-				switch_user="su $$git_tree_user -c"; \
+				if test $$? -eq 0 -a "$$git_tree_user" != "UNKNOWN"; then \
+					switch_user="su $$git_tree_user -c"; \
+				else \
+					switch_user="true"; \
+				fi \
 			fi \
 		fi \
 	fi; \
