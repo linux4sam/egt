@@ -402,6 +402,7 @@ protected:
     void deserialize(Serializer::Properties& props)
     {
         // TODO proper loading of all image properties
+        m_image_align.clear();
         props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
         {
             switch (detail::hash(std::get<0>(p)))
