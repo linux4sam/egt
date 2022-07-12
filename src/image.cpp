@@ -92,7 +92,7 @@ Rect Image::align(const Rect& bounding, const AlignFlags& align)
      * AlignFlag::expand flag, but is not aware of the keep_image_ratio()
      * boolean.
      */
-    auto target = detail::align_algorithm(size(), bounding, align);
+    auto target = detail::align_algorithm(Rect(bounding.point(), size()), bounding, align);
 
     /*
      * Resize the previously computed expanded box if the keep_image_ratio()
