@@ -168,16 +168,18 @@ void Sound::open_file()
     }
 
 #ifdef HAVE_SNDFILE
+    if (m_impl->in)
+        stop();
+
     m_impl->in = SndfileHandle(path.c_str());
     init_alsa_params(m_impl->in.samplerate(), m_impl->in.channels());
-#else
     if (m_impl->channels == 0 || m_impl->rate == 0)
     {
         detail::error("can't play sound file {}: sndfile not available and rate "
                       "and channel not specified", path);
         return;
     }
-
+#else
     m_impl->in.open(path, std::ios::binary | std::ios::in);
 #endif
 
@@ -426,6 +428,12 @@ void Sound::play(bool repeat)
 
         snd_pcm_drain(m_impl->handle);
     });
+}
+
+void Sound::stop()
+{
+    snd_pcm_drain(m_impl->handle);
+    m_impl->interrupt = true;
 }
 
 Sound::Sound(Sound&&) noexcept = default;

@@ -90,6 +90,8 @@ public:
      */
     void play(bool repeat = false);
 
+    void stop();
+
     virtual ~Sound() noexcept;
 
 protected:
