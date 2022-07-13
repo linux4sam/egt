@@ -75,6 +75,12 @@ public:
     Sound& operator=(Sound&&) noexcept;
 
     /**
+     * Sets the WAV file to play.
+     * @param uri the WAV file URI
+     */
+    void media(const std::string& uri);
+
+    /**
      * Play the sound.
      *
      * This will immediately cancel any existing playback happening of this

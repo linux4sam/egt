@@ -144,6 +144,14 @@ Sound::Sound(const std::string& uri, const std::string& device)
     open_file();
 }
 
+void Sound::media(const std::string& uri)
+{
+    if (detail::change_if_diff(m_uri, uri))
+    {
+        open_file();
+    }
+}
+
 void Sound::open_file()
 {
     std::string path;
