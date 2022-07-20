@@ -308,8 +308,6 @@ public:
         if (!parent_in_layout() && !in_layout())
             m_user_requested_box.width(w);
 
-        m_in_layout = true;
-        auto reset = detail::on_scope_exit([this]() { m_in_layout = false; });
         resize(Size(w, height()));
     }
 
@@ -323,8 +321,6 @@ public:
         if (!parent_in_layout() && !in_layout())
             m_user_requested_box.height(h);
 
-        m_in_layout = true;
-        auto reset = detail::on_scope_exit([this]() { m_in_layout = false; });
         resize(Size(width(), h));
     }
 
@@ -348,8 +344,6 @@ public:
         if (!parent_in_layout() && !in_layout())
             m_user_requested_box.x(x);
 
-        m_in_layout = true;
-        auto reset = detail::on_scope_exit([this]() { m_in_layout = false; });
         move(Point(x, y()));
     }
 
@@ -362,9 +356,6 @@ public:
     {
         if (!parent_in_layout() && !in_layout())
             m_user_requested_box.y(y);
-
-        m_in_layout = true;
-        auto reset = detail::on_scope_exit([this]() { m_in_layout = false; });
 
         move(Point(x(), y));
     }
