@@ -27,10 +27,10 @@ inline namespace v1
 namespace detail
 {
 
-CameraImpl::CameraImpl(CameraWindow& interface, const Rect& rect,
+CameraImpl::CameraImpl(CameraWindow& iface, const Rect& rect,
                        // NOLINTNEXTLINE(modernize-pass-by-value)
                        const std::string& device)
-    : m_interface(interface),
+    : m_interface(iface),
       m_devnode(device),
       m_rect(rect)
 {

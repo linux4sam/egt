@@ -19,8 +19,8 @@ inline namespace v1
 {
 namespace detail
 {
-GstKmsSinkImpl::GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool decodertype)
-    : GstDecoderImpl(interface, size),
+GstKmsSinkImpl::GstKmsSinkImpl(VideoWindow& iface, const Size& size, bool decodertype)
+    : GstDecoderImpl(iface, size),
       m_hwdecoder(decodertype)
 {
     static constexpr auto plugins =

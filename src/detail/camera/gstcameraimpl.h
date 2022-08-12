@@ -21,7 +21,7 @@ namespace detail
 class CameraImpl
 {
 public:
-    CameraImpl(CameraWindow& interface, const Rect& rect,
+    CameraImpl(CameraWindow& iface, const Rect& rect,
                const std::string& device);
 
     // special functions deleted because they are never used

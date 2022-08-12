@@ -39,7 +39,7 @@ public:
     GstDecoderImpl(GstDecoderImpl&&) = delete;
     GstDecoderImpl& operator=(GstDecoderImpl&&) = delete;
 
-    explicit GstDecoderImpl(VideoWindow& interface, const Size& size);
+    explicit GstDecoderImpl(VideoWindow& iface, const Size& size);
 
     virtual bool media(const std::string& uri) = 0;
 

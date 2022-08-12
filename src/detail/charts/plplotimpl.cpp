@@ -494,8 +494,8 @@ void PlPlotImpl::plplot_viewport(PLFLT size)
 
 PlPlotImpl::~PlPlotImpl() = default;
 
-PlPlotLineChart::PlPlotLineChart(LineChart& interface)
-    : m_interface(interface)
+PlPlotLineChart::PlPlotLineChart(LineChart& iface)
+    : m_interface(iface)
 {
 }
 
@@ -555,8 +555,8 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
 
 }
 
-PlPlotPointChart::PlPlotPointChart(PointChart& interface)
-    : m_interface(interface)
+PlPlotPointChart::PlPlotPointChart(PointChart& iface)
+    : m_interface(iface)
 {
 }
 
@@ -608,8 +608,8 @@ void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
     plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).first());
 }
 
-PlPlotBarChart::PlPlotBarChart(BarChart& interface)
-    : m_interface(interface)
+PlPlotBarChart::PlPlotBarChart(BarChart& iface)
+    : m_interface(iface)
 {
 }
 
@@ -711,8 +711,8 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
     plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).first());
 }
 
-PlPlotHBarChart::PlPlotHBarChart(HorizontalBarChart& interface)
-    : m_interface(interface)
+PlPlotHBarChart::PlPlotHBarChart(HorizontalBarChart& iface)
+    : m_interface(iface)
 {
 }
 
@@ -814,8 +814,8 @@ void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
     plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).first());
 }
 
-PlPlotPieChart::PlPlotPieChart(PieChart& interface)
-    : m_interface(interface)
+PlPlotPieChart::PlPlotPieChart(PieChart& iface)
+    : m_interface(iface)
 {
 }
 

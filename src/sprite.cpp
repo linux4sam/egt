@@ -33,7 +33,7 @@ namespace detail
 class HardwareSprite : public SpriteImpl
 {
 public:
-    HardwareSprite(Sprite& interface, const Image& image, const Size& frame_size,
+    HardwareSprite(Sprite& iface, const Image& image, const Size& frame_size,
                    int frame_count, const Point& frame_point);
 
     virtual void show_frame(int index) override;
@@ -56,7 +56,7 @@ protected:
 class SoftwareSprite : public SpriteImpl
 {
 public:
-    SoftwareSprite(Sprite& interface, const Image& image, const Size& frame_size,
+    SoftwareSprite(Sprite& iface, const Image& image, const Size& frame_size,
                    int frame_count, const Point& frame_point);
 
     void show_frame(int index) override;
@@ -95,23 +95,23 @@ static shared_cairo_surface_t frame_surface(const Rect& rect, const Image& image
 }
 
 #ifdef HAVE_LIBPLANES
-HardwareSprite::HardwareSprite(Sprite& interface, const Image& image, const Size& frame_size,
+HardwareSprite::HardwareSprite(Sprite& iface, const Image& image, const Size& frame_size,
                                int frame_count, const Point& frame_point)
     : SpriteImpl(image, frame_size, frame_count, frame_point),
       m_label(image),
-      m_interface(interface)
+      m_interface(iface)
 {
     m_label.image_align().clear();
-    interface.resize(m_image.size());
+    iface.resize(m_image.size());
 
-    interface.allocate_screen();
+    iface.allocate_screen();
 
-    KMSOverlay* s = reinterpret_cast<KMSOverlay*>(interface.screen());
+    KMSOverlay* s = reinterpret_cast<KMSOverlay*>(iface.screen());
     plane_set_pan_pos(s->s(), m_strips[m_strip].point.x(), m_strips[m_strip].point.y());
     plane_set_pan_size(s->s(), m_frame.width(), m_frame.height());
 
     // hack to change the size because the screen size and the box size are different
-    interface.m_box.size(frame_size);
+    iface.m_box.size(frame_size);
 }
 
 void HardwareSprite::draw(Painter& painter, const Rect& rect)
@@ -151,12 +151,12 @@ void HardwareSprite::paint(Painter& painter)
 
 #endif
 
-SoftwareSprite::SoftwareSprite(Sprite& interface, const Image& image, const Size& frame_size,
+SoftwareSprite::SoftwareSprite(Sprite& iface, const Image& image, const Size& frame_size,
                                int frame_count, const Point& frame_point)
     : SpriteImpl(image, frame_size, frame_count, frame_point),
-      m_interface(interface)
+      m_interface(iface)
 {
-    interface.m_box = Rect({}, frame_size);
+    iface.m_box = Rect({}, frame_size);
 }
 
 void SoftwareSprite::draw(Painter& painter, const Rect& rect)

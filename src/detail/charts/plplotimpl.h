@@ -164,7 +164,7 @@ protected:
 class PlPlotLineChart: public PlPlotImpl
 {
 public:
-    explicit PlPlotLineChart(LineChart& interface);
+    explicit PlPlotLineChart(LineChart& iface);
 
     void draw(Painter& painter, const Rect& rect) override;
 
@@ -180,7 +180,7 @@ protected:
 class PlPlotPointChart: public PlPlotImpl
 {
 public:
-    explicit PlPlotPointChart(PointChart& interface);
+    explicit PlPlotPointChart(PointChart& iface);
 
     void draw(Painter& painter, const Rect& rect) override;
 
@@ -196,7 +196,7 @@ protected:
 class PlPlotBarChart: public PlPlotImpl
 {
 public:
-    explicit PlPlotBarChart(BarChart& interface);
+    explicit PlPlotBarChart(BarChart& iface);
 
     void draw(Painter& painter, const Rect& rect) override;
 
@@ -215,7 +215,7 @@ protected:
 class PlPlotHBarChart: public PlPlotImpl
 {
 public:
-    explicit PlPlotHBarChart(HorizontalBarChart& interface);
+    explicit PlPlotHBarChart(HorizontalBarChart& iface);
 
     void draw(Painter& painter, const Rect& rect) override;
 
@@ -235,7 +235,7 @@ class PlPlotPieChart: public PlPlotImpl
 {
 public:
 
-    explicit PlPlotPieChart(PieChart& interface);
+    explicit PlPlotPieChart(PieChart& iface);
 
     void draw(Painter& painter, const Rect& rect) override;
 

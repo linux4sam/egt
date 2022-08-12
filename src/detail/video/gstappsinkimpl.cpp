@@ -27,8 +27,8 @@ inline namespace v1
 namespace detail
 {
 
-GstAppSinkImpl::GstAppSinkImpl(VideoWindow& interface, const Size& size)
-    : GstDecoderImpl(interface, size),
+GstAppSinkImpl::GstAppSinkImpl(VideoWindow& iface, const Size& size)
+    : GstDecoderImpl(iface, size),
       m_appsink(nullptr)
 {
     static constexpr auto plugins =

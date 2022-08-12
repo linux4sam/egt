@@ -20,7 +20,7 @@ namespace detail
 class GstAppSinkImpl: public GstDecoderImpl
 {
 public:
-    explicit GstAppSinkImpl(VideoWindow& interface, const Size& size);
+    explicit GstAppSinkImpl(VideoWindow& iface, const Size& size);
 
     bool media(const std::string& uri) override;
 

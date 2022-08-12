@@ -17,7 +17,7 @@ namespace detail
 class GstKmsSinkImpl: public GstDecoderImpl
 {
 public:
-    explicit GstKmsSinkImpl(VideoWindow& interface, const Size& size, bool decodertype);
+    explicit GstKmsSinkImpl(VideoWindow& iface, const Size& size, bool decodertype);
 
     bool media(const std::string& uri) override;
 

@@ -23,7 +23,7 @@ namespace detail
 class CaptureImpl
 {
 public:
-    CaptureImpl(experimental::CameraCapture& interface,
+    CaptureImpl(experimental::CameraCapture& iface,
                 const std::string& output,
                 PixelFormat format,
                 experimental::CameraCapture::ContainerType container,

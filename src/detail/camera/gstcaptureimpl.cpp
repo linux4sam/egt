@@ -25,14 +25,14 @@ inline namespace v1
 namespace detail
 {
 
-CaptureImpl::CaptureImpl(experimental::CameraCapture& interface,
+CaptureImpl::CaptureImpl(experimental::CameraCapture& iface,
                          // NOLINTNEXTLINE(modernize-pass-by-value)
                          const std::string& output,
                          PixelFormat format,
                          experimental::CameraCapture::ContainerType container,
                          // NOLINTNEXTLINE(modernize-pass-by-value)
                          const std::string& device)
-    : m_interface(interface),
+    : m_interface(iface),
       m_output(output),
       m_format(format),
       m_container(container),
