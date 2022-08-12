@@ -16,6 +16,7 @@
 #define EGT_ASIO_NO_DEPRECATED
 
 #ifdef __WIN32__
+#include <Winsock2.h>
 #include <sdkddkver.h>
 #endif
 
