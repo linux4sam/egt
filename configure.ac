@@ -293,6 +293,9 @@ AM_CONDITIONAL([HAVE_SDL2], [test "x${have_sdl2}" = xyes])
 if test "x${have_sdl2}" = xyes; then
    AC_DEFINE(HAVE_SDL2, 1, [Have sdl2 support])
    LIBEGT_EXTRA_CXXFLAGS="${SDL2_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+if test "x$egt_os_win32" = "xyes"; then
+   SDL2_LIBS=`echo "$SDL2_LIBS" | sed -e 's/-lSDL2main//g'`
+fi
    LIBEGT_EXTRA_LDFLAGS="${SDL2_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
