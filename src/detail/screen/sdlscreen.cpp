@@ -100,8 +100,10 @@ SDLScreen::SDLScreen(Application& app, const Size& size)
                 switch (event.type)
                 {
                 case SDL_QUIT:
-                    asio::post(m_app.event().io(), std::bind(&EventLoop::quit,
-                               std::ref(Application::instance().event())));
+                    asio::post(m_app.event().io(), []()
+                    {
+                        Application::instance().event().quit(0);
+                    });
                     m_quit = true;
                     tn.reset();
                     break;
