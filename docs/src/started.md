@@ -176,7 +176,7 @@ EGT is included as a package as part of the
 [meta-atmel](https://github.com/linux4sam/meta-atmel) Yocto layer project. To
 build a complete SDK and target filesystem for a board, follow the
 instructions found in that project's
-[README](https://github.com/linux4sam/meta-atmel/blob/warrior/README).
+[README](https://www.linux4sam.org/bin/view/Linux4SAM/PokyBuild#How_to_build_Poky_for_AT91).
 
 @section started_windows Building for Windows
 
