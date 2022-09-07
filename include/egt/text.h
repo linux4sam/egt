@@ -429,7 +429,7 @@ protected:
     void hide_cursor();
 
     /// Process key events.
-    void handle_key(const Key& key);
+    virtual void handle_key(const Key& key);
 
     /// Validate the input against the validator pattern.
     bool validate_input(const std::string& str);
