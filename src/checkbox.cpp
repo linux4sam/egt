@@ -43,12 +43,6 @@ CheckBox::CheckBox(Serializer::Properties& props, bool is_derived) noexcept
 {
     name("CheckBox" + std::to_string(m_widgetid));
 
-    fill_flags().clear();
-    padding(5);
-    text_align(AlignFlag::left | AlignFlag::center);
-
-    grab_mouse(true);
-
     deserialize(props);
 
     if (!is_derived)
@@ -297,10 +291,6 @@ ToggleBox::ToggleBox(Serializer::Properties& props, bool is_derived) noexcept
     : CheckBox(props, true)
 {
     name("ToggleBox" + std::to_string(m_widgetid));
-
-    fill_flags(Theme::FillFlag::blend);
-    border(theme().default_border());
-    border_radius(4.0);
 
     deserialize(props);
 

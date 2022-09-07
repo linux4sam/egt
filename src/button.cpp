@@ -110,11 +110,6 @@ Button::Button(Serializer::Properties& props, bool is_derived) noexcept
 {
     name("Button" + std::to_string(m_widgetid));
 
-    fill_flags(Theme::FillFlag::blend);
-    border_radius(4.0);
-
-    grab_mouse(true);
-
     if (!is_derived)
         deserialize_leaf(props);
 }

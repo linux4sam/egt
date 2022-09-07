@@ -58,9 +58,6 @@ Window::Window(Serializer::Properties& props, bool is_derived)
 
     name("Window" + std::to_string(m_widgetid));
 
-    // windows are not transparent by default
-    fill_flags(Theme::FillFlag::solid);
-
     PixelFormat format = DEFAULT_FORMAT;
     WindowHint hint = WindowHint::automatic;
 

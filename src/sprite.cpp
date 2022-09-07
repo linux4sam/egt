@@ -213,7 +213,6 @@ Sprite::Sprite(Serializer::Properties& props, bool is_derived) noexcept
     : Window(props, true)
 {
     name("Sprite" + std::to_string(m_widgetid));
-    fill_flags().clear();
 
     if (!is_derived)
         deserialize_leaf(props);

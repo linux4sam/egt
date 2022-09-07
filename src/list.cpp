@@ -55,9 +55,6 @@ ListBox::ListBox(Serializer::Properties& props, bool is_derived) noexcept
 {
     name("ListBox" + std::to_string(m_widgetid));
 
-    fill_flags(Theme::FillFlag::blend);
-    border(theme().default_border());
-
     m_sizer.align(AlignFlag::expand_horizontal);
 
     m_view.add(m_sizer);
