@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#define _USE_MATH_DEFINES
 #include <cmath>
 #include <egt/themes/coconut.h>
 #include <egt/themes/lapis.h>
