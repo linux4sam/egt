@@ -23,6 +23,7 @@ namespace egt
 inline namespace v1
 {
 
+class Notebook;
 /**
  * A single layer of a Notebook.
  */
@@ -41,6 +42,24 @@ public:
     explicit NotebookTab(Serializer::Properties& props) noexcept
         : NotebookTab(props, false)
     {
+    }
+
+    using Frame::add;
+    void add(const std::shared_ptr<Widget>& widget) override
+    {
+        if (!widget)
+            return;
+
+        if (widget.get() == this)
+            throw std::runtime_error("cannot add a widget to itself");
+
+        assert(!widget->parent() && "widget already has parent!");
+
+        auto cell = std::dynamic_pointer_cast<NotebookTab>(widget);
+        if (cell)
+            throw std::invalid_argument("cannot have nested NotebookTab");
+
+        Frame::add(widget);
     }
 
 protected:
