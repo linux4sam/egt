@@ -653,6 +653,17 @@ void Widget::checked(bool value)
     }
 }
 
+void Widget::focus(bool value)
+{
+    if (focus() != value)
+    {
+        if (value)
+            detail::keyboard_focus(this);
+        else
+            detail::keyboard_focus(nullptr);
+    }
+}
+
 std::string Widget::type() const
 {
     auto t = detail::demangle(typeid(*this).name());

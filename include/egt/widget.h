@@ -1057,6 +1057,13 @@ public:
     virtual void walk(const WalkCallback& callback, int level = 0);
 
     /**
+     * Set the focus state.
+     *
+     * @param value State of the focus.
+     */
+    void focus(bool value);
+
+    /**
      * Get the current focus state.
      *
      * @return true if in focus.
