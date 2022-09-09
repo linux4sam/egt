@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
+### Added
+- Support for Windows build.
+- Documentation for the Microchip Graphics Composer.
+### Changed
+- TextBox: handle_key method is now virtual.
+### Fixed
+- BoxSizer: layout is now recomputed when a BoxSizer is resized.
+- Image: fix alignment issue when align flags are empty.
+- Serialization: several fixes.
 
 ## [1.4] - 2022-07-12
 ### Added
