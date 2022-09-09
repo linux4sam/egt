@@ -152,6 +152,25 @@ void Notebook::selected(Widget* widget)
         selected(std::distance(m_cells.begin(), i));
 }
 
+void Notebook::serialize(Serializer& serializer) const
+{
+    serializer.add_property("selected", static_cast<int>(selected()));
+    Frame::serialize(serializer);
+}
+
+void Notebook::post_deserialize(Serializer::Properties& props)
+{
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
+    {
+        if (std::get<0>(p) == "selected")
+        {
+            selected(std::stoi(std::get<1>(p)));
+            return true;
+        }
+        return false;
+    }), props.end());
+}
+
 NotebookTab* Notebook::get(size_t index) const
 {
     if (index < m_cells.size())

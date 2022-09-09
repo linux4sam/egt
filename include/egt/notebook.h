@@ -171,6 +171,13 @@ public:
      */
     EGT_NODISCARD NotebookTab* get(size_t index) const;
 
+    void serialize(Serializer& serializer) const override;
+
+    /**
+     * Resume deserializing of the widget after its children have been deserialized.
+     */
+    void post_deserialize(Serializer::Properties& props) override;
+
 protected:
 
     /// Type of array of notebook tabs.
