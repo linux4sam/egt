@@ -54,6 +54,8 @@ SDLScreen::SDLScreen(Application& app, const Size& size)
     : m_priv(std::make_unique<detail::SDLData>()),
       m_app(app)
 {
+    detail::info("SDL Screen");
+
     init(size);
 
     m_buffers.emplace_back(nullptr);
