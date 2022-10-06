@@ -73,7 +73,7 @@ SDLScreen::SDLScreen(Application& app, const Size& size)
                                               SDL_WINDOWPOS_UNDEFINED,
                                               size.width(),
                                               size.height(),
-                                              SDL_WINDOW_SHOWN));
+                                              0));
 
         if (!m_priv->window)
             throw std::runtime_error(std::string("unable to create window: ") + SDL_GetError());
