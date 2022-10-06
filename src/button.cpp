@@ -295,19 +295,6 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
                                      Palette::ColorId::button_text);
 }
 
-void ImageButton::text(const std::string& text)
-{
-    if (m_text != text)
-    {
-        if (text.empty())
-            show_label(false);
-        else
-            show_label(true);
-    }
-
-    Button::text(text);
-}
-
 void ImageButton::serialize(Serializer& serializer) const
 {
     ImageHolder::serialize(serializer);
