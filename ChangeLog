@@ -15,7 +15,6 @@ property.
 - BoxSizer: layout is now recomputed when a BoxSizer is resized.
 - Image: fix alignment issue when align flags are empty.
 - Serialization: several fixes.
-- SDL2 backend: fix display issue when there are several damage areas.
 
 ## [1.4] - 2022-07-12
 ### Added
