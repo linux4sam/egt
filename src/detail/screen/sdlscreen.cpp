@@ -60,35 +60,35 @@ SDLScreen::SDLScreen(Application& app, const Size& size)
 
     m_buffers.emplace_back(nullptr);
 
-    SDL_Init(SDL_INIT_VIDEO);
-
-    m_priv->window = unique_sdl_window_t(
-                         SDL_CreateWindow("EGT",
-                                          SDL_WINDOWPOS_UNDEFINED,
-                                          SDL_WINDOWPOS_UNDEFINED,
-                                          size.width(),
-                                          size.height(),
-                                          0));
-
-    if (!m_priv->window)
-        throw std::runtime_error(std::string("unable to create window: ") + SDL_GetError());
-
-    m_priv->renderer = unique_sdl_renderer_t(
-                           SDL_CreateRenderer(m_priv->window.get(), -1, SDL_RENDERER_SOFTWARE));
-    if (!m_priv->renderer)
-        throw std::runtime_error(std::string("unable to create renderer: ") + SDL_GetError());
-
-    m_priv->texture = unique_sdl_texture_t(
-                          SDL_CreateTexture(m_priv->renderer.get(), SDL_PIXELFORMAT_ARGB8888,
-                                            SDL_TEXTUREACCESS_STREAMING,
-                                            size.width(), size.height()));
-    if (!m_priv->texture)
-        throw std::runtime_error(std::string("unable to create texture: ") + SDL_GetError());
-
     m_thread = std::thread([size, this]()
     {
         //Work guard prevents io_context from finishing work before it gets more.
         asio::executor_work_guard<asio::io_context::executor_type> tn = asio::make_work_guard(m_io);
+
+        SDL_Init(SDL_INIT_VIDEO);
+
+        m_priv->window = unique_sdl_window_t(
+                             SDL_CreateWindow("EGT",
+                                              SDL_WINDOWPOS_UNDEFINED,
+                                              SDL_WINDOWPOS_UNDEFINED,
+                                              size.width(),
+                                              size.height(),
+                                              0));
+
+        if (!m_priv->window)
+            throw std::runtime_error(std::string("unable to create window: ") + SDL_GetError());
+
+        m_priv->renderer = unique_sdl_renderer_t(
+                               SDL_CreateRenderer(m_priv->window.get(), -1, SDL_RENDERER_SOFTWARE));
+        if (!m_priv->renderer)
+            throw std::runtime_error(std::string("unable to create renderer: ") + SDL_GetError());
+
+        m_priv->texture = unique_sdl_texture_t(
+                              SDL_CreateTexture(m_priv->renderer.get(), SDL_PIXELFORMAT_ARGB8888,
+                                                SDL_TEXTUREACCESS_STREAMING,
+                                                size.width(), size.height()));
+        if (!m_priv->texture)
+            throw std::runtime_error(std::string("unable to create texture: ") + SDL_GetError());
 
         Pointer pointer;
         Key key;
@@ -182,6 +182,11 @@ void SDLScreen::key_event(EventId e, const Key& key)
 }
 
 void SDLScreen::flip(const DamageArray& damage)
+{
+    asio::post(m_io, std::bind(&SDLScreen::sdl_draw, this, damage));
+}
+
+void SDLScreen::sdl_draw(const DamageArray& damage)
 {
     void* pixels{};
     int pitch{};
