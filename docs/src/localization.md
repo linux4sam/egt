@@ -81,3 +81,33 @@ LANGUAGE=es.utf8 ./i18n
 domain for:
 
     Symbol: BR2_GENERATE_LOCALE [=en_US es_MX]
+
+
+@section local_configure_locale_ubuntu Configure Locales in Ubuntu
+
+@code{.sh}
+$ locale -a
+C
+C.UTF-8
+de_AT.utf8
+de_BE.utf8
+de_CH.utf8
+de_DE.utf8
+de_LI.utf8
+de_LU.utf8
+en_AG
+en_AG.utf8
+...
+POSIX
+@endcode
+
+If a locale does not appear in the list, it will have to be additionally installed.
+
+@code{.sh}
+$ sudo locale-gen fr_FR.UTF-8
+Generating locales...
+  fr_FR.UTF-8... done
+Generation complete.
+@endcode
+
+The following file contains a list of all available locales: /usr/share/i18n/SUPPORTED
