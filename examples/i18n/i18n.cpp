@@ -294,7 +294,8 @@ int main(int argc, char** argv)
             next->image(egt::Image(egt::Image("icon:arrow_left.png;64")));
             next->align(egt::AlignFlag::left | egt::AlignFlag::center);
             flag = false;
-            std::string lang = std::getenv("LANG");
+            auto env = std::getenv("LANG");
+            std::string lang = env ? env : "";
             if (!lang.empty())
             {
                 if (lang.compare(0, 3, "fr_") == 0)
