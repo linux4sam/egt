@@ -404,7 +404,7 @@ void ToggleBox::serialize(Serializer& serializer) const
     CheckBox::serialize(serializer);
 
     serializer.add_property("off_text", off_text());
-    serializer.add_property("on_text", off_text());
+    serializer.add_property("on_text", on_text());
     serializer.add_property("enable_disable", static_cast<int>(enable_disable()));
 }
 
