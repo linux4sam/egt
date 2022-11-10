@@ -121,6 +121,15 @@ public:
             float end_radius);
 
     /**
+     * Compare two patterns.
+     */
+    bool operator==(const Pattern& rhs) const;
+    bool operator!=(const Pattern& rhs) const
+    {
+        return !operator==(rhs);
+    }
+
+    /**
      * Get the first color of the pattern.
      */
     // NOLINTNEXTLINE(hicpp-explicit-conversions, google-explicit-constructor)

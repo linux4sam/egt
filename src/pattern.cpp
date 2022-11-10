@@ -38,6 +38,15 @@ struct Pattern::PatternImpl
           m_end_radius(end_radius)
     {}
 
+    bool operator==(const Pattern::PatternImpl& rhs) const
+    {
+        return m_steps == rhs.m_steps &&
+               m_start == rhs.m_start &&
+               detail::float_equal(m_start_radius, rhs.m_start_radius) &&
+               m_end == rhs.m_end &&
+               detail::float_equal(m_end_radius, rhs.m_end_radius);
+    }
+
     /// Steps of the pattern
     StepArray m_steps;
     /// Starting point of the pattern.
@@ -136,6 +145,17 @@ Pattern& Pattern::operator=(Pattern&& rhs) noexcept
     rhs.m_impl = nullptr;
     m_pattern = std::move(rhs.m_pattern);
     return *this;
+}
+
+bool Pattern::operator==(const Pattern& rhs) const
+{
+    if (m_type != rhs.m_type)
+        return false;
+
+    if (m_type == Type::solid)
+        return m_color == rhs.m_color;
+
+    return m_impl == rhs.m_impl;
 }
 
 Pattern& Pattern::step(StepScaler offset, const Color& color)
