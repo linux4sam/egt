@@ -33,7 +33,7 @@ inline namespace v1
 {
 class Painter;
 class Frame;
-template<class T> class ImageHolder;
+class ImageHolder;
 class Screen;
 
 /**
@@ -1556,7 +1556,7 @@ private:
     void deserialize(Serializer::Properties& props);
 
     friend class Frame;
-    template<class T> friend class ImageHolder;
+    friend class ImageHolder;
 };
 
 /// Enum string conversion map

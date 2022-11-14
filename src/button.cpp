@@ -235,7 +235,7 @@ ImageButton::ImageButton(const Image& image,
                          const Rect& rect,
                          const AlignFlags& text_align) noexcept
     : Button(text, rect, text_align),
-      ImageHolder(*static_cast<Widget*>(this))
+      ImageHolder(static_cast<TextWidget&>(*this))
 {
     name("ImageButton" + std::to_string(m_widgetid));
 
@@ -268,7 +268,7 @@ ImageButton::ImageButton(Frame& parent,
 
 ImageButton::ImageButton(Serializer::Properties& props, bool is_derived) noexcept
     : Button(props, true),
-      ImageHolder(*static_cast<Widget*>(this))
+      ImageHolder(static_cast<TextWidget&>(*this))
 {
     name("ImageButton" + std::to_string(m_widgetid));
 
@@ -283,7 +283,7 @@ ImageButton::ImageButton(Serializer::Properties& props, bool is_derived) noexcep
 
 Size ImageButton::min_size_hint() const
 {
-    return ImageHolder::min_size_hint();
+    return ImageHolder::min_size_hint(Button::min_size_hint());
 }
 
 void ImageButton::draw(Painter& painter, const Rect& rect)
@@ -302,6 +302,7 @@ void ImageButton::default_draw(ImageButton& widget, Painter& painter, const Rect
 
 void ImageButton::serialize(Serializer& serializer) const
 {
+    Button::serialize(serializer);
     ImageHolder::serialize(serializer);
 }
 

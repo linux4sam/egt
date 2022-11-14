@@ -204,7 +204,7 @@ private:
  *
  * @ingroup controls
  */
-class EGT_API ImageButton : public Button, public ImageHolder<Button>
+class EGT_API ImageButton : public Button, public ImageHolder
 {
 public:
 

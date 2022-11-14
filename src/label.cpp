@@ -123,7 +123,7 @@ ImageLabel::ImageLabel(const Image& image,
                        const Rect& rect,
                        const AlignFlags& text_align) noexcept
     : Label(text, rect, text_align),
-      ImageHolder(*static_cast<Widget*>(this))
+      ImageHolder(static_cast<TextWidget&>(*this))
 {
     name("ImageLabel" + std::to_string(m_widgetid));
 
@@ -156,7 +156,7 @@ ImageLabel::ImageLabel(Frame& parent,
 
 ImageLabel::ImageLabel(Serializer::Properties& props, bool is_derived) noexcept
     : Label(props, true),
-      ImageHolder(*static_cast<Widget*>(this))
+      ImageHolder(static_cast<TextWidget&>(*this))
 {
     name("ImageLabel" + std::to_string(m_widgetid));
 
@@ -182,11 +182,12 @@ void ImageLabel::default_draw(ImageLabel& widget, Painter& painter, const Rect& 
 
 Size ImageLabel::min_size_hint() const
 {
-    return ImageHolder::min_size_hint();
+    return ImageHolder::min_size_hint(Label::min_size_hint());
 }
 
 void ImageLabel::serialize(Serializer& serializer) const
 {
+    Label::serialize(serializer);
     ImageHolder::serialize(serializer);
 }
 

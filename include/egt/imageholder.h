@@ -18,6 +18,7 @@
 #include <egt/painter.h>
 #include "egt/serialize.h"
 #include <egt/text.h>
+#include <egt/textwidget.h>
 #include <egt/widget.h>
 
 namespace egt
@@ -25,7 +26,6 @@ namespace egt
 inline namespace v1
 {
 
-template<class T>
 class ImageHolder
 {
 protected:
@@ -291,7 +291,7 @@ public:
                       Palette::ColorId id_border,
                       Palette::ColorId id_text)
     {
-        T& widget = static_cast<T&>(m_widget);
+        auto& widget = m_widget;
 
         detail::ignoreparam(rect);
 
@@ -335,7 +335,7 @@ public:
     }
 
 protected:
-    explicit ImageHolder(Widget& widget) noexcept
+    explicit ImageHolder(TextWidget& widget) noexcept
         : m_widget(widget)
     {}
 
@@ -355,15 +355,14 @@ protected:
         m_widget.damage();
     }
 
-    Size min_size_hint() const
+    Size min_size_hint(const Size& default_min_size_hint) const
     {
         if (!m_widget.m_min_size.empty())
             return m_widget.m_min_size;
 
         Size min_size_constraint;
-        T& text_widget = static_cast<T&>(m_widget);
-        if (show_label() && !text_widget.text().empty())
-            min_size_constraint = text_widget.T::min_size_hint();
+        if (show_label() && !m_widget.text().empty())
+            min_size_constraint = default_min_size_hint;
         else
             min_size_constraint = m_widget.Widget::min_size_hint();
 
@@ -394,8 +393,6 @@ protected:
 
     void serialize(Serializer& serializer) const
     {
-        static_cast<T&>(m_widget).T::serialize(serializer);
-
         serializer.add_property("showlabel", show_label());
         if (!m_image.empty())
             m_image.serialize("image", serializer);
@@ -428,7 +425,7 @@ protected:
     }
 
     ///
-    Widget& m_widget;
+    TextWidget& m_widget;
 
     /// The image. Allowed to be empty.
     Image m_image;
