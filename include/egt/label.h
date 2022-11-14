@@ -145,6 +145,9 @@ class EGT_API ImageLabel : public Label, public ImageHolder<Label>
 {
 public:
 
+    ImageLabel(ImageLabel&&) noexcept;
+    ImageLabel& operator=(ImageLabel&&) noexcept = default;
+
     /**
     * @param[in] text The text to display.
     * @param[in] text_align Alignment for the text.

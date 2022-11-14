@@ -29,19 +29,22 @@ template<class T>
 class ImageHolder
 {
 public:
-    ImageHolder(const ImageHolder& rhs)
-        : m_widget(*static_cast<T*>(this)),
+    ImageHolder(TextWidget& widget, const ImageHolder& rhs) noexcept
+        : m_widget(widget),
           m_image(rhs.m_image),
           m_show_label(rhs.m_show_label),
           m_image_align(rhs.m_image_align)
     {}
 
-    ImageHolder(ImageHolder&& rhs)
-        : m_widget(*static_cast<T*>(this)),
+    ImageHolder(TextWidget& widget, ImageHolder&& rhs) noexcept
+        : m_widget(widget),
           m_image(std::move(rhs.m_image)),
           m_show_label(rhs.m_show_label),
           m_image_align(std::move(rhs.m_image_align))
     {}
+
+    ImageHolder(const ImageHolder&) = delete;
+    ImageHolder(ImageHolder&&) = delete;
 
     ImageHolder& operator=(const ImageHolder& rhs)
     {

@@ -208,6 +208,9 @@ class EGT_API ImageButton : public Button, public ImageHolder<Button>
 {
 public:
 
+    ImageButton(ImageButton&&) noexcept;
+    ImageButton& operator=(ImageButton&&) noexcept = default;
+
     /**
      * @param[in] text The text to display.
      * @param[in] text_align Alignment for the text.

@@ -100,6 +100,11 @@ Size Label::min_size_hint() const
     return Widget::min_size_hint();
 }
 
+ImageLabel::ImageLabel(ImageLabel&& rhs) noexcept
+    : Label(std::move(static_cast<Label&>(rhs))),
+      ImageHolder(static_cast<TextWidget&>(*this), std::move(rhs))
+{}
+
 ImageLabel::ImageLabel(const std::string& text,
                        const AlignFlags& text_align) noexcept
     : ImageLabel(Image(), text, {}, text_align)

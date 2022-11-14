@@ -214,6 +214,11 @@ Button::~Button() noexcept
         m_group->remove(this);
 }
 
+ImageButton::ImageButton(ImageButton&& rhs) noexcept
+    : Button(std::move(static_cast<Button&>(rhs))),
+      ImageHolder(static_cast<TextWidget&>(*this), std::move(rhs))
+{}
+
 ImageButton::ImageButton(const std::string& text,
                          const AlignFlags& text_align) noexcept
     : ImageButton(Image(), text, text_align)
