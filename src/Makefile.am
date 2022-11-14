@@ -162,6 +162,7 @@ $(top_builddir)/include/egt/ui \
 $(top_builddir)/include/egt/version.h \
 ../include/egt/animation.h \
 ../include/egt/app.h \
+../include/egt/bitfields.h \
 ../include/egt/button.h \
 ../include/egt/buttongroup.h \
 ../include/egt/canvas.h \
