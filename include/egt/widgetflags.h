@@ -317,10 +317,10 @@ std::shared_ptr<T>& align(std::shared_ptr<T>& widget, AlignFlags a)
  */
 enum class Orientation : uint32_t
 {
-    horizontal = detail::bit(0),
-    vertical = detail::bit(1),
-    flex = detail::bit(2),
-    none = detail::bit(3),
+    horizontal,
+    vertical,
+    flex,
+    none,
 };
 
 /// Enum string conversion map
