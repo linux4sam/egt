@@ -351,27 +351,27 @@ enum class WindowHint : uint32_t
     /**
      * Allow automatic detection of the window type to create.
      */
-    automatic = detail::bit(0),
+    automatic,
 
     /**
      * Request a software only implementation.
      */
-    software = detail::bit(1),
+    software,
 
     /**
      * Request an overlay plane.
      */
-    overlay = detail::bit(2),
+    overlay,
 
     /**
      * Request specifically an HEO overlay plane.
      */
-    heo_overlay = detail::bit(3),
+    heo_overlay,
 
     /**
      * Request a cursor overlay plane.
      */
-    cursor_overlay = detail::bit(4),
+    cursor_overlay,
 };
 
 /// Enum string conversion map
