@@ -332,11 +332,11 @@ EGT_API const std::pair<Orientation, char const*> detail::EnumStrings<Orientatio
  */
 enum class Justification : uint32_t
 {
-    start = detail::bit(0),
-    middle = detail::bit(1),
-    ending = detail::bit(2),
-    justify = detail::bit(3),
-    none = detail::bit(4),
+    start,
+    middle,
+    ending,
+    justify,
+    none,
 };
 
 /// Enum string conversion map
