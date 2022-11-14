@@ -288,7 +288,7 @@ std::shared_ptr<T>& expand(std::shared_ptr<T>& widget)
 
 /** Helper to set alignment of a widget. */
 template<class T>
-T& align(T& widget, AlignFlags a)
+T& align(T& widget, const AlignFlags& a)
 {
     widget.align(a);
     return widget;
@@ -296,7 +296,7 @@ T& align(T& widget, AlignFlags a)
 
 /** Helper to set alignment of a widget. */
 template<class T>
-const std::shared_ptr<T>& align(const std::shared_ptr<T>& widget, AlignFlags a)
+const std::shared_ptr<T>& align(const std::shared_ptr<T>& widget, const AlignFlags& a)
 {
     assert(widget);
     widget->align(a);
@@ -305,7 +305,7 @@ const std::shared_ptr<T>& align(const std::shared_ptr<T>& widget, AlignFlags a)
 
 /** Helper to set alignment of a widget. */
 template<class T>
-std::shared_ptr<T>& align(std::shared_ptr<T>& widget, AlignFlags a)
+std::shared_ptr<T>& align(std::shared_ptr<T>& widget, const AlignFlags& a)
 {
     assert(widget);
     widget->align(a);
