@@ -28,7 +28,7 @@ inline namespace v1
 template<class T>
 class ImageHolder
 {
-public:
+protected:
     ImageHolder(TextWidget& widget, const ImageHolder& rhs) noexcept
         : m_widget(widget),
           m_image(rhs.m_image),
@@ -70,6 +70,7 @@ public:
         return *this;
     }
 
+public:
     virtual ~ImageHolder() = default;
 
     /**
