@@ -25,7 +25,7 @@ CheckBox::CheckBox(const std::string& text,
 
     fill_flags().clear();
     padding(5);
-    text_align(AlignFlag::left | AlignFlag::center);
+    text_align(AlignFlag::left | AlignFlag::center_vertical);
 
     grab_mouse(true);
 }

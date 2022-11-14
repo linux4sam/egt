@@ -84,16 +84,16 @@ bool FileDialog::list_files(const std::string& filepath)
 
     if (filepath != "/")
     {
-        m_flist->add_item(std::make_shared<StringItem>("./", Rect(), AlignFlag::left | AlignFlag::center));
+        m_flist->add_item(std::make_shared<StringItem>("./", Rect(), AlignFlag::left | AlignFlag::center_vertical));
 
-        m_flist->add_item(std::make_shared<StringItem>("../", Rect(), AlignFlag::left | AlignFlag::center));
+        m_flist->add_item(std::make_shared<StringItem>("../", Rect(), AlignFlag::left | AlignFlag::center_vertical));
     }
 
     try
     {
         for (auto& dir : fs::directory_iterator(m_filepath))
         {
-            m_flist->add_item(std::make_shared<StringItem>(dir.path().filename().string(), Rect(), AlignFlag::left | AlignFlag::center));
+            m_flist->add_item(std::make_shared<StringItem>(dir.path().filename().string(), Rect(), AlignFlag::left | AlignFlag::center_vertical));
         }
     }
     catch (const fs::filesystem_error& ex)

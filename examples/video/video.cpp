@@ -97,7 +97,7 @@ int main(int argc, char** argv)
     egt::Label errlabel;
     errlabel.color(egt::Palette::ColorId::label_text, egt::Palette::white);
     errlabel.align(egt::AlignFlag::expand);
-    errlabel.text_align(egt::AlignFlag::center | egt::AlignFlag::top);
+    errlabel.text_align(egt::AlignFlag::center_horizontal | egt::AlignFlag::top);
     win.add(errlabel);
 
     // player after label to handle drag
@@ -107,7 +107,7 @@ int main(int argc, char** argv)
     win.add(player);
 
     egt::Window ctrlwindow(egt::Size(win.width(), 72), egt::PixelFormat::argb8888);
-    ctrlwindow.align(egt::AlignFlag::bottom | egt::AlignFlag::center);
+    ctrlwindow.align(egt::AlignFlag::bottom | egt::AlignFlag::center_horizontal);
     ctrlwindow.color(egt::Palette::ColorId::bg, egt::Palette::transparent);
     if (!ctrlwindow.plane_window())
         ctrlwindow.fill_flags(egt::Theme::FillFlag::blend);

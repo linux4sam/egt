@@ -33,7 +33,7 @@ int main(int argc, char** argv)
     vsizer.add(elogo);
 
     egt::TextBox text("", egt::TextBox::TextFlag::multiline);
-    text.text_align(egt::AlignFlag::center | egt::AlignFlag::right);
+    text.text_align(egt::AlignFlag::center_vertical | egt::AlignFlag::right);
     text.font(egt::Font(25));
     text.color(egt::Palette::ColorId::bg, egt::Color(0x272727ff));
     text.color(egt::Palette::ColorId::text, egt::Palette::white);

@@ -82,7 +82,7 @@ struct PiePage : public egt::NotebookTab
 
         auto btn1 = std::make_shared<egt::ImageButton>(egt::Image("file:add.png"));
         btn1->fill_flags().clear();
-        btn1->align(egt::AlignFlag::right | egt::AlignFlag::center);
+        btn1->align(egt::AlignFlag::right | egt::AlignFlag::center_vertical);
         sizer->add(btn1);
         btn1->on_click([pie, btn1](egt::Event&)
         {
@@ -161,7 +161,7 @@ struct Points : public egt::NotebookTab
 
         auto btn2 = std::make_shared<egt::ImageButton>(egt::Image("file:add.png"));
         btn2->fill_flags().clear();
-        btn2->align(egt::AlignFlag::right | egt::AlignFlag::center);
+        btn2->align(egt::AlignFlag::right | egt::AlignFlag::center_vertical);
         sizer->add(btn2);
         btn2->on_click([point, btn2](egt::Event&)
         {
@@ -255,7 +255,7 @@ struct HorizontalBarPage : public egt::NotebookTab
 
         auto btn2 = std::make_shared<egt::ImageButton>(egt::Image("file:add.png"));
         btn2->fill_flags().clear();
-        btn2->align(egt::AlignFlag::right | egt::AlignFlag::center);
+        btn2->align(egt::AlignFlag::right | egt::AlignFlag::center_vertical);
         sizer->add(btn2);
         btn2->on_click([bar, btn2, sdata, months](egt::Event&)
         {
@@ -326,7 +326,7 @@ struct VerticalBarPage : public egt::NotebookTab
 
         auto btn2 = std::make_shared<egt::ImageButton>(egt::Image("file:add.png"));
         btn2->fill_flags().clear();
-        btn2->align(egt::AlignFlag::right | egt::AlignFlag::center);
+        btn2->align(egt::AlignFlag::right | egt::AlignFlag::center_vertical);
         sizer->add(btn2);
         btn2->on_click([bar, btn2, sdata, months](egt::Event&)
         {
@@ -447,7 +447,7 @@ struct LineChartPage : public egt::NotebookTab
 
         auto btn2 = std::make_shared<egt::ImageButton>(egt::Image("file:add.png"));
         btn2->fill_flags().clear();
-        btn2->align(egt::AlignFlag::right | egt::AlignFlag::center);
+        btn2->align(egt::AlignFlag::right | egt::AlignFlag::center_vertical);
         sizer->add(btn2);
         btn2->on_click([btn2, line, type](egt::Event&)
         {
@@ -507,13 +507,13 @@ int main(int argc, char** argv)
     vsizer.add(egt::expand_horizontal(frame));
 
     auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_black.png;128"));
-    logo->align(egt::AlignFlag::left | egt::AlignFlag::center);
+    logo->align(egt::AlignFlag::left | egt::AlignFlag::center_vertical);
     logo->margin(5);
     frame->add(logo);
 
     auto setting = std::make_shared<egt::ImageButton>(egt::Image("icon:settings.png"));
     setting->fill_flags().clear();
-    setting->align(egt::AlignFlag::right | egt::AlignFlag::center);
+    setting->align(egt::AlignFlag::right | egt::AlignFlag::center_vertical);
     frame->add(setting);
 
     auto spopup = std::make_shared<egt::Popup>(egt::Size(win.width() * 0.50, 40));
@@ -581,7 +581,7 @@ int main(int argc, char** argv)
     auto chart = std::make_shared<egt::ComboBox>();
     for (auto& i : charts_items)
         chart->add_item(std::make_shared<egt::StringItem>(i.first));
-    chart->align(egt::AlignFlag::center_vertical | egt::AlignFlag::center);
+    chart->align(egt::AlignFlag::center);
     chart->margin(5);
     frame->add(chart);
 

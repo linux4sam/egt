@@ -95,7 +95,7 @@ int main(int argc, char** argv)
     box1.show();
     box2.show();
 
-    egt::Label label1("CPU: ----", {}, egt::AlignFlag::left | egt::AlignFlag::center);
+    egt::Label label1("CPU: ----", {}, egt::AlignFlag::left | egt::AlignFlag::center_vertical);
     label1.align(egt::AlignFlag::left | egt::AlignFlag::bottom);
     label1.color(egt::Palette::ColorId::label_text, egt::Palette::white);
     label1.color(egt::Palette::ColorId::bg, egt::Palette::transparent);

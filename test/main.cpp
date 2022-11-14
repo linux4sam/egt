@@ -317,8 +317,8 @@ TYPED_TEST(Widgets, Properties)
     EXPECT_EQ(widget->readonly(), true);
     widget->readonly(false);
     EXPECT_EQ(widget->readonly(), false);
-    widget->align(egt::AlignFlag::right | egt::AlignFlag::center);
-    EXPECT_EQ(widget->align(), egt::AlignFlag::right | egt::AlignFlag::center);
+    widget->align(egt::AlignFlag::right | egt::AlignFlag::center_vertical);
+    EXPECT_EQ(widget->align(), egt::AlignFlag::right | egt::AlignFlag::center_vertical);
     widget->padding(10);
     widget->border(11);
     widget->margin(12);
@@ -521,7 +521,7 @@ TEST_F(Align, TopLeft)
 TEST_F(Align, TopCenter)
 {
     WidgetType widget(window, egt::Size(100, 100));
-    widget.align(egt::AlignFlag::top | egt::AlignFlag::center);
+    widget.align(egt::AlignFlag::top | egt::AlignFlag::center_horizontal);
     EXPECT_EQ(widget.box().top_left(), egt::Point(400 / 2 - 100 / 2, 0));
     EXPECT_EQ(widget.box().size(), egt::Size(100, 100));
 }
@@ -537,7 +537,7 @@ TEST_F(Align, TopRight)
 TEST_F(Align, RightCenter)
 {
     WidgetType widget(window, egt::Size(100, 100));
-    widget.align(egt::AlignFlag::right | egt::AlignFlag::center);
+    widget.align(egt::AlignFlag::right | egt::AlignFlag::center_vertical);
     EXPECT_EQ(widget.box().top_left(), egt::Point(400 - 100, 400 / 2 - 100 / 2));
     EXPECT_EQ(widget.box().size(), egt::Size(100, 100));
 }
@@ -553,7 +553,7 @@ TEST_F(Align, BottomRight)
 TEST_F(Align, BottomCenter)
 {
     WidgetType widget(window, egt::Size(100, 100));
-    widget.align(egt::AlignFlag::bottom | egt::AlignFlag::center);
+    widget.align(egt::AlignFlag::bottom | egt::AlignFlag::center_horizontal);
     EXPECT_EQ(widget.box().top_left(), egt::Point(400 / 2 - 100 / 2, 400 - 100));
     EXPECT_EQ(widget.box().size(), egt::Size(100, 100));
 }
@@ -569,7 +569,7 @@ TEST_F(Align, BottomLeft)
 TEST_F(Align, LeftCenter)
 {
     WidgetType widget(window, egt::Size(100, 100));
-    widget.align(egt::AlignFlag::center | egt::AlignFlag::left);
+    widget.align(egt::AlignFlag::center_vertical | egt::AlignFlag::left);
     EXPECT_EQ(widget.box().top_left(), egt::Point(0, 400 / 2 - 100 / 2));
     EXPECT_EQ(widget.box().size(), egt::Size(100, 100));
 }

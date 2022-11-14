@@ -105,7 +105,7 @@ int main(int argc, char** argv)
 
     auto dlist0 = std::make_shared<egt::ListBox>();
     for (auto x = 0; x < 25; x++)
-        dlist0->add_item(std::make_shared<egt::StringItem>("item " + std::to_string(x), egt::Rect(), egt::AlignFlag::left | egt::AlignFlag::center));
+        dlist0->add_item(std::make_shared<egt::StringItem>("item " + std::to_string(x), egt::Rect(), egt::AlignFlag::left | egt::AlignFlag::center_vertical));
     list_dialog->widget(expand(dlist0));
 
     list_dialog->on_button1_click([list_dialog, dialog_result, dlist0]()

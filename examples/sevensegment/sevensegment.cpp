@@ -192,7 +192,7 @@ int main(int argc, char** argv)
 
     egt::ImageLabel logo(egt::Image("icon:egt_logo_white.png;128"));
     logo.margin(10);
-    logo.align(egt::AlignFlag::center | egt::AlignFlag::top);
+    logo.align(egt::AlignFlag::center_horizontal | egt::AlignFlag::top);
     window.add(logo);
 
     egt::HorizontalBoxSizer sizer;

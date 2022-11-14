@@ -26,19 +26,19 @@ int main(int argc, char** argv)
 
     auto imagebutton1 = std::make_shared<egt::ImageButton>(egt::Image("icon:calculator.png"), "Calculator");
     grid0->add(expand(imagebutton1));
-    imagebutton1->text_align(egt::AlignFlag::center | egt::AlignFlag::left);
+    imagebutton1->text_align(egt::AlignFlag::center_vertical | egt::AlignFlag::left);
 
     auto imagebutton2 = std::make_shared<egt::ImageButton>(egt::Image("icon:calculator.png"), "Calculator");
     grid0->add(expand(imagebutton2));
-    imagebutton2->text_align(egt::AlignFlag::center | egt::AlignFlag::right);
+    imagebutton2->text_align(egt::AlignFlag::center_vertical | egt::AlignFlag::right);
 
     auto imagebutton3 = std::make_shared<egt::ImageButton>(egt::Image("icon:calculator.png"), "Calculator");
     grid0->add(expand(imagebutton3));
-    imagebutton3->text_align(egt::AlignFlag::center | egt::AlignFlag::top);
+    imagebutton3->text_align(egt::AlignFlag::center_horizontal | egt::AlignFlag::top);
 
     auto imagebutton4 = std::make_shared<egt::ImageButton>(egt::Image("icon:calculator.png"), "Calculator");
     grid0->add(expand(imagebutton4));
-    imagebutton4->text_align(egt::AlignFlag::center | egt::AlignFlag::bottom);
+    imagebutton4->text_align(egt::AlignFlag::center_horizontal | egt::AlignFlag::bottom);
     imagebutton4->image_align(egt::AlignFlag::right);
 
     auto imagebutton5 = std::make_shared<egt::ImageButton>(egt::Image("icon:calculator.png"));

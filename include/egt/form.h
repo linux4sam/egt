@@ -137,7 +137,7 @@ protected:
     std::vector<Widget*> m_options;
 
     /// Option name text alignment.
-    AlignFlags m_name_align{AlignFlag::center | AlignFlag::left};
+    AlignFlags m_name_align{AlignFlag::center_vertical | AlignFlag::left};
 
     /// Group name text alignment.
     AlignFlags m_group_align{AlignFlag::bottom | AlignFlag::left};

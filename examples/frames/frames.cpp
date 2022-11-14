@@ -25,13 +25,13 @@ static std::shared_ptr<WindowType> create_window(const egt::Size& size,
         auto p = win->display_to_local(event.pointer().point);
         label->text(egt::detail::to_string(p));
     }, {egt::EventId::raw_pointer_move});
-    label->align(egt::AlignFlag::top | egt::AlignFlag::center);
+    label->align(egt::AlignFlag::top | egt::AlignFlag::center_horizontal);
     win->add(label);
 
     win->move(egt::Point(50, 50));
     auto l1 = std::make_shared<egt::Label>(egt::detail::to_string(win->box()),
                                            egt::Rect(0, 0, 100, 50));
-    l1->align(egt::AlignFlag::center | egt::AlignFlag::bottom);
+    l1->align(egt::AlignFlag::center_horizontal | egt::AlignFlag::bottom);
     win->add(l1);
 
     return win;

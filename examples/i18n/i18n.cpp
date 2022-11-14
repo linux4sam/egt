@@ -76,12 +76,12 @@ int main(int argc, char** argv)
 
     auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_black.png;128"));
     logo->margin(10);
-    logo->align(egt::AlignFlag::center | egt::AlignFlag::bottom);
+    logo->align(egt::AlignFlag::center_horizontal | egt::AlignFlag::bottom);
     window.add(logo);
 
     auto next = std::make_shared<egt::ImageButton>(egt::Image("icon:arrow_right.png;64"));
     next->fill_flags().clear();
-    next->align(egt::AlignFlag::right | egt::AlignFlag::center);
+    next->align(egt::AlignFlag::right | egt::AlignFlag::center_vertical);
     window.add(next);
 
     std::vector<std::string> variations =
@@ -292,7 +292,7 @@ int main(int argc, char** argv)
             vsizer.hide();
             hsizer.show();
             next->image(egt::Image(egt::Image("icon:arrow_left.png;64")));
-            next->align(egt::AlignFlag::left | egt::AlignFlag::center);
+            next->align(egt::AlignFlag::left | egt::AlignFlag::center_vertical);
             flag = false;
             auto env = std::getenv("LANG");
             std::string lang = env ? env : "";
@@ -329,7 +329,7 @@ int main(int argc, char** argv)
         {
             hsizer.hide();
             next->image(egt::Image(egt::Image("icon:arrow_right.png;64")));
-            next->align(egt::AlignFlag::right | egt::AlignFlag::center);
+            next->align(egt::AlignFlag::right | egt::AlignFlag::center_vertical);
             flag = true;
             vsizer.show();
             sequence.start();

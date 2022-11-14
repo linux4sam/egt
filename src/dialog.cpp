@@ -46,7 +46,7 @@ void Dialog::initialize()
     m_layout.align(AlignFlag::expand);
     add(m_layout);
 
-    m_title.text_align(AlignFlag::left | AlignFlag::center);
+    m_title.text_align(AlignFlag::left | AlignFlag::center_vertical);
     m_layout.add(expand_horizontal(m_title));
 
     m_layout.add(expand(m_content));
