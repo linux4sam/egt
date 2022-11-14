@@ -96,6 +96,11 @@ protected:
 
 public:
 
+    Label(const Label&) = delete;
+    Label& operator=(const Label&) = delete;
+    Label(Label&&) noexcept = default;
+    Label& operator=(Label&&) noexcept = default;
+
     using TextWidget::text;
 
     void draw(Painter& painter, const Rect& rect) override;
