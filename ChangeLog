@@ -3,6 +3,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+### Changed
+- Move from C++14 to C++17.
+- AlignFlag: transform the AlignFlag enum into a main AlignFlag class plus
+  few subclasses and define opertor| for all valid combination of those classes
+  in order to discard invalid AlignFlag combinations at compilation time.
+- WindowHint, Justification, Orientation: change enums values from flags to
+  regular enum values.
+- ImageHolder: de-templatize the ImageHolder class.
+
+### Fixed
+- Pattern: add Pattern::operator== and Pattern::operator!= to fix a crash in
+  'void Widget::Color(Paletter::ColorId, const Pattern&, Palette::GroupId)' when
+  changing a Pattern that already exists in the widget's palette.
+- Label: add missing move constructor annd move assignment operator.
+- ImageHolder: fix the copy and move constructors.
+- ImageButton, ImageLabel: fix their move constructor and add their default move
+  assignement operator.
+
 ## [1.5] - 2022-11-09
 ### Added
 - Support for Windows build.
