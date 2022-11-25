@@ -44,8 +44,6 @@ Form::Form(Serializer::Properties& props, bool is_derived) noexcept
     : Frame(props, true),
       m_vsizer(Orientation::vertical, Justification::start)
 {
-    name("Form" + std::to_string(m_widgetid));
-
     m_vsizer.align(AlignFlag::expand);
     add(m_vsizer);
 

@@ -40,8 +40,6 @@ RadioBox::RadioBox(Frame& parent,
 RadioBox::RadioBox(Serializer::Properties& props, bool is_derived) noexcept
     : Button(props, true)
 {
-    name("RadioBox" + std::to_string(m_widgetid));
-
     deserialize(props);
 
     if (!is_derived)

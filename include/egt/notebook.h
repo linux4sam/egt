@@ -67,8 +67,6 @@ protected:
     explicit NotebookTab(Serializer::Properties& props, bool is_derived) noexcept
         : Frame(props, true)
     {
-        name("NotebookTab" + std::to_string(m_widgetid));
-
         // tabs are not transparent by default
         fill_flags(Theme::FillFlag::solid);
 

@@ -41,8 +41,6 @@ CheckBox::CheckBox(Frame& parent,
 CheckBox::CheckBox(Serializer::Properties& props, bool is_derived) noexcept
     : Button(props, true)
 {
-    name("CheckBox" + std::to_string(m_widgetid));
-
     deserialize(props);
 
     if (!is_derived)
@@ -290,8 +288,6 @@ ToggleBox::ToggleBox(Frame& parent, const Rect& rect) noexcept
 ToggleBox::ToggleBox(Serializer::Properties& props, bool is_derived) noexcept
     : CheckBox(props, true)
 {
-    name("ToggleBox" + std::to_string(m_widgetid));
-
     deserialize(props);
 
     if (!is_derived)

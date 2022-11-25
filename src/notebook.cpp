@@ -37,8 +37,6 @@ Notebook::Notebook(Frame& parent, const Rect& rect) noexcept
 Notebook::Notebook(Serializer::Properties& props, bool is_derived) noexcept
     : Frame(props, true)
 {
-    name("Notebook" + std::to_string(m_widgetid));
-
     if (!is_derived)
         deserialize_leaf(props);
 }

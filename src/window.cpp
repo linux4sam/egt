@@ -56,8 +56,6 @@ Window::Window(Serializer::Properties& props, bool is_derived)
 {
     flags().set({Widget::Flag::window, Widget::Flag::invisible});
 
-    name("Window" + std::to_string(m_widgetid));
-
     PixelFormat format = DEFAULT_FORMAT;
     WindowHint hint = WindowHint::automatic;
 

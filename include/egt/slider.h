@@ -482,7 +482,6 @@ SliderType<T>::SliderType(Serializer::Properties& props, bool is_derived) noexce
     : ValueRangeWidget<T>(props, true)
 {
 
-    this->name("Slider" + std::to_string(this->m_widgetid));
     this->fill_flags(Theme::FillFlag::blend);
     this->grab_mouse(true);
     this->slider_flags().set(SliderFlag::rectangle_handle);

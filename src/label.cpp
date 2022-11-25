@@ -55,8 +55,6 @@ Label::Label(Frame& parent, const std::string& text, const Rect& rect,
 Label::Label(Serializer::Properties& props, bool is_derived) noexcept
     : TextWidget(props, true)
 {
-    name("Label" + std::to_string(m_widgetid));
-
     if (!is_derived)
         deserialize_leaf(props);
 }
@@ -158,8 +156,6 @@ ImageLabel::ImageLabel(Serializer::Properties& props, bool is_derived) noexcept
     : Label(props, true),
       ImageHolder(static_cast<TextWidget&>(*this))
 {
-    name("ImageLabel" + std::to_string(m_widgetid));
-
     deserialize(props);
 
     if (!is_derived)

@@ -51,8 +51,6 @@ FileDialog::FileDialog(Serializer::Properties& props, bool is_derived) noexcept
     : Dialog(props, true),
       m_flist(std::make_shared<egt::ListBox>())
 {
-    name("FileDialog" + std::to_string(m_widgetid));
-
     initialize();
 
     deserialize(props);
@@ -187,7 +185,6 @@ FileOpenDialog::FileOpenDialog(const std::string& filepath, const Rect& rect) no
 FileOpenDialog::FileOpenDialog(Serializer::Properties& props, bool is_derived) noexcept
     : FileDialog(props, true)
 {
-    name("FileOpenDialog" + std::to_string(m_widgetid));
     initialize();
 
     if (!is_derived)
@@ -237,7 +234,6 @@ FileSaveDialog::FileSaveDialog(Serializer::Properties& props, bool is_derived) n
     : FileDialog(props, true),
       m_fsave_box("", Size(box().width() * 0.50, box().height() * 0.15))
 {
-    name("FileSaveDialog" + std::to_string(m_widgetid));
     initialize();
 
     if (!is_derived)

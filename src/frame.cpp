@@ -32,7 +32,6 @@ Frame::Frame(Serializer::Properties& props, bool is_derived) noexcept
 {
     flags().set(Widget::Flag::frame);
 
-    name("Frame" + std::to_string(m_widgetid));
     m_damage.reserve(10);
 
     if (!is_derived)

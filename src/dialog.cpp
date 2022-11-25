@@ -27,7 +27,6 @@ Dialog::Dialog(Serializer::Properties& props, bool is_derived) noexcept
       m_button1("OK"),
       m_button2("Cancel")
 {
-    name("Dialog" + std::to_string(m_widgetid));
     initialize();
 
     if (!is_derived)

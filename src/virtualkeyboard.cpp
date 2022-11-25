@@ -154,8 +154,6 @@ VirtualKeyboard::VirtualKeyboard(const Rect& rect) noexcept
 VirtualKeyboard::VirtualKeyboard(Serializer::Properties& props, bool is_derived) noexcept
     : Frame(props, true)
 {
-    name("VirtualKeyboard" + std::to_string(m_widgetid));
-
     const std::vector<PanelKeys>& keys =
     {
         QwertyLettersLowerCase(),

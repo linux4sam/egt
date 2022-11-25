@@ -207,8 +207,6 @@ protected:
     explicit RectangleWidget(Serializer::Properties& props, bool is_derived)
         : Widget(props, true)
     {
-        name("RectangleWidget" + std::to_string(m_widgetid));
-
         if (!is_derived)
             deserialize_leaf(props);
     }

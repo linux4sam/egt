@@ -159,7 +159,6 @@ ComboBox::ComboBox(Serializer::Properties& props, bool is_derived) noexcept
     : Widget(props, true),
       m_popup(std::make_shared<detail::ComboBoxPopup>(*this))
 {
-    name("ComboBox" + std::to_string(m_widgetid));
     initialize();
 
     deserialize(props);

@@ -53,8 +53,6 @@ ListBox::ListBox(Serializer::Properties& props, bool is_derived) noexcept
       m_view(*this, ScrolledView::Policy::never),
       m_sizer(Orientation::vertical, Justification::start)
 {
-    name("ListBox" + std::to_string(m_widgetid));
-
     m_sizer.align(AlignFlag::expand_horizontal);
 
     m_view.add(m_sizer);

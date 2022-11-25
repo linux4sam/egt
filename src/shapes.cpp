@@ -30,8 +30,6 @@ CircleWidget::CircleWidget(Frame& parent, const Circle& circle)
 CircleWidget::CircleWidget(Serializer::Properties& props, bool is_derived)
     : Widget(props, true)
 {
-    name("CircleWidget" + std::to_string(m_widgetid));
-
     deserialize(props);
 
     if (!is_derived)

@@ -61,8 +61,6 @@ ScrolledView::ScrolledView(Serializer::Properties& props, bool is_derived) noexc
       m_hslider(0, 100, 0, Orientation::horizontal),
       m_vslider(0, 100, 0, Orientation::vertical)
 {
-    name("ScrolledView" + std::to_string(m_widgetid));
-
     m_hslider.slider_flags().set({Slider::SliderFlag::rectangle_handle,
                                   Slider::SliderFlag::consistent_line});
 

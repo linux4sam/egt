@@ -108,8 +108,6 @@ Button::Button(Frame& parent,
 Button::Button(Serializer::Properties& props, bool is_derived) noexcept
     : TextWidget(props, true)
 {
-    name("Button" + std::to_string(m_widgetid));
-
     if (!is_derived)
         deserialize_leaf(props);
 }
@@ -270,8 +268,6 @@ ImageButton::ImageButton(Serializer::Properties& props, bool is_derived) noexcep
     : Button(props, true),
       ImageHolder(static_cast<TextWidget&>(*this))
 {
-    name("ImageButton" + std::to_string(m_widgetid));
-
     if (m_text.empty())
         image_align(AlignFlag::center);
 
