@@ -497,7 +497,7 @@ private:
     /// Lost focus registration.
     Signal<>::RegisterHandle m_lost_focus_reg{};
 
-    void initialize();
+    void initialize(bool init_inherited_properties = true);
 
     void deserialize(Serializer::Properties& props);
 };

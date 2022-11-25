@@ -799,7 +799,7 @@ TextBox::TextBox(Serializer::Properties& props, bool is_derived) noexcept
     : TextWidget(props, true),
       m_timer(std::chrono::seconds(1))
 {
-    initialize();
+    initialize(false);
 
     deserialize(props);
 
@@ -807,12 +807,15 @@ TextBox::TextBox(Serializer::Properties& props, bool is_derived) noexcept
         deserialize_leaf(props);
 }
 
-void TextBox::initialize()
+void TextBox::initialize(bool init_inherited_properties)
 {
-    border(theme().default_border());
-    fill_flags(Theme::FillFlag::blend);
-    border_radius(4.0);
-    padding(5);
+    if (init_inherited_properties)
+    {
+        border(theme().default_border());
+        fill_flags(Theme::FillFlag::blend);
+        border_radius(4.0);
+        padding(5);
+    }
 
     m_timer.on_timeout([this]() { cursor_timeout(); });
 
