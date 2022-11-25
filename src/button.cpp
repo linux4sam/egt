@@ -268,9 +268,6 @@ ImageButton::ImageButton(Serializer::Properties& props, bool is_derived) noexcep
     : Button(props, true),
       ImageHolder(static_cast<TextWidget&>(*this))
 {
-    if (m_text.empty())
-        image_align(AlignFlag::center);
-
     deserialize(props);
 
     if (!is_derived)
