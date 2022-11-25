@@ -67,9 +67,6 @@ protected:
     explicit NotebookTab(Serializer::Properties& props, bool is_derived) noexcept
         : Frame(props, true)
     {
-        // tabs are not transparent by default
-        fill_flags(Theme::FillFlag::solid);
-
         if (!is_derived)
             deserialize_leaf(props);
     }
