@@ -167,7 +167,7 @@ public:
 
 protected:
     /// @private
-    void init();
+    void init(bool in_deserialize = false);
     /// Array of items.
     ItemArray m_items;
     /// Currently selected index.
