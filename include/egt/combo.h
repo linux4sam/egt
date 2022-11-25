@@ -210,7 +210,7 @@ private:
     static void register_handler();
     static void unregister_handler();
 
-    void initialize();
+    void initialize(bool init_inherited_properties = true);
 
     void deserialize(Serializer::Properties& props);
 };

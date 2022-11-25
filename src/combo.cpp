@@ -159,7 +159,7 @@ ComboBox::ComboBox(Serializer::Properties& props, bool is_derived) noexcept
     : Widget(props, true),
       m_popup(std::make_shared<detail::ComboBoxPopup>(*this))
 {
-    initialize();
+    initialize(false);
 
     deserialize(props);
 
@@ -167,14 +167,17 @@ ComboBox::ComboBox(Serializer::Properties& props, bool is_derived) noexcept
         deserialize_leaf(props);
 }
 
-void ComboBox::initialize()
+void ComboBox::initialize(bool init_inherited_properties)
 {
-    fill_flags(Theme::FillFlag::blend);
-    border_radius(4.0);
-    padding(5);
-    border(theme().default_border());
+    if (init_inherited_properties)
+    {
+        fill_flags(Theme::FillFlag::blend);
+        border_radius(4.0);
+        padding(5);
+        border(theme().default_border());
 
-    grab_mouse(true);
+        grab_mouse(true);
+    }
 
     m_popup->add(m_list);
 
