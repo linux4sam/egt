@@ -366,8 +366,6 @@ protected:
     explicit SpinProgressType(Serializer::Properties& props, bool is_derived) noexcept
         : ValueRangeWidget<T>(props, true)
     {
-        this->fill_flags(Theme::FillFlag::blend);
-
         deserialize(props);
 
         if (!is_derived)
