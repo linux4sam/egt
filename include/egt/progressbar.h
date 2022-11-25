@@ -81,9 +81,6 @@ protected:
     explicit ProgressBarType(Serializer::Properties& props, bool is_derived) noexcept
         : ValueRangeWidget<T>(props, true)
     {
-        this->fill_flags(Theme::FillFlag::blend);
-        this->border(this->theme().default_border());
-
         deserialize(props);
 
         if (!is_derived)
