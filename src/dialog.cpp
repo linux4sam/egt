@@ -27,20 +27,23 @@ Dialog::Dialog(Serializer::Properties& props, bool is_derived) noexcept
       m_button1("OK"),
       m_button2("Cancel")
 {
-    initialize();
+    initialize(false);
 
     if (!is_derived)
         deserialize_leaf(props);
 }
 
-void Dialog::initialize()
+void Dialog::initialize(bool init_inherited_properties)
 {
     m_grid->margin(5);
     m_grid->horizontal_space(5);
     m_grid->vertical_space(5);
 
-    border(theme().default_border());
-    padding(5);
+    if (init_inherited_properties)
+    {
+        border(theme().default_border());
+        padding(5);
+    }
 
     m_layout.align(AlignFlag::expand);
     add(m_layout);

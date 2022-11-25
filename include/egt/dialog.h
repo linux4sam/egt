@@ -150,7 +150,7 @@ protected:
     /// Button for okay or cancel.
     Button m_button2;
 
-    void initialize();
+    void initialize(bool init_inherited_properties = true);
 };
 
 }
