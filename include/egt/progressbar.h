@@ -629,9 +629,6 @@ protected:
     explicit LevelMeterType(Serializer::Properties& props, bool is_derived) noexcept
         : ValueRangeWidget<T>(props, true)
     {
-        this->fill_flags(Theme::FillFlag::blend);
-        this->padding(2);
-
         deserialize(props);
 
         if (!is_derived)
