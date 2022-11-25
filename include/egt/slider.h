@@ -481,11 +481,7 @@ template <class T>
 SliderType<T>::SliderType(Serializer::Properties& props, bool is_derived) noexcept
     : ValueRangeWidget<T>(props, true)
 {
-
-    this->fill_flags(Theme::FillFlag::blend);
-    this->grab_mouse(true);
     this->slider_flags().set(SliderFlag::rectangle_handle);
-    this->border_radius(4.0);
 
     deserialize(props);
 
