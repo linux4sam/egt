@@ -5,6 +5,16 @@
 Here, you can find the API changes from the version 1.0. In addition, some hints
 are provided to help you update your code.
 
+@section v1_5 1.5
+
+@subsection widget Widget
+
+@li Add a setter for the focus.
+
+@subsection textbox TextBox
+
+@li Make the handle_key() method virtual.
+
 @section v1_4 1.4
 
 @subsection app App
