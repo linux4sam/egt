@@ -5,6 +5,25 @@
 Here, you can find the API changes from the version 1.0. In addition, some hints
 are provided to help you update your code.
 
+@section v1_6 1.6
+
+@subsection cxx C++
+
+@li Switch to C++17
+
+@subsection pattern Pattern
+
+@li Add operator== and operator!=.
+
+@subsection widgetflags Widgetflags
+
+@li Transform the WidgetFlag enum into a WidgetFlag class plus few other
+related classes: HorizontalBitField, VerticalBitField, ExpandBitField,
+HVBitField, HExpandBitField, VExpendBitField.
+
+@li Override operators| to allow only valid combinations of WidgetFlag and
+related classes listed above.
+
 @section v1_5 1.5
 
 @subsection widget Widget
