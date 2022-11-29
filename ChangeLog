@@ -21,6 +21,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - ImageHolder: fix the copy and move constructors.
 - ImageButton, ImageLabel: fix their move constructor and add their default move
   assignement operator.
+- ComboBox, Dialog, ImageButton, LevelMeter, NotebookTab, ProgressBar,
+  ScrollWheel, Slider, SpinProgress, TextBox: fix deserialization issues of
+  inherited properties.
 
 ## [1.5] - 2022-11-09
 ### Added
