@@ -197,7 +197,9 @@ public:
      */
     explicit HorizontalBoxSizer(Justification justify = Justification::middle)
         : BoxSizer(Orientation::horizontal, justify)
-    {}
+    {
+        name("HorizontalBoxSizer" + std::to_string(m_widgetid));
+    }
 
     explicit HorizontalBoxSizer(Serializer::Properties& props)
         : HorizontalBoxSizer(props, false)
@@ -238,7 +240,9 @@ public:
      */
     explicit VerticalBoxSizer(Justification justify = Justification::middle)
         : BoxSizer(Orientation::vertical, justify)
-    {}
+    {
+        name("VerticalBoxSizer" + std::to_string(m_widgetid));
+    }
 
     explicit VerticalBoxSizer(Serializer::Properties& props)
         : VerticalBoxSizer(props, false)
@@ -279,7 +283,9 @@ public:
      */
     explicit FlexBoxSizer(Justification justify = Justification::middle)
         : BoxSizer(Orientation::flex, justify)
-    {}
+    {
+        name("FlexBoxSizer" + std::to_string(m_widgetid));
+    }
 
     /**
      * @param[in] parent The parent Frame.
