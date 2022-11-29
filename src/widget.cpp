@@ -599,6 +599,12 @@ size_t Widget::zorder() const
     return 0;
 }
 
+void Widget::zorder(size_t rank)
+{
+    if (m_parent)
+        m_parent->zorder(this, rank);
+}
+
 void Widget::detach()
 {
     if (m_parent)

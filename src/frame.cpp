@@ -347,6 +347,30 @@ size_t Frame::zorder(const Widget* widget) const
     return 0;
 }
 
+void Frame::zorder(const Widget* widget, size_t rank)
+{
+    auto i = std::find_if(m_children.begin(), m_children.end(),
+                          [widget](const auto & ptr)
+    {
+        return ptr.get() == widget;
+    });
+    if (i != m_children.end())
+    {
+        size_t old_rank = std::distance(m_children.begin(), i);
+        rank = std::min(rank, m_children.size() - 1);
+        if (rank != old_rank)
+        {
+            auto j = std::next(m_children.begin(), rank);
+
+            if (old_rank < rank)
+                std::rotate(i, i + 1, j + 1);
+            else
+                std::rotate(j, i, i + 1);
+            layout();
+        }
+    }
+}
+
 static inline bool time_child_draw_enabled()
 {
     static int value = 0;

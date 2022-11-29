@@ -1155,6 +1155,15 @@ public:
     EGT_NODISCARD virtual size_t zorder() const;
 
     /**
+     * Set the zorder of the widget.
+     *
+     * @param rank The rank in the zorder.
+     *
+     * @see @ref draw_zorder
+     */
+    virtual void zorder(size_t rank);
+
+    /**
      * Detach this widget from its parent.
      *
      * @warning This can result in immediately deleting the instance of the

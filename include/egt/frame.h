@@ -365,6 +365,14 @@ public:
      */
     size_t zorder(const Widget* widget) const;
 
+    /**
+     * Set the zorder of the widget.
+     *
+     * @param widget The widget.
+     * @param rank The rank in the zorder.
+     */
+    void zorder(const Widget* widget, size_t rank);
+
     using Widget::zorder;
 
     /**
