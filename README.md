@@ -120,7 +120,7 @@ To link this example application, saved as example.cpp, use g++ and pkgconfig to
 pull in the required compiler flags.
 
 ```sh
-g++ -std=c++14 example.cpp -o example `pkg-config libegt --cflags --libs` -pthread
+g++ -std=c++17 example.cpp -o example `pkg-config libegt --cflags --libs` -pthread
 ```
 
 Then, run.

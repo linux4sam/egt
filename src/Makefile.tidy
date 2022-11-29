@@ -1,4 +1,4 @@
-TIDY_OPTIONS = $(AM_CPPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(TIDY_FLAGS) -std=c++14
+TIDY_OPTIONS = $(AM_CPPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(TIDY_FLAGS) -std=c++17
 TIDY_SOURCE = $(filter %.cpp,$(filter-out $(BUILT_SOURCES),$(SOURCES)))
 TIDY_OPTS = $(filter-out -findirect-inlining,$(TIDY_OPTIONS))
 

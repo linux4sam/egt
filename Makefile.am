@@ -57,7 +57,7 @@ CPPCHECK_CMD = $(CPPCHECK_BIN) \
 	-j 4 \
 	--force \
 	--language=c++ \
-	--std=c++14 \
+	--std=c++17 \
 	--platform=unix32 \
 	--template=gcc \
 	-UTSLIB_MT_VALID \
