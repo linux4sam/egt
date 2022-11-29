@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - WindowHint, Justification, Orientation: change enums values from flags to
   regular enum values.
 - ImageHolder: de-templatize the ImageHolder class.
+- Horizontal/Vertical/FlexBoxSizer: dedicated name instead of BoxSizer.
 
 ### Fixed
 - Pattern: add Pattern::operator== and Pattern::operator!= to fix a crash in
