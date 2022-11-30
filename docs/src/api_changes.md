@@ -11,9 +11,17 @@ are provided to help you update your code.
 
 @li Switch to C++17
 
+@subsection frame Frame
+
+@li Add zorder setter to change the rank of a child.
+
 @subsection pattern Pattern
 
 @li Add operator== and operator!=.
+
+@subsection widget Widget
+
+@li Add zorder setter to change the rank.
 
 @subsection widgetflags Widgetflags
 
