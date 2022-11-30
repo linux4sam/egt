@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
+### Added
+- Widget/Frame: new zorder setter to be able to set a specific rank instead of
+using top, bottom, up and down.
 ### Changed
 - Move from C++14 to C++17.
 - AlignFlag: transform the AlignFlag enum into a main AlignFlag class plus
