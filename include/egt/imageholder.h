@@ -13,6 +13,7 @@
 
 #include "egt/detail/alignment.h"
 #include <egt/detail/meta.h>
+#include <egt/frame.h>
 #include <egt/geometry.h>
 #include <egt/image.h>
 #include <egt/painter.h>
@@ -26,52 +27,106 @@ namespace egt
 inline namespace v1
 {
 
-class ImageHolder
+template<class T,
+         Palette::ColorId id_bg,
+         Palette::ColorId id_border,
+         Palette::ColorId id_text>
+class EGT_API ImageHolder : public T
 {
-protected:
-    ImageHolder(TextWidget& widget, const ImageHolder& rhs) noexcept
-        : m_widget(widget),
-          m_image(rhs.m_image),
-          m_show_label(rhs.m_show_label),
-          m_image_align(rhs.m_image_align)
-    {}
-
-    ImageHolder(TextWidget& widget, ImageHolder&& rhs) noexcept
-        : m_widget(widget),
-          m_image(std::move(rhs.m_image)),
-          m_show_label(rhs.m_show_label),
-          m_image_align(std::move(rhs.m_image_align))
-    {}
-
-    ImageHolder(const ImageHolder&) = delete;
-    ImageHolder(ImageHolder&&) = delete;
-
-    ImageHolder& operator=(const ImageHolder& rhs)
-    {
-        if (this != &rhs)
-        {
-            // Keep m_widget unchanged
-            m_image = rhs.m_image;
-            m_show_label = rhs.m_show_label;
-            m_image_align = rhs.m_image_align;
-        }
-        return *this;
-    }
-
-    ImageHolder& operator=(ImageHolder&& rhs)
-    {
-        if (this != &rhs)
-        {
-            // Keep m_widget unchanged
-            m_image = std::move(rhs.m_image);
-            m_show_label = rhs.m_show_label;
-            m_image_align = std::move(rhs.m_image_align);
-        }
-        return *this;
-    }
-
 public:
+    /**
+     * @param[in] text The text to display.
+     * @param[in] text_align Alignment for the text.
+     */
+    explicit ImageHolder(const std::string& text = {},
+                         const AlignFlags& text_align = T::default_text_align()) noexcept
+        : ImageHolder(Image(), text, text_align)
+    {}
+
+    /**
+     * @param[in] image The image to display.
+     * @param[in] text The text to display.
+     * @param[in] text_align Alignment for the text.
+     */
+    explicit ImageHolder(const Image& image,
+                         const std::string& text = {},
+                         const AlignFlags& text_align = T::default_text_align()) noexcept
+        : ImageHolder(image, text, {}, text_align)
+    {}
+
+    /**
+     * @param[in] image The image to display.
+     * @param[in] text The text to display.
+     * @param[in] rect Initial rectangle of the widget.
+     * @param[in] text_align Alignment for the text.
+     */
+    explicit ImageHolder(const Image& image,
+                         const std::string& text,
+                         const Rect& rect,
+                         const AlignFlags& text_align = T::default_text_align()) noexcept
+        : T(text, rect, text_align)
+    {
+        this->name(type() + std::to_string(this->m_widgetid));
+
+        if (text.empty())
+        {
+            show_label(false);
+            image_align(AlignFlag::center | AlignFlag::expand);
+        }
+        do_set_image(image);
+    }
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] image The image to display.
+     * @param[in] text The text to display.
+     * @param[in] text_align Alignment for the text.
+     */
+    explicit ImageHolder(Frame& parent,
+                         const Image& image = {},
+                         const std::string& text = {},
+                         const AlignFlags& text_align = T::default_text_align()) noexcept
+        : ImageHolder(image, text, text_align)
+    {
+        parent.add(*this);
+    }
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] image The image to display.
+     * @param[in] text The text to display.
+     * @param[in] rect Initial rectangle of the widget.
+     * @param[in] text_align Alignment for the text.
+     */
+    ImageHolder(Frame& parent,
+                const Image& image,
+                const std::string& text,
+                const Rect& rect,
+                const AlignFlags& text_align = T::default_text_align()) noexcept
+        : ImageHolder(image, text, rect, text_align)
+    {
+        parent.add(*this);
+    }
+
+    /**
+     * @param[in] props list of arguments and its properties.
+     */
+    explicit ImageHolder(Serializer::Properties& props) noexcept
+        : ImageHolder(props, false)
+    {}
+
+    ImageHolder(const ImageHolder&) noexcept = delete;
+    ImageHolder& operator=(const ImageHolder&) noexcept = delete;
+    ImageHolder(ImageHolder&&) noexcept = default;
+    ImageHolder& operator=(ImageHolder&&) noexcept = default;
+
     virtual ~ImageHolder() = default;
+
+    EGT_NODISCARD std::string type() const override
+    {
+        auto t = detail::demangle(typeid(T).name());
+        return std::string("Image") + detail::replace_all(t, "egt::v1::", {});
+    }
 
     /**
      * Get the URI of the current image.
@@ -132,7 +187,7 @@ public:
     /**
      * Scale the image in both direction with the same ratio.
      */
-    void scale(float scale)
+    void image_scale(float scale)
     {
         m_image.scale(scale);
         refresh();
@@ -141,7 +196,7 @@ public:
     /**
      * Scale the image in both direction.
      */
-    void scale(const SizeF& scale)
+    void image_scale(const SizeF& scale)
     {
         m_image.scale(scale.width(), scale.height());
         refresh();
@@ -150,7 +205,7 @@ public:
     /**
      * Get both scale values.
      */
-    EGT_NODISCARD SizeF scale() const { return SizeF(hscale(), vscale()); }
+    EGT_NODISCARD SizeF image_scale() const { return SizeF(hscale(), vscale()); }
 
     /**
      * Set a new Image.
@@ -183,7 +238,7 @@ public:
                      bool approximate = false)
     {
         m_image.scale(hscale, vscale, approximate);
-        m_widget.parent_layout();
+        this->parent_layout();
     }
 
     /**
@@ -261,7 +316,7 @@ public:
     void image_align(const AlignFlags& align)
     {
         if (detail::change_if_diff<>(m_image_align, align))
-            m_widget.damage();
+            this->damage();
     }
 
     /**
@@ -285,23 +340,23 @@ public:
      */
     EGT_NODISCARD bool show_label() const { return m_show_label; }
 
-    void default_draw(Painter& painter,
-                      const Rect& rect,
-                      Palette::ColorId id_bg,
-                      Palette::ColorId id_border,
-                      Palette::ColorId id_text)
+    void draw(Painter& painter, const Rect& rect) override
     {
-        auto& widget = m_widget;
+        Drawer<ImageHolder>::draw(*this, painter, rect);
+    }
 
+    /// Default draw method for the widget.
+    static void default_draw(ImageHolder& widget, Painter& painter, const Rect& rect)
+    {
         detail::ignoreparam(rect);
 
         widget.draw_box(painter, id_bg, id_border);
 
-        if (show_label())
+        if (widget.show_label())
         {
             const std::string& text = widget.text();
 
-            if (!image().empty())
+            if (!widget.image().empty())
             {
                 detail::draw_text(painter,
                                   widget.content_area(),
@@ -311,8 +366,8 @@ public:
                                   widget.text_align(),
                                   Justification::middle,
                                   widget.color(id_text),
-                                  image_align(),
-                                  image());
+                                  widget.image_align(),
+                                  widget.image());
             }
             else
             {
@@ -326,50 +381,58 @@ public:
                                   widget.color(id_text));
             }
         }
-        else if (!image().empty())
+        else if (!widget.image().empty())
         {
-            auto target = image().align(widget.content_area(), image_align());
+            auto target = widget.image().align(widget.content_area(), widget.image_align());
             painter.draw(target.point());
-            painter.draw(image());
+            painter.draw(widget.image());
         }
     }
 
 protected:
-    explicit ImageHolder(TextWidget& widget) noexcept
-        : m_widget(widget)
-    {}
+    explicit ImageHolder(Serializer::Properties& props, bool is_derived) noexcept
+        : T(props, true)
+    {
+        deserialize(props);
+
+        if (!is_derived)
+            this->deserialize_leaf(props);
+    }
 
     void refresh()
     {
-        m_widget.damage();
-        m_widget.layout();
+        this->damage();
+        this->layout();
     }
 
     /// @private
     void do_set_image(const Image& image)
     {
-        if (m_widget.size().empty() && !image.empty())
-            m_widget.resize(image.size() + Size(m_widget.moat() * 2, m_widget.moat() * 2));
+        if (this->size().empty() && !image.empty())
+            this->resize(image.size() + Size(this->moat() * 2, this->moat() * 2));
 
         m_image = image;
-        m_widget.damage();
+        this->damage();
     }
 
-    Size min_size_hint(const Size& default_min_size_hint) const
+public:
+    using T::min_size_hint;
+
+    EGT_NODISCARD Size min_size_hint() const override
     {
-        if (!m_widget.m_min_size.empty())
-            return m_widget.m_min_size;
+        if (!this->m_min_size.empty())
+            return this->m_min_size;
 
         Size min_size_constraint;
-        if (show_label() && !m_widget.text().empty())
-            min_size_constraint = default_min_size_hint;
+        if (this->show_label() && !this->text().empty())
+            min_size_constraint = T::min_size_hint();
         else
-            min_size_constraint = m_widget.Widget::min_size_hint();
+            min_size_constraint = Widget::min_size_hint();
 
         if (!show_label() && auto_scale_image())
             return min_size_constraint;
 
-        Rect size = min_size_constraint - Size(m_widget.moat() * 2, m_widget.moat() * 2);
+        Rect size = min_size_constraint - Size(this->moat() * 2, this->moat() * 2);
 
         if (!m_image.size().empty())
         {
@@ -387,12 +450,14 @@ protected:
             size = Rect::merge(size, m_image.size());
         }
 
-        auto res = size.size() + Size(m_widget.moat() * 2, m_widget.moat() * 2);
+        auto res = size.size() + Size(this->moat() * 2, this->moat() * 2);
         return res;
     }
 
-    void serialize(Serializer& serializer) const
+    void serialize(Serializer& serializer) const override
     {
+        T::serialize(serializer);
+
         serializer.add_property("showlabel", show_label());
         if (!m_image.empty())
             m_image.serialize("image", serializer);
@@ -400,6 +465,7 @@ protected:
             serializer.add_property("image_align", image_align());
     }
 
+protected:
     void deserialize(Serializer::Properties& props)
     {
         // TODO proper loading of all image properties
@@ -423,9 +489,6 @@ protected:
             return true;
         }), props.end());
     }
-
-    ///
-    TextWidget& m_widget;
 
     /// The image. Allowed to be empty.
     Image m_image;
