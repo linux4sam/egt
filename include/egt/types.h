@@ -157,7 +157,7 @@ std::string gstreamer_format(PixelFormat format);
  *
  * @note This is g++ specific.
  */
-std::string demangle(const char* name);
+EGT_API std::string demangle(const char* name);
 
 }
 
