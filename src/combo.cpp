@@ -70,14 +70,31 @@ void ComboBoxPopup::smart_pos()
 {
     if (Application::instance().screen())
     {
+        const auto& list = m_parent.m_list;
+
+        /*
+         * 'reserved_height' is the fixed height of the decorations that surround
+         * the item list within the popup.
+         */
+        DefaultDim reserved_height = (margin() + border() + padding()) * 2;
+        reserved_height += (list.margin() + list.border() + list.padding()) * 2;
+
+        /*
+         * 'max_items_height' is the maxium height available for the item list,
+         * taking into account the screen height and 'reserved_height.
+         */
         const auto ss = Application::instance().screen()->size();
-        auto height =
-            std::min(static_cast<DefaultDim>(ss.height() / 40),
-                     static_cast<DefaultDim>(m_parent.m_list.item_count())) * 40;
+        DefaultDim max_items_height = std::max(ss.height() - reserved_height, 0);
 
-        // hack because list child area is smaller by this much
-        height += 2.0 * 3.0;
+        /*
+         * 'total_items_height' is the real height of the item list if no boundaries
+         * existed.
+         */
+        DefaultDim total_items_height = list.item_count() * 40;
 
+        DefaultDim items_height = std::min(total_items_height, max_items_height);
+
+        DefaultDim height = items_height + reserved_height;
         resize(Size(m_parent.size().width(), height));
     }
     else
