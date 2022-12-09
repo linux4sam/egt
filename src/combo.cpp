@@ -90,7 +90,18 @@ void ComboBoxPopup::smart_pos()
          * 'total_items_height' is the real height of the item list if no boundaries
          * existed.
          */
-        DefaultDim total_items_height = list.item_count() * 40;
+        DefaultDim total_items_height = 0;
+        size_t count = m_parent.item_count();
+        for (size_t index = 0; index < count; ++index)
+        {
+            /*
+             * TODO: ListBox::item_at() returns a std::shared_ptr<StringItem>.
+             * Creating such a shared pointer is not really efficient; maybe
+             * extend the API later to return a raw pointer instead.
+             */
+            auto item = m_parent.item_at(index);
+            total_items_height += item->height();
+        }
 
         DefaultDim items_height = std::min(total_items_height, max_items_height);
 
