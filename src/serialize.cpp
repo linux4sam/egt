@@ -77,7 +77,6 @@ using StringNode = Node<std::string>;
 struct OstreamWidgetSerializer::OstreamSerializerImpl
 {
     StringNode doc;
-    std::vector<StringNode*> stack;
     StringNode* current{nullptr};
 };
 
@@ -89,61 +88,60 @@ OstreamWidgetSerializer::OstreamWidgetSerializer()
 
 void OstreamWidgetSerializer::reset()
 {
-    m_level = 0;
     m_impl->current = &m_impl->doc;
     m_impl->doc.clear();
-    m_impl->stack.clear();
-    m_impl->stack.push_back(m_impl->current);
 
     // Start with egt node
     m_impl->current->value = "egt";
 
     // Add global theme
-    m_impl->stack.back()->children.emplace_back();
-    m_impl->current = &m_impl->stack.back()->children.back();
-    m_impl->current->value = "theme";
+    auto context = begin_child("theme");
     m_impl->current->attrs.push_back("type=" + global_theme().name());
+    end_child(context);
 
     // Add global palette
     if (global_palette())
     {
-        m_impl->stack.back()->children.emplace_back();
-        m_impl->current = &m_impl->stack.back()->children.back();
-        m_impl->current->value = "palette";
+        context = begin_child("palette");
         global_palette()->serialize("color", *this);
+        end_child(context);
     }
 
     // Add global font
     if (global_font())
     {
-        m_impl->stack.back()->children.emplace_back();
-        m_impl->current = &m_impl->stack.back()->children.back();
-        m_impl->current->value = "font";
+        context = begin_child("font");
         global_font()->serialize("font", *this);
+        end_child(context);
     }
+}
+
+Serializer::Context* OstreamWidgetSerializer::begin_child(const std::string& nodename)
+{
+    auto context = reinterpret_cast<Serializer::Context*>(m_impl->current);
+
+    m_impl->current->children.emplace_back();
+    m_impl->current = &m_impl->current->children.back();
+    m_impl->current->value = nodename;
+
+    return context;
+}
+
+void OstreamWidgetSerializer::end_child(Serializer::Context* context)
+{
+    m_impl->current = reinterpret_cast<StringNode*>(context);
 }
 
 bool OstreamWidgetSerializer::add(const Widget* widget, int level)
 {
-    m_level = level;
+    detail::ignoreparam(level);
+    auto context = begin_child(widget->name());
 
-    const auto advance = level > static_cast<int>(m_impl->stack.size()) - 1;
-    if (advance)
-    {
-        m_impl->stack.push_back(m_impl->current);
-    }
-    else
-    {
-        while (static_cast<int>(m_impl->stack.size()) - 1 > level)
-            m_impl->stack.pop_back();
-    }
-
-    m_impl->stack.back()->children.emplace_back();
-    m_impl->current = &m_impl->stack.back()->children.back();
-    m_impl->current->value = widget->name();
     m_impl->current->attrs.push_back("type=" + widget->type());
 
     widget->serialize(*this);
+
+    end_child(context);
 
     return true;
 }
@@ -288,7 +286,6 @@ void OstreamWidgetSerializer::write(std::ostream& out)
 struct XmlWidgetSerializer::XmlSerializerImpl
 {
     rapidxml::xml_document<> doc;
-    std::vector<rapidxml::xml_node<>*> stack;
     rapidxml::xml_node<>* current{nullptr};
 };
 
@@ -300,10 +297,7 @@ XmlWidgetSerializer::XmlWidgetSerializer()
 
 void XmlWidgetSerializer::reset()
 {
-    m_level = 0;
-    m_impl->current = nullptr;
     m_impl->doc.clear();
-    m_impl->stack.clear();
 
     auto decl = m_impl->doc.allocate_node(rapidxml::node_declaration);
     decl->append_attribute(m_impl->doc.allocate_attribute("version", "1.0"));
@@ -312,59 +306,61 @@ void XmlWidgetSerializer::reset()
 
     auto root = m_impl->doc.allocate_node(rapidxml::node_element, "egt");
     m_impl->doc.append_node(root);
+    m_impl->current = root;
 
-    auto theme = m_impl->doc.allocate_node(rapidxml::node_element, "theme");
-    root->append_node(theme);
-    auto node = m_impl->doc.allocate_node(rapidxml::node_element, "property");
-    node->value(m_impl->doc.allocate_string(global_theme().name().c_str()));
-    node->append_attribute(m_impl->doc.allocate_attribute("name",
-                           m_impl->doc.allocate_string("type")));
-    theme->append_node(node);
+    auto context = begin_child("theme");
+    add_property("type", global_theme().name());
+    end_child(context);
 
     if (global_palette())
     {
-        m_impl->current = m_impl->doc.allocate_node(rapidxml::node_element, "palette");
-        root->append_node(m_impl->current);
+        context = begin_child("palette");
         global_palette()->serialize("color", *this);
+        end_child(context);
     }
 
     if (global_font())
     {
-        m_impl->current = m_impl->doc.allocate_node(rapidxml::node_element, "font");
-        root->append_node(m_impl->current);
+        context = begin_child("font");
         global_font()->serialize("font", *this);
+        end_child(context);
     }
 
     auto widgets = m_impl->doc.allocate_node(rapidxml::node_element, "widgets");
     root->append_node(widgets);
-    m_impl->stack.push_back(widgets);
+    m_impl->current = widgets;
+}
+
+Serializer::Context* XmlWidgetSerializer::begin_child(const std::string& nodename)
+{
+    auto context = reinterpret_cast<Serializer::Context*>(m_impl->current);
+
+    auto str = m_impl->doc.allocate_string(nodename.c_str());
+    auto child = m_impl->doc.allocate_node(rapidxml::node_element, str);
+    m_impl->current->append_node(child);
+    m_impl->current = child;
+
+    return context;
+}
+
+void XmlWidgetSerializer::end_child(Context* context)
+{
+    m_impl->current = reinterpret_cast<rapidxml::xml_node<>*>(context);
 }
 
 bool XmlWidgetSerializer::add(const Widget* widget, int level)
 {
-    m_level = level;
-
-    const auto advance = level > static_cast<int>(m_impl->stack.size()) - 1;
-    if (advance)
-    {
-        m_impl->stack.push_back(m_impl->current);
-    }
-    else
-    {
-        while (static_cast<int>(m_impl->stack.size()) - 1 > level)
-            m_impl->stack.pop_back();
-    }
-
-    m_impl->current = m_impl->doc.allocate_node(rapidxml::node_element, "widget");
+    detail::ignoreparam(level);
+    auto context = begin_child("widget");
 
     m_impl->current->append_attribute(m_impl->doc.allocate_attribute("name",
                                       m_impl->doc.allocate_string(widget->name().c_str())));
     m_impl->current->append_attribute(m_impl->doc.allocate_attribute("type",
                                       m_impl->doc.allocate_string(widget->type().c_str())));
 
-    m_impl->stack.back()->append_node(m_impl->current);
-
     widget->serialize(*this);
+
+    end_child(context);
 
     return true;
 }

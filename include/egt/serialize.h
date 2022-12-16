@@ -33,6 +33,7 @@ class Pattern;
 class EGT_API Serializer
 {
 public:
+    using Context = void;
 
     Serializer() noexcept = default;
     Serializer(const Serializer&) = default;
@@ -48,7 +49,11 @@ public:
     /// Add a widget to the serializer.
     virtual bool add(const Widget* widget, int level = 0) = 0;
 
+    /// Create a new child.
+    virtual Context* begin_child(const std::string& nodename) = 0;
 
+    /// Complete a child.
+    virtual void end_child(Context* context) = 0;
 
     /// Add a property.
     virtual void add_property(const std::string& name, const std::string& value,
@@ -122,7 +127,9 @@ public:
 
     bool add(const Widget* widget, int level = 0) override;
 
+    Context* begin_child(const std::string& nodename) override;
 
+    void end_child(Context* context) override;
 
     using Serializer::add_property;
 
@@ -171,7 +178,9 @@ public:
 
     bool add(const Widget* widget, int level = 0) override;
 
+    Context* begin_child(const std::string& nodename) override;
 
+    void end_child(Context* context) override;
 
     using Serializer::add_property;
 
