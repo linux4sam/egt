@@ -364,18 +364,14 @@ void XmlWidgetSerializer::reset()
     {
         m_impl->current = m_impl->doc.allocate_node(rapidxml::node_element, "palette");
         root->append_node(m_impl->current);
-        m_impl->stack.push_back(m_impl->current);
         global_palette()->serialize("color", *this);
-        m_impl->stack.pop_back();
     }
 
     if (global_font())
     {
         m_impl->current = m_impl->doc.allocate_node(rapidxml::node_element, "font");
         root->append_node(m_impl->current);
-        m_impl->stack.push_back(m_impl->current);
         global_font()->serialize("font", *this);
-        m_impl->stack.pop_back();
     }
 
     auto widgets = m_impl->doc.allocate_node(rapidxml::node_element, "widgets");
