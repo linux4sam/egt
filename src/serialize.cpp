@@ -95,10 +95,10 @@ void OstreamWidgetSerializer::reset()
     m_impl->stack.clear();
     m_impl->stack.push_back(m_impl->current);
 
-    //start with egt node
+    // Start with egt node
     m_impl->current->value = "egt";
 
-    //Add global theme
+    // Add global theme
     m_impl->stack.back()->children.emplace_back();
     m_impl->current = &m_impl->stack.back()->children.back();
     m_impl->current->value = "theme";
