@@ -495,26 +495,23 @@ void XmlWidgetSerializer::add_property(const std::string& name, const Pattern& v
         node->append_node(patternnode);
 
         auto snode = m_impl->doc.allocate_node(rapidxml::node_element, "property");
-        snode->append_attribute(m_impl->doc.allocate_attribute("name",
-                                m_impl->doc.allocate_string("start")));
+        snode->append_attribute(m_impl->doc.allocate_attribute("name", "start"));
         snode->value(m_impl->doc.allocate_string(detail::to_string(value.starting()).c_str()));
 
         auto enode = m_impl->doc.allocate_node(rapidxml::node_element, "property");
-        enode->append_attribute(m_impl->doc.allocate_attribute("name",
-                                m_impl->doc.allocate_string("end")));
+        enode->append_attribute(m_impl->doc.allocate_attribute("name", "end"));
         enode->value(m_impl->doc.allocate_string(detail::to_string(value.ending()).c_str()));
 
         auto steps = value.steps();
         std::ostringstream oss;
         auto stepsnode = m_impl->doc.allocate_node(rapidxml::node_element, "property");
-        stepsnode->append_attribute(m_impl->doc.allocate_attribute("name",
-                                    m_impl->doc.allocate_string("steps")));
+        stepsnode->append_attribute(m_impl->doc.allocate_attribute("name", "steps"));
         if (!steps.empty())
         {
             std::string tmp;
             for (auto& s : steps)
             {
-                tmp = tmp + m_impl->doc.allocate_string(std::string("{" + detail::to_string(s.first) + "," + s.second.hex().c_str() + "},").c_str());
+                tmp += "{" + detail::to_string(s.first) + "," + s.second.hex().c_str() + "},";
             }
             stepsnode->value(m_impl->doc.allocate_string(tmp.c_str()));
         }
@@ -522,9 +519,8 @@ void XmlWidgetSerializer::add_property(const std::string& name, const Pattern& v
         if (value.type() == Pattern::Type::linear)
         {
             auto pnode = m_impl->doc.allocate_node(rapidxml::node_element, "property");
-            pnode->append_attribute(m_impl->doc.allocate_attribute("name",
-                                    m_impl->doc.allocate_string("type")));
-            pnode->value(m_impl->doc.allocate_string("linear"));
+            pnode->append_attribute(m_impl->doc.allocate_attribute("name", "type"));
+            pnode->value("linear");
 
             patternnode->append_node(pnode);
             patternnode->append_node(snode);
@@ -535,9 +531,8 @@ void XmlWidgetSerializer::add_property(const std::string& name, const Pattern& v
         else if (value.type() == Pattern::Type::linear_vertical)
         {
             auto pnode = m_impl->doc.allocate_node(rapidxml::node_element, "property");
-            pnode->append_attribute(m_impl->doc.allocate_attribute("name",
-                                    m_impl->doc.allocate_string("type")));
-            pnode->value(m_impl->doc.allocate_string("linear_vertical"));
+            pnode->append_attribute(m_impl->doc.allocate_attribute("name", "type"));
+            pnode->value("linear_vertical");
 
             patternnode->append_node(pnode);
             patternnode->append_node(snode);
@@ -548,9 +543,8 @@ void XmlWidgetSerializer::add_property(const std::string& name, const Pattern& v
         else if (value.type() == Pattern::Type::radial)
         {
             auto rnode = m_impl->doc.allocate_node(rapidxml::node_element, "property");
-            rnode->append_attribute(m_impl->doc.allocate_attribute("name",
-                                    m_impl->doc.allocate_string("type")));
-            rnode->value(m_impl->doc.allocate_string("radial"));
+            rnode->append_attribute(m_impl->doc.allocate_attribute("name", "type"));
+            rnode->value("radial");
 
             patternnode->append_node(rnode);
             patternnode->append_node(snode);
@@ -561,8 +555,7 @@ void XmlWidgetSerializer::add_property(const std::string& name, const Pattern& v
             auto start_radius = detail::to_string(value.starting_radius());
 
             auto sradius = m_impl->doc.allocate_node(rapidxml::node_element, "property");
-            sradius->append_attribute(m_impl->doc.allocate_attribute("name",
-                                      m_impl->doc.allocate_string("start_radius")));
+            sradius->append_attribute(m_impl->doc.allocate_attribute("name", "start_radius"));
             sradius->value(m_impl->doc.allocate_string(start_radius.c_str()));
 
             patternnode->append_node(sradius);
@@ -570,8 +563,7 @@ void XmlWidgetSerializer::add_property(const std::string& name, const Pattern& v
             auto end_radius = detail::to_string(value.ending_radius());
 
             auto eradius = m_impl->doc.allocate_node(rapidxml::node_element, "property");
-            eradius->append_attribute(m_impl->doc.allocate_attribute("name",
-                                      m_impl->doc.allocate_string("end_radius")));
+            eradius->append_attribute(m_impl->doc.allocate_attribute("name", "end_radius"));
             eradius->value(m_impl->doc.allocate_string(end_radius.c_str()));
             patternnode->append_node(eradius);
         }
