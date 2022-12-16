@@ -93,7 +93,6 @@ void OstreamWidgetSerializer::reset()
     m_impl->current = &m_impl->doc;
     m_impl->doc.clear();
     m_impl->stack.clear();
-    m_impl->current->value = "egt";
     m_impl->stack.push_back(m_impl->current);
 }
 
@@ -141,35 +140,33 @@ bool OstreamWidgetSerializer::add(const Widget* widget, int level)
 
     if (m_level == 0)
     {
-        m_impl->stack.back()->children.emplace_back();
-        m_impl->current = &m_impl->stack.back()->children.back();
-
         //start with egt node
         m_impl->current->value = "egt";
-        m_impl->stack.push_back(m_impl->current);
-        previous_node();
 
         //Add global theme
-        add_node("theme");
+        m_impl->stack.back()->children.emplace_back();
+        m_impl->current = &m_impl->stack.back()->children.back();
+        m_impl->current->value = "theme";
         std::ostringstream out;
         out << "type"  << "=" << global_theme().name();
         m_impl->current->attrs.push_back(out.str());
-        previous_node();
 
         // Add global palette
         if (global_palette())
         {
-            add_node("palette");
+            m_impl->stack.back()->children.emplace_back();
+            m_impl->current = &m_impl->stack.back()->children.back();
+            m_impl->current->value = "palette";
             global_palette()->serialize("color", *this);
-            previous_node();
         }
 
         // Add global font
         if (global_font())
         {
-            add_node("font");
+            m_impl->stack.back()->children.emplace_back();
+            m_impl->current = &m_impl->stack.back()->children.back();
+            m_impl->current->value = "font";
             global_font()->serialize("font", *this);
-            previous_node();
         }
     }
 
@@ -317,11 +314,8 @@ static void print_node(std::string prefix, std::ostream& out,
 
 void OstreamWidgetSerializer::write(std::ostream& out)
 {
-    if (m_impl->doc.children.empty())
-        return;
-
     std::string prefix;
-    print_node(prefix, out, m_impl->doc.children.front());
+    print_node(prefix, out, m_impl->doc);
 }
 
 struct XmlWidgetSerializer::XmlSerializerImpl
