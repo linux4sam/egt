@@ -94,6 +94,35 @@ void OstreamWidgetSerializer::reset()
     m_impl->doc.clear();
     m_impl->stack.clear();
     m_impl->stack.push_back(m_impl->current);
+
+    //start with egt node
+    m_impl->current->value = "egt";
+
+    //Add global theme
+    m_impl->stack.back()->children.emplace_back();
+    m_impl->current = &m_impl->stack.back()->children.back();
+    m_impl->current->value = "theme";
+    std::ostringstream out;
+    out << "type"  << "=" << global_theme().name();
+    m_impl->current->attrs.push_back(out.str());
+
+    // Add global palette
+    if (global_palette())
+    {
+        m_impl->stack.back()->children.emplace_back();
+        m_impl->current = &m_impl->stack.back()->children.back();
+        m_impl->current->value = "palette";
+        global_palette()->serialize("color", *this);
+    }
+
+    // Add global font
+    if (global_font())
+    {
+        m_impl->stack.back()->children.emplace_back();
+        m_impl->current = &m_impl->stack.back()->children.back();
+        m_impl->current->value = "font";
+        global_font()->serialize("font", *this);
+    }
 }
 
 void OstreamWidgetSerializer::previous_node()
@@ -136,38 +165,6 @@ bool OstreamWidgetSerializer::add(const Widget* widget, int level)
     {
         while (static_cast<int>(m_impl->stack.size()) - 1 > level)
             m_impl->stack.pop_back();
-    }
-
-    if (m_level == 0)
-    {
-        //start with egt node
-        m_impl->current->value = "egt";
-
-        //Add global theme
-        m_impl->stack.back()->children.emplace_back();
-        m_impl->current = &m_impl->stack.back()->children.back();
-        m_impl->current->value = "theme";
-        std::ostringstream out;
-        out << "type"  << "=" << global_theme().name();
-        m_impl->current->attrs.push_back(out.str());
-
-        // Add global palette
-        if (global_palette())
-        {
-            m_impl->stack.back()->children.emplace_back();
-            m_impl->current = &m_impl->stack.back()->children.back();
-            m_impl->current->value = "palette";
-            global_palette()->serialize("color", *this);
-        }
-
-        // Add global font
-        if (global_font())
-        {
-            m_impl->stack.back()->children.emplace_back();
-            m_impl->current = &m_impl->stack.back()->children.back();
-            m_impl->current->value = "font";
-            global_font()->serialize("font", *this);
-        }
     }
 
     m_impl->stack.back()->children.emplace_back();
