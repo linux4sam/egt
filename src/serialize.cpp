@@ -478,19 +478,6 @@ void XmlWidgetSerializer::add_property(const std::string& name, const Pattern& v
     }
     else
     {
-        m_level++;
-
-        const auto advance = m_level > static_cast<int>(m_impl->stack.size()) - 1;
-        if (advance)
-        {
-            m_impl->stack.push_back(m_impl->current);
-        }
-        else
-        {
-            while (static_cast<int>(m_impl->stack.size()) - 1 > m_level)
-                m_impl->stack.pop_back();
-        }
-
         auto patternnode  = m_impl->doc.allocate_node(rapidxml::node_element, "pattern");
         node->append_node(patternnode);
 
@@ -567,9 +554,7 @@ void XmlWidgetSerializer::add_property(const std::string& name, const Pattern& v
             eradius->value(m_impl->doc.allocate_string(end_radius.c_str()));
             patternnode->append_node(eradius);
         }
-        --m_level;
         m_impl->current->append_node(node);
-        m_impl->stack.pop_back();
     }
 }
 
