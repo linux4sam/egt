@@ -309,8 +309,7 @@ static void print_node(std::string prefix, std::ostream& out,
 
 void OstreamWidgetSerializer::write(std::ostream& out)
 {
-    std::string prefix;
-    print_node(prefix, out, m_impl->doc);
+    print_node("", out, m_impl->doc);
 }
 
 struct XmlWidgetSerializer::XmlSerializerImpl
