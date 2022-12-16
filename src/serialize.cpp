@@ -502,14 +502,14 @@ void XmlWidgetSerializer::add_property(const std::string& name, const Pattern& v
         enode->append_attribute(m_impl->doc.allocate_attribute("name", "end"));
         enode->value(m_impl->doc.allocate_string(detail::to_string(value.ending()).c_str()));
 
-        auto steps = value.steps();
+        const auto& steps = value.steps();
         std::ostringstream oss;
         auto stepsnode = m_impl->doc.allocate_node(rapidxml::node_element, "property");
         stepsnode->append_attribute(m_impl->doc.allocate_attribute("name", "steps"));
         if (!steps.empty())
         {
             std::string tmp;
-            for (auto& s : steps)
+            for (const auto& s : steps)
             {
                 tmp += "{" + detail::to_string(s.first) + "," + s.second.hex().c_str() + "},";
             }
