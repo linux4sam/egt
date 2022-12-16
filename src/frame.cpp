@@ -610,9 +610,21 @@ void Frame::layout()
 void Frame::serialize(Serializer& serializer) const
 {
     Widget::serialize(serializer);
+    serialize_children(serializer);
+}
 
+void Frame::serialize_children(Serializer& serializer) const
+{
     for (auto& child : m_children)
         serializer.add(child.get());
+}
+
+void Frame::deserialize_children(const Deserializer& deserializer)
+{
+    for (auto node = deserializer.first_child("widget");
+         node->is_valid();
+         node = node->next_sibling("widget"))
+        add(node->parse_widget());
 }
 
 Frame::~Frame() noexcept

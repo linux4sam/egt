@@ -24,6 +24,86 @@ inline namespace v1
 namespace experimental
 {
 
+class EGT_API XmlDeserializer : public Deserializer
+{
+public:
+    XmlDeserializer(rapidxml::xml_node<>* node)
+        : m_node(node)
+    {}
+
+    XmlDeserializer() = default;
+    XmlDeserializer(const XmlDeserializer&) = delete;
+    XmlDeserializer& operator=(const XmlDeserializer&) = delete;
+    XmlDeserializer(XmlDeserializer&&) noexcept = default;
+    XmlDeserializer& operator=(XmlDeserializer&&) noexcept = default;
+    ~XmlDeserializer() noexcept override = default;
+
+    bool is_valid() const override;
+    std::unique_ptr<Deserializer> first_child(const std::string& name = "") const override;
+    std::unique_ptr<Deserializer> next_sibling(const std::string& name = "") const override;
+    std::shared_ptr<Widget> parse_widget() const override;
+    bool get_property(const std::string& name, std::string* value, Serializer::Attributes* attrs = nullptr) const override;
+
+private:
+    rapidxml::xml_node<>* m_node{nullptr};
+};
+
+bool XmlDeserializer::is_valid() const
+{
+    return m_node;
+}
+
+std::unique_ptr<Deserializer> XmlDeserializer::first_child(const std::string& name) const
+{
+    auto ret = std::make_unique<XmlDeserializer>();
+
+    if (is_valid())
+        ret->m_node = m_node->first_node(name.c_str());
+
+    return ret;
+}
+
+std::unique_ptr<Deserializer> XmlDeserializer::next_sibling(const std::string& name) const
+{
+    auto ret = std::make_unique<XmlDeserializer>();
+
+    if (is_valid())
+        ret->m_node = m_node->next_sibling(name.c_str());
+
+    return ret;
+}
+
+bool XmlDeserializer::get_property(const std::string& name, std::string* value, Serializer::Attributes* attrs) const
+{
+    for (const auto* prop = m_node->first_node("property");
+         prop;
+         prop = prop->next_sibling("property"))
+    {
+        const auto* attr = prop->first_attribute("name");
+        if (attr && !strcmp(attr->value(), name.c_str()))
+        {
+            if (value)
+                *value = prop->value();
+
+            if (attrs)
+            {
+                attrs->clear();
+                for (attr = prop->first_attribute(); attr; attr = attr->next_attribute())
+                {
+                    if (!strcmp(attr->name(), "name"))
+                        continue;
+
+                    attrs->emplace_back(attr->name(), attr->value());
+                }
+            }
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
 static const std::pair<const std::string, std::function<std::unique_ptr<egt::Theme>()>> theme_items[] =
 {
     {"CoconutTheme", []{ return std::make_unique<egt::CoconutTheme>(); }},
@@ -36,7 +116,6 @@ static const std::pair<const std::string, std::function<std::unique_ptr<egt::The
 
 template <class T>
 static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
-        const std::shared_ptr<Frame>& parent,
         Serializer::Properties& saved_props)
 {
     auto wname = node->first_attribute("name");
@@ -94,9 +173,6 @@ static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
         }
 
         auto instance = std::make_shared<T>(props);
-        if (parent)
-            parent->add(instance);
-
         if (wname)
             instance->name(wname->value());
 
@@ -109,7 +185,6 @@ static std::shared_ptr<Widget> create_widget(rapidxml::xml_node<>* node,
 
 using CreateFunction =
     std::function<std::shared_ptr<Widget>(rapidxml::xml_node<>* widget,
-            const std::shared_ptr<Frame>& parent,
             Serializer::Properties& saved_props)>;
 
 static const std::pair<std::string, CreateFunction> allocators[] =
@@ -183,8 +258,7 @@ static const std::pair<std::string, CreateFunction> allocators[] =
 #endif
 };
 
-static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node,
-        const std::shared_ptr<Frame>& parent = nullptr)
+static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node)
 {
     std::shared_ptr<Widget> result;
     Serializer::Properties props;
@@ -204,7 +278,7 @@ static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node,
     {
         if (i.first == ttype)
         {
-            result = i.second(node, parent, props);
+            result = i.second(node, props);
             found = true;
         }
     }
@@ -221,7 +295,7 @@ static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node,
             if (ttype == name)
             {
                 found = true;
-                result = x.second(node, parent, props);
+                result = x.second(node, props);
                 break;
             }
         }
@@ -233,10 +307,8 @@ static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node,
         }
     }
 
-    for (auto child = node->first_node("widget"); child; child = child->next_sibling("widget"))
-    {
-        parse_widget(child, std::dynamic_pointer_cast<Frame>(result));
-    }
+    XmlDeserializer deserializer(node);
+    result->deserialize_children(deserializer);
 
     result->post_deserialize(props);
 
@@ -249,6 +321,11 @@ static std::shared_ptr<Widget> parse_widget(rapidxml::xml_node<>* node,
     }
 
     return result;
+}
+
+std::shared_ptr<Widget> XmlDeserializer::parse_widget() const
+{
+    return egt::v1::experimental::parse_widget(m_node);
 }
 
 static void parse_resource(rapidxml::xml_node<>* node)

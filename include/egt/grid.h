@@ -295,6 +295,10 @@ public:
 
     void serialize(Serializer& serializer) const override;
 
+    void serialize_children(Serializer& serializer) const override;
+
+    void deserialize_children(const Deserializer& deserializer) override;
+
 protected:
 
     /// Reallocate the size of the grid keeping any existing cells intact.

@@ -356,6 +356,52 @@ void StaticGrid::serialize(Serializer& serializer) const
     Frame::serialize(serializer);
 }
 
+void StaticGrid::serialize_children(Serializer& serializer) const
+{
+    unsigned int columns = m_cells.size();
+    for (unsigned int column = 0; column < columns; column++)
+    {
+        unsigned int rows = m_cells[column].size();
+        for (unsigned int row = 0; row < rows; row++)
+        {
+            auto widget = m_cells[column][row].lock();
+            if (widget)
+            {
+                auto context = serializer.begin_child("cell");
+                serializer.add_property("column", column);
+                serializer.add_property("row", row);
+                serializer.add(widget.get());
+                serializer.end_child(context);
+            }
+        }
+    }
+}
+
+void StaticGrid::deserialize_children(const Deserializer& deserializer)
+{
+    for (auto cell = deserializer.first_child("cell");
+         cell->is_valid();
+         cell = cell->next_sibling("cell"))
+    {
+        size_t column = 0;
+        size_t row = 0;
+        std::string value;
+
+        if (cell->get_property("column", &value))
+            column = std::stoi(value);
+
+        if (cell->get_property("row", &value))
+            row = std::stoi(value);
+
+        for (auto widget = cell->first_child("widget");
+             widget->is_valid();
+             widget = widget->next_sibling("widget"))
+        {
+            add(widget->parse_widget(), column, row);
+        }
+    }
+}
+
 void StaticGrid::deserialize(Serializer::Properties& props)
 {
     props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)

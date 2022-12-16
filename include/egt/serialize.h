@@ -196,6 +196,17 @@ private:
     std::unique_ptr<XmlSerializerImpl> m_impl;
 };
 
+class EGT_API Deserializer
+{
+public:
+    virtual ~Deserializer() {}
+    virtual bool is_valid() const = 0;
+    virtual std::unique_ptr<Deserializer> first_child(const std::string& name = "") const = 0;
+    virtual std::unique_ptr<Deserializer> next_sibling(const std::string& name = "") const = 0;
+    virtual std::shared_ptr<Widget> parse_widget() const = 0;
+    virtual bool get_property(const std::string& name, std::string* value, Serializer::Attributes* attrs = nullptr) const = 0;
+};
+
 }
 }
 
