@@ -102,9 +102,7 @@ void OstreamWidgetSerializer::reset()
     m_impl->stack.back()->children.emplace_back();
     m_impl->current = &m_impl->stack.back()->children.back();
     m_impl->current->value = "theme";
-    std::ostringstream out;
-    out << "type"  << "=" << global_theme().name();
-    m_impl->current->attrs.push_back(out.str());
+    m_impl->current->attrs.push_back("type=" + global_theme().name());
 
     // Add global palette
     if (global_palette())
