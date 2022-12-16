@@ -47,7 +47,7 @@ public:
     using Properties = std::list<std::tuple<std::string, std::string, Serializer::Attributes>>;
 
     /// Add a widget to the serializer.
-    virtual bool add(const Widget* widget, int level = 0) = 0;
+    virtual bool add(const Widget* widget) = 0;
 
     /// Create a new child.
     virtual Context* begin_child(const std::string& nodename) = 0;
@@ -88,18 +88,10 @@ public:
     void add_property(const std::string& name, bool value,
                       const Attributes& attrs = {});
 
-    /// Get the current level
-    EGT_NODISCARD int level() const { return m_level; }
-
     /// Write to the specified ostream.
     virtual void write(std::ostream& out) = 0;
 
     virtual ~Serializer() noexcept = default;
-
-protected:
-
-    /// Current serialize tree level
-    int m_level{0};
 };
 
 /**
@@ -125,7 +117,7 @@ public:
     /// Clear or reset, the serializer for re-use.
     void reset();
 
-    bool add(const Widget* widget, int level = 0) override;
+    bool add(const Widget* widget) override;
 
     Context* begin_child(const std::string& nodename) override;
 
@@ -176,7 +168,7 @@ public:
     /// Clear or reset, the serializer for re-use.
     void reset();
 
-    bool add(const Widget* widget, int level = 0) override;
+    bool add(const Widget* widget) override;
 
     Context* begin_child(const std::string& nodename) override;
 

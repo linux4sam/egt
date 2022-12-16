@@ -611,10 +611,8 @@ void Frame::serialize(Serializer& serializer) const
 {
     Widget::serialize(serializer);
 
-    int level = serializer.level() + 1;
-
     for (auto& child : m_children)
-        serializer.add(child.get(), level);
+        serializer.add(child.get());
 }
 
 Frame::~Frame() noexcept

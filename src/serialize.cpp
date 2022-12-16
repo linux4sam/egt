@@ -132,9 +132,8 @@ void OstreamWidgetSerializer::end_child(Serializer::Context* context)
     m_impl->current = reinterpret_cast<StringNode*>(context);
 }
 
-bool OstreamWidgetSerializer::add(const Widget* widget, int level)
+bool OstreamWidgetSerializer::add(const Widget* widget)
 {
-    detail::ignoreparam(level);
     auto context = begin_child(widget->name());
 
     m_impl->current->attrs.push_back("type=" + widget->type());
@@ -348,9 +347,8 @@ void XmlWidgetSerializer::end_child(Context* context)
     m_impl->current = reinterpret_cast<rapidxml::xml_node<>*>(context);
 }
 
-bool XmlWidgetSerializer::add(const Widget* widget, int level)
+bool XmlWidgetSerializer::add(const Widget* widget)
 {
-    detail::ignoreparam(level);
     auto context = begin_child("widget");
 
     m_impl->current->append_attribute(m_impl->doc.allocate_attribute("name",
