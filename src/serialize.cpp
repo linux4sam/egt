@@ -540,7 +540,6 @@ void XmlWidgetSerializer::add_property(const std::string& name, const Pattern& v
             auto sradius = m_impl->doc.allocate_node(rapidxml::node_element, "property");
             sradius->append_attribute(m_impl->doc.allocate_attribute("name", "start_radius"));
             sradius->value(m_impl->doc.allocate_string(start_radius.c_str()));
-
             patternnode->append_node(sradius);
 
             auto end_radius = detail::to_string(value.ending_radius());
