@@ -212,10 +212,15 @@ std::string GstAppSinkImpl::create_pipeline()
     }
 
     std::string a_pipe;
-    std::string caps = " caps=video/x-raw";
+    /*
+     * GstURIDecodeBin caps are propagated to GstDecodeBin. Its caps must a be a
+     * superset of the inner decoder element. So make this superset large enough
+     * to contain the inner decoder's caps that have features.
+     */
+    std::string caps = " caps=video/x-raw(ANY)";
     if (m_audiodevice && m_audiotrack)
     {
-        caps += ";audio/x-raw";
+        caps += ";audio/x-raw(ANY)";
         a_pipe = "! queue ! audioconvert ! volume name=volume ! autoaudiosink sync=false";
     }
 
