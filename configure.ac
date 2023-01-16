@@ -288,7 +288,7 @@ if test "x$with_xkbcommon" = xyes && test "x${have_xkbcommon}" != xyes; then
 fi
 AM_CONDITIONAL([HAVE_XKBCOMMON], [test "x${have_xkbcommon}" = xyes])
 
-AX_PKG_CHECK_MODULES2(SDL2, [sdl2], [], [have_sdl2=yes], [have_sdl2=no])
+AX_PKG_CHECK_MODULES2(SDL2, [], [sdl2], [have_sdl2=yes], [have_sdl2=no])
 AM_CONDITIONAL([HAVE_SDL2], [test "x${have_sdl2}" = xyes])
 if test "x${have_sdl2}" = xyes; then
    AC_DEFINE(HAVE_SDL2, 1, [Have sdl2 support])
