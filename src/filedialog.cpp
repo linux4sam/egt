@@ -6,13 +6,13 @@
 #include "detail/egtlog.h"
 #include "egt/embed.h"
 #include "egt/filedialog.h"
-#include <experimental/filesystem>
+#include <filesystem>
 
 #ifdef SRCDIR
 EGT_EMBED(internal_folder, SRCDIR "/icons/32px/folder.png")
 #endif
 
-namespace fs = std::experimental::filesystem;
+namespace fs = std::filesystem;
 
 namespace egt
 {

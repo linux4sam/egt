@@ -18,6 +18,7 @@
 #include <cairo.h>
 #include <cstring>
 #include <drm_fourcc.h>
+#include <filesystem>
 #include <fstream>
 #include <planes/fb.h>
 #include <planes/kms.h>
@@ -29,11 +30,7 @@
 #include <cairo-gfx2d.h>
 #endif
 
-#ifdef HAVE_EXPERIMENTAL_FILESYSTEM
-#include <experimental/filesystem>
-
-namespace fs = std::experimental::filesystem;
-#endif
+namespace fs = std::filesystem;
 
 namespace egt
 {
@@ -366,53 +363,39 @@ void KMSScreen::close()
     }
 }
 
-#ifdef HAVE_EXPERIMENTAL_FILESYSTEM
 static fs::path const get_backlight_dir(std::string const& path)
 {
     auto const iterator = fs::directory_iterator{fs::path{path}};
     return iterator->path();
 }
-#endif
 
 size_t KMSScreen::max_brightness() const
 {
     size_t max_brightness{};
-#ifdef HAVE_EXPERIMENTAL_FILESYSTEM
     auto const backlight_dir = get_backlight_dir("/sys/class/backlight/");
     auto const max_backlight_path = backlight_dir / "max_brightness";
     std::ifstream max_brightness_file{max_backlight_path};
     max_brightness_file >> max_brightness;
-#else
-    detail::warn("getting screen brightness requires std::experimental::filesystem");
-#endif
     return max_brightness;
 }
 
 size_t KMSScreen::brightness() const
 {
     size_t brightness{};
-#ifdef HAVE_EXPERIMENTAL_FILESYSTEM
     auto const backlight_dir = get_backlight_dir("/sys/class/backlight/");
     auto const brightness_backlight_path = backlight_dir / "brightness";
     std::ifstream brightness_file{brightness_backlight_path};
     brightness_file >> brightness;
-#else
-    detail::warn("getting screen brightness requires std::experimental::filesystem");
-#endif
     return brightness;
 }
 
 void KMSScreen::brightness(size_t brightness)
 {
-#ifdef HAVE_EXPERIMENTAL_FILESYSTEM
     auto max = max_brightness();
     if (brightness > max)
         brightness = max;
     auto const backlight_dir = get_backlight_dir("/sys/class/backlight/");
     std::ofstream{backlight_dir / "brightness"} << std::to_string(brightness);
-#else
-    detail::warn("setting screen brightness requires std::experimental::filesystem");
-#endif
 }
 
 KMSScreen::KMSScreen(KMSScreen&&) noexcept = default;

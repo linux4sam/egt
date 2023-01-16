@@ -37,6 +37,7 @@ basic/basic \
 basicui/basicui \
 boards/boards \
 colors/colors \
+dialog/dialog \
 drag/drag \
 floating/floating \
 frames/frames \
@@ -65,11 +66,6 @@ endif
 if HAVE_GSTREAMER
 bin_PROGRAMS += \
 audioplayer/audioplayer
-endif
-
-if HAVE_EXPERIMENTAL_FILESYSTEM
-bin_PROGRAMS += \
-dialog/dialog
 endif
 
 if HAVE_LIBRSVG

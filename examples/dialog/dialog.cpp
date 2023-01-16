@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include <egt/ui>
-#include <experimental/filesystem>
+#include <filesystem>
 #include <memory>
 #include <string>
 
-namespace fs = std::experimental::filesystem;
+namespace fs = std::filesystem;
 
 int main(int argc, char** argv)
 {

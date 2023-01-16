@@ -596,25 +596,6 @@ AS_IF([test "x$with_libmagic" != "xno"],[
 ])
 AM_CONDITIONAL([HAVE_LIBMAGIC], [test "x${have_libmagic}" = xyes])
 
-AC_ARG_WITH([filesystem],
-    AS_HELP_STRING([--without-filesystem], [Ignore presence of filesystem and disable it]),
-    [with_filesystem=$withval],
-    [with_filesystem=auto])
-AS_IF([test "x$with_filesystem" != "xno"],[
-   AC_CHECK_LIB([stdc++fs], [main], [have_libstdcppfs=yes], [have_libstdcppfs=no])
-   AM_CONDITIONAL([HAVE_EXPERIMENTAL_FILESYSTEM], [test "x${have_libstdcppfs}" = xyes])
-   if test "x${have_libstdcppfs}" = xyes;
-   then
-      AX_APPEND_FLAG([-lstdc++fs], [LDFLAGS])
-      AC_DEFINE(HAVE_EXPERIMENTAL_FILESYSTEM, 1, [Have experimental filesystem support])
-      AC_SUBST(include_filedialog, ["#define EGT_HAS_FILEDIALOG 1"])
-   fi
-])
-if test "x$with_filesystem" = xyes && test "x${have_libstdcppfs}" != xyes; then
-   AC_MSG_FAILURE([--with-filesystem was given but not found])
-fi
-AM_CONDITIONAL([HAVE_EXPERIMENTAL_FILESYSTEM], [test "x${have_libstdcppfs}" = xyes])
-
 if test "x${have_gstreamer}" = xyes; then
    AC_SUBST(include_audio, ["#define EGT_HAS_AUDIO 1"])
    AC_SUBST(include_video, ["#define EGT_HAS_VIDEO 1"])
@@ -632,6 +613,8 @@ AC_CHECK_HEADER([windows.h], [have_windows_h=yes], [have_windows_h=no])
 AM_CONDITIONAL([HAVE_WINDOWS_H], [test "x${have_windows_h}" = xyes])
 if test "x${have_windows_h}" = xyes; then
    AC_DEFINE(HAVE_WINDOWS_H, 1, [Have windows_h support])
+else
+   AX_APPEND_FLAG([-lstdc++fs], [LDFLAGS])
 fi
 
 AC_CHECK_PROG(XXD, xxd, yes)
@@ -844,7 +827,6 @@ echo "  Networking             ${have_libcurl:-no}"
 echo "  libmagic               ${have_libmagic:-no}"
 echo "  LUA Interpreter        ${have_lua:-no}"
 echo "  LUA Bindings           ${have_lua_bindings:-no}"
-echo "  C++17 Filesystem       ${have_libstdcppfs:-no}"
 echo "  ALSA Sound             ${have_alsa:-no}"
 echo "  sndfile                ${have_sndfile:-no}"
 echo "  plplot                 ${have_plplot:-no}"

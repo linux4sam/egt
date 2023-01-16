@@ -11,6 +11,7 @@
 #include "egt/detail/filesystem.h"
 #include <climits>
 #include <cstring>
+#include <filesystem>
 #include <fstream>
 #include <iterator>
 #include <libgen.h>
@@ -23,12 +24,10 @@
 #include <glob.h>
 #endif
 
-#ifdef HAVE_EXPERIMENTAL_FILESYSTEM
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
-#endif
+namespace fs = std::filesystem;
 
 #ifdef HAVE_WINDOWS_H
+#include <algorithm>
 #include <cstdio>
 #include <tchar.h>
 #include <windows.h>
@@ -40,6 +39,17 @@ inline namespace v1
 {
 namespace detail
 {
+
+#ifdef HAVE_WINDOWS_H
+static std::string dos2unix_path(const std::string& path)
+{
+    std::string p(path);
+    std::replace(p.begin(), p.end(), '\\', '/');
+    return p;
+}
+#else
+#define dos2unix_path(path) (path)
+#endif
 
 std::string extract_filename(const std::string& path)
 {
@@ -99,61 +109,35 @@ std::vector<unsigned char> read_file(const std::string& path)
 
 std::string readlink(const std::string& path)
 {
-    static const auto MAX_PATH_SIZE = 1024;
-    char buff[MAX_PATH_SIZE] {};
-    ssize_t len = -1;
-#ifdef HAVE_WINDOWS_H
-    if (path == "/proc/self/exe")
-    {
-        return std::to_string(GetModuleFileNameA(NULL, buff, MAX_PATH_SIZE));
-    }
-    len = sizeof(_fullpath(buff, path.c_str(), sizeof(buff) - 1));
-#else
-    len = ::readlink(path.c_str(), buff, sizeof(buff) - 1);
-#endif
-    if (len != -1)
-    {
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-constant-array-index)
-        buff[len] = '\0';
-        return std::string(buff);
-    }
-
-    return {};
+    std::error_code ec;
+    return dos2unix_path(fs::read_symlink(path, ec).string());
 }
 
 std::string abspath(const std::string& path)
 {
-#ifdef HAVE_WINDOWS_H
-    char buff[_MAX_PATH] {};
-    if (_fullpath(buff, path.c_str(), _MAX_PATH))
-        return std::string(buff);
-#else
-    char buff[PATH_MAX] {};
-    if (realpath(path.c_str(), buff))
-        return std::string(buff);
-#endif
-    return {};
+    std::error_code ec;
+    return dos2unix_path(fs::canonical(path, ec).string());
 }
 
 std::string exe_pwd()
 {
-    return extract_dirname(std::string(readlink("/proc/self/exe")));
+#ifdef HAVE_WINDOWS_H
+    char buff[_MAX_PATH] {};
+    auto len = GetModuleFileNameA(NULL, buff, sizeof(buff));
+    if (!len || len >= sizeof(buff))
+        return std::string();
+
+    auto str = dos2unix_path(buff);
+#else
+    auto str = readlink("/proc/self/exe");
+#endif
+    return extract_dirname(str);
 }
 
 std::string cwd()
 {
-#if defined(HAVE_WINDOWS_H)
-    char buff[PATH_MAX] {};
-    if (_getcwd(buff, PATH_MAX))
-        return std::string(buff);
-#elif HAVE_EXPERIMENTAL_FILESYSTEM
-    return fs::current_path();
-#else
-    std::unique_ptr<char, decltype(std::free)*> d(get_current_dir_name(), std::free);
-    if (d)
-        return d.get();
-#endif
-    return {};
+    std::error_code ec;
+    return dos2unix_path(fs::current_path(ec).string());
 }
 
 char path_separator()

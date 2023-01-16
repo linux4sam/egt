@@ -82,6 +82,7 @@ dialog.cpp \
 easing.cpp \
 event.cpp \
 eventloop.cpp \
+filedialog.cpp \
 font.cpp \
 form.cpp \
 frame.cpp \
@@ -190,6 +191,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/embed.h \
 ../include/egt/event.h \
 ../include/egt/eventloop.h \
+../include/egt/filedialog.h \
 ../include/egt/fixedvector.h \
 ../include/egt/flags.h \
 ../include/egt/flagsbase.h \
@@ -337,14 +339,6 @@ libegt_la_SOURCES += network/http.cpp
 
 nobase_libegtinclude_HEADERS += \
 ../include/egt/network/http.h
-endif
-
-if HAVE_EXPERIMENTAL_FILESYSTEM
-libegt_la_SOURCES += \
-filedialog.cpp
-
-nobase_libegtinclude_HEADERS += \
-../include/egt/filedialog.h
 endif
 
 if HAVE_LIBRSVG
