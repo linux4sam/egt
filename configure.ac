@@ -411,7 +411,7 @@ AS_IF([test "x$with_readline" != "xno"],[
    AC_CHECK_HEADER([readline/readline.h], [have_readline=yes], [have_readline=no])
    if test "x${have_readline}" = xyes; then
       LIBEGT_EXTRA_CXXFLAGS="-DLUA_USE_READLINE ${LIBEGT_EXTRA_CXXFLAGS}"
-      LIBEGT_EXTRA_LDFLAGS="-lreadline ${LIBEGT_EXTRA_LDFLAGS}"
+      LIBEGT_PRIVATE_LDFLAGS="-lreadline ${LIBEGT_PRIVATE_LDFLAGS}"
    fi
 ])
 if test "x$with_readline" = xyes && test "x${have_readline}" != xyes; then
@@ -448,7 +448,7 @@ fi
 AC_CHECK_DECL([CAIRO_HAS_FT_FONT], [], [
     AC_MSG_FAILURE([cairo is not compiled with freetype support and it is required.])
    ], [[#include <cairo/cairo-features.h>]])
-LIBEGT_EXTRA_LDFLAGS="-lfreetype ${LIBEGT_EXTRA_LDFLAGS}"
+LIBEGT_PRIVATE_LDFLAGS="-lfreetype ${LIBEGT_PRIVATE_LDFLAGS}"
 
 AC_ARG_WITH([fontconfig],
     AS_HELP_STRING([--without-fontconfig], [Ignore presence of fontconfig and disable it]),
@@ -459,7 +459,7 @@ AS_IF([test "x$with_fontconfig" != "xno"],[
    AC_CHECK_DECL([CAIRO_HAS_FC_FONT], [have_fontconfig=yes], [have_fontconfig=no], [[#include <cairo/cairo-features.h>]])
    if test "x${have_fontconfig}" = xyes; then
       AC_DEFINE(HAVE_FONTCONFIG, 1, [Have fontconfig support])
-      LIBEGT_EXTRA_LDFLAGS="-lfontconfig ${LIBEGT_EXTRA_LDFLAGS}"
+      LIBEGT_PRIVATE_LDFLAGS="-lfontconfig ${LIBEGT_PRIVATE_LDFLAGS}"
    fi
 ])
 if test "x$with_fontconfig" = xyes && test "x${have_fontconfig}" != xyes; then
@@ -591,7 +591,7 @@ AS_IF([test "x$with_libmagic" != "xno"],[
    ])
    if test "x${have_libmagic}" = xyes; then
       AC_DEFINE(HAVE_LIBMAGIC, 1, [Have libmagic support])
-      LIBEGT_EXTRA_LDFLAGS="${MAGIC_LIB} ${LIBEGT_EXTRA_LDFLAGS}"
+      LIBEGT_PRIVATE_LDFLAGS="${MAGIC_LIB} ${LIBEGT_PRIVATE_LDFLAGS}"
    fi
 ])
 AM_CONDITIONAL([HAVE_LIBMAGIC], [test "x${have_libmagic}" = xyes])
@@ -716,13 +716,15 @@ if test "x$with_sndfile" = xyes && test "x${have_sndfile}" != xyes; then
 fi
 AM_CONDITIONAL([HAVE_SNDFILE], [test "x${have_sndfile}" = xyes])
 
+LIBEGT_EXTRA_LDFLAGS="${LIBEGT_PRIVATE_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
+
 # Subst LIBEGT_EXTRA_CFLAGS & CXXFLAGS & LDFLAGS
 AC_SUBST(LIBEGT_EXTRA_CFLAGS)
 AC_SUBST(LIBEGT_EXTRA_CXXFLAGS)
 AC_SUBST(LIBEGT_EXTRA_LDFLAGS)
 
 # Libs.private section of libegt.pc
-libs_private="$LDFLAGS $LIBEGT_EXTRA_LDFLAGS"
+libs_private="$LDFLAGS $LIBEGT_PRIVATE_LDFLAGS"
 AC_SUBST(libs_private)
 
 AC_USE_SYSTEM_EXTENSIONS
