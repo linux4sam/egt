@@ -408,10 +408,10 @@ AC_ARG_WITH([readline],
     [with_readline=$withval],
     [with_readline=auto])
 AS_IF([test "x$with_readline" != "xno"],[
-   AC_CHECK_HEADER([readline/readline.h], [have_readline=yes], [have_readline=no])
+   AX_PKG_CHECK_MODULES2(readline, [], [readline], [have_readline=yes], [have_readline=no])
    if test "x${have_readline}" = xyes; then
-      LIBEGT_EXTRA_CXXFLAGS="-DLUA_USE_READLINE ${LIBEGT_EXTRA_CXXFLAGS}"
-      LIBEGT_PRIVATE_LDFLAGS="-lreadline ${LIBEGT_PRIVATE_LDFLAGS}"
+      LIBEGT_EXTRA_CXXFLAGS="-DLUA_USE_READLINE ${readline_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${readline_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
 if test "x$with_readline" = xyes && test "x${have_readline}" != xyes; then
