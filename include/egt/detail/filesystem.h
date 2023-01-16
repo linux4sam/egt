@@ -75,6 +75,14 @@ EGT_API std::string exe_pwd();
 EGT_API std::string cwd();
 
 /**
+ * Get the separator character in a list of paths.
+ *
+ * Used, for instance, in EGT_SEARCH_PATH. It should be ':' on Linux and
+ * ';' on Windows.
+ */
+EGT_API char path_separator();
+
+/**
  * Given a glob pattern, return a vector of matching path names.
  */
 EGT_API std::vector<std::string> glob(const std::string& pattern);

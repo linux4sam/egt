@@ -188,7 +188,7 @@ void Application::setup_search_paths(const std::vector<std::string>& extra_paths
     if (path && strlen(path))
     {
         std::vector<std::string> tokens;
-        detail::tokenize(path, ':', tokens);
+        detail::tokenize(path, detail::path_separator(), tokens);
 
         for (auto& token : tokens)
             add_search_path(token);
@@ -281,7 +281,7 @@ void Application::setup_inputs()
         for (auto& input : inputs)
         {
             std::vector<std::string> tokens;
-            detail::tokenize(input, ':', tokens);
+            detail::tokenize(input, detail::path_separator(), tokens);
 
             if (tokens.size() != 2)
             {

@@ -156,6 +156,15 @@ std::string cwd()
     return {};
 }
 
+char path_separator()
+{
+#if defined(HAVE_WINDOWS_H)
+    return ';';
+#else
+    return ':';
+#endif
+}
+
 std::vector<std::string> glob(const std::string& pattern)
 {
     std::vector<std::string> filenames;
