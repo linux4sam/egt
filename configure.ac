@@ -584,16 +584,16 @@ AM_CONDITIONAL([HAVE_ZLIB], [test "x${have_zlib}" = xyes])
 AC_ARG_WITH([libmagic],
     AS_HELP_STRING([--without-libmagic], [Ignore presence of libmagic and disable it]))
 AS_IF([test "x$with_libmagic" != "xno"],[
-   AC_SEARCH_LIBS([magic_open], [magic], [MAGIC_LIB=-lmagic have_libmagic=yes], [have_libmagic=no])
-   AC_CHECK_HEADER([magic.h],
-     [],
-     [have_libmagic=no
-   ])
+   AX_PKG_CHECK_MODULES2(libmagic, [], [libmagic], [have_libmagic=yes], [have_libmagic=no])
    if test "x${have_libmagic}" = xyes; then
       AC_DEFINE(HAVE_LIBMAGIC, 1, [Have libmagic support])
-      LIBEGT_PRIVATE_LDFLAGS="${MAGIC_LIB} ${LIBEGT_PRIVATE_LDFLAGS}"
+      LIBEGT_EXTRA_CXXFLAGS="${libmagic_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${libmagic_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
    fi
 ])
+if test "x$with_libmagic" = xyes && test "x${have_libmagic}" != xyes; then
+   AC_MSG_FAILURE([--with-libmagic was given, but libmagic not found])
+fi
 AM_CONDITIONAL([HAVE_LIBMAGIC], [test "x${have_libmagic}" = xyes])
 
 if test "x${have_gstreamer}" = xyes; then
