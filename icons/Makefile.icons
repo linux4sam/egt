@@ -1,4 +1,5 @@
 PNG_ICONS_FILES = \
+$(top_srcdir)/icons/ico/egt_logo_icon.ico \
 $(top_srcdir)/icons/svg/folder_open.svg \
 $(top_srcdir)/icons/svg/text_justify.svg \
 $(top_srcdir)/icons/svg/clouda.svg \
