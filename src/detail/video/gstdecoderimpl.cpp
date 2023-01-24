@@ -259,13 +259,12 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
     }
     case GST_MESSAGE_STATE_CHANGED:
     {
-        GstState old_state;
-        GstState new_state;
-        GstState pending_state;
-        gst_message_parse_state_changed(message, &old_state, &new_state, &pending_state);
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
         if (GST_MESSAGE_SRC(message) == GST_OBJECT(impl->m_pipeline))
         {
+            GstState old_state, new_state, pending_state;
+            gst_message_parse_state_changed(message, &old_state, &new_state, &pending_state);
+
             EGTLOG_DEBUG("state changed from {} to {}",
                          gst_element_state_get_name(old_state),
                          gst_element_state_get_name(new_state));
