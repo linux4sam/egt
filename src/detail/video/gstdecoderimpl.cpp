@@ -269,6 +269,15 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
                          gst_element_state_get_name(old_state),
                          gst_element_state_get_name(new_state));
 
+            gchar* dump_name = g_strdup_printf("egt.%s_%s",
+                                               gst_element_state_get_name(old_state),
+                                               gst_element_state_get_name(new_state));
+
+            GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS(GST_BIN(impl->m_pipeline),
+                                              GST_DEBUG_GRAPH_SHOW_ALL, dump_name);
+
+            g_free(dump_name);
+
             if (impl->playing())
             {
                 GstQuery* query = gst_query_new_seeking(GST_FORMAT_TIME);
