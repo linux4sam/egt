@@ -59,6 +59,7 @@ protected:
     std::string m_caps_format;
     std::vector<std::tuple<int, int>> m_resolutions;
 
+    std::vector<std::string> get_camera_device_list();
     void get_camera_device_caps();
 
     static GstFlowReturn on_new_buffer(GstElement* elt, gpointer data);
@@ -70,8 +71,6 @@ using BusCallback = gboolean(*)(GstBus* bus, GstMessage* message, gpointer data)
 
 std::tuple<std::string, std::string, std::string, std::vector<std::tuple<int, int>>>
 get_camera_device_caps(const std::string& dev_name);
-
-std::vector<std::string> get_camera_device_list();
 
 } //End of detail
 

@@ -458,7 +458,7 @@ void CameraImpl::scale(float scalex, float scaley)
 
 std::vector<std::string> CameraImpl::list_devices()
 {
-    return detail::get_camera_device_list();
+    return get_camera_device_list();
 }
 
 void CameraImpl::device(const std::string& device)
@@ -507,7 +507,7 @@ CameraImpl::~CameraImpl() noexcept
     }
 }
 
-std::vector<std::string> get_camera_device_list()
+std::vector<std::string> CameraImpl::get_camera_device_list()
 {
     std::vector<std::string> dlist;
     GstDeviceMonitor* monitor = gst_device_monitor_new();
