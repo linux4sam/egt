@@ -180,7 +180,7 @@ void CaptureImpl::set_output(const std::string& output,
 void CaptureImpl::get_camera_device_caps()
 {
     std::tuple<std::string, std::string, std::string,
-        std::vector<std::tuple<int, int>>> caps = detail::get_camera_device_caps(m_devnode, &bus_callback, this);
+        std::vector<std::tuple<int, int>>> caps = detail::get_camera_device_caps(m_devnode);
 
     m_devnode = std::get<0>(caps);
 }

@@ -69,9 +69,9 @@ protected:
 using BusCallback = gboolean(*)(GstBus* bus, GstMessage* message, gpointer data);
 
 std::tuple<std::string, std::string, std::string, std::vector<std::tuple<int, int>>>
-get_camera_device_caps(const std::string& dev_name, BusCallback bus_callback, void* instance);
+get_camera_device_caps(const std::string& dev_name);
 
-std::vector<std::string> get_camera_device_list(BusCallback bus_callback, void* instance);
+std::vector<std::string> get_camera_device_list();
 
 } //End of detail
 
