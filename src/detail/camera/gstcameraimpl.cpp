@@ -55,6 +55,17 @@ CameraImpl::CameraImpl(CameraWindow& iface, const Rect& rect,
 
     m_gmain_loop = g_main_loop_new(nullptr, FALSE);
     m_gmain_thread = std::thread(g_main_loop_run, m_gmain_loop);
+
+    m_device_monitor = gst_device_monitor_new();
+
+    GstCaps* caps = gst_caps_new_empty_simple("video/x-raw");
+    gst_device_monitor_add_filter(m_device_monitor, "Video/Source", caps);
+    gst_caps_unref(caps);
+
+    GstBus* bus = gst_device_monitor_get_bus(m_device_monitor);
+    gst_bus_add_watch(bus, &bus_callback, this);
+
+    gst_device_monitor_start(m_device_monitor);
 }
 
 gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer data)
@@ -269,13 +280,7 @@ GstFlowReturn CameraImpl::on_new_buffer(GstElement* elt, gpointer data)
 
 void CameraImpl::get_camera_device_caps()
 {
-    GstDeviceMonitor* monitor = gst_device_monitor_new();
-
-    GstCaps* caps = gst_caps_new_empty_simple("video/x-raw");
-    gst_device_monitor_add_filter(monitor, "Video/Source", caps);
-    gst_caps_unref(caps);
-
-    GList* devlist = gst_device_monitor_get_devices(monitor);
+    GList* devlist = gst_device_monitor_get_devices(m_device_monitor);
     for (GList* i = g_list_first(devlist); i; i = g_list_next(i))
     {
         auto device = static_cast<GstDevice*>(i->data);
@@ -292,7 +297,7 @@ void CameraImpl::get_camera_device_caps()
         if (gstreamer_get_device_path(device) != m_devnode)
             continue;
 
-        caps = gst_device_get_caps(device);
+        GstCaps* caps = gst_device_get_caps(device);
         if (caps)
         {
             m_resolutions.clear();
@@ -492,6 +497,11 @@ void CameraImpl::stop()
 
 CameraImpl::~CameraImpl() noexcept
 {
+
+    GstBus* bus = gst_device_monitor_get_bus(m_device_monitor);
+    gst_bus_remove_watch(bus);
+    gst_device_monitor_stop(m_device_monitor);
+
     if (m_gmain_loop)
     {
         /*
@@ -510,17 +520,12 @@ CameraImpl::~CameraImpl() noexcept
 std::vector<std::string> CameraImpl::get_camera_device_list()
 {
     std::vector<std::string> dlist;
-    GstDeviceMonitor* monitor = gst_device_monitor_new();
-
-    GstCaps* caps = gst_caps_new_empty_simple("video/x-raw");
-    gst_device_monitor_add_filter(monitor, "Video/Source", caps);
-    gst_caps_unref(caps);
 
     std::string caps_name;
     std::string caps_format;
     std::vector<std::tuple<int, int>> resolutions;
 
-    GList* devlist = gst_device_monitor_get_devices(monitor);
+    GList* devlist = gst_device_monitor_get_devices(m_device_monitor);
     for (GList* i = g_list_first(devlist); i; i = g_list_next(i))
     {
         auto device = static_cast<GstDevice*>(i->data);
