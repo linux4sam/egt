@@ -515,6 +515,9 @@ get_camera_device_caps(const std::string& dev_name, BusCallback bus_callback, vo
             GstStringHandle dev_string{gst_device_get_device_class(device)};
             EGTLOG_DEBUG("class : {}", dev_string.get());
 
+            if (gstreamer_get_device_path(device) != dev_name)
+                continue;
+
             caps = gst_device_get_caps(device);
             if (caps)
             {
@@ -553,8 +556,7 @@ get_camera_device_caps(const std::string& dev_name, BusCallback bus_callback, vo
                 gst_caps_unref(caps);
             }
 
-            if (gstreamer_get_device_path(device) == dev_name)
-                break;
+            break;
         }
         g_list_free(devlist);
     }
