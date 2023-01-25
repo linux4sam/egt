@@ -62,6 +62,20 @@ CameraImpl::CameraImpl(CameraWindow& iface, const Rect& rect,
     gst_device_monitor_add_filter(m_device_monitor, "Video/Source", caps);
     gst_caps_unref(caps);
 
+    GList* devlist = gst_device_monitor_get_devices(m_device_monitor);
+    for (GList* i = g_list_first(devlist); i; i = g_list_next(i))
+    {
+        auto device = static_cast<GstDevice*>(i->data);
+        if (!device)
+            continue;
+
+        const std::string devnode = gstreamer_get_device_path(device);
+
+        if (std::find(m_devices.begin(), m_devices.end(), devnode) == m_devices.end())
+            m_devices.push_back(devnode);
+    }
+    g_list_free(devlist);
+
     GstBus* bus = gst_device_monitor_get_bus(m_device_monitor);
     gst_bus_add_watch(bus, &bus_callback, this);
 
@@ -132,8 +146,10 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
 
         const std::string devnode = gstreamer_get_device_path(device);
 
-        if (devnode.empty() || devnode == impl->m_devnode)
+        if (std::find(impl->m_devices.begin(), impl->m_devices.end(), devnode) != impl->m_devices.end())
             break;
+
+        impl->m_devices.push_back(devnode);
 
         if (Application::check_instance())
         {
@@ -151,6 +167,11 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
         gst_message_parse_device_removed(message, &device);
 
         const std::string devnode = gstreamer_get_device_path(device);
+        const auto i = std::find(impl->m_devices.begin(), impl->m_devices.end(), devnode);
+        if (i == impl->m_devices.end())
+            break;
+
+        impl->m_devices.erase(i);
 
         /**
          * invoke disconnect only if current device is

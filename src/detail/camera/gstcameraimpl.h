@@ -49,6 +49,7 @@ public:
 protected:
     CameraWindow& m_interface;
     std::string m_devnode;
+    std::vector<std::string> m_devices;
     GstDeviceMonitor* m_device_monitor{nullptr};
     GstElement* m_pipeline{nullptr};
     GstElement* m_appsink{nullptr};
