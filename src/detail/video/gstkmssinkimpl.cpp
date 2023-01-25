@@ -45,7 +45,7 @@ GstKmsSinkImpl::GstKmsSinkImpl(VideoWindow& iface, const Size& size, bool decode
         "libgstvideoscale.so",
         "libgstvideoconvert.so",
     };
-    detail::gst_init_plugins(plugins);
+    detail::gstreamer_init_plugins(plugins);
 }
 
 std::string GstKmsSinkImpl::create_pipeline()

@@ -52,7 +52,7 @@ CaptureImpl::CaptureImpl(experimental::CameraCapture& iface,
         "libgstlibav.so",
         "libgstvideoparsersbad.so",
     };
-    detail::gst_init_plugins(plugins);
+    detail::gstreamer_init_plugins(plugins);
 
     m_gmainLoop = g_main_loop_new(nullptr, FALSE);
     m_gmainThread = std::thread(g_main_loop_run, m_gmainLoop);
@@ -74,7 +74,7 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
     {
         GstErrorHandle error;
         GstStringHandle debug;
-        gst_message_parse(gst_message_parse_error, message, error, debug);
+        gstreamer_message_parse(gst_message_parse_error, message, error, debug);
         if (error)
         {
             EGTLOG_DEBUG("gst error: {} {}",
@@ -95,7 +95,7 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
     {
         GstErrorHandle error;
         GstStringHandle debug;
-        gst_message_parse(gst_message_parse_warning, message, error, debug);
+        gstreamer_message_parse(gst_message_parse_warning, message, error, debug);
         if (error)
         {
             EGTLOG_DEBUG("gst warning: {} {}",
@@ -108,7 +108,7 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
     {
         GstErrorHandle error;
         GstStringHandle debug;
-        gst_message_parse(gst_message_parse_info, message, error, debug);
+        gstreamer_message_parse(gst_message_parse_info, message, error, debug);
         if (error)
         {
             EGTLOG_DEBUG("gst info: {} {}",

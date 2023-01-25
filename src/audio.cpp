@@ -112,7 +112,7 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
     {
         detail::GstErrorHandle error;
         detail::GstStringHandle debug;
-        detail::gst_message_parse(gst_message_parse_error, message, error, debug);
+        detail::gstreamer_message_parse(gst_message_parse_error, message, error, debug);
         if (error)
         {
             EGTLOG_DEBUG("gst error: {} {}",
@@ -135,7 +135,7 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
     {
         detail::GstErrorHandle error;
         detail::GstStringHandle debug;
-        detail::gst_message_parse(gst_message_parse_warning, message, error, debug);
+        detail::gstreamer_message_parse(gst_message_parse_warning, message, error, debug);
         if (error)
         {
             EGTLOG_DEBUG("gst warning: {} {}",
@@ -148,7 +148,7 @@ static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data)
     {
         detail::GstErrorHandle error;
         detail::GstStringHandle debug;
-        detail::gst_message_parse(gst_message_parse_info, message, error, debug);
+        detail::gstreamer_message_parse(gst_message_parse_info, message, error, debug);
         if (error)
         {
             EGTLOG_DEBUG("gst info: {} {}",
@@ -235,7 +235,7 @@ AudioPlayer::AudioPlayer()
         "libgstalsa.so",
         "libgstlibav.so",
     };
-    detail::gst_init_plugins(plugins);
+    detail::gstreamer_init_plugins(plugins);
 }
 
 AudioPlayer::AudioPlayer(const std::string& uri)

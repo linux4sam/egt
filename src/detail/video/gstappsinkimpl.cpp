@@ -52,7 +52,7 @@ GstAppSinkImpl::GstAppSinkImpl(VideoWindow& iface, const Size& size)
         "libgstlibav.so",
         "libgstvideoparsersbad.so",
     };
-    detail::gst_init_plugins(plugins);
+    detail::gstreamer_init_plugins(plugins);
 }
 
 void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)

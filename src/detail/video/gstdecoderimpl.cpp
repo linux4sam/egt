@@ -189,7 +189,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
     {
         GstErrorHandle error;
         GstStringHandle debug;
-        gst_message_parse(gst_message_parse_error, message, error, debug);
+        gstreamer_message_parse(gst_message_parse_error, message, error, debug);
         if (error)
         {
             EGTLOG_DEBUG("gst error: {} {}",
@@ -210,7 +210,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
     {
         GstErrorHandle error;
         GstStringHandle debug;
-        gst_message_parse(gst_message_parse_warning, message, error, debug);
+        gstreamer_message_parse(gst_message_parse_warning, message, error, debug);
         if (error)
         {
             EGTLOG_DEBUG("gst warning: {} {}",
@@ -223,7 +223,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
     {
         GstErrorHandle error;
         GstStringHandle debug;
-        gst_message_parse(gst_message_parse_info, message, error, debug);
+        gstreamer_message_parse(gst_message_parse_info, message, error, debug);
         if (error)
         {
             EGTLOG_DEBUG("gst info: {} {}",

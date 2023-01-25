@@ -32,7 +32,7 @@ using GstStringHandle = std::unique_ptr<gchar, GstDeleter<void, g_free>>;
 using GstErrorHandle = std::unique_ptr<GError, GstDeleter<GError, g_error_free>>;
 
 template<class T>
-inline void gst_message_parse(T& func, GstMessage* msg, GstErrorHandle& err, GstStringHandle& debug)
+inline void gstreamer_message_parse(T& func, GstMessage* msg, GstErrorHandle& err, GstStringHandle& debug)
 {
     GError* gst_error = nullptr;
     gchar* string = nullptr;
@@ -42,7 +42,7 @@ inline void gst_message_parse(T& func, GstMessage* msg, GstErrorHandle& err, Gst
 }
 
 template<class T>
-inline void gst_init_plugins(T& plugins)
+inline void gstreamer_init_plugins(T& plugins)
 {
     GError* err = nullptr;
     if (!gst_init_check(nullptr, nullptr, &err))

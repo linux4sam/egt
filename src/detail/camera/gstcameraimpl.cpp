@@ -51,7 +51,7 @@ CameraImpl::CameraImpl(CameraWindow& iface, const Rect& rect,
         "libgstaudioresample.so",
         "libgstautodetect.so",
     };
-    detail::gst_init_plugins(plugins);
+    detail::gstreamer_init_plugins(plugins);
 
     m_gmain_loop = g_main_loop_new(nullptr, FALSE);
     m_gmain_thread = std::thread(g_main_loop_run, m_gmain_loop);
@@ -71,7 +71,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
     {
         GstErrorHandle error;
         GstStringHandle debug;
-        gst_message_parse(gst_message_parse_error, message, error, debug);
+        gstreamer_message_parse(gst_message_parse_error, message, error, debug);
         if (error)
         {
             EGTLOG_DEBUG("gst error: {} {}",
@@ -92,7 +92,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
     {
         GstErrorHandle error;
         GstStringHandle debug;
-        gst_message_parse(gst_message_parse_warning, message, error, debug);
+        gstreamer_message_parse(gst_message_parse_warning, message, error, debug);
         if (error)
         {
             EGTLOG_DEBUG("gst warning: {} {}",
@@ -105,7 +105,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
     {
         GstErrorHandle error;
         GstStringHandle debug;
-        gst_message_parse(gst_message_parse_info, message, error, debug);
+        gstreamer_message_parse(gst_message_parse_info, message, error, debug);
         if (error)
         {
             EGTLOG_DEBUG("gst info: {} {}",
