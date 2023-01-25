@@ -540,26 +540,7 @@ CameraImpl::~CameraImpl() noexcept
 
 std::vector<std::string> CameraImpl::get_camera_device_list()
 {
-    std::vector<std::string> dlist;
-
-    std::string caps_name;
-    std::string caps_format;
-    std::vector<std::tuple<int, int>> resolutions;
-
-    GList* devlist = gst_device_monitor_get_devices(m_device_monitor);
-    for (GList* i = g_list_first(devlist); i; i = g_list_next(i))
-    {
-        auto device = static_cast<GstDevice*>(i->data);
-        if (device == nullptr)
-            continue;
-
-        const auto devnode = gstreamer_get_device_path(device);
-        EGTLOG_DEBUG("device : {}", devnode);
-        dlist.push_back(devnode);
-    }
-    g_list_free(devlist);
-
-    return dlist;
+    return m_devices;
 }
 
 std::tuple<std::string, std::string, std::string, std::vector<std::tuple<int, int>>>
