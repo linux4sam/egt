@@ -121,12 +121,14 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
 
         const std::string devnode = gstreamer_get_device_path(device);
 
+        if (devnode.empty() || devnode == impl->m_devnode)
+            break;
+
         if (Application::check_instance())
         {
             asio::post(Application::instance().event().io(), [impl, devnode]()
             {
-                if (!devnode.empty() && devnode != impl->m_devnode)
-                    impl->m_interface.on_connect.invoke(devnode);
+                impl->m_interface.on_connect.invoke(devnode);
             });
         }
 
@@ -139,14 +141,16 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
 
         const std::string devnode = gstreamer_get_device_path(device);
 
+        /**
+         * invoke disconnect only if current device is
+         * disconnected.
+         */
+        if (devnode != impl->m_devnode)
+            break;
+
         asio::post(Application::instance().event().io(), [impl, devnode]()
         {
-            /**
-             * invoke disconnect only if current device is
-             * disconnected.
-             */
-            if (devnode == impl->m_devnode)
-                impl->m_interface.on_disconnect.invoke(devnode);
+            impl->m_interface.on_disconnect.invoke(devnode);
         });
         break;
     }
