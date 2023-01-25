@@ -269,12 +269,68 @@ GstFlowReturn CameraImpl::on_new_buffer(GstElement* elt, gpointer data)
 
 void CameraImpl::get_camera_device_caps()
 {
-    std::tuple<std::string, std::string, std::string,
-        std::vector<std::tuple<int, int>>> caps = detail::get_camera_device_caps(m_devnode);
+    GstDeviceMonitor* monitor = gst_device_monitor_new();
 
-    m_caps_name = std::get<1>(caps);
-    m_caps_format = std::get<2>(caps);
-    m_resolutions = std::get<3>(caps);
+    GstCaps* caps = gst_caps_new_empty_simple("video/x-raw");
+    gst_device_monitor_add_filter(monitor, "Video/Source", caps);
+    gst_caps_unref(caps);
+
+    GList* devlist = gst_device_monitor_get_devices(monitor);
+    for (GList* i = g_list_first(devlist); i; i = g_list_next(i))
+    {
+        auto device = static_cast<GstDevice*>(i->data);
+        if (device == nullptr)
+            continue;
+
+        // Probe all device properties and store them internally:
+        GstStringHandle display_name{gst_device_get_display_name(device)};
+        EGTLOG_DEBUG("name : {}", display_name.get());
+
+        GstStringHandle dev_string{gst_device_get_device_class(device)};
+        EGTLOG_DEBUG("class : {}", dev_string.get());
+
+        if (gstreamer_get_device_path(device) != m_devnode)
+            continue;
+
+        caps = gst_device_get_caps(device);
+        if (caps)
+        {
+            m_resolutions.clear();
+            int size = gst_caps_get_size(caps);
+            EGTLOG_DEBUG("caps : ");
+            for (int j = 0; j < size; ++j)
+            {
+                GstStructure* s = gst_caps_get_structure(caps, j);
+                std::string name = std::string(gst_structure_get_name(s));
+                if (name == "video/x-raw")
+                {
+                    int width = 0;
+                    int height = 0;
+                    m_caps_name = name;
+                    gst_structure_get_int(s, "width", &width);
+                    gst_structure_get_int(s, "height", &height);
+                    const gchar* str = gst_structure_get_string(s, "format");
+                    m_caps_format = str ? str : "";
+                    m_resolutions.emplace_back(std::make_tuple(width, height));
+                    EGTLOG_DEBUG("{}, format=(string){}, width=(int){}, "
+                                 "height=(int){}", m_caps_name, m_caps_format, width, height);
+                }
+            }
+
+            if (!m_resolutions.empty())
+            {
+                // sort by camera width
+                std::sort(m_resolutions.begin(), m_resolutions.end(), [](
+                              std::tuple<int, int>& t1,
+                              std::tuple<int, int>& t2)
+                {
+                    return std::get<0>(t1) < std::get<0>(t2);
+                });
+            }
+            gst_caps_unref(caps);
+        }
+    }
+    g_list_free(devlist);
 }
 
 bool CameraImpl::start()
