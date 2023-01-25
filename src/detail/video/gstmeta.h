@@ -7,6 +7,7 @@
 #define EGT_SRC_DETAIL_VIDEO_GSTMETA_H
 
 #include "egt/detail/filesystem.h"
+#include "detail/egtlog.h"
 #include <gst/gst.h>
 #include <memory>
 #include <string>
@@ -99,6 +100,8 @@ inline void gstreamer_init_plugins(T& plugins)
         }
     }
 }
+
+std::string gstreamer_get_device_path(GstDevice* device);
 
 }
 }

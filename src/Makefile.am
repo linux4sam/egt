@@ -286,6 +286,7 @@ detail/camera/gstcameraimpl.h \
 capture.cpp \
 detail/camera/gstcaptureimpl.cpp \
 detail/camera/gstcaptureimpl.h \
+detail/video/gstmeta.cpp \
 detail/video/gstmeta.h
 
 if HAVE_LIBPLANES

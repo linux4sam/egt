@@ -127,14 +127,7 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
         GstDevice* device;
         gst_message_parse_device_added(message, &device);
 
-        std::string devnode;
-        GstStructure* props = gst_device_get_properties(device);
-        if (props)
-        {
-            EGTLOG_DEBUG("device properties: {}", gst_structure_to_string(props));
-            devnode = gst_structure_get_string(props, "device.path");
-            gst_structure_free(props);
-        }
+        std::string devnode = gstreamer_get_device_path(device);
 
         if (Application::check_instance())
         {
@@ -151,14 +144,7 @@ gboolean CaptureImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer da
         GstDevice* device;
         gst_message_parse_device_removed(message, &device);
 
-        std::string devnode;
-        GstStructure* props = gst_device_get_properties(device);
-        if (props)
-        {
-            EGTLOG_DEBUG("device properties: {}", gst_structure_to_string(props));
-            devnode = gst_structure_get_string(props, "device.path");
-            gst_structure_free(props);
-        }
+        std::string devnode = gstreamer_get_device_path(device);
 
         impl->m_condition.notify_one();
 

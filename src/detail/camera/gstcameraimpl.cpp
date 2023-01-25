@@ -119,14 +119,7 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
         GstDevice* device;
         gst_message_parse_device_added(message, &device);
 
-        std::string devnode;
-        GstStructure* props = gst_device_get_properties(device);
-        if (props)
-        {
-            EGTLOG_DEBUG("device properties: {}", gst_structure_to_string(props));
-            devnode = gst_structure_get_string(props, "device.path");
-            gst_structure_free(props);
-        }
+        const std::string devnode = gstreamer_get_device_path(device);
 
         if (Application::check_instance())
         {
@@ -143,14 +136,8 @@ gboolean CameraImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer dat
     {
         GstDevice* device;
         gst_message_parse_device_removed(message, &device);
-        std::string devnode;
-        GstStructure* props = gst_device_get_properties(device);
-        if (props)
-        {
-            EGTLOG_DEBUG("device properties: {}", gst_structure_to_string(props));
-            devnode = gst_structure_get_string(props, "device.path");
-            gst_structure_free(props);
-        }
+
+        const std::string devnode = gstreamer_get_device_path(device);
 
         asio::post(Application::instance().event().io(), [impl, devnode]()
         {
@@ -489,14 +476,9 @@ std::vector<std::string> get_camera_device_list(BusCallback bus_callback, void* 
             if (device == nullptr)
                 continue;
 
-            GstStructure* props = gst_device_get_properties(device);
-            if (props)
-            {
-                auto devnode = std::string(gst_structure_get_string(props, "device.path"));
-                gst_structure_free(props);
-                EGTLOG_DEBUG("device : {}", devnode);
-                dlist.push_back(devnode);
-            }
+            const auto devnode = gstreamer_get_device_path(device);
+            EGTLOG_DEBUG("device : {}", devnode);
+            dlist.push_back(devnode);
         }
         g_list_free(devlist);
     }
@@ -506,8 +488,6 @@ std::vector<std::string> get_camera_device_list(BusCallback bus_callback, void* 
 std::tuple<std::string, std::string, std::string, std::vector<std::tuple<int, int>>>
 get_camera_device_caps(const std::string& dev_name, BusCallback bus_callback, void* instance)
 {
-    std::string devnode;
-
     GstDeviceMonitor* monitor = gst_device_monitor_new();
 
     GstBus* bus = gst_device_monitor_get_bus(monitor);
@@ -574,24 +554,13 @@ get_camera_device_caps(const std::string& dev_name, BusCallback bus_callback, vo
                 gst_caps_unref(caps);
             }
 
-            GstStructure* props = gst_device_get_properties(device);
-            if (props)
-            {
-                EGTLOG_DEBUG("device properties: {}", gst_structure_to_string(props));
-
-                devnode = std::string(gst_structure_get_string(props, "device.path"));
-                gst_structure_free(props);
-
-                if (devnode == dev_name)
-                    break;
-            }
+            if (gstreamer_get_device_path(device) == dev_name)
+                break;
         }
         g_list_free(devlist);
     }
 
-    EGTLOG_DEBUG("camera device node : {}", devnode);
-
-    return std::make_tuple(devnode, caps_name, caps_format, resolutions);
+    return std::make_tuple(dev_name, caps_name, caps_format, resolutions);
 }
 
 }
