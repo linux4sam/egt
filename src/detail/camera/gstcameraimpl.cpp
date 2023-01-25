@@ -277,8 +277,6 @@ void CameraImpl::get_camera_device_caps()
 
 bool CameraImpl::start()
 {
-    std::string pipe;
-
     get_camera_device_caps();
 
     Rect box;
@@ -352,7 +350,7 @@ bool CameraImpl::start()
         "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={} ! {} " \
         "appsink name=appsink async=false enable-last-sample=false sync=true";
 
-    pipe = fmt::format(appsink_pipe, m_devnode, w, h, gst_format, vscale);
+    const std::string pipe = fmt::format(appsink_pipe, m_devnode, w, h, gst_format, vscale);
 
     EGTLOG_DEBUG(pipe);
 
