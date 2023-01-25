@@ -272,8 +272,6 @@ void CameraImpl::get_camera_device_caps()
     std::tuple<std::string, std::string, std::string,
         std::vector<std::tuple<int, int>>> caps = detail::get_camera_device_caps(m_devnode, &bus_callback, this);
 
-    std::string dev = std::get<0>(caps);
-    m_devnode = dev.empty() ? "/dev/video0" : dev;
     m_caps_name = std::get<1>(caps);
     m_caps_format = std::get<2>(caps);
     m_resolutions = std::get<3>(caps);
