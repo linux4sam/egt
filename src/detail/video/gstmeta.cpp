@@ -27,7 +27,9 @@ std::string gstreamer_get_device_path(GstDevice* device)
     if (props)
     {
         EGTLOG_DEBUG("device properties: {}", gst_structure_to_string(props.get()));
-        devnode = gst_structure_get_string(props.get(), "device.path");
+        const gchar* str = gst_structure_get_string(props.get(), "device.path");
+        if (str)
+            devnode = str;
     }
 
     return devnode;

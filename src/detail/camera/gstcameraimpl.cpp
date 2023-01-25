@@ -534,7 +534,8 @@ get_camera_device_caps(const std::string& dev_name, BusCallback bus_callback, vo
                         caps_name = name;
                         gst_structure_get_int(s, "width", &width);
                         gst_structure_get_int(s, "height", &height);
-                        caps_format = std::string(gst_structure_get_string(s, "format"));
+                        const gchar* str = gst_structure_get_string(s, "format");
+                        caps_format = str ? str : "";
                         resolutions.emplace_back(std::make_tuple(width, height));
                         EGTLOG_DEBUG("{}, format=(string){}, width=(int){}, "
                                      "height=(int){}", caps_name, caps_format, width, height);
