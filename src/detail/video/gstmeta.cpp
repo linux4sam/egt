@@ -23,12 +23,11 @@ namespace detail
 std::string gstreamer_get_device_path(GstDevice* device)
 {
     std::string devnode;
-    GstStructure* props = gst_device_get_properties(device);
+    GstStructureHandle props{gst_device_get_properties(device)};
     if (props)
     {
-        EGTLOG_DEBUG("device properties: {}", gst_structure_to_string(props));
-        devnode = gst_structure_get_string(props, "device.path");
-        gst_structure_free(props);
+        EGTLOG_DEBUG("device properties: {}", gst_structure_to_string(props.get()));
+        devnode = gst_structure_get_string(props.get(), "device.path");
     }
 
     return devnode;

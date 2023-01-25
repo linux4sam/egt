@@ -31,6 +31,7 @@ struct GstDeleter
 
 using GstStringHandle = std::unique_ptr<gchar, GstDeleter<void, g_free>>;
 using GstErrorHandle = std::unique_ptr<GError, GstDeleter<GError, g_error_free>>;
+using GstStructureHandle = std::unique_ptr<GstStructure, GstDeleter<GstStructure, gst_structure_free >>;
 
 template<class T>
 inline void gstreamer_message_parse(T& func, GstMessage* msg, GstErrorHandle& err, GstStringHandle& debug)
