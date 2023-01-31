@@ -15,6 +15,7 @@
 #include <cairo-xlib.h>
 #include <cairo.h>
 #include <cstdlib>
+#include <string>
 
 namespace egt
 {
@@ -33,7 +34,7 @@ struct X11Data
     InputKeyboard keyboard;
 };
 
-X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
+X11Screen::X11Screen(Application& app, const Size& size, const std::string& name, bool borderless)
     : m_app(app),
       m_priv(std::make_unique<detail::X11Data>()),
       m_input(m_app.event().io())
@@ -68,7 +69,7 @@ X11Screen::X11Screen(Application& app, const Size& size, bool borderless)
         XSetWindowBorder(m_priv->display, m_priv->window, 0);
     }
 
-    XStoreName(m_priv->display, m_priv->window, "EGT");
+    XStoreName(m_priv->display, m_priv->window, name.empty() ? "EGT" : name.c_str());
 
     auto sh = std::unique_ptr<XSizeHints, decltype(&::XFree)>(XAllocSizeHints(), ::XFree);
     sh->flags = PMinSize | PMaxSize;

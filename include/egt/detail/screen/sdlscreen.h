@@ -17,6 +17,7 @@
 #include <egt/input.h>
 #include <egt/screen.h>
 #include <memory>
+#include <string>
 #include <thread>
 
 namespace egt
@@ -38,7 +39,7 @@ public:
      * @param app Application instance this screen is associated with.
      * @param size Size of the screen.
      */
-    explicit SDLScreen(Application& app, const Size& size = Size(800, 480));
+    explicit SDLScreen(Application& app, const Size& size = Size(800, 480), const std::string& name = {});
 
     SDLScreen(const SDLScreen&) = delete;
     SDLScreen& operator=(const SDLScreen&) = delete;

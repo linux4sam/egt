@@ -10,6 +10,7 @@
 #include "egt/utils.h"
 #include <SDL2/SDL.h>
 #include <cairo.h>
+#include <string>
 
 namespace egt
 {
@@ -50,7 +51,7 @@ struct SDLData
 };
 
 
-SDLScreen::SDLScreen(Application& app, const Size& size)
+SDLScreen::SDLScreen(Application& app, const Size& size, const std::string& name)
     : m_priv(std::make_unique<detail::SDLData>()),
       m_app(app)
 {
@@ -60,7 +61,7 @@ SDLScreen::SDLScreen(Application& app, const Size& size)
 
     m_buffers.emplace_back(nullptr);
 
-    m_thread = std::thread([size, this]()
+    m_thread = std::thread([size, name, this]()
     {
         //Work guard prevents io_context from finishing work before it gets more.
         asio::executor_work_guard<asio::io_context::executor_type> tn = asio::make_work_guard(m_io);
@@ -68,7 +69,7 @@ SDLScreen::SDLScreen(Application& app, const Size& size)
         SDL_Init(SDL_INIT_VIDEO);
 
         m_priv->window = unique_sdl_window_t(
-                             SDL_CreateWindow("EGT",
+                             SDL_CreateWindow(name.empty() ? "EGT" : name.c_str(),
                                               SDL_WINDOWPOS_UNDEFINED,
                                               SDL_WINDOWPOS_UNDEFINED,
                                               size.width(),

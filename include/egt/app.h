@@ -195,7 +195,7 @@ protected:
     /// @private
     static void setup_locale(const std::string& name);
     /// @private
-    void setup_backend(bool primary);
+    void setup_backend(bool primary, const std::string& name);
     /// @private
     void setup_inputs();
     /// @private

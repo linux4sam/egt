@@ -108,7 +108,7 @@ Application::Application(int argc, char** argv,
 
     setup_locale(name);
 
-    setup_backend(primary);
+    setup_backend(primary, name);
 
     setup_inputs();
 
@@ -206,7 +206,7 @@ void Application::setup_search_paths(const std::vector<std::string>& extra_paths
 }
 
 // NOLINTNEXTLINE(readability-convert-member-functions-to-static)
-void Application::setup_backend(bool primary)
+void Application::setup_backend(bool primary, const std::string& name)
 {
     detail::ignoreparam(primary);
     std::string backend;
@@ -239,10 +239,10 @@ void Application::setup_backend(bool primary)
         {"kms", [&primary]() { return std::make_unique<detail::KMSScreen>(primary); }},
 #endif
 #ifdef HAVE_X11
-        {"x11", [this, &size]() { return std::make_unique<detail::X11Screen>(*this, size); }},
+        {"x11", [this, &size, &name]() { return std::make_unique<detail::X11Screen>(*this, size, name); }},
 #endif
 #ifdef HAVE_SDL2
-        {"sdl2", [this, &size]() { return std::make_unique<detail::SDLScreen>(*this, size); }},
+        {"sdl2", [this, &size, &name]() { return std::make_unique<detail::SDLScreen>(*this, size, name); }},
 #endif
         {"memory", [&size]() { return std::make_unique<detail::MemoryScreen>(size); }},
         {"composer", [&size]() { return std::make_unique<detail::ComposerScreen>(size); }},

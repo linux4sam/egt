@@ -16,6 +16,7 @@
 #include <egt/input.h>
 #include <egt/screen.h>
 #include <memory>
+#include <string>
 
 namespace egt
 {
@@ -42,7 +43,7 @@ public:
      * @param borderless Create the X11 window without a border.
      */
     explicit X11Screen(Application& app, const Size& size = Size(800, 480),
-                       bool borderless = false);
+                       const std::string& name = {}, bool borderless = false);
 
     X11Screen(const X11Screen&) = delete;
     X11Screen& operator=(const X11Screen&) = delete;
