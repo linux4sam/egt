@@ -318,8 +318,6 @@ public:
 
     Size text_size(const std::string& text);
 
-    Size font_size(const std::string& text);
-
     void color_at(const Point& point, const Color& color) noexcept;
     static void color_at(cairo_surface_t* image, const Point& point, const Color& color) noexcept;
     Color color_at(const Point& point) noexcept;

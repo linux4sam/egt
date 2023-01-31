@@ -177,14 +177,6 @@ Size Painter::text_size(const std::string& text)
             static_cast<Size::DimType>(std::floor(n * line_recommended_height + 1.0))};
 }
 
-Size Painter::font_size(const std::string& text)
-{
-    cairo_font_extents_t fe;
-    cairo_font_extents(m_cr.get(), &fe);
-    return {text_size(text).width(),
-            static_cast<Size::DimType>(std::floor(fe.height + 1.0))};
-}
-
 Painter& Painter::clip()
 {
     cairo_clip(m_cr.get());
