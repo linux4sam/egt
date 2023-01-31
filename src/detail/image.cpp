@@ -305,7 +305,7 @@ private:
         case 0x25504446:
             return MIME_PDF;
 #ifdef HAVE_LIBRSVG
-	case 0x3C737667:
+        case 0x3C737667:
             return MIME_SVG;
 #endif
         case 0xFFD8FFDB:
