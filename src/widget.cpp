@@ -639,10 +639,11 @@ void Widget::layout()
         // cppcheck-suppress unreadVariable
         auto reset = detail::on_scope_exit([this]() { m_in_layout = false; });
         auto s = size();
-        if (s.width() < min_size_hint().width())
-            s.width(min_size_hint().width());
-        if (s.height() < min_size_hint().height())
-            s.height(min_size_hint().height());
+        auto m = min_size_hint();
+        if (s.width() < m.width())
+            s.width(m.width());
+        if (s.height() < m.height())
+            s.height(m.height());
         resize(s);
     }
 }
