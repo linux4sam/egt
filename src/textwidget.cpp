@@ -135,7 +135,7 @@ Size TextWidget::text_size(const std::string& text) const
     Painter painter(canvas.context());
     painter.set(this->font());
 
-    auto size = painter.font_size(text);
+    auto size = painter.text_size(text);
     size_cache.add(std::make_pair(SizeCache::SizeItem{text, this->font()}, size));
     return size;
 }
