@@ -7,6 +7,7 @@
 #include "egt/painter.h"
 #include <cairo.h>
 #include <deque>
+#include <sstream>
 
 namespace egt
 {
@@ -149,10 +150,31 @@ Painter& Painter::draw(const std::string& str, const TextDrawFlags& flags)
 
 Size Painter::text_size(const std::string& text)
 {
-    cairo_text_extents_t textext;
-    cairo_text_extents(m_cr.get(), text.c_str(), &textext);
-    return {static_cast<Size::DimType>(std::floor(textext.width + 1.0)),
-            static_cast<Size::DimType>(std::floor(textext.height + 1.0))};
+    /*
+     * cairo_text_extents deals with glyphs and doesn't handle multilines
+     * strings so the text size has to be computed manually.
+     * The line recommended height is used here as adding the line height
+     * returned by the text extents won't work. getline removes the line return
+     * sequence whose glyph is bigger than letters.
+     */
+    cairo_font_extents_t fontext;
+    cairo_font_extents(m_cr.get(), &fontext);
+    const double line_recommended_height = fontext.height;
+
+    std::istringstream lines(text);
+    std::string line;
+    unsigned int n = 0;
+    double line_max_width = 0;
+    while (std::getline(lines, line))
+    {
+        cairo_text_extents_t textext;
+        cairo_text_extents(m_cr.get(), line.c_str(), &textext);
+        line_max_width = std::max(line_max_width, textext.width);
+        ++n;
+    }
+
+    return {static_cast<Size::DimType>(std::floor(line_max_width + 1.0)),
+            static_cast<Size::DimType>(std::floor(n * line_recommended_height + 1.0))};
 }
 
 Size Painter::font_size(const std::string& text)
