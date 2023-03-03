@@ -32,56 +32,6 @@ Scrollwheel::Scrollwheel(const Rect& rect, ItemArray items) noexcept
       m_button_down(Image("res:internal_arrow_down"))
 {
     init();
-
-    m_button_up.on_click([this](Event&)
-    {
-        if (m_items.empty())
-            return;
-
-        if (m_reversed)
-        {
-            if (m_selected == 0)
-                m_selected = m_items.size() - 1;
-            else
-                m_selected--;
-        }
-        else
-        {
-            if (m_selected == m_items.size() - 1)
-                m_selected = 0;
-            else
-                m_selected++;
-        }
-
-        m_label.text(m_items[m_selected]);
-
-        on_value_changed.invoke();
-    });
-
-    m_button_down.on_click([this](Event&)
-    {
-        if (m_items.empty())
-            return;
-
-        if (m_reversed)
-        {
-            if (m_selected == m_items.size() - 1)
-                m_selected = 0;
-            else
-                m_selected++;
-        }
-        else
-        {
-            if (m_selected == 0)
-                m_selected = m_items.size() - 1;
-            else
-                m_selected--;
-        }
-
-        m_label.text(m_items[m_selected]);
-
-        on_value_changed.invoke();
-    });
 }
 
 Scrollwheel::Scrollwheel(Frame& parent, const ItemArray& items) noexcept
@@ -105,56 +55,6 @@ Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step) noexcept
         m_items.push_back(std::to_string(i));
 
     init();
-
-    m_button_up.on_click([this](Event&)
-    {
-        if (m_items.empty())
-            return;
-
-        if (m_reversed)
-        {
-            if (m_selected == 0)
-                m_selected = m_items.size() - 1;
-            else
-                m_selected--;
-        }
-        else
-        {
-            if (m_selected == m_items.size() - 1)
-                m_selected = 0;
-            else
-                m_selected++;
-        }
-
-        m_label.text(m_items[m_selected]);
-
-        on_value_changed.invoke();
-    });
-
-    m_button_down.on_click([this](Event&)
-    {
-        if (m_items.empty())
-            return;
-
-        if (m_reversed)
-        {
-            if (m_selected == m_items.size() - 1)
-                m_selected = 0;
-            else
-                m_selected++;
-        }
-        else
-        {
-            if (m_selected == 0)
-                m_selected = m_items.size() - 1;
-            else
-                m_selected--;
-        }
-
-        m_label.text(m_items[m_selected]);
-
-        on_value_changed.invoke();
-    });
 }
 
 Scrollwheel::Scrollwheel(Serializer::Properties& props, bool is_derived) noexcept
@@ -165,56 +65,6 @@ Scrollwheel::Scrollwheel(Serializer::Properties& props, bool is_derived) noexcep
     reallocate(StaticGrid::GridSize(1, 3));
 
     init(true);
-
-    m_button_up.on_click([this](Event&)
-    {
-        if (m_items.empty())
-            return;
-
-        if (m_reversed)
-        {
-            if (m_selected == 0)
-                m_selected = m_items.size() - 1;
-            else
-                m_selected--;
-        }
-        else
-        {
-            if (m_selected == m_items.size() - 1)
-                m_selected = 0;
-            else
-                m_selected++;
-        }
-
-        m_label.text(m_items[m_selected]);
-
-        on_value_changed.invoke();
-    });
-
-    m_button_down.on_click([this](Event&)
-    {
-        if (m_items.empty())
-            return;
-
-        if (m_reversed)
-        {
-            if (m_selected == m_items.size() - 1)
-                m_selected = 0;
-            else
-                m_selected++;
-        }
-        else
-        {
-            if (m_selected == 0)
-                m_selected = m_items.size() - 1;
-            else
-                m_selected--;
-        }
-
-        m_label.text(m_items[m_selected]);
-
-        on_value_changed.invoke();
-    });
 
     deserialize(props);
 
@@ -276,6 +126,56 @@ void Scrollwheel::init(bool in_deserialize)
         add(expand(m_label), 1, 0);
         add(expand(m_button_down), 2, 0);
     }
+
+    m_button_up.on_click([this](Event&)
+    {
+        if (m_items.empty())
+            return;
+
+        if (m_reversed)
+        {
+            if (m_selected == 0)
+                m_selected = m_items.size() - 1;
+            else
+                m_selected--;
+        }
+        else
+        {
+            if (m_selected == m_items.size() - 1)
+                m_selected = 0;
+            else
+                m_selected++;
+        }
+
+        m_label.text(m_items[m_selected]);
+
+        on_value_changed.invoke();
+    });
+
+    m_button_down.on_click([this](Event&)
+    {
+        if (m_items.empty())
+            return;
+
+        if (m_reversed)
+        {
+            if (m_selected == m_items.size() - 1)
+                m_selected = 0;
+            else
+                m_selected++;
+        }
+        else
+        {
+            if (m_selected == 0)
+                m_selected = m_items.size() - 1;
+            else
+                m_selected--;
+        }
+
+        m_label.text(m_items[m_selected]);
+
+        on_value_changed.invoke();
+    });
 }
 
 std::string Scrollwheel::value() const
