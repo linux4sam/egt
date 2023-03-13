@@ -26,8 +26,9 @@ Scrollwheel::Scrollwheel(const ItemArray& items) noexcept
 {}
 
 Scrollwheel::Scrollwheel(const Rect& rect, ItemArray items) noexcept
-    : StaticGrid(rect, StaticGrid::GridSize(1, 3)),
+    : Widget(rect),
       m_items(std::move(items)),
+      m_grid(StaticGrid::GridSize(1, 3)),
       m_button_up(Image("res:internal_arrow_up")),
       m_button_down(Image("res:internal_arrow_down"))
 {
@@ -47,7 +48,8 @@ Scrollwheel::Scrollwheel(Frame& parent, const Rect& rect, const ItemArray& items
 }
 
 Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step) noexcept
-    : StaticGrid(rect, StaticGrid::GridSize(1, 3)),
+    : Widget(rect),
+      m_grid(StaticGrid::GridSize(1, 3)),
       m_button_up(Image("res:internal_arrow_up")),
       m_button_down(Image("res:internal_arrow_down"))
 {
@@ -58,11 +60,11 @@ Scrollwheel::Scrollwheel(const Rect& rect, int min, int max, int step) noexcept
 }
 
 Scrollwheel::Scrollwheel(Serializer::Properties& props, bool is_derived) noexcept
-    : StaticGrid(props, true),
+    : Widget(props, true),
       m_button_up(Image("res:internal_arrow_up")),
       m_button_down(Image("res:internal_arrow_down"))
 {
-    reallocate(StaticGrid::GridSize(1, 3));
+    m_grid.grid_size(StaticGrid::GridSize(1, 3));
 
     init(true);
 
@@ -94,11 +96,14 @@ void Scrollwheel::init(bool in_deserialize)
     {
         name("Scrollwheel" + std::to_string(m_widgetid));
 
-        horizontal_space(1);
-        vertical_space(1);
+        m_grid.horizontal_space(1);
+        m_grid.vertical_space(1);
 
         fill_flags().clear();
     }
+
+    add_component(m_grid);
+    expand(m_grid);
 
     m_button_up.fill_flags().clear();
     m_button_down.fill_flags().clear();
@@ -114,17 +119,17 @@ void Scrollwheel::init(bool in_deserialize)
 
     if (m_orient == Orientation::vertical)
     {
-        reallocate(StaticGrid::GridSize(1, 3));
-        add(expand(m_label), 0, 1);
-        add(expand(m_button_up), 0, 0);
-        add(expand(m_button_down), 0, 2);
+        m_grid.grid_size(StaticGrid::GridSize(1, 3));
+        m_grid.add(expand(m_label), 0, 1);
+        m_grid.add(expand(m_button_up), 0, 0);
+        m_grid.add(expand(m_button_down), 0, 2);
     }
     else
     {
-        reallocate(StaticGrid::GridSize(3, 1));
-        add(expand(m_button_up), 0, 0);
-        add(expand(m_label), 1, 0);
-        add(expand(m_button_down), 2, 0);
+        m_grid.grid_size(StaticGrid::GridSize(3, 1));
+        m_grid.add(expand(m_button_up), 0, 0);
+        m_grid.add(expand(m_label), 1, 0);
+        m_grid.add(expand(m_button_down), 2, 0);
     }
 
     m_button_up.on_click([this](Event&)
