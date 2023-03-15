@@ -388,7 +388,7 @@ public:
      * Also, set the selection origin (its fixed end), if needed.
      * In all cases, the cursor is positioned to the new selection cursor.
      */
-    void selection_move(size_t count);
+    void selection_move(size_t count, bool save_column = true);
 
     /**
      * Get the position of the moving end of the selection, as opposed to its
@@ -492,6 +492,12 @@ protected:
     /// Hide/disable the visibility of the cursor.
     void hide_cursor();
 
+    /// Set the cursor position.
+    void cursor_set(size_t pos, bool save_column);
+
+    /// Change the value of m_cursor_pos.
+    void change_cursor(size_t pos, bool save_column = true);
+
     /// Convert point coordinates to position in text for cursor or selection.
     size_t point2pos(const Point& p) const;
 
@@ -506,6 +512,18 @@ protected:
 
     /// Get the position of the end of the current line.
     size_t end_of_line() const { return end_of_line(m_cursor_pos); }
+
+    /// Get the position in the line befor cursor_pos at the same column, if possible.
+    size_t up(size_t cursor_pos) const;
+
+    /// Get the position in the previous line at the same column, if possible.
+    size_t up() const { return up(m_cursor_pos); }
+
+    /// Get the position in the line after cursor_pos at the same column, if possible.
+    size_t down(size_t cursor_pos) const;
+
+    /// Get the position in the next line at the same column, if possible.
+    size_t down() const { return down(m_cursor_pos); }
 
     /// Process key events.
     virtual void handle_key(const Key& key);
@@ -679,6 +697,12 @@ protected:
      * This is a UTF-8 offset.
      */
     size_t m_cursor_pos{0};
+
+    /**
+     * Save the column of the cursor when it was moved for the last time, except
+     * when the cursor is moved with the UP and DOWN keys.
+     */
+    size_t m_saved_column{0};
 
     /**
      * Selection start position.

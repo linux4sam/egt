@@ -1309,7 +1309,22 @@ void TextBox::handle_key(const Key& key)
     {
         if (text_flags().is_set(TextFlag::multiline))
         {
-            // TODO
+            auto pos = up();
+            if (key.state.is_set(Key::KeyMod::shift))
+            {
+                selection_move(pos - selection_cursor(), false);
+            }
+            else if (m_select_len)
+            {
+                // Move the cursor up and deselect the text
+                cursor_set(pos, false);
+                m_select_len = 0;
+                selection_damage();
+            }
+            else
+            {
+                cursor_set(pos, false);
+            }
         }
         move_sliders();
         break;
@@ -1318,7 +1333,22 @@ void TextBox::handle_key(const Key& key)
     {
         if (text_flags().is_set(TextFlag::multiline))
         {
-            // TODO
+            auto pos = down();
+            if (key.state.is_set(Key::KeyMod::shift))
+            {
+                selection_move(pos - selection_cursor(), false);
+            }
+            else if (m_select_len)
+            {
+                // Move the cursor down and deselect the text
+                cursor_set(pos, false);
+                m_select_len = 0;
+                selection_damage();
+            }
+            else
+            {
+                cursor_set(pos, false);
+            }
         }
         move_sliders();
         break;
@@ -1598,18 +1628,30 @@ void TextBox::cursor_backward(size_t count)
 
 void TextBox::cursor_set(size_t pos)
 {
+    cursor_set(pos, true);
+}
+
+void TextBox::cursor_set(size_t pos, bool save_column)
+{
     const auto len = detail::utf8len(m_text);
     if (pos > len)
         pos = len;
 
     if (m_cursor_pos != pos)
     {
-        m_cursor_pos = pos;
+        change_cursor(pos, save_column);
         damage_cursor();
         get_cursor_rect();
     }
 
     show_cursor();
+}
+
+void TextBox::change_cursor(size_t pos, bool save_column)
+{
+    m_cursor_pos = pos;
+    if (save_column)
+        m_saved_column = m_cursor_pos - beginning_of_line();
 }
 
 void TextBox::selection_all()
@@ -1663,7 +1705,7 @@ size_t TextBox::selection_cursor()
     return m_select_start + m_select_len;
 }
 
-void TextBox::selection_move(size_t count)
+void TextBox::selection_move(size_t count, bool save_column)
 {
     if (!count)
         return;
@@ -1688,7 +1730,7 @@ void TextBox::selection_move(size_t count)
     m_select_len = end - start;
     selection_damage();
 
-    m_cursor_pos = (end == m_select_origin) ? start : end;
+    change_cursor((end == m_select_origin) ? start : end, save_column);
     get_cursor_rect();
 }
 
@@ -1929,6 +1971,30 @@ size_t TextBox::end_of_line(size_t cursor_pos) const
     }
 
     return eol;
+}
+
+size_t TextBox::up(size_t cursor_pos) const
+{
+    auto bol = beginning_of_line(cursor_pos);
+
+    if (bol <= 0)
+        return cursor_pos;
+
+    bol = beginning_of_line(bol - 1);
+    auto eol = end_of_line(bol);
+    return bol + std::min(m_saved_column, eol - bol);
+}
+
+size_t TextBox::down(size_t cursor_pos) const
+{
+    auto eol = end_of_line(cursor_pos);
+
+    if (eol >= detail::utf8len(m_text))
+        return cursor_pos;
+
+    auto bol = beginning_of_line(eol + 1);
+    eol = end_of_line(bol);
+    return bol + std::min(m_saved_column, eol - bol);
 }
 
 Rect TextBox::text_boundaries() const
