@@ -391,7 +391,7 @@ static void tag_left_aligned_line(TextRects& prev,
 
     size_t len = detail::utf8len(prefix);
     size_t l;
-    while ((l = next_it->length()) < len)
+    while ((l = next_it->length()) <= len)
     {
         prefix_rect.width(prefix_rect.width() + next_it->rect().width());
         len -= l;
