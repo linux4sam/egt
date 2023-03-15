@@ -622,7 +622,7 @@ void TextBox::tag_text_selection(const TextRects& prev,
 
 void TextBox::draw_text(Painter& painter, const Rect& rect)
 {
-    const auto clip = Rect::intersection(content_area(), rect);
+    const auto clip = Rect::intersection(text_area(), rect);
     if (clip.empty())
         return;
 
@@ -741,6 +741,220 @@ void TextBox::refresh_text_area()
     prepare_text(m_rects);
     get_cursor_rect();
     invalidate_text_rect();
+    update_sliders();
+}
+
+Rect TextBox::text_area() const
+{
+    bool hscrollable = text_flags().is_set(TextBox::TextFlag::horizontal_scrollable);
+    bool vscrollable = text_flags().is_set(TextBox::TextFlag::vertical_scrollable);
+
+    auto b = content_area();
+
+    if (!hscrollable && !vscrollable)
+        return b;
+
+    if (hscrollable)
+        b.height(b.height() - m_slider_dim);
+
+    if (vscrollable)
+        b.width(b.width() - m_slider_dim);
+
+    // Don't return a negative size
+    if (b.empty())
+        return Rect(b.point(), Size());
+
+    return b;
+}
+
+void TextBox::init_sliders()
+{
+    auto redraw = [this]()
+    {
+        damage();
+        prepare_text(m_rects);
+        get_cursor_rect();
+        invalidate_text_rect();
+    };
+
+    m_hslider.orient(Orientation::horizontal);
+    m_hslider.slider_flags().set({Slider::SliderFlag::rectangle_handle,
+                                  Slider::SliderFlag::consistent_line});
+    m_hslider.on_value_changed.on_event(redraw);
+    m_hslider.live_update(true);
+    m_hslider.hide();
+    m_components.push_back(&m_hslider);
+
+    m_vslider.orient(Orientation::vertical);
+    m_vslider.slider_flags().set({Slider::SliderFlag::rectangle_handle,
+                                  Slider::SliderFlag::inverted,
+                                  Slider::SliderFlag::consistent_line});
+    m_vslider.on_value_changed.on_event(redraw);
+    m_vslider.live_update(true);
+    m_vslider.hide();
+    m_components.push_back(&m_vslider);
+
+    resize_sliders();
+}
+
+void TextBox::resize_sliders()
+{
+    bool hscrollable = text_flags().is_set(TextBox::TextFlag::horizontal_scrollable);
+    bool vscrollable = text_flags().is_set(TextBox::TextFlag::vertical_scrollable);
+
+    if (!hscrollable && !vscrollable)
+    {
+        update_sliders();
+        return;
+    }
+
+    auto c = content_area();
+
+    if (hscrollable)
+    {
+        auto b = c;
+        b.y(b.y() + b.height() - m_slider_dim);
+        b.height(m_slider_dim);
+
+        if (vscrollable)
+            b.width(b.width() - m_slider_dim);
+
+        m_hslider.move(b.point() - point());
+        m_hslider.resize(b.size());
+    }
+
+    if (vscrollable)
+    {
+        auto b = c;
+        b.x(b.x() + b.width() - m_slider_dim);
+        b.width(m_slider_dim);
+
+        if (hscrollable)
+            b.height(b.height() - m_slider_dim);
+
+        m_vslider.move(b.point() - point());
+        m_vslider.resize(b.size());
+    }
+
+    update_sliders();
+}
+
+void TextBox::update_hslider()
+{
+    if (!text_flags().is_set(TextBox::TextFlag::horizontal_scrollable))
+    {
+        if (m_hslider.visible())
+        {
+            m_hslider.hide();
+            if (m_hslider.value())
+                m_hslider.value(0);
+            else
+                damage_hslider();
+        }
+        return;
+    }
+
+    auto draw_sz = text_area().size();
+    auto text_sz = text_size();
+    DefaultDim delta = text_sz.width() - draw_sz.width();
+    bool visible = delta > 0;
+
+    if (visible && m_hslider.ending() != delta)
+    {
+        m_hslider.ending(delta);
+        damage_hslider();
+    }
+
+    if (visible && !m_hslider.visible())
+    {
+        m_hslider.show();
+        damage_hslider();
+    }
+    else if (!visible && m_hslider.visible())
+    {
+        m_hslider.hide();
+        if (m_hslider.value())
+            m_hslider.value(0);
+        else
+            damage_hslider();
+    }
+}
+
+void TextBox::update_vslider()
+{
+    if (!text_flags().is_set(TextBox::TextFlag::vertical_scrollable))
+    {
+        if (m_vslider.visible())
+        {
+            m_vslider.hide();
+            if (m_vslider.value())
+                m_vslider.value(0);
+            else
+                damage_vslider();
+        }
+        return;
+    }
+
+    auto draw_sz = text_area().size();
+    auto text_sz = text_size();
+    DefaultDim delta = text_sz.height() - draw_sz.height();
+    bool visible = delta > 0;
+
+    if (visible && m_vslider.ending() != delta)
+    {
+        m_vslider.ending(delta);
+        damage_vslider();
+    }
+
+    if (visible && !m_vslider.visible())
+    {
+        m_vslider.show();
+        damage_vslider();
+    }
+    else if (!visible && m_vslider.visible())
+    {
+        m_vslider.hide();
+        if (m_vslider.value())
+            m_vslider.value(0);
+        else
+            damage_vslider();
+    }
+}
+
+void TextBox::update_sliders()
+{
+    update_hslider();
+    update_vslider();
+}
+
+void TextBox::draw_sliders(Painter& painter, const Rect& rect)
+{
+    bool hvisible = m_hslider.visible();
+    bool vvisible = m_vslider.visible();
+
+    if (!hvisible && !vvisible)
+        return;
+
+    // Change the origin to paint the sliders.
+    Painter::AutoSaveRestore sr(painter);
+
+    const auto& origin = point();
+    if (origin.x() || origin.y())
+    {
+        auto cr = painter.context();
+        cairo_translate(cr.get(),
+                        origin.x(),
+                        origin.y());
+    }
+
+    // Component rect
+    const auto crect = rect - origin;
+
+    if (hvisible)
+        m_hslider.draw(painter, crect);
+
+    if (vvisible)
+        m_vslider.draw(painter, crect);
 }
 
 static AlignFlags default_text_align_value{AlignFlag::expand};
@@ -827,6 +1041,8 @@ void TextBox::initialize(bool init_inherited_properties)
         padding(5);
     }
 
+    init_sliders();
+
     m_timer.on_timeout([this]() { cursor_timeout(); });
 
     m_gain_focus_reg = on_gain_focus([this]()
@@ -862,6 +1078,39 @@ void TextBox::handle(Event& event)
     case EventId::keyboard_down:
         handle_key(event.key());
         event.stop();
+    default:
+        break;
+    }
+
+    switch (event.id())
+    {
+    case EventId::raw_pointer_down:
+    case EventId::raw_pointer_up:
+    case EventId::raw_pointer_move:
+    case EventId::pointer_click:
+    case EventId::pointer_dblclick:
+    case EventId::pointer_hold:
+    case EventId::pointer_drag_start:
+    case EventId::pointer_drag:
+    case EventId::pointer_drag_stop:
+    {
+        auto pos = display_to_local(event.pointer().point);
+
+        for (auto& component : m_components)
+        {
+            if (!component->can_handle_event())
+                continue;
+
+            if (component->box().intersect(pos))
+            {
+                component->handle(event);
+                break;
+            }
+        }
+
+        break;
+    }
+
     default:
         break;
     }
@@ -1019,12 +1268,15 @@ void TextBox::draw(Painter& painter, const Rect& rect)
             painter.stroke();
         }
     }
+
+    draw_sliders(painter, rect);
 }
 
 void TextBox::resize(const Size& size)
 {
     TextWidget::resize(size);
     refresh_text_area();
+    resize_sliders();
 }
 
 void TextBox::text(const std::string& str)
@@ -1041,6 +1293,7 @@ void TextBox::clear()
     cursor_begin();
     TextWidget::clear();
     invalidate_text_rect();
+    update_sliders();
 }
 
 void TextBox::max_length(size_t len)
@@ -1071,7 +1324,7 @@ size_t TextBox::append(const std::string& str)
 
 size_t TextBox::width_to_len(const std::string& str) const
 {
-    const auto b = content_area();
+    const auto b = text_area();
 
     cairo_set_scaled_font(context(), font().scaled_font());
 
@@ -1108,7 +1361,7 @@ size_t TextBox::insert(const std::string& str)
 
     if (!text_flags().is_set(TextFlag::multiline) &&
         text_flags().is_set(TextFlag::fit_to_width) &&
-        !content_area().empty())
+        !text_area().empty())
     {
         /*
          * Have to go through the motions and build the expected string at this
@@ -1152,6 +1405,7 @@ size_t TextBox::insert(const std::string& str)
         cursor_forward(len);
         continue_show_cursor();
         invalidate_text_rect();
+        update_sliders();
     }
 
     return len;
@@ -1350,6 +1604,7 @@ void TextBox::selection_delete()
         m_rects = std::move(rects);
 
         invalidate_text_rect();
+        update_sliders();
     }
 }
 
@@ -1377,19 +1632,17 @@ bool TextBox::validate_input(const std::string& str)
 
 Point TextBox::text_offset() const
 {
-    return m_text_offset;
+    return Point(m_hslider.visible() ? m_hslider.value() : 0,
+                 m_vslider.visible() ? m_vslider.value() : 0);
 }
 
 void TextBox::text_offset(const Point& p)
 {
-    auto draw_sz = content_area().size();
-    auto text_sz = text_size();
+    if (m_hslider.visible())
+        m_hslider.value(p.x());
 
-    DefaultDim delta_w = std::max(text_sz.width() - draw_sz.width(), 0);
-    DefaultDim delta_h = std::max(text_sz.height() - draw_sz.height(), 0);
-
-    m_text_offset.x(std::max(std::min(p.x(), delta_w), 0));
-    m_text_offset.y(std::max(std::min(p.y(), delta_h), 0));
+    if (m_vslider.visible())
+        m_vslider.value(p.y());
 }
 
 void TextBox::cursor_timeout()
@@ -1423,7 +1676,7 @@ void TextBox::hide_cursor()
 
 Rect TextBox::text_boundaries() const
 {
-    return content_area() - text_offset();
+    return text_area() - text_offset();
 }
 
 void TextBox::invalidate_text_rect()
@@ -1479,6 +1732,13 @@ Size TextBox::min_size_hint() const
 
     auto s = text_size(text);
     s += Widget::min_size_hint() + Size(0, CURSOR_Y_OFFSET * 2.);
+
+    if (text_flags().is_set(TextBox::TextFlag::horizontal_scrollable))
+        s.height(s.height() + m_slider_dim);
+
+    if (text_flags().is_set(TextBox::TextFlag::vertical_scrollable))
+        s.width(s.width() + m_slider_dim);
+
     return s;
 }
 
@@ -1495,6 +1755,8 @@ const std::pair<TextBox::TextFlag, char const*> detail::EnumStrings<TextBox::Tex
     {TextBox::TextFlag::multiline, "multiline"},
     {TextBox::TextFlag::word_wrap, "word_wrap"},
     {TextBox::TextFlag::no_virt_keyboard, "no_virt_keyboard"},
+    {TextBox::TextFlag::horizontal_scrollable, "horizontal_scrollable"},
+    {TextBox::TextFlag::vertical_scrollable, "vertical_scrollable"},
 };
 
 void TextBox::serialize(Serializer& serializer) const

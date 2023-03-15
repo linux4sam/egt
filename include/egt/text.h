@@ -16,6 +16,7 @@
 #include <egt/flags.h>
 #include <egt/font.h>
 #include <egt/image.h>
+#include <egt/slider.h>
 #include <egt/textwidget.h>
 #include <egt/timer.h>
 #include <egt/types.h>
@@ -142,6 +143,12 @@ public:
 
         /// Do not display a virtual keyboard when focus is gained.
         no_virt_keyboard = detail::bit(3),
+
+        /// Horizontal scrollable
+        horizontal_scrollable = detail::bit(4),
+
+        /// Vertical scrollable
+        vertical_scrollable = detail::bit(5),
     };
 
     /// Text flags.
@@ -266,7 +273,10 @@ public:
     void text_flags(const TextFlags& text_flags)
     {
         if (detail::change_if_diff<>(m_text_flags, text_flags))
+        {
+            resize_sliders();
             damage();
+        }
     }
 
     /**
@@ -559,10 +569,49 @@ protected:
     /// Compute the new text layout and cursor rectangle.
     void refresh_text_area();
 
+    /// Return the rectangle boundaries where the text can be drawn.
+    EGT_NODISCARD Rect text_area() const;
+
+    /// Init sliders.
+    void init_sliders();
+
+    /// Resize the sliders whenever the widget size changes.
+    void resize_sliders();
+
+    /// Update the horizontal slider.
+    void update_hslider();
+
+    /// Update the vertical slider.
+    void update_vslider();
+
+    /// Update the horizontal and vertical sliders as needed.
+    void update_sliders();
+
+    /// Draw sliders.
+    void draw_sliders(Painter& painter, const Rect& rect);
+
+    /// Damage a component.
+    void damage_component(Widget& component)
+    {
+        damage(component.box() + point());
+    }
+
+    /// Damage the horizontal slider.
+    void damage_hslider()
+    {
+        return damage_component(m_hslider);
+    }
+
+    /// Damage the vertical slider.
+    void damage_vslider()
+    {
+        return damage_component(m_vslider);
+    }
+
     /// Damage the text but only if visible.
     void damage_text(const Rect& rect)
     {
-        damage(Rect::intersection(rect, content_area()));
+        damage(Rect::intersection(rect, text_area()));
     }
 
     /// Damage the cursor but only if visible.
@@ -613,9 +662,6 @@ protected:
 
     TextRects m_rects;
     Rect m_cursor_rect;
-
-    /// The text offset.
-    Point m_text_offset;
 
     /**
      * Given text, return the number of UTF8 characters that will fit on a
@@ -691,6 +737,18 @@ private:
     size_t m_max_len{0};
 
     State m_state;
+
+    /// Horizontal slider shown when scrollable.
+    Slider m_hslider;
+
+    /// Vertical slider shown when scrollable.
+    Slider m_vslider;
+
+    /// Width/height of the slider when shown.
+    DefaultDim m_slider_dim{8};
+
+    /// Widget components.
+    std::list<Widget*> m_components;
 
     /// Gain focus registration.
     Signal<>::RegisterHandle m_gain_focus_reg{};
