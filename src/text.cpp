@@ -91,8 +91,8 @@ static void tokenize(TextRects& rects,
 
     tokens.reserve(text.length());
 
-    if (flags.is_set(TextBox::TextFlag::multiline) &&
-        flags.is_set(TextBox::TextFlag::word_wrap))
+    bool multiline = flags.is_set(TextBox::TextFlag::multiline);
+    if (multiline && flags.is_set(TextBox::TextFlag::word_wrap))
     {
         detail::tokenize_with_delimiters(text.cbegin(),
                                          text.cend(),
@@ -105,7 +105,12 @@ static void tokenize(TextRects& rects,
         for (detail::utf8_const_iterator ch(text.begin(), text.begin(), text.end());
              ch != detail::utf8_const_iterator(text.end(), text.begin(), text.end()); ++ch)
         {
-            tokens.emplace_back(detail::utf8_char_to_string(ch.base(), text.cend()));
+            auto t = detail::utf8_char_to_string(ch.base(), text.cend());
+
+            if (!multiline && t == "\n")
+                break;
+
+            tokens.emplace_back(t);
         }
     }
 
@@ -638,7 +643,6 @@ static void draw_text(Painter& painter,
                       const Rect& rect,
                       const TextRects& rects,
                       const Font& font,
-                      const TextBox::TextFlags& flags,
                       const Pattern& text_color,
                       const Pattern& highlight_color)
 {
@@ -678,11 +682,6 @@ static void draw_text(Painter& painter,
             painter.set(text_color);
             painter.draw(p);
             painter.draw(r.text());
-        }
-        else
-        {
-            if (!flags.is_set(TextBox::TextFlag::multiline))
-                break;
         }
     }
 }
@@ -1043,7 +1042,6 @@ void TextBox::draw(Painter& painter, const Rect& rect)
               rect,
               m_rects,
               font(),
-              text_flags(),
               color(Palette::ColorId::text),
               color(Palette::ColorId::text_highlight));
 
