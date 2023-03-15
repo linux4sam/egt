@@ -43,6 +43,9 @@ public:
 
         /// End of non-empty line
         eonel = detail::bit(1),
+
+        /// Beginning of line
+        bol = detail::bit(2),
     };
 
     /// TextRect flags.
@@ -71,6 +74,8 @@ public:
     void deselect(void) { m_text_rect_flags.clear(TextRectFlag::selected); }
     bool is_selected(void) const { return m_text_rect_flags.is_set(TextRectFlag::selected); }
     bool end_of_non_empty_line(void) const { return m_text_rect_flags.is_set(TextRectFlag::eonel); }
+    void mark_beginning_of_line(void) { m_text_rect_flags.set(TextRectFlag::bol); }
+    bool beginning_of_line(void) const { return m_text_rect_flags.is_set(TextRectFlag::bol); }
 
     bool can_consolidate(const TextRect& r) const noexcept
     {
@@ -489,6 +494,18 @@ protected:
 
     /// Convert point coordinates to position in text for cursor or selection.
     size_t point2pos(const Point& p) const;
+
+    /// Get the position of the beginning of the line at cursor_pos.
+    size_t beginning_of_line(size_t cursor_pos) const;
+
+    /// Get the position of the beginning of the current line.
+    size_t beginning_of_line() const { return beginning_of_line(m_cursor_pos); }
+
+    /// Get the position of the end of the line at cursor_pos.
+    size_t end_of_line(size_t cursor_pos) const;
+
+    /// Get the position of the end of the current line.
+    size_t end_of_line() const { return end_of_line(m_cursor_pos); }
 
     /// Process key events.
     virtual void handle_key(const Key& key);

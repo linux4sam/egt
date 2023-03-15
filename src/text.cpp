@@ -67,7 +67,9 @@ TextRect TextRect::split(size_t pos, cairo_t* cr) noexcept
     Rect tail_rect(m_rect);
     tail_rect.x(tail_rect.x() + head_width);
     tail_rect.width(tail_rect.width() - head_width);
-    TextRect tail(m_behave, tail_rect, tail_text, tail_te, m_text_rect_flags);
+    TextRectFlags flags(m_text_rect_flags);
+    flags.clear(TextRectFlag::bol);
+    TextRect tail(m_behave, tail_rect, tail_text, tail_te, flags);
 
     m_text = head_text;
     m_rect.width(head_width);
@@ -181,6 +183,9 @@ void TextBox::compute_layout(TextRects& rects)
 
     lay_run_context(&ctx);
 
+    DefaultDim line_y = boundaries.y() - 1;
+    bool next_is_beginning_of_line = true;
+
     auto it = rects.begin();
     auto child = lay_first_child(&ctx, inner_parent);
     while (child != LAY_INVALID_ID)
@@ -191,6 +196,16 @@ void TextBox::compute_layout(TextRects& rects)
         it->point(Point(x, y));
         x += it->rect().width();
 
+        if (line_y != y || next_is_beginning_of_line)
+        {
+            next_is_beginning_of_line = false;
+            it->mark_beginning_of_line();
+            line_y = y;
+        }
+
+        if (it->text() == "\n")
+            next_is_beginning_of_line = true;
+
         lay_item_t* pchild = lay_get_item(&ctx, child);
         child = pchild->next_sibling;
         ++it;
@@ -198,6 +213,7 @@ void TextBox::compute_layout(TextRects& rects)
         if (it != rects.end() && it->end_of_non_empty_line())
         {
             it->point(Point(x, y));
+            next_is_beginning_of_line = true;
             ++it;
         }
     }
@@ -1297,13 +1313,43 @@ void TextBox::handle_key(const Key& key)
     /// NOLINTNEXTLINE(bugprone-branch-clone)
     case EKEY_END:
     {
-        // TODO
+        auto eol = key.state.is_set(Key::KeyMod::control) ? detail::utf8len(m_text) : end_of_line();
+        if (key.state.is_set(Key::KeyMod::shift))
+        {
+            selection_move(eol - selection_cursor());
+        }
+        else if (m_select_len)
+        {
+            // Move the cursor to the end of line and deselect the text
+            cursor_set(eol);
+            m_select_len = 0;
+            selection_damage();
+        }
+        else
+        {
+            cursor_set(eol);
+        }
         move_sliders();
         break;
     }
     case EKEY_HOME:
     {
-        // TODO
+        auto bol = key.state.is_set(Key::KeyMod::control) ? 0 : beginning_of_line();
+        if (key.state.is_set(Key::KeyMod::shift))
+        {
+            selection_move(bol - selection_cursor());
+        }
+        else if (m_select_len)
+        {
+            // Move the cursor to the beginning of the line and deselect the text
+            cursor_set(bol);
+            m_select_len = 0;
+            selection_damage();
+        }
+        else
+        {
+            cursor_set(bol);
+        }
         move_sliders();
         break;
     }
@@ -1806,6 +1852,70 @@ size_t TextBox::point2pos(const Point& p) const
     }
 
     return pos;
+}
+
+size_t TextBox::beginning_of_line(size_t cursor_pos) const
+{
+    size_t pos = 0;
+    size_t bol = pos;
+
+    for (auto it = m_rects.cbegin(); it != m_rects.cend(); ++it)
+    {
+        if (it->beginning_of_line())
+            bol = pos;
+
+        auto len = it->length();
+        if (pos + len < cursor_pos)
+        {
+            pos += len;
+            continue;
+        }
+
+        if (pos + len > cursor_pos)
+            break;
+
+        auto next = std::next(it);
+        if ((it->text() == "\n") ||
+            (next != m_rects.cend() && next->beginning_of_line()))
+            bol = pos + len;
+
+        break;
+    }
+
+    return bol;
+}
+
+size_t TextBox::end_of_line(size_t cursor_pos) const
+{
+    size_t pos = 0;
+    size_t eol = pos;
+
+    for (auto it = m_rects.cbegin(); it != m_rects.cend(); ++it)
+    {
+        auto next = std::next(it);
+
+        auto len = it->length();
+        if (pos + len <= cursor_pos)
+        {
+            pos += len;
+            if (next == m_rects.cend())
+                eol = pos;
+
+            continue;
+        }
+
+        if ((it->text() == "\n") ||
+            (next != m_rects.cend() && next->beginning_of_line()))
+        {
+            eol = pos + len - 1;
+            break;
+        }
+
+        pos += len;
+        eol = pos;
+    }
+
+    return eol;
 }
 
 Rect TextBox::text_boundaries() const
