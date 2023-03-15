@@ -713,8 +713,10 @@ void TextBox::get_cursor_rect()
     Size s(CURSOR_RECT_WIDTH, fe.height);
 
     size_t pos = 0;
-    for (const auto& r : m_rects)
+    for (auto itr = m_rects.cbegin(); itr != m_rects.cend(); ++itr)
     {
+        const auto& r = *itr;
+
         size_t l = r.length();
         if (pos + l < m_cursor_pos)
         {
@@ -734,6 +736,17 @@ void TextBox::get_cursor_rect()
             p.x(boundaries.x() - CURSOR_X_MARGIN);
             p.y(r.rect().y() + fe.height);
             break;
+        }
+
+        if (pos + l == m_cursor_pos)
+        {
+            auto next = std::next(itr);
+            if (next != m_rects.cend() && next->beginning_of_line())
+            {
+                p = next->rect().point();
+                p.x(p.x() - CURSOR_X_MARGIN);
+                break;
+            }
         }
 
         auto it = r.text().begin();
