@@ -110,24 +110,31 @@ static void tokenize(TextRects& rects,
     uint32_t default_behave = 0;
     uint32_t behave = default_behave;
 
+    bool empty_line = true;
     for (const auto& t : tokens)
     {
         cairo_text_extents_t te;
 
         if (t == "\n")
         {
+            TextRect::TextRectFlags flags = {};
+            if (!empty_line)
+                flags.set(TextRect::TextRectFlag::eonel);
+
             memset(&te, 0, sizeof(te));
             te.width = 1;
             te.height = fe.height;
             te.x_advance = 1;
-            rects.emplace_back(behave, Rect(0, 0, te.x_advance, fe.height), t, te);
+            rects.emplace_back(behave, Rect(0, 0, te.x_advance, fe.height), t, te, flags);
             behave |= LAY_BREAK;
+            empty_line = true;
         }
         else
         {
             cairo_text_extents(cr, t.c_str(), &te);
             rects.emplace_back(behave, Rect(0, 0, te.x_advance, fe.height), t, te);
             behave = default_behave;
+            empty_line = false;
         }
     }
 }
@@ -162,6 +169,9 @@ static void compute_layout(const Rect& boundaries,
 
     for (const auto& r : rects)
     {
+        if (r.end_of_non_empty_line())
+            continue;
+
         lay_id c = lay_item(&ctx);
         lay_set_size_xy(&ctx, c, r.rect().width(), r.rect().height());
         lay_set_behave(&ctx, c, r.behave());
@@ -175,11 +185,20 @@ static void compute_layout(const Rect& boundaries,
     while (child != LAY_INVALID_ID)
     {
         lay_vec4 r = lay_get_rect(&ctx, child);
-        it->point(Point(boundaries.x() + r[0], boundaries.y() + r[1]));
+        auto x = boundaries.x() + r[0];
+        auto y = boundaries.y() + r[1];
+        it->point(Point(x, y));
+        x += it->rect().width();
 
         lay_item_t* pchild = lay_get_item(&ctx, child);
         child = pchild->next_sibling;
         ++it;
+
+        if (it != rects.end() && it->end_of_non_empty_line())
+        {
+            it->point(Point(x, y));
+            ++it;
+        }
     }
 }
 

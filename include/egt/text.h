@@ -38,6 +38,9 @@ public:
     {
         /// Text is selected
         selected = detail::bit(0),
+
+        /// End of non-empty line
+        eonel = detail::bit(1),
     };
 
     /// TextRect flags.
@@ -65,6 +68,7 @@ public:
     void select(void) { m_text_rect_flags.set(TextRectFlag::selected); }
     void deselect(void) { m_text_rect_flags.clear(TextRectFlag::selected); }
     bool is_selected(void) const { return m_text_rect_flags.is_set(TextRectFlag::selected); }
+    bool end_of_non_empty_line(void) const { return m_text_rect_flags.is_set(TextRectFlag::eonel); }
 
     bool can_consolidate(const TextRect& r) const noexcept
     {
