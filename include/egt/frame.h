@@ -156,7 +156,10 @@ public:
      */
     EGT_NODISCARD std::shared_ptr<Widget> child_at(size_t index) const
     {
-        return m_children.at(index);
+        if (index >= m_children.size())
+            return nullptr;
+        else
+            return *std::next(m_children.begin(), index);
     }
 
     /**

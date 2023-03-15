@@ -1703,7 +1703,7 @@ protected:
     ChildDrawCallback m_special_child_draw_callback;
 
     /// Helper type for an array of children.
-    using ChildrenArray = std::vector<std::shared_ptr<Widget>>;
+    using ChildrenArray = std::list<std::shared_ptr<Widget>>;
 
     /// Array of child widgets in the order they were added.
     ChildrenArray m_children;

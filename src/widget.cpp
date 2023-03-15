@@ -744,7 +744,7 @@ void Widget::zorder_bottom(const Widget* widget)
     });
     if (i != m_children.end() && i != m_children.begin())
     {
-        std::rotate(m_children.begin(), i, i + 1);
+        m_children.splice(m_children.begin(), m_children, i, std::next(i));
         layout();
     }
 }
@@ -761,7 +761,7 @@ void Widget::zorder_top(const Widget* widget)
     });
     if (i != m_children.end())
     {
-        std::rotate(i, i + 1, m_children.end());
+        m_children.splice(m_children.end(), m_children, i, std::next(i));
         layout();
     }
 }
@@ -795,11 +795,10 @@ void Widget::zorder(const Widget* widget, size_t rank)
         if (rank != old_rank)
         {
             auto j = std::next(m_children.begin(), rank);
+            if (rank > old_rank)
+                std::advance(j, 1);
 
-            if (old_rank < rank)
-                std::rotate(i, i + 1, j + 1);
-            else
-                std::rotate(j, i, i + 1);
+            m_children.splice(j, m_children, i, std::next(i));
             layout();
         }
     }
