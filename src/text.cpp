@@ -623,6 +623,14 @@ void TextBox::tag_text_selection(const TextRects& prev,
 
 void TextBox::draw_text(Painter& painter, const Rect& rect)
 {
+    const auto clip = Rect::intersection(content_area(), rect);
+    if (clip.empty())
+        return;
+
+    Painter::AutoSaveRestore sr(painter);
+    painter.draw(clip);
+    painter.clip();
+
     auto cr = painter.context().get();
 
     painter.set(font());
