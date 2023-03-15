@@ -469,6 +469,9 @@ protected:
     /// Hide/disable the visibility of the cursor.
     void hide_cursor();
 
+    /// Convert point coordinates to position in text for cursor or selection.
+    size_t point2pos(const Point& p) const;
+
     /// Process key events.
     virtual void handle_key(const Key& key);
 
@@ -653,6 +656,9 @@ protected:
 
     /// Selection origin.
     size_t m_select_origin{0};
+
+    /// Selection drag start.
+    size_t m_select_drag_start{0};
 
     /// Validation of the input.
     bool m_validate_input{false};

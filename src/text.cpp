@@ -1167,6 +1167,42 @@ void TextBox::handle(Event& event)
     default:
         break;
     }
+
+    if (event.quit())
+        return;
+
+    switch (event.id())
+    {
+    case EventId::raw_pointer_down:
+    {
+        auto p = display_to_local(event.pointer().point) + point();
+        if (text_area().intersect(p))
+        {
+            auto pos = point2pos(p);
+            cursor_set(pos);
+            selection_clear();
+            m_select_drag_start = pos;
+        }
+        break;
+    }
+
+    case EventId::pointer_drag_start:
+    case EventId::pointer_drag:
+    {
+        auto p = display_to_local(event.pointer().point) + point();
+        if (text_area().intersect(p))
+        {
+            auto pos = point2pos(p);
+            auto start = std::min(m_select_drag_start, pos);
+            auto len = std::abs(static_cast<long long>(pos - m_select_drag_start));
+            selection(start, len);
+        }
+        break;
+    }
+
+    default:
+        break;
+    }
 }
 
 void TextBox::handle_key(const Key& key)
@@ -1734,6 +1770,56 @@ void TextBox::hide_cursor()
     m_timer.cancel();
     m_cursor_state = false;
     damage_cursor();
+}
+
+size_t TextBox::point2pos(const Point& p) const
+{
+    size_t pos = 0;
+    for (const auto& r : m_rects)
+    {
+        const auto& rect = r.rect();
+
+        if (rect.bottom() < p.y())
+        {
+            pos += r.length();
+            continue;
+        }
+
+        if (rect.top() > p.y())
+            break;
+
+        if (rect.right() < p.x())
+        {
+            if (r.text() == "\n")
+                break;
+
+            pos += r.length();
+            continue;
+        }
+
+        if (rect.left() > p.x())
+            break;
+
+        if (r.text() ==  "\n")
+            break;
+
+        auto delta_x = p.x() - rect.x();
+
+        auto* cr = context();
+        cairo_set_scaled_font(cr, font().scaled_font());
+        for (size_t len = r.length(); len > 0; --len)
+        {
+            cairo_text_extents_t te;
+            cairo_text_extents(cr, r.text().substr(0, len).c_str(), &te);
+            if (te.x_advance <= delta_x)
+            {
+                pos += len;
+                break;
+            }
+        }
+    }
+
+    return pos;
 }
 
 Rect TextBox::text_boundaries() const
