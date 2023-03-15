@@ -58,6 +58,7 @@ public:
     const std::string& text(void) const { return m_text; }
     const Rect& rect(void) const { return m_rect; }
     void rect(const Rect& r) { m_rect = r; }
+    void point(const Point& p) { m_rect.point(p); }
     const TextRectFlags& flags(void) const { return m_text_rect_flags; }
     uint32_t behave(void) const { return m_behave; }
     const cairo_text_extents_t& text_extents(void) const { return m_te; }

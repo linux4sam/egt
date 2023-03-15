@@ -175,7 +175,7 @@ static void compute_layout(const Rect& boundaries,
     while (child != LAY_INVALID_ID)
     {
         lay_vec4 r = lay_get_rect(&ctx, child);
-        it->rect(Rect(boundaries.x() + r[0], boundaries.y() + r[1], r[2], r[3]));
+        it->point(Point(boundaries.x() + r[0], boundaries.y() + r[1]));
 
         lay_item_t* pchild = lay_get_item(&ctx, child);
         child = pchild->next_sibling;
