@@ -145,7 +145,7 @@ void TextBox::tokenize(TextRects& rects)
 
 void TextBox::compute_layout(TextRects& rects)
 {
-    const auto boundaries = content_area();
+    const auto boundaries = text_boundaries();
     lay_context ctx;
     lay_init_context(&ctx);
 
@@ -688,7 +688,7 @@ constexpr static auto CURSOR_RECT_WIDTH = CURSOR_WIDTH + 2 * CURSOR_X_MARGIN;
 void TextBox::get_cursor_rect()
 {
     cairo_t* cr = context();
-    const Rect boundaries = content_area();
+    const Rect boundaries = text_boundaries();
     cairo_set_scaled_font(cr, font().scaled_font());
     cairo_font_extents_t fe;
     cairo_font_extents(cr, &fe);
@@ -740,6 +740,7 @@ void TextBox::refresh_text_area()
 {
     prepare_text(m_rects);
     get_cursor_rect();
+    invalidate_text_rect();
 }
 
 static AlignFlags default_text_align_value{AlignFlag::expand};
@@ -1039,6 +1040,7 @@ void TextBox::clear()
     selection_clear();
     cursor_begin();
     TextWidget::clear();
+    invalidate_text_rect();
 }
 
 void TextBox::max_length(size_t len)
@@ -1149,6 +1151,7 @@ size_t TextBox::insert(const std::string& str)
 
         cursor_forward(len);
         continue_show_cursor();
+        invalidate_text_rect();
     }
 
     return len;
@@ -1345,6 +1348,8 @@ void TextBox::selection_delete()
         prepare_text(rects);
         tag_text(m_rects, rects);
         m_rects = std::move(rects);
+
+        invalidate_text_rect();
     }
 }
 
@@ -1368,6 +1373,23 @@ bool TextBox::validate_input(const std::string& str)
     }
 
     return true;
+}
+
+Point TextBox::text_offset() const
+{
+    return m_text_offset;
+}
+
+void TextBox::text_offset(const Point& p)
+{
+    auto draw_sz = content_area().size();
+    auto text_sz = text_size();
+
+    DefaultDim delta_w = std::max(text_sz.width() - draw_sz.width(), 0);
+    DefaultDim delta_h = std::max(text_sz.height() - draw_sz.height(), 0);
+
+    m_text_offset.x(std::max(std::min(p.x(), delta_w), 0));
+    m_text_offset.y(std::max(std::min(p.y(), delta_h), 0));
 }
 
 void TextBox::cursor_timeout()
@@ -1397,6 +1419,53 @@ void TextBox::hide_cursor()
     m_timer.cancel();
     m_cursor_state = false;
     damage_cursor();
+}
+
+Rect TextBox::text_boundaries() const
+{
+    return content_area() - text_offset();
+}
+
+void TextBox::invalidate_text_rect()
+{
+    m_text_rect_valid = false;
+}
+
+Rect TextBox::text_rect() const
+{
+    if (!m_text_rect_valid)
+    {
+        m_text_rect.clear();
+
+        for (const auto& rect : m_rects)
+        {
+            if (rect.text() == "\n")
+                continue;
+
+            const auto& r = rect.rect();
+
+            if (m_text_rect.empty())
+                m_text_rect = r;
+            else
+                m_text_rect = Rect::merge(m_text_rect, r);
+        }
+
+        const auto& r = m_cursor_rect;
+
+        if (m_text_rect.empty())
+            m_text_rect = r;
+        else
+            m_text_rect = Rect::merge(m_text_rect, r);
+
+        m_text_rect_valid = true;
+    }
+
+    return m_text_rect;
+}
+
+Size TextBox::text_size() const
+{
+    return text_rect().size();
 }
 
 Size TextBox::min_size_hint() const

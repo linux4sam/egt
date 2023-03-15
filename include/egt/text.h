@@ -418,11 +418,34 @@ public:
      */
     void add_validator_function(ValidatorCallback callback);
 
+    /**
+     * Get the position offset of the drawn text as compared to the whole text.
+     */
+    EGT_NODISCARD Point text_offset() const;
+
+    /**
+     * Set the position offset of the drawn text as compared to the whole text.
+     */
+    void text_offset(const Point& p);
+
     void serialize(Serializer& serializer) const override;
 
     ~TextBox() noexcept override;
 
 protected:
+
+    /// Get the rectangle of the text boundaries.
+    EGT_NODISCARD Rect text_boundaries() const;
+
+    /// Get the rectangle of a text.
+    EGT_NODISCARD Rect text_rect() const;
+
+    /// Get the size of a text.
+    using TextWidget::text_size;
+    EGT_NODISCARD Size text_size() const;
+
+    /// Invalidate the cache used by text_rect()
+    void invalidate_text_rect();
 
     /// Type array used for validator callbacks.
     using ValidatorCallbackArray = std::vector<ValidatorCallback>;
@@ -579,6 +602,10 @@ protected:
     /// The canvas that provides a cairo context to compute the text layout.
     Canvas m_canvas;
 
+    /// The cache for text_rect().
+    mutable Rect m_text_rect;
+    mutable bool m_text_rect_valid{false};
+
     /**
      * Cairo context.
      */
@@ -586,6 +613,9 @@ protected:
 
     TextRects m_rects;
     Rect m_cursor_rect;
+
+    /// The text offset.
+    Point m_text_offset;
 
     /**
      * Given text, return the number of UTF8 characters that will fit on a
