@@ -1229,6 +1229,7 @@ void TextBox::selection(size_t pos, size_t length)
 
     if (pos != m_select_start || length != m_select_len)
     {
+        m_select_origin = pos;
         m_select_start = pos;
         m_select_len = length;
         selection_damage();
@@ -1238,10 +1239,13 @@ void TextBox::selection(size_t pos, size_t length)
 void TextBox::selection_forward(size_t count)
 {
     if (!m_select_len)
+    {
+        m_select_origin = m_cursor_pos;
         m_select_start = m_cursor_pos;
+    }
 
     size_t select_end = m_select_start + m_select_len;
-    if (select_end == m_cursor_pos && m_select_len)
+    if (select_end == m_select_origin && m_select_len)
     {
         count = std::min(count, m_select_len);
 
@@ -1249,6 +1253,8 @@ void TextBox::selection_forward(size_t count)
         m_select_start += count;
         m_select_len -= count;
         selection_damage();
+        m_cursor_pos = m_select_start;
+        get_cursor_rect();
     }
     else if (select_end < detail::utf8len(m_text))
     {
@@ -1259,21 +1265,28 @@ void TextBox::selection_forward(size_t count)
             hide_cursor();
         m_select_len += count;
         selection_damage();
+        m_cursor_pos = m_select_start + m_select_len;
+        get_cursor_rect();
     }
 }
 
 void TextBox::selection_backward(size_t count)
 {
     if (!m_select_len)
+    {
+        m_select_origin = m_cursor_pos;
         m_select_start = m_cursor_pos;
+    }
 
-    if (m_select_start == m_cursor_pos && m_select_len)
+    if (m_select_start == m_select_origin && m_select_len)
     {
         count = std::min(count, m_select_len);
 
         // Reduce the selection from the right
         m_select_len -= count;
         selection_damage();
+        m_cursor_pos = m_select_start + m_select_len;
+        get_cursor_rect();
     }
     else if (m_select_start > 0)
     {
@@ -1285,6 +1298,8 @@ void TextBox::selection_backward(size_t count)
         m_select_start -= count;
         m_select_len += count;
         selection_damage();
+        m_cursor_pos = m_select_start;
+        get_cursor_rect();
     }
 }
 

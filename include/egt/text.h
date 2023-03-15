@@ -567,6 +567,9 @@ protected:
     /// Selection length.
     size_t m_select_len{0};
 
+    /// Selection origin.
+    size_t m_select_origin{0};
+
     /// Validation of the input.
     bool m_validate_input{false};
 
