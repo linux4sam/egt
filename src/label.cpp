@@ -78,7 +78,7 @@ void Label::default_draw(const Label& widget, Painter& painter, const Rect&)
                       widget.color(Palette::ColorId::label_text));
 }
 
-void Label::set_parent(Frame* parent)
+void Label::set_parent(Widget* parent)
 {
     TextWidget::set_parent(parent);
     layout();

@@ -21,6 +21,8 @@
 #include <ostream>
 #include <string>
 
+#include "detail/dump.h"
+
 namespace egt
 {
 inline namespace v1
@@ -134,6 +136,59 @@ void Widget::handle(Event& event)
     }
 
     invoke_handlers(event);
+
+    if (!m_children.empty())
+    {
+        switch (event.id())
+        {
+        case EventId::raw_pointer_down:
+        case EventId::raw_pointer_up:
+        case EventId::raw_pointer_move:
+        case EventId::pointer_click:
+        case EventId::pointer_dblclick:
+        case EventId::pointer_hold:
+        case EventId::pointer_drag_start:
+        case EventId::pointer_drag:
+        case EventId::pointer_drag_stop:
+        {
+            auto pos = display_to_local(event.pointer().point);
+
+            for (auto& child : detail::reverse_iterate(m_children))
+            {
+                if (!child->can_handle_event())
+                    continue;
+
+                if (child->box().intersect(pos))
+                {
+                    child->handle(event);
+                    break;
+                }
+            }
+
+            break;
+        }
+
+        case EventId::keyboard_down:
+        case EventId::keyboard_up:
+        case EventId::keyboard_repeat:
+        {
+            for (auto& child : detail::reverse_iterate(m_children))
+            {
+                if (!child->can_handle_event())
+                    continue;
+
+                child->handle(event);
+                if (event.quit())
+                    return;
+            }
+
+            break;
+        }
+
+        default:
+            break;
+        }
+    }
 }
 
 void Widget::move_to_center(const Point& point)
@@ -168,6 +223,9 @@ void Widget::resize(const Size& size)
             m_user_requested_box.size(size);
 
         parent_layout();
+
+        if (!m_children.empty())
+            layout();
     }
 }
 
@@ -374,9 +432,42 @@ void Widget::damage(const Rect& rect)
     if (!visible())
         return;
 
-    // damage propagates to top level frame
-    if (m_parent)
-        m_parent->damage_from_child(to_parent(rect));
+    // damage propagates up to widget with screen
+    if (!has_screen())
+    {
+        if (parent())
+            parent()->damage_from_child(to_parent(rect));
+
+        // have no parent or screen - nowhere to put damage
+        return;
+    }
+
+    add_damage(rect);
+}
+
+void Widget::add_damage(const Rect& rect)
+{
+    // if we get here, we must have a screen
+    assert(has_screen());
+    if (!has_screen())
+        return;
+
+    if (egt_unlikely(rect.empty()))
+        return;
+
+    // not allowed to damage() in draw()
+    assert(!m_in_draw);
+    if (m_in_draw)
+        return;
+
+    EGTLOG_TRACE("{} damage:{}", name(), rect);
+
+    // No damage outside of our box().  There are cases where this is expected,
+    // for example, when a widget is halfway off the screen. So, we truncate the
+    // to just the part we care about.
+    auto r = Rect::intersection(rect, to_child(box()));
+
+    Screen::damage_algorithm(m_damage, r);
 }
 
 void Widget::palette(const Palette& palette)
@@ -458,12 +549,12 @@ const Palette& Widget::palette() const
     return global_theme().palette();
 }
 
-Frame* Widget::parent()
+Widget* Widget::parent()
 {
     return m_parent;
 }
 
-const Frame* Widget::parent() const
+const Widget* Widget::parent() const
 {
     return m_parent;
 }
@@ -605,6 +696,115 @@ void Widget::zorder(size_t rank)
         m_parent->zorder(this, rank);
 }
 
+void Widget::zorder_down(const Widget* widget)
+{
+    auto i = std::find_if(m_children.begin(), m_children.end(),
+                          [widget](const auto & ptr)
+    {
+        return ptr.get() == widget;
+    });
+    if (i != m_children.end() && i != m_children.begin())
+    {
+        auto to = std::prev(i);
+        (*i)->damage();
+        (*to)->damage();
+        std::iter_swap(i, to);
+    }
+}
+
+void Widget::zorder_up(const Widget* widget)
+{
+    auto i = std::find_if(m_children.begin(), m_children.end(),
+                          [widget](const auto & ptr)
+    {
+        return ptr.get() == widget;
+    });
+    if (i != m_children.end())
+    {
+        auto to = std::next(i);
+        if (to != m_children.end())
+        {
+            (*i)->damage();
+            (*to)->damage();
+            std::iter_swap(i, to);
+            layout();
+        }
+    }
+}
+
+void Widget::zorder_bottom(const Widget* widget)
+{
+    if (m_children.size() <= 1)
+        return;
+
+    auto i = std::find_if(m_children.begin(), m_children.end(),
+                          [widget](const auto & ptr)
+    {
+        return ptr.get() == widget;
+    });
+    if (i != m_children.end() && i != m_children.begin())
+    {
+        std::rotate(m_children.begin(), i, i + 1);
+        layout();
+    }
+}
+
+void Widget::zorder_top(const Widget* widget)
+{
+    if (m_children.size() <= 1)
+        return;
+
+    auto i = std::find_if(m_children.begin(), m_children.end(),
+                          [widget](const auto & ptr)
+    {
+        return ptr.get() == widget;
+    });
+    if (i != m_children.end())
+    {
+        std::rotate(i, i + 1, m_children.end());
+        layout();
+    }
+}
+
+size_t Widget::zorder(const Widget* widget) const
+{
+    auto i = std::find_if(m_children.begin(), m_children.end(),
+                          [widget](const auto & ptr)
+    {
+        return ptr.get() == widget;
+    });
+    if (i != m_children.end())
+    {
+        return std::distance(m_children.begin(), i);
+    }
+
+    return 0;
+}
+
+void Widget::zorder(const Widget* widget, size_t rank)
+{
+    auto i = std::find_if(m_children.begin(), m_children.end(),
+                          [widget](const auto & ptr)
+    {
+        return ptr.get() == widget;
+    });
+    if (i != m_children.end())
+    {
+        size_t old_rank = std::distance(m_children.begin(), i);
+        rank = std::min(rank, m_children.size() - 1);
+        if (rank != old_rank)
+        {
+            auto j = std::next(m_children.begin(), rank);
+
+            if (old_rank < rank)
+                std::rotate(i, i + 1, j + 1);
+            else
+                std::rotate(j, i, i + 1);
+            layout();
+        }
+    }
+}
+
 void Widget::detach()
 {
     if (m_parent)
@@ -633,18 +833,57 @@ Rect Widget::content_area() const
 
 void Widget::layout()
 {
-    if (!flags().is_set(Widget::Flag::no_autoresize))
+    if (m_children.empty())
     {
+        if (!flags().is_set(Widget::Flag::no_autoresize))
+        {
+            m_in_layout = true;
+            // cppcheck-suppress unreadVariable
+            auto reset = detail::on_scope_exit([this]() { m_in_layout = false; });
+            auto s = size();
+            auto m = min_size_hint();
+            if (s.width() < m.width())
+                s.width(m.width());
+            if (s.height() < m.height())
+                s.height(m.height());
+            resize(s);
+        }
+    }
+    else
+    {
+        if (!visible())
+            return;
+
+        // we cannot layout with no space
+        if (size().empty())
+            return;
+
+        if (m_in_layout)
+            return;
+
         m_in_layout = true;
-        // cppcheck-suppress unreadVariable
         auto reset = detail::on_scope_exit([this]() { m_in_layout = false; });
-        auto s = size();
-        auto m = min_size_hint();
-        if (s.width() < m.width())
-            s.width(m.width());
-        if (s.height() < m.height())
-            s.height(m.height());
-        resize(s);
+
+        auto area = content_area();
+
+        for (auto& child : m_children)
+        {
+            auto bounding = to_child(area);
+            if (bounding.empty())
+                continue;
+
+            child->layout();
+
+            auto r = detail::align_algorithm(child->box(),
+                                             bounding,
+                                             child->align(),
+                                             0,
+                                             child->horizontal_ratio(),
+                                             child->vertical_ratio(),
+                                             child->xratio(),
+                                             child->yratio());
+            child->box(r);
+        }
     }
 }
 
@@ -860,7 +1099,7 @@ Widget::~Widget() noexcept
         detail::keyboard_focus(nullptr);
 }
 
-void Widget::set_parent(Frame* parent)
+void Widget::set_parent(Widget* parent)
 {
     // cannot already have a parent
     assert(!m_parent);
@@ -944,6 +1183,205 @@ void Widget::on_screen_resized()
         damage();
         layout();
         parent_layout();
+    }
+}
+
+void Widget::draw(Painter& painter, const Rect& rect)
+{
+    EGTLOG_TRACE("{} draw {}", name(), rect);
+
+    Painter::AutoSaveRestore sr(painter);
+
+    // child rect
+    auto crect = rect;
+
+    // if this widget does not have a screen, it means the damage rect is in
+    // coordinates of some parent widget, so we have to adjust the physical origin
+    // and take it into account when looking at children, who's coordinates are
+    // respective of this widget
+    if (!has_screen())
+    {
+        const auto& origin = point();
+        if (origin.x() || origin.y())
+        {
+            //
+            // Origin about to change
+            //
+            auto cr = painter.context();
+            cairo_translate(cr.get(),
+                            origin.x(),
+                            origin.y());
+        }
+
+        // adjust our child rect for comparison's below
+        crect -= origin;
+    }
+
+    if (clip())
+    {
+        // clip the damage rectangle, otherwise we will draw this whole widget
+        // and then only draw the children inside the actual damage rect, which
+        // will cover them
+        painter.draw(crect);
+        painter.clip();
+    }
+
+    // draw our widget box, but now that the physical origin has possibly changed
+    // and our box() is relative to our parent, we have to adjust to our local
+    // origin
+    if (!fill_flags().empty() || border())
+    {
+        Palette::GroupId group = Palette::GroupId::normal;
+        if (disabled())
+            group = Palette::GroupId::disabled;
+        else if (active())
+            group = Palette::GroupId::active;
+
+        theme().draw_box(painter,
+                         fill_flags(),
+                         to_child(box()),
+                         color(Palette::ColorId::border, group),
+                         color(Palette::ColorId::bg, group),
+                         border(),
+                         margin(),
+                         border_radius(),
+                         border_flags());
+    }
+    else if (Application::instance().is_composer())
+    {
+        constexpr static Color composer_border = Palette::black;
+        constexpr static Color composer_bg = Color(0x00000020);
+
+        theme().draw_box(painter,
+        {Theme::FillFlag::blend},
+        to_child(box()),
+        composer_border,
+        composer_bg,
+        1,
+        0,
+        0,
+        {});
+    }
+
+    if (m_children.empty())
+        return;
+
+    // keep the crect inside our content area
+    crect = Rect::intersection(crect, to_child(content_area()));
+
+    for (auto& child : m_children)
+    {
+        if (!child->visible())
+            continue;
+
+        // don't draw plane widget as child - this is
+        // specifically handled by event loop
+        if (child->plane_window())
+            continue;
+
+        draw_child(painter, crect, child.get());
+    }
+}
+
+static inline bool time_child_draw_enabled()
+{
+    static int value = 0;
+    if (value == 0)
+    {
+        if (std::getenv("EGT_TIME_DRAW"))
+            value += 1;
+        else
+            value -= 1;
+    }
+    return value == 1;
+}
+
+void Widget::draw_child(Painter& painter, const Rect& crect, Widget* child)
+{
+    if (child->box().intersect(crect))
+    {
+        // don't give a child a rectangle that is outside of its own box
+        auto r = Rect::intersection(crect, child->box());
+        if (r.empty())
+            return;
+
+        if (detail::float_equal(child->alpha(), 1.f))
+        {
+            Painter::AutoSaveRestore sr2(painter);
+
+            // no matter what the child draws, clip the output to only the
+            // rectangle we care about updating
+            if (clip())
+            {
+                painter.draw(r);
+                painter.clip();
+            }
+
+            detail::code_timer(time_child_draw_enabled(), child->name() + " draw: ", [child, &painter, &r]()
+            {
+                child->draw(painter, r);
+            });
+        }
+        else
+        {
+            {
+                Painter::AutoGroup group(painter);
+
+                // no matter what the child draws, clip the output to only the
+                // rectangle we care about updating
+                if (clip())
+                {
+                    painter.draw(r);
+                    painter.clip();
+                }
+
+                detail::code_timer(time_child_draw_enabled(), child->name() + " draw: ", [child, &painter, &r]()
+                {
+                    child->draw(painter, r);
+                });
+            }
+
+            // we pushed a group for the child to draw into it, now paint that
+            // child with its alpha component
+            painter.paint(child->alpha());
+        }
+
+        special_child_draw(painter, child);
+    }
+}
+
+Point Widget::to_panel(const Point& p)
+{
+    if (has_screen())
+        return p - point();
+
+    if (parent())
+        return parent()->to_panel(p - point());
+
+    return p;
+}
+
+void Widget::remove(Widget* widget)
+{
+    if (!widget)
+        return;
+
+    auto i = std::find_if(m_children.begin(), m_children.end(),
+                          [widget](const auto & ptr)
+    {
+        return ptr.get() == widget;
+    });
+    if (i != m_children.end())
+    {
+        // note order here - damage and then unset parent
+        (*i)->damage();
+        (*i)->m_parent = nullptr;
+        m_children.erase(i);
+        layout();
+    }
+    else if (widget->m_parent == this)
+    {
+        widget->m_parent = nullptr;
     }
 }
 

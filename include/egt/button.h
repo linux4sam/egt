@@ -165,7 +165,7 @@ public:
 
 protected:
 
-    void set_parent(Frame* parent) override;
+    void set_parent(Widget* parent) override;
 
 private:
 

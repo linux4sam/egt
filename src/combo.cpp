@@ -246,7 +246,7 @@ void ComboBox::clear()
     }
 }
 
-void ComboBox::set_parent(Frame* parent)
+void ComboBox::set_parent(Widget* parent)
 {
     Widget::set_parent(parent);
 

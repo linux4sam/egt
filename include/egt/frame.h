@@ -81,8 +81,6 @@ public:
 
     ~Frame() noexcept override;
 
-    void handle(Event& event) override;
-
     /**
      * Add a child widget.
      *
@@ -140,15 +138,6 @@ public:
      * Returns true if the child exists.
      */
     bool is_child(Widget* widget) const;
-
-    /**
-     * Remove a child widget.
-     *
-     * The inverse of this call is Frame::add().
-     *
-     * @param widget The widget.
-     */
-    virtual void remove(Widget* widget);
 
     /**
      * Remove all child widgets.
@@ -221,44 +210,6 @@ public:
         return nullptr;
     }
 
-    /**
-     * Damage the rectangle of the entire Frame.
-     */
-    void damage() override
-    {
-        damage(m_box);
-    }
-
-    /**
-     * This will merge the damaged area with any already existing damaged area
-     * that it overlaps with into a super rectangle. Then, the whole array has
-     * to be checked again to make sure the new rectangle doesn't conflict with
-     * another existing rectangle.
-     */
-    void damage(const Rect& rect) override;
-
-    /**
-     * Special variation of damage() that is to be called explicitly by child
-     * widgets.
-     */
-    virtual void damage_from_child(const Rect& rect)
-    {
-        damage(rect);
-    }
-
-    void draw(Painter& painter, const Rect& rect) override;
-
-    /**
-     * Cause the frame to draw itself and all of its children.
-     *
-     * @warning Normally this should not be called directly and instead the
-     * event loop will call this function.
-     */
-    virtual void begin_draw()
-    {
-        assert(0);
-    }
-
     void walk(const WalkCallback& callback, int level = 0) override;
 
     /**
@@ -281,190 +232,11 @@ public:
     }
 
     /**
-     * @note Remember that when overriding this function as a Frame, you must
-     * call layout on each child Frame to propagate the layout.
-     */
-    void layout() override;
-
-    void resize(const Size& size) override
-    {
-        if (size != this->size())
-        {
-            Widget::resize(size);
-            layout();
-        }
-    }
-
-    /**
-     * Convert a point with an origin of the current frame to child origin.
-     */
-    EGT_NODISCARD virtual Point to_child(const Point& p) const
-    {
-        return p - point();
-    }
-
-    /**
-     * @see Frame::to_child();
-     */
-    EGT_NODISCARD Rect to_child(Rect rect) const
-    {
-        rect.point(to_child(rect.point()));
-        return rect;
-    }
-
-    /**
-     * Convert a local point to the coordinate system of the current panel.
-     *
-     * In other words, work towards a parent that has the panel so we can get
-     * this point relative to the origin of the panel we are drawing to.
-     */
-    virtual Point to_panel(const Point& p);
-
-    using Widget::zorder_down;
-    using Widget::zorder_up;
-
-    /**
-     * Move the specified widget zorder down relative to other widgets with the
-     * same parent.
-     *
-     * @param widget The widget.
-     */
-    void zorder_down(const Widget* widget);
-
-    /**
-     * Move the specified widget zorder up relative to other widgets with the
-     * same parent.
-     *
-     * @param widget The widget.
-     */
-    void zorder_up(const Widget* widget);
-
-    using Widget::zorder_bottom;
-    using Widget::zorder_top;
-
-    /**
-     * Move the specified widget zorder to the bottom of the current list of widgets
-     * with the same parent.
-     *
-     * @param widget The widget.
-     */
-    void zorder_bottom(const Widget* widget);
-
-    /**
-     * Move the specified widget zorder to the top of the current list of widgets
-     * with the same parent.
-     *
-     * @param widget The widget.
-     */
-    void zorder_top(const Widget* widget);
-
-    /**
-     * Get the zorder of the widget.
-     *
-     * @param widget The widget.
-     */
-    size_t zorder(const Widget* widget) const;
-
-    /**
-     * Set the zorder of the widget.
-     *
-     * @param widget The widget.
-     * @param rank The rank in the zorder.
-     */
-    void zorder(const Widget* widget, size_t rank);
-
-    using Widget::zorder;
-
-    /**
      * Get the widget under the given DisplayPoint.
      *
      * @return The widget pointer or nullptr if not found.
      */
     Widget* hit_test(const DisplayPoint& point);
-
-    /**
-     * Add damage to the damage array.
-     *
-     * Damage rects added here must have origin at point() of this frame. This
-     * is done for several reasons, including if this frame is moved, all of the
-     * damage rects are still valid.
-     */
-    void add_damage(const Rect& rect);
-
-    /**
-     * Helper type that defines the special draw child callback.
-     */
-    using ChildDrawCallback = std::function<void(Painter& painter, Widget* widget)>;
-
-    /**
-     * Get the special child draw callback.
-     */
-    EGT_NODISCARD ChildDrawCallback special_child_draw_callback() const
-    {
-        return m_special_child_draw_callback;
-    }
-
-    /**
-     * Set the special child draw callback.
-     */
-    void special_child_draw_callback(ChildDrawCallback func)
-    {
-        m_special_child_draw_callback = std::move(func);
-    }
-
-    /**
-     * Special draw function that can be invoked when drawing each child.
-     *
-     * This is useful, for example, to draw a custom bounding box around
-     * children or to modify how a child draws by overwriting it.
-     *
-     * @param painter An instance of the Painter to use.
-     * @param widget The widget.
-     */
-    void special_child_draw(Painter& painter, Widget* widget)
-    {
-        if (m_special_child_draw_callback)
-            m_special_child_draw_callback(painter, widget);
-        else if (parent())
-            parent()->special_child_draw(painter, widget);
-    }
-
-    /**
-     * Does this Frame have a screen?
-     */
-    EGT_NODISCARD virtual bool has_screen() const { return false; }
-
-    /**
-     * Starting from this Frame, find the Frame that has a Screen.
-     *
-     * This searches up the widget hierarchy from here.
-     */
-    Frame* find_screen()
-    {
-        if (has_screen())
-            return this;
-
-        if (parent())
-            return parent()->find_screen();
-
-        return nullptr;
-    }
-
-    /**
-     * Starting from this Frame, find the Frame that has a Screen.
-     *
-     * This searches up the widget hierarchy from here.
-     */
-    EGT_NODISCARD const Frame* find_screen() const
-    {
-        if (has_screen())
-            return this;
-
-        if (parent())
-            return parent()->find_screen();
-
-        return nullptr;
-    }
 
     /**
      * Create a child widget of the specified type.
@@ -495,26 +267,6 @@ public:
 
     /// Overridden to be called recursively on all children.
     void on_screen_resized() override;
-
-protected:
-
-    /// @private
-    void draw_child(Painter& painter, const Rect& crect, Widget* child);
-
-    /// Used internally for calling the special child draw function.
-    ChildDrawCallback m_special_child_draw_callback;
-
-    /// Helper type for an array of children.
-    using ChildrenArray = std::vector<std::shared_ptr<Widget>>;
-
-    /// Array of child widgets in the order they were added.
-    ChildrenArray m_children;
-
-    /// The damage array for this frame.
-    Screen::DamageArray m_damage;
-
-    /// Status for whether this frame is currently drawing.
-    bool m_in_draw{false};
 
 private:
 
