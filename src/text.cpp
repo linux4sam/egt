@@ -1655,7 +1655,6 @@ void TextBox::selection_delete()
         utf8::advance(l, m_select_len, m_text.end());
 
         m_text.erase(i, l);
-        cursor_set(m_select_start);
         selection_clear();
         on_text_changed.invoke();
 
@@ -1664,6 +1663,7 @@ void TextBox::selection_delete()
         tag_text(m_rects, rects);
         m_rects = std::move(rects);
 
+        cursor_set(m_select_start);
         invalidate_text_rect();
         update_sliders();
         move_sliders();
