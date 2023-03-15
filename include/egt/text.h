@@ -442,6 +442,94 @@ protected:
     /// Compute damage rectangles for selection updates
     void selection_damage();
 
+    /// Get the cairo context to compute text extents, hence the text layout.
+    cairo_t* context() const { return m_cr.get(); }
+
+    /// Split the text into atomic tokens that fill the TextRects parameter.
+    void tokenize(TextRects& rects);
+
+    /// Compute the text layout from the tokens contained in the TextRects.
+    void compute_layout(TextRects& rects);
+
+    /// Merge adjacent TextRect items, when possible.
+    void consolidate(TextRects& rects);
+
+    /// Clear the TextRectFlag::selected flag from all TextRects in rects.
+    void clear_selection(TextRects& rects);
+
+    /**
+     * Add the TextRectFlag::selected flag to TextRects based on the
+     * m_select_start and m_select_len values.
+     *
+     * Split TextRects if needed.
+     */
+    void set_selection(TextRects& rects);
+
+    /**
+     * Get the std::string and Rect from pos to the first follwing TextRect in
+     * rects with a different height, or till the end of rects if any.
+     */
+    static void get_line(const TextRects& rects,
+                         TextRects::iterator& pos,
+                         std::string& line,
+                         Rect& rect);
+
+    /// Compute the longest common prefix between two strings.
+    static std::string longest_prefix(const std::string& s1, const std::string& s2);
+
+    /// Compute the longest common suffix between two strings.
+    static std::string longest_suffix(const std::string& s1, const std::string& s2);
+
+    /// Damage the merged rectangle of two text lines if they are not equal.
+    void tag_default_aligned_line(TextRects& prev,
+                                  TextRects::iterator& prev_pos,
+                                  TextRects& next,
+                                  TextRects::iterator& next_pos);
+
+    /// Damage the merge rectangle of two text lines, excluding their common prefix.
+    void tag_left_aligned_line(TextRects& prev,
+                               TextRects::iterator& prev_pos,
+                               TextRects& next,
+                               TextRects::iterator& next_pos);
+
+    /// Damage the merge rectangle of two text lines, excluding their common suffix.
+    void tag_right_aligned_line(TextRects& prev,
+                                TextRects::iterator& prev_pos,
+                                TextRects& next,
+                                TextRects::iterator& next_pos);
+
+    /// Damage the differences between two text lines, based on the text alignment.
+    void tag_line(TextRects& prev,
+                  TextRects::iterator& prev_pos,
+                  TextRects& next,
+                  TextRects::iterator& next_pos);
+
+    /// Damage the differences between two texts.
+    void tag_text(TextRects& prev, TextRects& next);
+
+    /// Compute the merged Rect for the selected TextRects on the same line as pos.
+    static void get_line_selection(const TextRects& rects,
+                                   TextRects::const_iterator& pos,
+                                   Rect& rect);
+
+    /// Damage the differences between two selected text lines.
+    void tag_line_selection(const TextRects& prev,
+                            TextRects::const_iterator& prev_pos,
+                            const TextRects& next,
+                            TextRects::const_iterator& next_pos);
+
+    /// Damage the differences between two selected texts.
+    void tag_text_selection(const TextRects& prev, const TextRects& next);
+
+    /// Tokenize and compute the layout of a text; fill TextRects accordingly.
+    void prepare_text(TextRects& rects);
+
+    /// Update m_cursor_rect based on the current position of the cursor.
+    void get_cursor_rect();
+
+    /// Draw the text based on the m_rects TextRects.
+    void draw_text(Painter& painter, const Rect& rect);
+
     /// Timer for blinking the cursor.
     PeriodicTimer m_timer;
 

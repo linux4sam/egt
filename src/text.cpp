@@ -77,11 +77,9 @@ TextRect TextRect::split(size_t pos, cairo_t* cr) noexcept
     return tail;
 }
 
-static void tokenize(TextRects& rects,
-                     cairo_t* cr,
-                     const std::string& text,
-                     const TextBox::TextFlags& flags)
+void TextBox::tokenize(TextRects& rects)
 {
+    cairo_t* cr = context();
     cairo_font_extents_t fe;
     cairo_font_extents(cr, &fe);
 
@@ -89,23 +87,23 @@ static void tokenize(TextRects& rects,
     static const std::string delimiters = " \t\n\r";
     std::vector<std::string> tokens;
 
-    tokens.reserve(text.length());
+    tokens.reserve(m_text.length());
 
-    bool multiline = flags.is_set(TextBox::TextFlag::multiline);
-    if (multiline && flags.is_set(TextBox::TextFlag::word_wrap))
+    bool multiline = text_flags().is_set(TextBox::TextFlag::multiline);
+    if (multiline && text_flags().is_set(TextBox::TextFlag::word_wrap))
     {
-        detail::tokenize_with_delimiters(text.cbegin(),
-                                         text.cend(),
+        detail::tokenize_with_delimiters(m_text.cbegin(),
+                                         m_text.cend(),
                                          delimiters.cbegin(),
                                          delimiters.cend(),
                                          tokens);
     }
     else
     {
-        for (detail::utf8_const_iterator ch(text.begin(), text.begin(), text.end());
-             ch != detail::utf8_const_iterator(text.end(), text.begin(), text.end()); ++ch)
+        for (detail::utf8_const_iterator ch(m_text.begin(), m_text.begin(), m_text.end());
+             ch != detail::utf8_const_iterator(m_text.end(), m_text.begin(), m_text.end()); ++ch)
         {
-            auto t = detail::utf8_char_to_string(ch.base(), text.cend());
+            auto t = detail::utf8_char_to_string(ch.base(), m_text.cend());
 
             if (!multiline && t == "\n")
                 break;
@@ -146,10 +144,9 @@ static void tokenize(TextRects& rects,
     }
 }
 
-static void compute_layout(const Rect& boundaries,
-                           TextRects& rects,
-                           const AlignFlags& align)
+void TextBox::compute_layout(TextRects& rects)
 {
+    const auto boundaries = content_area();
     lay_context ctx;
     lay_init_context(&ctx);
 
@@ -168,7 +165,7 @@ static void compute_layout(const Rect& boundaries,
     uint32_t contains = detail::justify_to_contains(Justification::start, Orientation::flex);
     lay_set_contain(&ctx, inner_parent, contains);
 
-    uint32_t dbehave = detail::align_to_behave(align);
+    uint32_t dbehave = detail::align_to_behave(text_align());
     lay_set_behave(&ctx, inner_parent, dbehave);
     lay_insert(&ctx, outer_parent, inner_parent);
 
@@ -207,9 +204,10 @@ static void compute_layout(const Rect& boundaries,
     }
 }
 
-static void consolidate(TextRects& rects,
-                        cairo_t* cr)
+void TextBox::consolidate(TextRects& rects)
 {
+    cairo_t* cr = context();
+
     for (auto it = rects.begin(); it != rects.end();)
     {
         auto nx = std::next(it, 1);
@@ -228,21 +226,21 @@ static void consolidate(TextRects& rects,
     }
 }
 
-static void clear_selection(TextRects& rects)
+void TextBox::clear_selection(TextRects& rects)
 {
     for (auto& r : rects)
         r.deselect();
 }
 
-static void set_selection(TextRects& rects,
-                          cairo_t* cr,
-                          size_t select_start,
-                          size_t select_len)
+void TextBox::set_selection(TextRects& rects)
 {
-    if (!select_len)
+    if (!m_select_len)
         return;
 
+    cairo_t* cr = context();
     size_t pos = 0;
+    size_t select_start = m_select_start;
+    size_t select_len = m_select_len;
     size_t select_end = select_start + select_len;
     for (auto it = rects.begin(); it != rects.end(); ++it)
     {
@@ -301,10 +299,10 @@ static void set_selection(TextRects& rects,
     }
 }
 
-static void get_line(const TextRects& rects,
-                     TextRects::iterator& pos,
-                     std::string& line,
-                     Rect& rect)
+void TextBox::get_line(const TextRects& rects,
+                       TextRects::iterator& pos,
+                       std::string& line,
+                       Rect& rect)
 {
     line.clear();
     rect.clear();
@@ -328,8 +326,8 @@ static void get_line(const TextRects& rects,
     }
 }
 
-static std::string longest_prefix(const std::string& s1,
-                                  const std::string& s2)
+std::string TextBox::longest_prefix(const std::string& s1,
+                                    const std::string& s2)
 {
     detail::utf8_const_iterator it1(s1.cbegin(), s1.cbegin(), s1.cend());
     detail::utf8_const_iterator end1(s1.cend(), s1.cbegin(), s1.cend());
@@ -345,8 +343,8 @@ static std::string longest_prefix(const std::string& s1,
     return std::string(s1.cbegin(), it1.base());
 }
 
-static std::string longest_suffix(const std::string& s1,
-                                  const std::string& s2)
+std::string TextBox::longest_suffix(const std::string& s1,
+                                    const std::string& s2)
 {
     utf8::iterator<std::string::const_reverse_iterator> it1(s1.crbegin(), s1.crbegin(), s1.crend());
     utf8::iterator<std::string::const_reverse_iterator> end1(s1.crend(), s1.crbegin(), s1.crend());
@@ -362,11 +360,10 @@ static std::string longest_suffix(const std::string& s1,
     return std::string(it1.base().base(), s1.cend());
 }
 
-static void tag_default_aligned_line(TextRects& prev,
-                                     TextRects::iterator& prev_pos,
-                                     TextRects& next,
-                                     TextRects::iterator& next_pos,
-                                     Widget& parent)
+void TextBox::tag_default_aligned_line(TextRects& prev,
+                                       TextRects::iterator& prev_pos,
+                                       TextRects& next,
+                                       TextRects::iterator& next_pos)
 {
     std::string prev_line;
     Rect prev_rect;
@@ -384,16 +381,14 @@ static void tag_default_aligned_line(TextRects& prev,
         auto y_max = std::max(prev_rect.y() + prev_rect.height(), next_rect.y() + next_rect.height());
         Rect r(x_min, y_min, x_max - x_min, y_max - y_min);
         if (!r.empty())
-            parent.damage(r);
+            damage(r);
     }
 }
 
-static void tag_left_aligned_line(TextRects& prev,
-                                  TextRects::iterator& prev_pos,
-                                  TextRects& next,
-                                  TextRects::iterator& next_pos,
-                                  Widget& parent,
-                                  cairo_t* cr)
+void TextBox::tag_left_aligned_line(TextRects& prev,
+                                    TextRects::iterator& prev_pos,
+                                    TextRects& next,
+                                    TextRects::iterator& next_pos)
 {
     std::string prev_line;
     Rect prev_rect;
@@ -414,7 +409,7 @@ static void tag_left_aligned_line(TextRects& prev,
             auto y = prev_rect.y();
             auto w = prev_rect.width() - next_rect.width();
             auto h = prev_rect.height();
-            parent.damage(Rect(x, y, w, h));
+            damage(Rect(x, y, w, h));
         }
         return;
     }
@@ -433,7 +428,7 @@ static void tag_left_aligned_line(TextRects& prev,
 
     if (len && len < next_it->length())
     {
-        TextRect tail(std::move(next_it->split(len, cr)));
+        TextRect tail(std::move(next_it->split(len, context())));
         prefix_rect.width(prefix_rect.width() + next_it->rect().width());
         next.insert(std::next(next_it), std::move(tail));
     }
@@ -442,15 +437,13 @@ static void tag_left_aligned_line(TextRects& prev,
     r.x(prefix_rect.x() + prefix_rect.width());
     r.width(std::max(next_rect.width(), prev_rect.width()) - prefix_rect.width());
     if (!r.empty())
-        parent.damage(r);
+        damage(r);
 }
 
-static void tag_right_aligned_line(TextRects& prev,
-                                   TextRects::iterator& prev_pos,
-                                   TextRects& next,
-                                   TextRects::iterator& next_pos,
-                                   Widget& parent,
-                                   cairo_t* cr)
+void TextBox::tag_right_aligned_line(TextRects& prev,
+                                     TextRects::iterator& prev_pos,
+                                     TextRects& next,
+                                     TextRects::iterator& next_pos)
 {
     std::string prev_line;
     Rect prev_rect;
@@ -471,7 +464,7 @@ static void tag_right_aligned_line(TextRects& prev,
             auto y = prev_rect.y();
             auto w = prev_rect.width() - next_rect.width();
             auto h = prev_rect.height();
-            parent.damage(Rect(x, y, w, h));
+            damage(Rect(x, y, w, h));
         }
         return;
     }
@@ -490,7 +483,7 @@ static void tag_right_aligned_line(TextRects& prev,
 
     if (len && len < next_it->length())
     {
-        TextRect tail(next_it->split(len, cr));
+        TextRect tail(next_it->split(len, context()));
         prefix_rect.width(prefix_rect.width() + next_it->rect().width());
         next.insert(std::next(next_it), std::move(tail));
     }
@@ -499,56 +492,49 @@ static void tag_right_aligned_line(TextRects& prev,
     r.x(std::min(next_rect.x(), prev_rect.x()));
     r.width(prefix_rect.x() + prefix_rect.width() - r.x());
     if (!r.empty())
-        parent.damage(r);
+        damage(r);
 }
 
-static void tag_line(const AlignFlags& text_align,
-                     TextRects& prev,
-                     TextRects::iterator& prev_pos,
-                     TextRects& next,
-                     TextRects::iterator& next_pos,
-                     Widget& parent,
-                     cairo_t* cr)
+void TextBox::tag_line(TextRects& prev,
+                       TextRects::iterator& prev_pos,
+                       TextRects& next,
+                       TextRects::iterator& next_pos)
 {
     /* Currently AlignFlag::expand_horizontal is left-aligned. */
-    if (text_align.is_set(AlignFlag::left) ||
-        text_align.is_set(AlignFlag::expand_horizontal))
-        tag_left_aligned_line(prev, prev_pos, next, next_pos, parent, cr);
-    else if (text_align.is_set(AlignFlag::right))
-        tag_right_aligned_line(prev, prev_pos, next, next_pos, parent, cr);
+    if (text_align().is_set(AlignFlag::left) ||
+        text_align().is_set(AlignFlag::expand_horizontal))
+        tag_left_aligned_line(prev, prev_pos, next, next_pos);
+    else if (text_align().is_set(AlignFlag::right))
+        tag_right_aligned_line(prev, prev_pos, next, next_pos);
     else
-        tag_default_aligned_line(prev, prev_pos, next, next_pos, parent);
+        tag_default_aligned_line(prev, prev_pos, next, next_pos);
 }
 
-static void tag_text(const AlignFlags& text_align,
-                     TextRects& prev,
-                     TextRects& next,
-                     Widget& parent,
-                     cairo_t* cr)
+void TextBox::tag_text(TextRects& prev, TextRects& next)
 {
     auto prev_pos = prev.begin();
     auto next_pos = next.begin();
     while (prev_pos != prev.end() && next_pos != next.end())
-        tag_line(text_align, prev, prev_pos, next, next_pos, parent, cr);
+        tag_line(prev, prev_pos, next, next_pos);
 
     std::string line;
     Rect rect;
     while (next_pos != next.end())
     {
         get_line(next, next_pos, line, rect);
-        parent.damage(rect);
+        damage(rect);
     }
 
     while (prev_pos != prev.end())
     {
         get_line(prev, prev_pos, line, rect);
-        parent.damage(rect);
+        damage(rect);
     }
 }
 
-static void get_line_selection(const TextRects& rects,
-                               TextRects::const_iterator& pos,
-                               Rect& rect)
+void TextBox::get_line_selection(const TextRects& rects,
+                                 TextRects::const_iterator& pos,
+                                 Rect& rect)
 {
     rect.clear();
 
@@ -581,11 +567,10 @@ static void get_line_selection(const TextRects& rects,
     }
 }
 
-static void tag_line_selection(const TextRects& prev,
-                               TextRects::const_iterator& prev_pos,
-                               const TextRects& next,
-                               TextRects::const_iterator& next_pos,
-                               Widget& parent)
+void TextBox::tag_line_selection(const TextRects& prev,
+                                 TextRects::const_iterator& prev_pos,
+                                 const TextRects& next,
+                                 TextRects::const_iterator& next_pos)
 {
     Rect pr;
     get_line_selection(prev, prev_pos, pr);
@@ -598,13 +583,13 @@ static void tag_line_selection(const TextRects& prev,
 
     if (pr.width() && !nr.width())
     {
-        parent.damage(pr);
+        damage(pr);
         return;
     }
 
     if (nr.width() && !pr.width())
     {
-        parent.damage(nr);
+        damage(nr);
         return;
     }
 
@@ -613,7 +598,7 @@ static void tag_line_selection(const TextRects& prev,
     if (min_lx != max_lx)
     {
         Rect left(min_lx, pr.y(), max_lx - min_lx, pr.height());
-        parent.damage(left);
+        damage(left);
     }
 
     auto min_rx = std::min(pr.x() + pr.width(), nr.x() + nr.width());
@@ -621,36 +606,30 @@ static void tag_line_selection(const TextRects& prev,
     if (min_rx != max_rx)
     {
         Rect right(min_rx, pr.y(), max_rx - min_rx, pr.height());
-        parent.damage(right);
+        damage(right);
     }
 }
 
-static void tag_text_selection(const TextRects& prev,
-                               const TextRects& next,
-                               Widget& parent)
+void TextBox::tag_text_selection(const TextRects& prev,
+                                 const TextRects& next)
 {
     auto prev_pos = prev.cbegin();
     auto next_pos = next.cbegin();
     while (prev_pos != prev.cend() && next_pos != next.cend())
-        tag_line_selection(prev, prev_pos, next, next_pos, parent);
+        tag_line_selection(prev, prev_pos, next, next_pos);
 }
 
 #define fl(f) static_cast<float>(f)
 
-static void draw_text(Painter& painter,
-                      const Rect& rect,
-                      const TextRects& rects,
-                      const Font& font,
-                      const Pattern& text_color,
-                      const Pattern& highlight_color)
+void TextBox::draw_text(Painter& painter, const Rect& rect)
 {
     auto cr = painter.context().get();
 
-    painter.set(font);
+    painter.set(font());
     cairo_font_extents_t fe;
     cairo_font_extents(cr, &fe);
 
-    for (const auto& r : rects)
+    for (const auto& r : m_rects)
     {
         if (r.text() != "\n")
         {
@@ -671,50 +650,39 @@ static void draw_text(Painter& painter,
                 auto r2 = RectF(p2, s);
                 if (!r2.empty())
                 {
-                    painter.set(highlight_color);
+                    painter.set(color(Palette::ColorId::text_highlight));
                     painter.draw(r2);
                     painter.fill();
                 }
             }
 
-            painter.set(text_color);
+            painter.set(color(Palette::ColorId::text));
             painter.draw(p);
             painter.draw(r.text());
         }
     }
 }
 
-static void prepare_text(TextRects& rects,
-                         cairo_t* cr,
-                         const Rect& b,
-                         const std::string& text,
-                         const Font& font,
-                         const TextBox::TextFlags& flags,
-                         const AlignFlags& text_align,
-                         size_t select_start,
-                         size_t select_len)
+void TextBox::prepare_text(TextRects& rects)
 {
-    cairo_set_scaled_font(cr, font.scaled_font());
+    cairo_set_scaled_font(context(), font().scaled_font());
 
     rects.clear();
 
-    tokenize(rects, cr, text, flags);
-    compute_layout(b, rects, text_align);
-    set_selection(rects, cr, select_start, select_len);
+    tokenize(rects);
+    compute_layout(rects);
+    set_selection(rects);
 }
 
 constexpr static auto CURSOR_WIDTH = 2;
 constexpr static auto CURSOR_X_MARGIN = 1;
 constexpr static auto CURSOR_RECT_WIDTH = CURSOR_WIDTH + 2 * CURSOR_X_MARGIN;
 
-static void get_cursor_rect(const TextRects& rects,
-                            cairo_t* cr,
-                            const Rect& boundaries,
-                            const Font& font,
-                            size_t cursor_pos,
-                            Rect& rect)
+void TextBox::get_cursor_rect()
 {
-    cairo_set_scaled_font(cr, font.scaled_font());
+    cairo_t* cr = context();
+    const Rect boundaries = content_area();
+    cairo_set_scaled_font(cr, font().scaled_font());
     cairo_font_extents_t fe;
     cairo_font_extents(cr, &fe);
 
@@ -722,16 +690,16 @@ static void get_cursor_rect(const TextRects& rects,
     Size s(CURSOR_RECT_WIDTH, fe.height);
 
     size_t pos = 0;
-    for (const auto& r : rects)
+    for (const auto& r : m_rects)
     {
         size_t l = r.length();
-        if (pos + l < cursor_pos)
+        if (pos + l < m_cursor_pos)
         {
             pos += l;
             continue;
         }
 
-        if (pos == cursor_pos)
+        if (pos == m_cursor_pos)
         {
             p = r.rect().point();
             p.x(p.x() - CURSOR_X_MARGIN);
@@ -746,7 +714,7 @@ static void get_cursor_rect(const TextRects& rects,
         }
 
         auto it = r.text().begin();
-        utf8::advance(it, cursor_pos - pos, r.text().end());
+        utf8::advance(it, m_cursor_pos - pos, r.text().end());
         std::string str(r.text().begin(), it);
 
         cairo_text_extents_t te;
@@ -757,8 +725,8 @@ static void get_cursor_rect(const TextRects& rects,
         break;
     }
 
-    rect.point(p);
-    rect.size(s);
+    m_cursor_rect.point(p);
+    m_cursor_rect.size(s);
 }
 
 static AlignFlags default_text_align_value{AlignFlag::expand};
@@ -1002,23 +970,8 @@ void TextBox::draw(Painter& painter, const Rect& rect)
         m_cr = painter.context();
 
         m_state = std::move(state);
-
-        prepare_text(m_rects,
-                     m_cr.get(),
-                     content_area(),
-                     m_text,
-                     font(),
-                     text_flags(),
-                     text_align(),
-                     m_select_start,
-                     m_select_len);
-
-        get_cursor_rect(m_rects,
-                        m_cr.get(),
-                        content_area(),
-                        font(),
-                        m_cursor_pos,
-                        m_cursor_rect);
+        prepare_text(m_rects);
+        get_cursor_rect();
     }
 
     // box
@@ -1036,13 +989,7 @@ void TextBox::draw(Painter& painter, const Rect& rect)
         painter.fill();
     }
 
-    draw_text(painter,
-              rect,
-              m_rects,
-              font(),
-              color(Palette::ColorId::text),
-              color(Palette::ColorId::text_highlight));
-
+    draw_text(painter, rect);
 
     if (m_cursor_rect.intersect(rect))
     {
@@ -1182,16 +1129,8 @@ size_t TextBox::insert(const std::string& str)
         if (m_cr)
         {
             TextRects rects;
-            prepare_text(rects,
-                         m_cr.get(),
-                         content_area(),
-                         m_text,
-                         font(),
-                         text_flags(),
-                         text_align(),
-                         m_select_start,
-                         m_select_len);
-            tag_text(text_align(), m_rects, rects, *this, m_cr.get());
+            prepare_text(rects);
+            tag_text(m_rects, rects);
             m_rects = std::move(rects);
         }
         else
@@ -1248,12 +1187,7 @@ void TextBox::cursor_set(size_t pos)
         if (m_cr)
         {
             damage(m_cursor_rect);
-            get_cursor_rect(m_rects,
-                            m_cr.get(),
-                            content_area(),
-                            font(),
-                            m_cursor_pos,
-                            m_cursor_rect);
+            get_cursor_rect();
         }
     }
 
@@ -1273,12 +1207,12 @@ void TextBox::selection_damage()
         return;
     }
 
-    consolidate(m_rects, m_cr.get());
+    consolidate(m_rects);
     TextRects rects(m_rects);
     clear_selection(rects);
-    consolidate(rects, m_cr.get());
-    set_selection(rects, m_cr.get(), m_select_start, m_select_len);
-    tag_text_selection(m_rects, rects, *this);
+    consolidate(rects);
+    set_selection(rects);
+    tag_text_selection(m_rects, rects);
     m_rects = std::move(rects);
 }
 
@@ -1397,16 +1331,8 @@ void TextBox::selection_delete()
         if (m_cr)
         {
             TextRects rects;
-            prepare_text(rects,
-                         m_cr.get(),
-                         content_area(),
-                         m_text,
-                         font(),
-                         text_flags(),
-                         text_align(),
-                         m_select_start,
-                         m_select_len);
-            tag_text(text_align(), m_rects, rects, *this, m_cr.get());
+            prepare_text(rects);
+            tag_text(m_rects, rects);
             m_rects = std::move(rects);
         }
         else
