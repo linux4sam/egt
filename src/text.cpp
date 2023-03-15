@@ -381,7 +381,7 @@ void TextBox::tag_default_aligned_line(TextRects& prev,
         auto y_max = std::max(prev_rect.y() + prev_rect.height(), next_rect.y() + next_rect.height());
         Rect r(x_min, y_min, x_max - x_min, y_max - y_min);
         if (!r.empty())
-            damage(r);
+            damage_text(r);
     }
 }
 
@@ -409,7 +409,7 @@ void TextBox::tag_left_aligned_line(TextRects& prev,
             auto y = prev_rect.y();
             auto w = prev_rect.width() - next_rect.width();
             auto h = prev_rect.height();
-            damage(Rect(x, y, w, h));
+            damage_text(Rect(x, y, w, h));
         }
         return;
     }
@@ -437,7 +437,7 @@ void TextBox::tag_left_aligned_line(TextRects& prev,
     r.x(prefix_rect.x() + prefix_rect.width());
     r.width(std::max(next_rect.width(), prev_rect.width()) - prefix_rect.width());
     if (!r.empty())
-        damage(r);
+        damage_text(r);
 }
 
 void TextBox::tag_right_aligned_line(TextRects& prev,
@@ -464,7 +464,7 @@ void TextBox::tag_right_aligned_line(TextRects& prev,
             auto y = prev_rect.y();
             auto w = prev_rect.width() - next_rect.width();
             auto h = prev_rect.height();
-            damage(Rect(x, y, w, h));
+            damage_text(Rect(x, y, w, h));
         }
         return;
     }
@@ -492,7 +492,7 @@ void TextBox::tag_right_aligned_line(TextRects& prev,
     r.x(std::min(next_rect.x(), prev_rect.x()));
     r.width(prefix_rect.x() + prefix_rect.width() - r.x());
     if (!r.empty())
-        damage(r);
+        damage_text(r);
 }
 
 void TextBox::tag_line(TextRects& prev,
@@ -522,13 +522,13 @@ void TextBox::tag_text(TextRects& prev, TextRects& next)
     while (next_pos != next.end())
     {
         get_line(next, next_pos, line, rect);
-        damage(rect);
+        damage_text(rect);
     }
 
     while (prev_pos != prev.end())
     {
         get_line(prev, prev_pos, line, rect);
-        damage(rect);
+        damage_text(rect);
     }
 }
 
@@ -583,13 +583,13 @@ void TextBox::tag_line_selection(const TextRects& prev,
 
     if (pr.width() && !nr.width())
     {
-        damage(pr);
+        damage_text(pr);
         return;
     }
 
     if (nr.width() && !pr.width())
     {
-        damage(nr);
+        damage_text(nr);
         return;
     }
 
@@ -598,7 +598,7 @@ void TextBox::tag_line_selection(const TextRects& prev,
     if (min_lx != max_lx)
     {
         Rect left(min_lx, pr.y(), max_lx - min_lx, pr.height());
-        damage(left);
+        damage_text(left);
     }
 
     auto min_rx = std::min(pr.x() + pr.width(), nr.x() + nr.width());
@@ -606,7 +606,7 @@ void TextBox::tag_line_selection(const TextRects& prev,
     if (min_rx != max_rx)
     {
         Rect right(min_rx, pr.y(), max_rx - min_rx, pr.height());
-        damage(right);
+        damage_text(right);
     }
 }
 
@@ -1194,7 +1194,7 @@ void TextBox::cursor_set(size_t pos)
 
         if (m_cr)
         {
-            damage(m_cursor_rect);
+            damage_cursor();
             get_cursor_rect();
         }
     }
@@ -1375,14 +1375,14 @@ bool TextBox::validate_input(const std::string& str)
 void TextBox::cursor_timeout()
 {
     m_cursor_state = !m_cursor_state;
-    damage(m_cursor_rect);
+    damage_cursor();
 }
 
 void TextBox::show_cursor()
 {
     m_cursor_state = true;
     m_timer.start();
-    damage(m_cursor_rect);
+    damage_cursor();
 }
 
 void TextBox::continue_show_cursor()
@@ -1390,7 +1390,7 @@ void TextBox::continue_show_cursor()
     if (m_cursor_state)
     {
         m_timer.start();
-        damage(m_cursor_rect);
+        damage_cursor();
     }
 }
 
@@ -1398,7 +1398,7 @@ void TextBox::hide_cursor()
 {
     m_timer.cancel();
     m_cursor_state = false;
-    damage(m_cursor_rect);
+    damage_cursor();
 }
 
 Size TextBox::min_size_hint() const

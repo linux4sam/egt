@@ -530,6 +530,19 @@ protected:
     /// Draw the text based on the m_rects TextRects.
     void draw_text(Painter& painter, const Rect& rect);
 
+    /// Damage the text but only if visible.
+    void damage_text(const Rect& rect)
+    {
+        damage(Rect::intersection(rect, content_area()));
+    }
+
+    /// Damage the cursor but only if visible.
+    void damage_cursor()
+    {
+        /// The cursor may cross the content area; hence intersect with the box.
+        damage(Rect::intersection(m_cursor_rect, box()));
+    }
+
     /// Timer for blinking the cursor.
     PeriodicTimer m_timer;
 
