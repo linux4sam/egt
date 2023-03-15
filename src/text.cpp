@@ -997,12 +997,14 @@ constexpr static auto CURSOR_Y_OFFSET = 2.;
 
 void TextBox::draw(Painter& painter, const Rect& rect)
 {
+    State state(content_area(), &font(), flags(), text_align(), text_flags());
+
     if ((m_cr.get() != painter.context().get()) ||
-        m_textbox_rect != content_area())
+        m_state != state)
     {
         m_cr = painter.context();
 
-        m_textbox_rect = content_area();
+        m_state = std::move(state);
 
         prepare_text(m_rects,
                      m_cr.get(),
