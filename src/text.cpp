@@ -56,13 +56,22 @@ TextRect TextRect::split(size_t pos, cairo_t* cr) noexcept
     cairo_text_extents_t tail_te;
     cairo_text_extents(cr, tail_text.c_str(), &tail_te);
 
+    /*
+     * Fix a former rounding issue when computing:
+     * tail_rect.width() - head_te.x_advance
+     * to update tail_rect.width().
+     *
+     * Now converting, here and once for all, the double 'head_te.x_advance'
+     * (see its definition in cairo.h) into the DefaultDim (int) 'head_width'.
+     */
+    DefaultDim head_width = head_te.x_advance;
     Rect tail_rect(m_rect);
-    tail_rect.x(tail_rect.x() + head_te.x_advance);
-    tail_rect.width(tail_rect.width() - head_te.x_advance);
+    tail_rect.x(tail_rect.x() + head_width);
+    tail_rect.width(tail_rect.width() - head_width);
     TextRect tail(m_behave, tail_rect, tail_text, tail_te, m_text_rect_flags);
 
     m_text = head_text;
-    m_rect.width(head_te.x_advance);
+    m_rect.width(head_width);
     m_te = head_te;
 
     return tail;
