@@ -79,10 +79,12 @@ TextRect TextRect::split(size_t pos, cairo_t* cr) noexcept
 
 static void tokenize(TextRects& rects,
                      cairo_t* cr,
-                     cairo_font_extents_t& fe,
                      const std::string& text,
                      const TextBox::TextFlags& flags)
 {
+    cairo_font_extents_t fe;
+    cairo_font_extents(cr, &fe);
+
     // tokenize based on words or code points
     static const std::string delimiters = " \t\n\r";
     std::vector<std::string> tokens;
@@ -697,12 +699,10 @@ static void prepare_text(TextRects& rects,
                          size_t select_len)
 {
     cairo_set_scaled_font(cr, font.scaled_font());
-    cairo_font_extents_t fe;
-    cairo_font_extents(cr, &fe);
 
     rects.clear();
 
-    tokenize(rects, cr, fe, text, flags);
+    tokenize(rects, cr, text, flags);
     compute_layout(b, rects, justify, Orientation::flex, text_align);
     set_selection(rects, cr, select_start, select_len);
 }
