@@ -148,8 +148,6 @@ static void tokenize(TextRects& rects,
 
 static void compute_layout(const Rect& boundaries,
                            TextRects& rects,
-                           Justification justify,
-                           Orientation orient,
                            const AlignFlags& align)
 {
     lay_context ctx;
@@ -167,7 +165,7 @@ static void compute_layout(const Rect& boundaries,
 
     lay_set_size_xy(&ctx, outer_parent, boundaries.width(), boundaries.height());
 
-    uint32_t contains = detail::justify_to_contains(justify, orient);
+    uint32_t contains = detail::justify_to_contains(Justification::start, Orientation::flex);
     lay_set_contain(&ctx, inner_parent, contains);
 
     uint32_t dbehave = detail::align_to_behave(align);
@@ -701,7 +699,7 @@ static void prepare_text(TextRects& rects,
     rects.clear();
 
     tokenize(rects, cr, text, flags);
-    compute_layout(b, rects, Justification::start, Orientation::flex, text_align);
+    compute_layout(b, rects, text_align);
     set_selection(rects, cr, select_start, select_len);
 }
 
