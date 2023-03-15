@@ -736,6 +736,12 @@ void TextBox::get_cursor_rect()
     m_cursor_rect.size(s);
 }
 
+void TextBox::refresh_text_area()
+{
+    prepare_text(m_rects);
+    get_cursor_rect();
+}
+
 static AlignFlags default_text_align_value{AlignFlag::expand};
 
 AlignFlags TextBox::default_text_align()
@@ -973,13 +979,12 @@ constexpr static auto CURSOR_Y_OFFSET = 2.;
 
 void TextBox::draw(Painter& painter, const Rect& rect)
 {
-    State state(content_area(), &font(), flags(), text_align(), text_flags());
+    State state(&font(), flags(), text_align(), text_flags());
 
     if (m_state != state)
     {
         m_state = std::move(state);
-        prepare_text(m_rects);
-        get_cursor_rect();
+        refresh_text_area();
     }
 
     // box
@@ -1013,6 +1018,12 @@ void TextBox::draw(Painter& painter, const Rect& rect)
             painter.stroke();
         }
     }
+}
+
+void TextBox::resize(const Size& size)
+{
+    TextWidget::resize(size);
+    refresh_text_area();
 }
 
 void TextBox::text(const std::string& str)

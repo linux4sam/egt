@@ -234,6 +234,8 @@ public:
 
     void draw(Painter& painter, const Rect& rect) override;
 
+    void resize(const Size& size) override;
+
     using TextWidget::text;
 
     void text(const std::string& str) override;
@@ -531,6 +533,9 @@ protected:
     /// Draw the text based on the m_rects TextRects.
     void draw_text(Painter& painter, const Rect& rect);
 
+    /// Compute the new text layout and cursor rectangle.
+    void refresh_text_area();
+
     /// Damage the text but only if visible.
     void damage_text(const Rect& rect)
     {
@@ -592,13 +597,11 @@ private:
         State() noexcept
         {}
 
-        explicit State(const Rect& rect,
-                       const Font* font,
+        explicit State(const Font* font,
                        const Widget::Flags& flags,
                        const AlignFlags& text_align,
                        const TextFlags& text_flags) noexcept
-            : m_rect(rect),
-              m_font(font),
+            : m_font(font),
               m_flags(flags),
               m_text_align(text_align),
               m_text_flags(text_flags)
@@ -606,7 +609,6 @@ private:
 
         State& operator=(const State& rhs) noexcept
         {
-            m_rect = rhs.m_rect;
             m_font = rhs.m_font;
             m_flags = rhs.m_flags;
             m_text_align = rhs.m_text_align;
@@ -616,7 +618,6 @@ private:
 
         State& operator=(State&& rhs) noexcept
         {
-            m_rect = std::move(rhs.m_rect);
             m_font = rhs.m_font;
             m_flags = std::move(rhs.m_flags);
             m_text_align = std::move(rhs.m_text_align);
@@ -626,8 +627,7 @@ private:
 
         bool operator==(const State& rhs) const noexcept
         {
-            return m_rect == rhs.m_rect &&
-                   m_font == rhs.m_font &&
+            return m_font == rhs.m_font &&
                    m_flags == rhs.m_flags &&
                    m_text_align == rhs.m_text_align &&
                    m_text_flags == rhs.m_text_flags;
@@ -639,7 +639,6 @@ private:
         }
 
     private:
-        Rect m_rect;
         const Font* m_font{nullptr};
         Widget::Flags m_flags;
         AlignFlags m_text_align;
