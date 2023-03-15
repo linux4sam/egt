@@ -8,7 +8,6 @@
 #endif
 
 #include "detail/utf8text.h"
-#include "egt/canvas.h"
 #include "egt/detail/alignment.h"
 #include "egt/detail/enum.h"
 #include "egt/detail/layout.h"
@@ -768,6 +767,8 @@ TextBox::TextBox(const std::string& text,
                  const TextFlags& flags) noexcept
     : TextWidget( {}, rect, text_align),
 m_timer(std::chrono::seconds(1)),
+m_canvas(Size(1, 1)),
+m_cr(m_canvas.context().get()),
 m_text_flags(flags)
 {
     name("TextBox" + std::to_string(m_widgetid));
@@ -797,7 +798,9 @@ TextBox::TextBox(Frame& parent,
 
 TextBox::TextBox(Serializer::Properties& props, bool is_derived) noexcept
     : TextWidget(props, true),
-      m_timer(std::chrono::seconds(1))
+      m_timer(std::chrono::seconds(1)),
+      m_canvas(Size(1, 1)),
+      m_cr(m_canvas.context().get())
 {
     initialize(false);
 
@@ -972,11 +975,8 @@ void TextBox::draw(Painter& painter, const Rect& rect)
 {
     State state(content_area(), &font(), flags(), text_align(), text_flags());
 
-    if ((m_cr.get() != painter.context().get()) ||
-        m_state != state)
+    if (m_state != state)
     {
-        m_cr = painter.context();
-
         m_state = std::move(state);
         prepare_text(m_rects);
         get_cursor_rect();
@@ -1060,10 +1060,7 @@ size_t TextBox::width_to_len(const std::string& str) const
 {
     const auto b = content_area();
 
-    Canvas c(Size(1, 1));
-    auto cr = c.context();
-    Painter painter(cr);
-    painter.set(font());
+    cairo_set_scaled_font(context(), font().scaled_font());
 
     size_t len = 0;
     float total = 0;
@@ -1072,7 +1069,7 @@ size_t TextBox::width_to_len(const std::string& str) const
     {
         const auto txt = detail::utf8_char_to_string(ch.base(), str.cend());
         cairo_text_extents_t te;
-        cairo_text_extents(cr.get(), txt.c_str(), &te);
+        cairo_text_extents(context(), txt.c_str(), &te);
         if (total + static_cast<float>(te.x_advance) > b.width())
             return len;
         total += static_cast<float>(te.x_advance);
@@ -1134,17 +1131,10 @@ size_t TextBox::insert(const std::string& str)
 
         on_text_changed.invoke();
 
-        if (m_cr)
-        {
-            TextRects rects;
-            prepare_text(rects);
-            tag_text(m_rects, rects);
-            m_rects = std::move(rects);
-        }
-        else
-        {
-            damage();
-        }
+        TextRects rects;
+        prepare_text(rects);
+        tag_text(m_rects, rects);
+        m_rects = std::move(rects);
 
         cursor_forward(len);
         continue_show_cursor();
@@ -1191,12 +1181,8 @@ void TextBox::cursor_set(size_t pos)
     if (m_cursor_pos != pos)
     {
         m_cursor_pos = pos;
-
-        if (m_cr)
-        {
-            damage_cursor();
-            get_cursor_rect();
-        }
+        damage_cursor();
+        get_cursor_rect();
     }
 
     show_cursor();
@@ -1209,12 +1195,6 @@ void TextBox::selection_all()
 
 void TextBox::selection_damage()
 {
-    if (!m_cr)
-    {
-        damage();
-        return;
-    }
-
     consolidate(m_rects);
     TextRects rects(m_rects);
     clear_selection(rects);
@@ -1336,17 +1316,10 @@ void TextBox::selection_delete()
         selection_clear();
         on_text_changed.invoke();
 
-        if (m_cr)
-        {
-            TextRects rects;
-            prepare_text(rects);
-            tag_text(m_rects, rects);
-            m_rects = std::move(rects);
-        }
-        else
-        {
-            damage();
-        }
+        TextRects rects;
+        prepare_text(rects);
+        tag_text(m_rects, rects);
+        m_rects = std::move(rects);
     }
 }
 

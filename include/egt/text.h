@@ -11,6 +11,7 @@
  * @brief Working with text input.
  */
 
+#include <egt/canvas.h>
 #include <egt/detail/meta.h>
 #include <egt/flags.h>
 #include <egt/font.h>
@@ -443,7 +444,7 @@ protected:
     void selection_damage();
 
     /// Get the cairo context to compute text extents, hence the text layout.
-    cairo_t* context() const { return m_cr.get(); }
+    cairo_t* context() const { return m_cr; }
 
     /// Split the text into atomic tokens that fill the TextRects parameter.
     void tokenize(TextRects& rects);
@@ -567,10 +568,13 @@ protected:
     /// Callbacks invoked to validate the input.
     ValidatorCallbackArray m_validator_callbacks;
 
+    /// The canvas that provides a cairo context to compute the text layout.
+    Canvas m_canvas;
+
     /**
      * Cairo context.
      */
-    shared_cairo_t m_cr;
+    cairo_t* m_cr{nullptr};
 
     TextRects m_rects;
     Rect m_cursor_rect;
