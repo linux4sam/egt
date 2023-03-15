@@ -578,6 +578,9 @@ protected:
     /// Resize the sliders whenever the widget size changes.
     void resize_sliders();
 
+    /// Return the lowest multiple of 'screen_size' / 2, greater than 'size'.
+    static DefaultDim half_screens(DefaultDim size, DefaultDim screen_size);
+
     /// Update the horizontal slider.
     void update_hslider();
 
@@ -586,6 +589,15 @@ protected:
 
     /// Update the horizontal and vertical sliders as needed.
     void update_sliders();
+
+    /// Move the horizontal slider, if needed, to track the cursor.
+    void move_hslider();
+
+    /// Move the vertical slider, if needed, to track the cursor.
+    void move_vslider();
+
+    /// Move sliders, if needed, to track the cursor.
+    void move_sliders();
 
     /// Draw sliders.
     void draw_sliders(Painter& painter, const Rect& rect);

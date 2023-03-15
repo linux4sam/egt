@@ -742,6 +742,7 @@ void TextBox::refresh_text_area()
     get_cursor_rect();
     invalidate_text_rect();
     update_sliders();
+    move_sliders();
 }
 
 Rect TextBox::text_area() const
@@ -837,6 +838,14 @@ void TextBox::resize_sliders()
     }
 
     update_sliders();
+    move_sliders();
+}
+
+DefaultDim TextBox::half_screens(DefaultDim size, DefaultDim screen_size)
+{
+    DefaultDim n = size;
+    DefaultDim d = screen_size >> 1;
+    return ((n + d - 1) / d) * d;
 }
 
 void TextBox::update_hslider()
@@ -856,7 +865,7 @@ void TextBox::update_hslider()
 
     auto draw_sz = text_area().size();
     auto text_sz = text_size();
-    DefaultDim delta = text_sz.width() - draw_sz.width();
+    DefaultDim delta = half_screens(text_sz.width() - draw_sz.width(), draw_sz.width());
     bool visible = delta > 0;
 
     if (visible && m_hslider.ending() != delta)
@@ -897,7 +906,7 @@ void TextBox::update_vslider()
 
     auto draw_sz = text_area().size();
     auto text_sz = text_size();
-    DefaultDim delta = text_sz.height() - draw_sz.height();
+    DefaultDim delta = half_screens(text_sz.height() - draw_sz.height(), draw_sz.height());
     bool visible = delta > 0;
 
     if (visible && m_vslider.ending() != delta)
@@ -925,6 +934,50 @@ void TextBox::update_sliders()
 {
     update_hslider();
     update_vslider();
+}
+
+void TextBox::move_hslider()
+{
+    if (!m_hslider.visible())
+        return;
+
+    const auto area = text_area();
+
+    if (m_cursor_rect.left() < area.left())
+    {
+        auto delta = half_screens(area.left() - m_cursor_rect.left(), area.width());
+        m_hslider.value(m_hslider.value() - delta);
+    }
+    else if (m_cursor_rect.right() > area.right())
+    {
+        auto delta = half_screens(m_cursor_rect.right() - area.right(), area.width());
+        m_hslider.value(m_hslider.value() + delta);
+    }
+}
+
+void TextBox::move_vslider()
+{
+    if (!m_vslider.visible())
+        return;
+
+    const auto area = text_area();
+
+    if (m_cursor_rect.top() < area.top())
+    {
+        auto delta = half_screens(area.top() - m_cursor_rect.top(), area.height());
+        m_vslider.value(m_vslider.value() - delta);
+    }
+    else if (m_cursor_rect.bottom() > area.bottom())
+    {
+        auto delta = half_screens(m_cursor_rect.bottom() - area.bottom(), area.height());
+        m_vslider.value(m_vslider.value() + delta);
+    }
+}
+
+void TextBox::move_sliders()
+{
+    move_hslider();
+    move_vslider();
 }
 
 void TextBox::draw_sliders(Painter& painter, const Rect& rect)
@@ -1163,6 +1216,7 @@ void TextBox::handle_key(const Key& key)
         {
             cursor_backward();
         }
+        move_sliders();
         break;
     }
     case EKEY_RIGHT:
@@ -1182,6 +1236,7 @@ void TextBox::handle_key(const Key& key)
         {
             cursor_forward();
         }
+        move_sliders();
         break;
     }
     /// NOLINTNEXTLINE(bugprone-branch-clone)
@@ -1191,6 +1246,7 @@ void TextBox::handle_key(const Key& key)
         {
             // TODO
         }
+        move_sliders();
         break;
     }
     case EKEY_DOWN:
@@ -1199,17 +1255,20 @@ void TextBox::handle_key(const Key& key)
         {
             // TODO
         }
+        move_sliders();
         break;
     }
     /// NOLINTNEXTLINE(bugprone-branch-clone)
     case EKEY_END:
     {
         // TODO
+        move_sliders();
         break;
     }
     case EKEY_HOME:
     {
         // TODO
+        move_sliders();
         break;
     }
     default:
@@ -1294,6 +1353,7 @@ void TextBox::clear()
     TextWidget::clear();
     invalidate_text_rect();
     update_sliders();
+    move_sliders();
 }
 
 void TextBox::max_length(size_t len)
@@ -1406,6 +1466,7 @@ size_t TextBox::insert(const std::string& str)
         continue_show_cursor();
         invalidate_text_rect();
         update_sliders();
+        move_sliders();
     }
 
     return len;
@@ -1605,6 +1666,7 @@ void TextBox::selection_delete()
 
         invalidate_text_rect();
         update_sliders();
+        move_sliders();
     }
 }
 
