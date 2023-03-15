@@ -693,7 +693,6 @@ static void prepare_text(TextRects& rects,
                          const Font& font,
                          const TextBox::TextFlags& flags,
                          const AlignFlags& text_align,
-                         Justification justify,
                          size_t select_start,
                          size_t select_len)
 {
@@ -702,7 +701,7 @@ static void prepare_text(TextRects& rects,
     rects.clear();
 
     tokenize(rects, cr, text, flags);
-    compute_layout(b, rects, justify, Orientation::flex, text_align);
+    compute_layout(b, rects, Justification::start, Orientation::flex, text_align);
     set_selection(rects, cr, select_start, select_len);
 }
 
@@ -1013,7 +1012,6 @@ void TextBox::draw(Painter& painter, const Rect& rect)
                      font(),
                      text_flags(),
                      text_align(),
-                     Justification::start,
                      m_select_start,
                      m_select_len);
 
@@ -1193,7 +1191,6 @@ size_t TextBox::insert(const std::string& str)
                          font(),
                          text_flags(),
                          text_align(),
-                         Justification::start,
                          m_select_start,
                          m_select_len);
             tag_text(text_align(), m_rects, rects, *this, m_cr.get());
@@ -1409,7 +1406,6 @@ void TextBox::selection_delete()
                          font(),
                          text_flags(),
                          text_align(),
-                         Justification::start,
                          m_select_start,
                          m_select_len);
             tag_text(text_align(), m_rects, rects, *this, m_cr.get());
