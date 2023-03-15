@@ -868,14 +868,16 @@ void TextBox::handle_key(const Key& key)
     {
         if (cursor())
         {
-            selection(cursor() - 1, 1);
+            if (!m_select_len)
+                selection(cursor() - 1, 1);
             selection_delete();
         }
         break;
     }
     case EKEY_DELETE:
     {
-        selection(cursor(), 1);
+        if (!m_select_len)
+            selection(cursor(), 1);
         selection_delete();
         break;
     }
