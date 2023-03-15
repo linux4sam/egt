@@ -375,6 +375,24 @@ public:
     void selection_backward(size_t count = 1);
 
     /**
+     * Move the selection cursor to count character(s):
+     * - to the left, if count is negative
+     * - to the right, if count is positive
+     * Do nothing if count is zero.
+     *
+     * Also, set the selection origin (its fixed end), if needed.
+     * In all cases, the cursor is positioned to the new selection cursor.
+     */
+    void selection_move(size_t count);
+
+    /**
+     * Get the position of the moving end of the selection, as opposed to its
+     * origin (the fixed end of the selection).
+     * Set the selection origin, if needed.
+     */
+    EGT_NODISCARD size_t selection_cursor();
+
+    /**
      * Get the start position of the selection.
      */
     EGT_NODISCARD size_t selection_start() const
