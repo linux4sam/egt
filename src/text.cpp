@@ -1320,10 +1320,9 @@ void TextBox::selection_delete()
         utf8::advance(i, m_select_start, m_text.end());
         auto l = i;
         utf8::advance(l, m_select_len, m_text.end());
-        size_t p = utf8::distance(m_text.begin(), i);
 
         m_text.erase(i, l);
-        cursor_set(p);
+        cursor_set(m_select_start);
         selection_clear();
         on_text_changed.invoke();
 
