@@ -361,18 +361,25 @@ std::string TextBox::longest_prefix(const std::string& s1,
 std::string TextBox::longest_suffix(const std::string& s1,
                                     const std::string& s2)
 {
-    utf8::iterator<std::string::const_reverse_iterator> it1(s1.crbegin(), s1.crbegin(), s1.crend());
-    utf8::iterator<std::string::const_reverse_iterator> end1(s1.crend(), s1.crbegin(), s1.crend());
-    utf8::iterator<std::string::const_reverse_iterator> it2(s2.crbegin(), s2.crbegin(), s2.crend());
-    utf8::iterator<std::string::const_reverse_iterator> end2(s2.crend(), s2.crbegin(), s2.crend());
+    detail::utf8_const_iterator begin1(s1.cbegin(), s1.cbegin(), s1.cend());
+    detail::utf8_const_iterator it1(s1.cend(), s1.cbegin(), s1.cend());
+    detail::utf8_const_iterator begin2(s2.cbegin(), s2.cbegin(), s2.cend());
+    detail::utf8_const_iterator it2(s2.cend(), s2.cbegin(), s2.cend());
 
-    while (it1 != end1 && it2 != end2 && *it1 == *it2)
+    while (it1 != begin1 && it2 != begin2)
     {
-        ++it1;
-        ++it2;
+        auto next1 = it1--;
+        auto next2 = it2--;
+
+        if (*it1 != *it2)
+        {
+            it1 = next1;
+            it2 = next2;
+            break;
+        }
     }
 
-    return std::string(it1.base().base(), s1.cend());
+    return std::string(it1.base(), s1.cend());
 }
 
 void TextBox::tag_default_aligned_line(TextRects& prev,
