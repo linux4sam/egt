@@ -182,6 +182,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/detail/math.h \
 ../include/egt/detail/meta.h \
 ../include/egt/detail/mousegesture.h \
+../include/egt/detail/range.h \
 ../include/egt/detail/screen/composerscreen.h \
 ../include/egt/detail/screen/memoryscreen.h \
 ../include/egt/detail/string.h \
