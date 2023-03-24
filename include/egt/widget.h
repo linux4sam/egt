@@ -1399,6 +1399,8 @@ public:
 
     ~Widget() noexcept override;
 
+protected:
+
     /**
      * Remove a child widget.
      *
@@ -1426,6 +1428,17 @@ public:
     virtual void begin_draw()
     {
         assert(0);
+    }
+
+    /**
+     * Call the begin_draw() method of the parent.
+     *
+     * As begin_draw() is protected, a subclass of widget is not allowed to call
+     * m_parent->begin_draw(), so use this method.
+     */
+    void begin_draw(Widget* parent)
+    {
+        parent->begin_draw();
     }
 
     /**
@@ -1523,6 +1536,18 @@ public:
     }
 
     /**
+     * Get the child draw callback of the parent.
+     *
+     * As special_child_draw_callback() is protected, a subclass of widget is
+     * not allowed to call m_parent->special_child_draw_callback(), so use this
+     * method.
+     */
+    EGT_NODISCARD ChildDrawCallback special_child_draw_callback(Widget* parent) const
+    {
+        return parent->special_child_draw_callback();
+    }
+
+    /**
      * Set the special child draw callback.
      */
     void special_child_draw_callback(ChildDrawCallback func)
@@ -1583,8 +1608,6 @@ public:
 
         return nullptr;
     }
-
-protected:
 
     /**
      * Get a const ref of the flags.

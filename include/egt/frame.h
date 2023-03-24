@@ -139,6 +139,8 @@ public:
      */
     bool is_child(Widget* widget) const;
 
+    using Widget::remove;
+
     /**
      * Remove all child widgets.
      */
@@ -222,6 +224,12 @@ public:
      */
     void paint_children_to_file();
 
+    using Widget::zorder;
+    using Widget::zorder_down;
+    using Widget::zorder_up;
+    using Widget::zorder_bottom;
+    using Widget::zorder_top;
+
     void show() override
     {
         if (visible())
@@ -258,6 +266,8 @@ public:
         add(w);
         return w;
     }
+
+    using Widget::special_child_draw_callback;
 
     void serialize(Serializer& serializer) const override;
 

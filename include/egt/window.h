@@ -156,6 +156,7 @@ public:
      * the opposite change happens to the rectangle origin.
      */
     void begin_draw() override;
+    using Frame::begin_draw;
 
     /**
      * Set a background image of the window.
@@ -271,7 +272,7 @@ protected:
     {
         if (m_parent)
         {
-            m_parent->begin_draw();
+            begin_draw(m_parent);
             return;
         }
 
