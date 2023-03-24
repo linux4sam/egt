@@ -336,7 +336,7 @@ void StaticGrid::layout()
     if (m_in_layout)
         return;
 
-    if (m_children.empty())
+    if (children().empty())
         return;
 
     m_in_layout = true;

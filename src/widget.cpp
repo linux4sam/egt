@@ -137,7 +137,7 @@ void Widget::handle(Event& event)
 
     invoke_handlers(event);
 
-    if (!m_children.empty())
+    if (!children().empty())
     {
         switch (event.id())
         {
@@ -224,7 +224,7 @@ void Widget::resize(const Size& size)
 
         parent_layout();
 
-        if (!m_children.empty())
+        if (!children().empty())
             layout();
     }
 }
@@ -698,12 +698,12 @@ void Widget::zorder(size_t rank)
 
 void Widget::zorder_down(const Widget* widget)
 {
-    auto i = std::find_if(m_children.begin(), m_children.end(),
+    auto i = std::find_if(children().begin(), children().end(),
                           [widget](const auto & ptr)
     {
         return ptr.get() == widget;
     });
-    if (i != m_children.end() && i != m_children.begin())
+    if (i != children().end() && i != children().begin())
     {
         auto to = std::prev(i);
         (*i)->damage();
@@ -714,15 +714,15 @@ void Widget::zorder_down(const Widget* widget)
 
 void Widget::zorder_up(const Widget* widget)
 {
-    auto i = std::find_if(m_children.begin(), m_children.end(),
+    auto i = std::find_if(children().begin(), children().end(),
                           [widget](const auto & ptr)
     {
         return ptr.get() == widget;
     });
-    if (i != m_children.end())
+    if (i != children().end())
     {
         auto to = std::next(i);
-        if (to != m_children.end())
+        if (to != children().end())
         {
             (*i)->damage();
             (*to)->damage();
@@ -734,48 +734,48 @@ void Widget::zorder_up(const Widget* widget)
 
 void Widget::zorder_bottom(const Widget* widget)
 {
-    if (m_children.size() <= 1)
+    if (children().size() <= 1)
         return;
 
-    auto i = std::find_if(m_children.begin(), m_children.end(),
+    auto i = std::find_if(children().begin(), children().end(),
                           [widget](const auto & ptr)
     {
         return ptr.get() == widget;
     });
-    if (i != m_children.end() && i != m_children.begin())
+    if (i != children().end() && i != children().begin())
     {
-        m_children.splice(m_children.begin(), m_children, i, std::next(i));
+        children().splice(children().begin(), children(), i, std::next(i));
         layout();
     }
 }
 
 void Widget::zorder_top(const Widget* widget)
 {
-    if (m_children.size() <= 1)
+    if (children().size() <= 1)
         return;
 
-    auto i = std::find_if(m_children.begin(), m_children.end(),
+    auto i = std::find_if(children().begin(), children().end(),
                           [widget](const auto & ptr)
     {
         return ptr.get() == widget;
     });
-    if (i != m_children.end())
+    if (i != children().end())
     {
-        m_children.splice(m_children.end(), m_children, i, std::next(i));
+        children().splice(children().end(), children(), i, std::next(i));
         layout();
     }
 }
 
 size_t Widget::zorder(const Widget* widget) const
 {
-    auto i = std::find_if(m_children.begin(), m_children.end(),
+    auto i = std::find_if(children().begin(), children().end(),
                           [widget](const auto & ptr)
     {
         return ptr.get() == widget;
     });
-    if (i != m_children.end())
+    if (i != children().end())
     {
-        return std::distance(m_children.begin(), i);
+        return std::distance(children().begin(), i);
     }
 
     return 0;
@@ -783,22 +783,22 @@ size_t Widget::zorder(const Widget* widget) const
 
 void Widget::zorder(const Widget* widget, size_t rank)
 {
-    auto i = std::find_if(m_children.begin(), m_children.end(),
+    auto i = std::find_if(children().begin(), children().end(),
                           [widget](const auto & ptr)
     {
         return ptr.get() == widget;
     });
-    if (i != m_children.end())
+    if (i != children().end())
     {
-        size_t old_rank = std::distance(m_children.begin(), i);
-        rank = std::min(rank, m_children.size() - 1);
+        size_t old_rank = std::distance(children().begin(), i);
+        rank = std::min(rank, children().size() - 1);
         if (rank != old_rank)
         {
-            auto j = std::next(m_children.begin(), rank);
+            auto j = std::next(children().begin(), rank);
             if (rank > old_rank)
                 std::advance(j, 1);
 
-            m_children.splice(j, m_children, i, std::next(i));
+            children().splice(j, children(), i, std::next(i));
             layout();
         }
     }
@@ -1262,13 +1262,13 @@ void Widget::draw(Painter& painter, const Rect& rect)
         {});
     }
 
-    if (m_children.empty())
+    if (children().empty())
         return;
 
     // keep the crect inside our content area
     crect = Rect::intersection(crect, to_child(content_area()));
 
-    for (auto& child : m_children)
+    for (auto& child : children())
     {
         if (!child->visible())
             continue;
@@ -1365,17 +1365,17 @@ void Widget::remove(Widget* widget)
     if (!widget)
         return;
 
-    auto i = std::find_if(m_children.begin(), m_children.end(),
+    auto i = std::find_if(children().begin(), children().end(),
                           [widget](const auto & ptr)
     {
         return ptr.get() == widget;
     });
-    if (i != m_children.end())
+    if (i != children().end())
     {
         // note order here - damage and then unset parent
         (*i)->damage();
         (*i)->m_parent = nullptr;
-        m_children.erase(i);
+        children().erase(i);
         layout();
     }
     else if (widget->m_parent == this)

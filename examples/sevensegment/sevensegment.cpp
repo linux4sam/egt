@@ -57,7 +57,7 @@ public:
     void apply(int digit)
     {
         // hide all of the segments first and then go turn the ones on we want
-        for (auto& child : m_children)
+        for (auto& child : children())
         {
             if (child->name().rfind("#pl_100_seg_", 0) == 0)
                 child->hide();

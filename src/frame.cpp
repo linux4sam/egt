@@ -50,7 +50,7 @@ void Frame::add(const std::shared_ptr<Widget>& widget)
         return;
 
     widget->set_parent(this);
-    m_children.emplace_back(widget);
+    children().emplace_back(widget);
     layout();
 }
 
@@ -59,25 +59,25 @@ bool Frame::is_child(Widget* widget) const
     if (!widget)
         return false;
 
-    auto i = std::find_if(m_children.begin(), m_children.end(),
+    auto i = std::find_if(children().begin(), children().end(),
                           [widget](const auto & ptr)
     {
         return ptr.get() == widget;
     });
 
-    return (i != m_children.end());
+    return (i != children().end());
 }
 
 void Frame::remove_all_basic()
 {
-    for (auto& i : m_children)
+    for (auto& i : children())
     {
         // note order here - damage and then unset parent
         i->damage();
         i->m_parent = nullptr;
     }
 
-    m_children.clear();
+    children().clear();
 }
 
 void Frame::remove_all()
@@ -90,7 +90,7 @@ Widget* Frame::hit_test(const DisplayPoint& point)
 {
     Point pos = display_to_local(point);
 
-    for (auto& child : detail::reverse_iterate(m_children))
+    for (auto& child : detail::reverse_iterate(children()))
     {
         if (child->box().intersect(pos))
         {
@@ -118,7 +118,7 @@ void Frame::walk(const WalkCallback& callback, int level)
     if (!callback(this, level))
         return;
 
-    for (auto& child : m_children)
+    for (auto& child : children())
         child->walk(callback, level + 1);
 }
 
@@ -140,7 +140,7 @@ void Frame::paint_to_file(const std::string& filename)
 
 void Frame::paint_children_to_file()
 {
-    for (auto& child : m_children)
+    for (auto& child : children())
     {
         if (child->frame())
         {
@@ -162,7 +162,7 @@ void Frame::serialize(Serializer& serializer) const
 
 void Frame::serialize_children(Serializer& serializer) const
 {
-    for (auto& child : m_children)
+    for (auto& child : children())
         serializer.add(child.get());
 }
 
@@ -183,7 +183,7 @@ void Frame::on_screen_resized()
 {
     Widget::on_screen_resized();
 
-    for (auto& child : m_children)
+    for (auto& child : children())
         child->on_screen_resized();
 }
 

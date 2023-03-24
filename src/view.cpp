@@ -161,7 +161,7 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
                      border(),
                      margin());
 
-    for (auto& child : m_children)
+    for (auto& child : children())
     {
         if (!child->visible())
             continue;
@@ -311,7 +311,7 @@ void ScrolledView::resize_slider()
 Rect ScrolledView::super_rect() const
 {
     auto result = box();
-    for (const auto& child : m_children)
+    for (const auto& child : children())
     {
         result = Rect::merge(result, child->to_parent(child->box()));
     }
@@ -402,7 +402,7 @@ void ScrolledView::handle(Event& event)
          */
         Point pos = display_to_local(event.pointer().point) - m_offset;
 
-        for (auto& child : detail::reverse_iterate(m_children))
+        for (auto& child : detail::reverse_iterate(children()))
         {
             if (child->readonly())
                 continue;

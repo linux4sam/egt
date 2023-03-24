@@ -25,7 +25,7 @@ public:
         add(expand(m_play));
         add(expand(m_next));
 
-        for (auto& child : m_children)
+        for (auto& child : children())
             child->fill_flags().clear();
 
         // no forward/rewind support in this example for now

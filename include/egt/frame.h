@@ -146,20 +146,22 @@ public:
      */
     void remove_all();
 
+    using Widget::children;
+
     /**
      * Get the number of children widgets.
      */
-    EGT_NODISCARD size_t count_children() const { return m_children.size(); }
+    EGT_NODISCARD size_t count_children() const { return children().size(); }
 
     /**
      * Get a child widget at a specific index.
      */
     EGT_NODISCARD std::shared_ptr<Widget> child_at(size_t index) const
     {
-        if (index >= m_children.size())
+        if (index >= children().size())
             return nullptr;
         else
-            return *std::next(m_children.begin(), index);
+            return *std::next(children().begin(), index);
     }
 
     /**
@@ -185,23 +187,23 @@ public:
         if (name.empty())
             return nullptr;
 
-        auto i = std::find_if(m_children.begin(), m_children.end(),
+        auto i = std::find_if(children().begin(), children().end(),
                               [&name](const auto & obj)
         {
             return obj->name() == name;
         });
 
         // just return first one
-        if (i != m_children.end())
+        if (i != children().end())
             return std::dynamic_pointer_cast<T>(*i);
 
-        i = std::find_if(m_children.begin(), m_children.end(),
+        i = std::find_if(children().begin(), children().end(),
                          [](const auto & obj)
         {
             return obj->frame();
         });
 
-        for (; i != m_children.end(); ++i)
+        for (; i != children().end(); ++i)
         {
             auto frame = dynamic_cast<Frame*>((*i).get());
             if (frame)

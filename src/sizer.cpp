@@ -60,7 +60,7 @@ void BoxSizer::layout()
     if (m_in_layout)
         return;
 
-    if (m_children.empty())
+    if (children().empty())
         return;
 
     m_in_layout = true;
@@ -96,7 +96,7 @@ void BoxSizer::layout()
 
     std::vector<detail::LayoutRect> rects;
 
-    for (auto& child : m_children)
+    for (auto& child : children())
     {
         auto min = child->box();
         // Use the user requested box. The intermediate steps where the sizer
@@ -135,7 +135,7 @@ void BoxSizer::layout()
 
     detail::flex_layout(content_area(), rects, justify(), orient());
 
-    auto child = m_children.begin();
+    auto child = children().begin();
     for (const auto& r : rects)
     {
         (*child)->box(r.rect - point() + content_area().point());

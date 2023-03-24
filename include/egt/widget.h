@@ -1705,6 +1705,18 @@ protected:
     /// Helper type for an array of children.
     using ChildrenArray = std::list<std::shared_ptr<Widget>>;
 
+    /// Return the array of child widgets.
+    EGT_NODISCARD const ChildrenArray& children() const
+    {
+        return m_children;
+    }
+
+    /// Return the array of child widgets.
+    EGT_NODISCARD ChildrenArray& children()
+    {
+        return m_children;
+    }
+
     /// Array of child widgets in the order they were added.
     ChildrenArray m_children;
 
