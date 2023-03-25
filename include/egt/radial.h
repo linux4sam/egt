@@ -169,7 +169,6 @@ public:
             damage();
         }
     }
-    using Widget::remove;
 
     using Widget::color;
 

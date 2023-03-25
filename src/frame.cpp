@@ -49,11 +49,15 @@ void Frame::add(const std::shared_ptr<Widget>& widget)
     if (!widget)
         return;
 
-    widget->set_parent(this);
-    m_subordinates.emplace_back(widget);
+    bool first_subordinate = m_subordinates.empty();
 
-    if (children().empty())
+    widget->set_parent(this);
+    m_subordinates.emplace(m_components_begin, widget);
+
+    if (first_subordinate || children().empty())
+    {
         children().begin(m_subordinates.begin());
+    }
 
     layout();
 }
@@ -72,6 +76,32 @@ bool Frame::is_child(Widget* widget) const
     return (i != children().end());
 }
 
+void Frame::remove(Widget* widget)
+{
+    if (!widget)
+        return;
+
+    auto i = std::find_if(children().begin(), children().end(),
+                          [widget](const auto & ptr)
+    {
+        return ptr.get() == widget;
+    });
+    if (i != children().end())
+    {
+        // note order here - damage and then unset parent
+        (*i)->damage();
+        (*i)->m_parent = nullptr;
+        m_subordinates.erase(i);
+        if (i == children().begin())
+            children().begin(m_subordinates.begin());
+        layout();
+    }
+    else if (widget->m_parent == this)
+    {
+        widget->m_parent = nullptr;
+    }
+}
+
 void Frame::remove_all_basic()
 {
     for (auto& i : children())
@@ -81,7 +111,10 @@ void Frame::remove_all_basic()
         i->m_parent = nullptr;
     }
 
-    m_subordinates.clear();
+    m_subordinates.erase(children().begin(), children().end());
+    m_components_begin = m_subordinates.begin();
+    children().begin(m_components_begin);
+    children().end(m_components_begin);
 }
 
 void Frame::remove_all()

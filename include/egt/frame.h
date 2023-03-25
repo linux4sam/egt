@@ -149,7 +149,14 @@ public:
         return Widget::to_subordinate(rect);
     }
 
-    using Widget::remove;
+    /**
+     * Remove a child widget.
+     *
+     * The inverse of this call is Frame::add().
+     *
+     * @param widget The widget.
+     */
+    virtual void remove(Widget* widget);
 
     /**
      * Remove all child widgets.

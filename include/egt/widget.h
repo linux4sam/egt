@@ -133,6 +133,11 @@ public:
          * Is the widget in a checked state.
          */
         checked = detail::bit(11),
+
+        /**
+         * Is the widget a component.
+         */
+        component = detail::bit(12),
     };
 
     /// Widget flags
@@ -1403,15 +1408,6 @@ public:
 protected:
 
     /**
-     * Remove a child widget.
-     *
-     * The inverse of this call is Frame::add().
-     *
-     * @param widget The widget.
-     */
-    virtual void remove(Widget* widget);
-
-    /**
      * Special variation of damage() that is to be called explicitly by
      * subordinate widgets.
      */
@@ -1724,6 +1720,25 @@ protected:
     /// Array of child widgets in the order they were added.
     detail::Range<SubordinatesArray> m_children;
 
+    /// Add a component.
+    void add_component(Widget& widget);
+
+    /// Remove a component.
+    void remove_component(Widget* widget);
+
+    /// Set the component flag.
+    void component(bool value);
+
+    /// Get the component status.
+    EGT_NODISCARD bool component() const;
+    /**
+     * Iterator for the beginning of components which are positionned after
+     * children in the subordinates array. Components are child widget as well,
+     * but not added through the Frame interface. Components are composition
+     * widgets and users must not be able to add extra ones or to remove them.
+     */
+    SubordinatesArray::iterator m_components_begin;
+
     /// The damage array for this widget.
     Screen::DamageArray m_damage;
 
@@ -1831,7 +1846,7 @@ private:
 
 /// Enum string conversion map
 template<>
-EGT_API const std::pair<Widget::Flag, char const*> detail::EnumStrings<Widget::Flag>::data[12];
+EGT_API const std::pair<Widget::Flag, char const*> detail::EnumStrings<Widget::Flag>::data[13];
 
 /// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Widget::Flag& flag);
