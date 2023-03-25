@@ -402,7 +402,7 @@ void ScrolledView::handle(Event& event)
          */
         Point pos = display_to_local(event.pointer().point) - m_offset;
 
-        for (auto& child : detail::reverse_iterate(children()))
+        for (auto& child : detail::reverse_iterate(m_subordinates))
         {
             if (child->readonly())
                 continue;

@@ -50,7 +50,11 @@ void Frame::add(const std::shared_ptr<Widget>& widget)
         return;
 
     widget->set_parent(this);
-    children().emplace_back(widget);
+    m_subordinates.emplace_back(widget);
+
+    if (children().empty())
+        children().begin(m_subordinates.begin());
+
     layout();
 }
 
@@ -77,7 +81,7 @@ void Frame::remove_all_basic()
         i->m_parent = nullptr;
     }
 
-    children().clear();
+    m_subordinates.clear();
 }
 
 void Frame::remove_all()
@@ -90,7 +94,7 @@ Widget* Frame::hit_test(const DisplayPoint& point)
 {
     Point pos = display_to_local(point);
 
-    for (auto& child : detail::reverse_iterate(children()))
+    for (auto& child : detail::reverse_iterate(m_subordinates))
     {
         if (child->box().intersect(pos))
         {

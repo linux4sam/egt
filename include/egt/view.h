@@ -110,11 +110,6 @@ public:
         Frame::damage(box());
     }
 
-    void damage_from_child(const Rect& rect) override
-    {
-        damage(rect + m_offset);
-    }
-
     /**
      * Get the current offset.
      *
@@ -222,6 +217,11 @@ public:
     static Policy str2policy(const std::string& str);
 
 protected:
+
+    void damage_from_subordinate(const Rect& rect) override
+    {
+        damage(rect + m_offset);
+    }
 
     /// Horizontal scrollable
     EGT_NODISCARD bool hscrollable() const

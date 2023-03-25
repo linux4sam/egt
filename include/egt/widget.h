@@ -14,6 +14,7 @@
 #include <egt/app.h>
 #include <egt/detail/enum.h>
 #include <egt/detail/meta.h>
+#include <egt/detail/range.h>
 #include <egt/event.h>
 #include <egt/flags.h>
 #include <egt/font.h>
@@ -1411,10 +1412,10 @@ protected:
     virtual void remove(Widget* widget);
 
     /**
-     * Special variation of damage() that is to be called explicitly by child
-     * widgets.
+     * Special variation of damage() that is to be called explicitly by
+     * subordinate widgets.
      */
-    virtual void damage_from_child(const Rect& rect)
+    virtual void damage_from_subordinate(const Rect& rect)
     {
         damage(rect);
     }
@@ -1442,19 +1443,19 @@ protected:
     }
 
     /**
-     * Convert a point with an origin of the current widget to child origin.
+     * Convert a point with an origin of the current widget to subordinate origin.
      */
-    EGT_NODISCARD virtual Point to_child(const Point& p) const
+    EGT_NODISCARD virtual Point to_subordinate(const Point& p) const
     {
         return p - point();
     }
 
     /**
-     * @see Widget::to_child();
+     * @see Widget::to_subordinate();
      */
-    EGT_NODISCARD Rect to_child(Rect rect) const
+    EGT_NODISCARD Rect to_subordinate(Rect rect) const
     {
-        rect.point(to_child(rect.point()));
+        rect.point(to_subordinate(rect.point()));
         return rect;
     }
 
@@ -1697,28 +1698,31 @@ protected:
     void deserialize_leaf(Serializer::Properties& props);
 
     /// @private
-    void draw_child(Painter& painter, const Rect& crect, Widget* child);
+    void draw_subordinate(Painter& painter, const Rect& crect, Widget* child);
 
     /// Used internally for calling the special child draw function.
     ChildDrawCallback m_special_child_draw_callback;
 
-    /// Helper type for an array of children.
-    using ChildrenArray = std::list<std::shared_ptr<Widget>>;
+    /// Helper type for an array of subordinate widgets.
+    using SubordinatesArray = std::list<std::shared_ptr<Widget>>;
+
+    /// Array of subordinates widgets split in child widgets and component widgets.
+    SubordinatesArray m_subordinates;
 
     /// Return the array of child widgets.
-    EGT_NODISCARD const ChildrenArray& children() const
+    EGT_NODISCARD const detail::Range<SubordinatesArray> children() const
     {
         return m_children;
     }
 
     /// Return the array of child widgets.
-    EGT_NODISCARD ChildrenArray& children()
+    EGT_NODISCARD detail::Range<SubordinatesArray>& children()
     {
         return m_children;
     }
 
     /// Array of child widgets in the order they were added.
-    ChildrenArray m_children;
+    detail::Range<SubordinatesArray> m_children;
 
     /// The damage array for this widget.
     Screen::DamageArray m_damage;

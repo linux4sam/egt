@@ -64,6 +64,9 @@ Widget::Widget(const Rect& rect, const Widget::Flags& flags) noexcept
       m_widgetid(global_widget_id++),
       m_widget_flags(flags)
 {
+    m_children.begin(m_subordinates.begin());
+    m_children.end(m_subordinates.end());
+
     m_align.on_change([this]()
     {
         parent_layout();
@@ -86,6 +89,9 @@ Widget::Widget(Serializer::Properties& props, bool is_derived) noexcept
     deserialize(props);
 
     m_user_requested_box = m_box;
+
+    m_children.begin(m_subordinates.begin());
+    m_children.end(m_subordinates.end());
 
     m_align.on_change([this]()
     {
@@ -137,7 +143,7 @@ void Widget::handle(Event& event)
 
     invoke_handlers(event);
 
-    if (!children().empty())
+    if (!m_subordinates.empty())
     {
         switch (event.id())
         {
@@ -153,14 +159,14 @@ void Widget::handle(Event& event)
         {
             auto pos = display_to_local(event.pointer().point);
 
-            for (auto& child : detail::reverse_iterate(m_children))
+            for (auto& subordinate : detail::reverse_iterate(m_subordinates))
             {
-                if (!child->can_handle_event())
+                if (!subordinate->can_handle_event())
                     continue;
 
-                if (child->box().intersect(pos))
+                if (subordinate->box().intersect(pos))
                 {
-                    child->handle(event);
+                    subordinate->handle(event);
                     break;
                 }
             }
@@ -172,12 +178,12 @@ void Widget::handle(Event& event)
         case EventId::keyboard_up:
         case EventId::keyboard_repeat:
         {
-            for (auto& child : detail::reverse_iterate(m_children))
+            for (auto& subordinate : detail::reverse_iterate(m_subordinates))
             {
-                if (!child->can_handle_event())
+                if (!subordinate->can_handle_event())
                     continue;
 
-                child->handle(event);
+                subordinate->handle(event);
                 if (event.quit())
                     return;
             }
@@ -224,7 +230,7 @@ void Widget::resize(const Size& size)
 
         parent_layout();
 
-        if (!children().empty())
+        if (!m_subordinates.empty())
             layout();
     }
 }
@@ -436,7 +442,7 @@ void Widget::damage(const Rect& rect)
     if (!has_screen())
     {
         if (parent())
-            parent()->damage_from_child(to_parent(rect));
+            parent()->damage_from_subordinate(to_parent(rect));
 
         // have no parent or screen - nowhere to put damage
         return;
@@ -465,7 +471,7 @@ void Widget::add_damage(const Rect& rect)
     // No damage outside of our box().  There are cases where this is expected,
     // for example, when a widget is halfway off the screen. So, we truncate the
     // to just the part we care about.
-    auto r = Rect::intersection(rect, to_child(box()));
+    auto r = Rect::intersection(rect, to_subordinate(box()));
 
     Screen::damage_algorithm(m_damage, r);
 }
@@ -709,6 +715,9 @@ void Widget::zorder_down(const Widget* widget)
         (*i)->damage();
         (*to)->damage();
         std::iter_swap(i, to);
+        if (to == children().begin())
+            children().begin(m_subordinates.begin());
+        layout();
     }
 }
 
@@ -727,6 +736,8 @@ void Widget::zorder_up(const Widget* widget)
             (*i)->damage();
             (*to)->damage();
             std::iter_swap(i, to);
+            if (i == children().begin())
+                children().begin(m_subordinates.begin());
             layout();
         }
     }
@@ -744,7 +755,8 @@ void Widget::zorder_bottom(const Widget* widget)
     });
     if (i != children().end() && i != children().begin())
     {
-        children().splice(children().begin(), children(), i, std::next(i));
+        m_subordinates.splice(children().begin(), m_subordinates, i, std::next(i));
+        children().begin(m_subordinates.begin());
         layout();
     }
 }
@@ -759,9 +771,11 @@ void Widget::zorder_top(const Widget* widget)
     {
         return ptr.get() == widget;
     });
-    if (i != children().end())
+    if (i != children().end() && i != std::prev(children().end()))
     {
-        children().splice(children().end(), children(), i, std::next(i));
+        m_subordinates.splice(children().end(), m_subordinates, i, std::next(i));
+        if (i == children().begin())
+            children().begin(m_subordinates.begin());
         layout();
     }
 }
@@ -798,7 +812,9 @@ void Widget::zorder(const Widget* widget, size_t rank)
             if (rank > old_rank)
                 std::advance(j, 1);
 
-            children().splice(j, children(), i, std::next(i));
+            m_subordinates.splice(j, m_subordinates, i, std::next(i));
+            if (i == children().begin() || j == children().begin())
+                children().begin(m_subordinates.begin());
             layout();
         }
     }
@@ -832,7 +848,7 @@ Rect Widget::content_area() const
 
 void Widget::layout()
 {
-    if (m_children.empty())
+    if (m_subordinates.empty())
     {
         if (!flags().is_set(Widget::Flag::no_autoresize))
         {
@@ -865,23 +881,23 @@ void Widget::layout()
 
         auto area = content_area();
 
-        for (auto& child : m_children)
+        for (auto& subordinate : m_subordinates)
         {
-            auto bounding = to_child(area);
+            auto bounding = to_subordinate(area);
             if (bounding.empty())
                 continue;
 
-            child->layout();
+            subordinate->layout();
 
-            auto r = detail::align_algorithm(child->box(),
+            auto r = detail::align_algorithm(subordinate->box(),
                                              bounding,
-                                             child->align(),
+                                             subordinate->align(),
                                              0,
-                                             child->horizontal_ratio(),
-                                             child->vertical_ratio(),
-                                             child->xratio(),
-                                             child->yratio());
-            child->box(r);
+                                             subordinate->horizontal_ratio(),
+                                             subordinate->vertical_ratio(),
+                                             subordinate->xratio(),
+                                             subordinate->yratio());
+            subordinate->box(r);
         }
     }
 }
@@ -1238,7 +1254,7 @@ void Widget::draw(Painter& painter, const Rect& rect)
 
         theme().draw_box(painter,
                          fill_flags(),
-                         to_child(box()),
+                         to_subordinate(box()),
                          color(Palette::ColorId::border, group),
                          color(Palette::ColorId::bg, group),
                          border(),
@@ -1253,7 +1269,7 @@ void Widget::draw(Painter& painter, const Rect& rect)
 
         theme().draw_box(painter,
         {Theme::FillFlag::blend},
-        to_child(box()),
+        to_subordinate(box()),
         composer_border,
         composer_bg,
         1,
@@ -1262,27 +1278,27 @@ void Widget::draw(Painter& painter, const Rect& rect)
         {});
     }
 
-    if (children().empty())
+    if (m_subordinates.empty())
         return;
 
     // keep the crect inside our content area
-    crect = Rect::intersection(crect, to_child(content_area()));
+    crect = Rect::intersection(crect, to_subordinate(content_area()));
 
-    for (auto& child : children())
+    for (auto& subordinate : m_subordinates)
     {
-        if (!child->visible())
+        if (!subordinate->visible())
             continue;
 
         // don't draw plane widget as child - this is
         // specifically handled by event loop
-        if (child->plane_window())
+        if (subordinate->plane_window())
             continue;
 
-        draw_child(painter, crect, child.get());
+        draw_subordinate(painter, crect, subordinate.get());
     }
 }
 
-static inline bool time_child_draw_enabled()
+static inline bool time_subordinate_draw_enabled()
 {
     static int value = 0;
     if (value == 0)
@@ -1295,16 +1311,16 @@ static inline bool time_child_draw_enabled()
     return value == 1;
 }
 
-void Widget::draw_child(Painter& painter, const Rect& crect, Widget* child)
+void Widget::draw_subordinate(Painter& painter, const Rect& crect, Widget* subordinate)
 {
-    if (child->box().intersect(crect))
+    if (subordinate->box().intersect(crect))
     {
         // don't give a child a rectangle that is outside of its own box
-        auto r = Rect::intersection(crect, child->box());
+        auto r = Rect::intersection(crect, subordinate->box());
         if (r.empty())
             return;
 
-        if (detail::float_equal(child->alpha(), 1.f))
+        if (detail::float_equal(subordinate->alpha(), 1.f))
         {
             Painter::AutoSaveRestore sr2(painter);
 
@@ -1316,9 +1332,9 @@ void Widget::draw_child(Painter& painter, const Rect& crect, Widget* child)
                 painter.clip();
             }
 
-            detail::code_timer(time_child_draw_enabled(), child->name() + " draw: ", [child, &painter, &r]()
+            detail::code_timer(time_subordinate_draw_enabled(), subordinate->name() + " draw: ", [subordinate, &painter, &r]()
             {
-                child->draw(painter, r);
+                subordinate->draw(painter, r);
             });
         }
         else
@@ -1334,18 +1350,18 @@ void Widget::draw_child(Painter& painter, const Rect& crect, Widget* child)
                     painter.clip();
                 }
 
-                detail::code_timer(time_child_draw_enabled(), child->name() + " draw: ", [child, &painter, &r]()
+                detail::code_timer(time_subordinate_draw_enabled(), subordinate->name() + " draw: ", [subordinate, &painter, &r]()
                 {
-                    child->draw(painter, r);
+                    subordinate->draw(painter, r);
                 });
             }
 
             // we pushed a group for the child to draw into it, now paint that
             // child with its alpha component
-            painter.paint(child->alpha());
+            painter.paint(subordinate->alpha());
         }
 
-        special_child_draw(painter, child);
+        special_child_draw(painter, subordinate);
     }
 }
 
@@ -1365,17 +1381,19 @@ void Widget::remove(Widget* widget)
     if (!widget)
         return;
 
-    auto i = std::find_if(children().begin(), children().end(),
+    auto i = std::find_if(m_subordinates.begin(), m_subordinates.end(),
                           [widget](const auto & ptr)
     {
         return ptr.get() == widget;
     });
-    if (i != children().end())
+    if (i != m_subordinates.end())
     {
         // note order here - damage and then unset parent
         (*i)->damage();
         (*i)->m_parent = nullptr;
-        children().erase(i);
+        m_subordinates.erase(i);
+        if (i == children().begin())
+            children().begin(m_subordinates.begin());
         layout();
     }
     else if (widget->m_parent == this)

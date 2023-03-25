@@ -139,6 +139,16 @@ public:
      */
     bool is_child(Widget* widget) const;
 
+    EGT_NODISCARD virtual Point to_child(const Point& p) const
+    {
+        return Widget::to_subordinate(p);
+    }
+
+    EGT_NODISCARD Rect to_child(Rect rect) const
+    {
+        return Widget::to_subordinate(rect);
+    }
+
     using Widget::remove;
 
     /**
