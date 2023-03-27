@@ -12,12 +12,12 @@
  */
 
 #include <egt/detail/meta.h>
-#include <egt/frame.h>
 #include <egt/label.h>
 #include <egt/signal.h>
 #include <egt/sizer.h>
 #include <egt/string.h>
 #include <egt/view.h>
+#include <egt/widget.h>
 #include <string>
 
 namespace egt
@@ -38,7 +38,7 @@ inline namespace v1
  *
  * @note This interface only supports a vertical Orientation.
  */
-class EGT_API ListBox : public Frame
+class EGT_API ListBox : public Widget
 {
 public:
 
@@ -108,11 +108,11 @@ public:
     {
         if (s != size())
         {
-            Frame::resize(s);
+            Widget::resize(s);
             auto carea = content_area();
             if (!carea.empty())
             {
-                m_view.box(to_child(carea));
+                m_view.box(to_subordinate(carea));
                 m_sizer.resize(carea.size());
             }
         }

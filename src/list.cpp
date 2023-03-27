@@ -24,11 +24,13 @@ ListBox::ListBox(const Rect& rect) noexcept
 {}
 
 ListBox::ListBox(const ItemArray& items, const Rect& rect) noexcept
-    : Frame(rect),
-      m_view(*this, ScrolledView::Policy::never),
+    : Widget(rect),
+      m_view(ScrolledView::Policy::never),
       m_sizer(Orientation::vertical, Justification::start)
 {
     name("ListBox" + std::to_string(m_widgetid));
+
+    add_component(m_view);
 
     fill_flags(Theme::FillFlag::blend);
     border(theme().default_border());
@@ -40,7 +42,7 @@ ListBox::ListBox(const ItemArray& items, const Rect& rect) noexcept
     auto carea = content_area();
     if (!carea.empty())
     {
-        m_view.box(to_child(carea));
+        m_view.box(to_subordinate(carea));
         m_sizer.resize(carea.size());
     }
 
@@ -49,10 +51,12 @@ ListBox::ListBox(const ItemArray& items, const Rect& rect) noexcept
 }
 
 ListBox::ListBox(Serializer::Properties& props, bool is_derived) noexcept
-    : Frame(props, true),
-      m_view(*this, ScrolledView::Policy::never),
+    : Widget(props, true),
+      m_view(ScrolledView::Policy::never),
       m_sizer(Orientation::vertical, Justification::start)
 {
+    add_component(m_view);
+
     m_sizer.align(AlignFlag::expand_horizontal);
 
     m_view.add(m_sizer);
@@ -60,7 +64,7 @@ ListBox::ListBox(Serializer::Properties& props, bool is_derived) noexcept
     auto carea = content_area();
     if (!carea.empty())
     {
-        m_view.box(to_child(carea));
+        m_view.box(to_subordinate(carea));
         m_sizer.resize(carea.size());
     }
 
@@ -151,7 +155,7 @@ void ListBox::handle(Event& event)
         break;
     }
 
-    Frame::handle(event);
+    Widget::handle(event);
 }
 
 void ListBox::selected(size_t index)
