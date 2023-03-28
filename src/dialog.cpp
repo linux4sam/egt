@@ -46,7 +46,7 @@ void Dialog::initialize(bool init_inherited_properties)
     }
 
     m_layout.align(AlignFlag::expand);
-    add(m_layout);
+    add_component(m_layout);
 
     m_title.text_align(AlignFlag::left | AlignFlag::center_vertical);
     m_layout.add(expand_horizontal(m_title));
@@ -149,7 +149,20 @@ void Dialog::resize(const Size& size)
 void Dialog::layout()
 {
     // Resize to min_size_hint if needed and allowed.
-    Widget::layout();
+    if (autoresize())
+    {
+        m_in_layout = true;
+        // cppcheck-suppress unreadVariable
+        auto reset = detail::on_scope_exit([this]() { m_in_layout = false; });
+        auto s = size();
+        auto m = min_size_hint();
+        if (s.width() < m.width())
+            s.width(m.width());
+        if (s.height() < m.height())
+            s.height(m.height());
+        resize(s);
+    }
+
     Popup::layout();
 }
 
