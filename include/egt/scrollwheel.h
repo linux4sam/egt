@@ -168,6 +168,8 @@ public:
 protected:
     /// @private
     void init(bool in_deserialize = false);
+    /// @private
+    void update_orientation();
     /// Array of items.
     ItemArray m_items;
     /// Currently selected index.

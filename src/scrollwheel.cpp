@@ -85,8 +85,26 @@ void Scrollwheel::orient(Orientation orient)
     if (detail::change_if_diff<>(m_orient, orient))
     {
         auto s = selected();
-        init(); // todo
+        update_orientation(); // todo
         selected(s);
+    }
+}
+
+void Scrollwheel::update_orientation()
+{
+    if (m_orient == Orientation::vertical)
+    {
+        m_grid.grid_size(StaticGrid::GridSize(1, 3));
+        m_grid.add(expand(m_label), 0, 1);
+        m_grid.add(expand(m_button_up), 0, 0);
+        m_grid.add(expand(m_button_down), 0, 2);
+    }
+    else
+    {
+        m_grid.grid_size(StaticGrid::GridSize(3, 1));
+        m_grid.add(expand(m_button_up), 0, 0);
+        m_grid.add(expand(m_label), 1, 0);
+        m_grid.add(expand(m_button_down), 2, 0);
     }
 }
 
@@ -105,6 +123,8 @@ void Scrollwheel::init(bool in_deserialize)
     add_component(m_grid);
     expand(m_grid);
 
+    update_orientation();
+
     m_button_up.fill_flags().clear();
     m_button_down.fill_flags().clear();
     m_label.fill_flags().clear();
@@ -116,21 +136,6 @@ void Scrollwheel::init(bool in_deserialize)
     m_label.detach();
     m_button_up.detach();
     m_button_down.detach();
-
-    if (m_orient == Orientation::vertical)
-    {
-        m_grid.grid_size(StaticGrid::GridSize(1, 3));
-        m_grid.add(expand(m_label), 0, 1);
-        m_grid.add(expand(m_button_up), 0, 0);
-        m_grid.add(expand(m_button_down), 0, 2);
-    }
-    else
-    {
-        m_grid.grid_size(StaticGrid::GridSize(3, 1));
-        m_grid.add(expand(m_button_up), 0, 0);
-        m_grid.add(expand(m_label), 1, 0);
-        m_grid.add(expand(m_button_down), 2, 0);
-    }
 
     m_button_up.on_click([this](Event&)
     {
