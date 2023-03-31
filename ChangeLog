@@ -3,6 +3,29 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+### Added
+- Use C++17 std::filesystem API.
+- GstDecoderImpl: can output the pipeline graph if GST_DEBUG_DUMP_DOT_DIR is
+set.
+- Multiline support for Button and Label.
+- TextBox: add selection support.
+- TextBox: add UP, DOWN, HOME, and END keys support.
+- TopWindow title can be set when using X11 or SDL2 backends.
+### Changed
+- Discard libmagic for SVG file detection.
+- Serialization improvements.
+- Inheritance: widgets that are not aimed to offer public API to add or remove
+child widgets can inherit from Widget instead of Frame.
+- Operating System: Windows support improved.
+- TextBox: horizontal and vertical scrollbars are optionals.
+### Fixed
+- CameraImpl: fix camera detection.
+- ComboBox: fix sizing issues, scrollbar no longer displayed if not needed.
+- StaticGrid: fix serialization of children.
+- TextBox: fix multiline layout bugs, there are still issues with right alignment.
+- Video player: fix GStreamer issues on desktop distributions.
+
 ## [1.6] - 2022-12-02
 ### Added
 - Widget/Frame: new zorder setter to be able to set a specific rank instead of
