@@ -92,6 +92,10 @@ void Scrollwheel::orient(Orientation orient)
 
 void Scrollwheel::update_orientation()
 {
+    m_label.detach();
+    m_button_up.detach();
+    m_button_down.detach();
+
     if (m_orient == Orientation::vertical)
     {
         m_grid.grid_size(StaticGrid::GridSize(1, 3));
@@ -132,10 +136,6 @@ void Scrollwheel::init(bool in_deserialize)
     m_label.text_align(AlignFlag::center);
     if (!m_items.empty())
         m_label.text(m_items[m_selected]);
-
-    m_label.detach();
-    m_button_up.detach();
-    m_button_down.detach();
 
     m_button_up.on_click([this](Event&)
     {
