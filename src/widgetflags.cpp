@@ -74,6 +74,7 @@ const std::pair<AlignFlag, char const*> detail::EnumStrings<AlignFlag>::data[] =
     {AlignFlag::expand, "expand"},
 };
 
+EGT_API
 std::list<AlignFlag> get(const BitFields<AlignFlag>& fields)
 {
     std::list<AlignFlag> result;
