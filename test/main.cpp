@@ -318,7 +318,7 @@ TYPED_TEST(Widgets, Properties)
     widget->readonly(false);
     EXPECT_EQ(widget->readonly(), false);
     widget->align(egt::AlignFlag::right | egt::AlignFlag::center_vertical);
-    EXPECT_EQ(widget->align(), egt::AlignFlag::right | egt::AlignFlag::center_vertical);
+    EXPECT_EQ(widget->align(), egt::AlignFlags(egt::AlignFlag::right | egt::AlignFlag::center_vertical));
     widget->padding(10);
     widget->border(11);
     widget->margin(12);
@@ -383,9 +383,11 @@ TEST(AlignFlags, Basic)
     EXPECT_FALSE(flags1.is_set(egt::AlignFlag::right));
     EXPECT_FALSE(flags1.is_set(egt::AlignFlag::bottom));
 
-    flags1.set({egt::AlignFlag::left, egt::AlignFlag::right});
+    flags1.set(egt::AlignFlag::left);
+    flags1.set(egt::AlignFlag::right);
     EXPECT_TRUE(state); state = false;
-    flags1.set({egt::AlignFlag::left, egt::AlignFlag::right});
+    flags1.set(egt::AlignFlag::left);
+    flags1.set(egt::AlignFlag::right);
     EXPECT_FALSE(state);
     EXPECT_TRUE(flags1.is_set(egt::AlignFlag::left));
     EXPECT_TRUE(flags1.is_set(egt::AlignFlag::right));
