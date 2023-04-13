@@ -1460,6 +1460,8 @@ void Widget::remove_component(Widget* widget)
         if (i == m_components_begin)
         {
             m_components_begin = std::next(m_components_begin);
+            if (!children().size())
+                children().begin(m_components_begin);
             children().end(m_components_begin);
         }
         m_subordinates.erase(i);
