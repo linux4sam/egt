@@ -1465,7 +1465,6 @@ void Widget::remove_component(Widget* widget)
             children().end(m_components_begin);
         }
         m_subordinates.erase(i);
-        layout();
     }
     else if (widget->m_parent == this)
     {
