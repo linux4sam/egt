@@ -140,7 +140,7 @@ public:
         /// When not multiline, only allow max length to be what can fit.
         fit_to_width = detail::bit(0),
 
-        /// Enable multi-line text.
+        /// Enable multi-line text. expand_vertical align flag must be set, be careful to not set top or bottom later.
         multiline = detail::bit(1),
 
         /// Wrap at word boundaries instead of character boundaries.  Must be flag::multiline.
