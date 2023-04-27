@@ -162,13 +162,33 @@ build snippets examples [default=no]
 
 EGT is included as a package as part of the
 [buildroot-external-microchip](https://github.com/linux4sam/buildroot-external-microchip)
-project. To build a complete SDK and target filesystem for a board, follow the
+project. Start building a target filesystem for a board, follow the
 instructions found in that project's
 <a href="https://github.com/linux4sam/buildroot-external-microchip/blob/master/README.md">README</a>.
 
 See the configs directory in the buildroot-external-microchip project for
 a graphics defconfig for your processor and board.
 
+Once the target filesystem is done, run
+@code{.unparsed}
+make sdk
+@endcode
+
+Extract the SDK. Then:
+
+@code{.unparsed}
+cd path_to_the_extracted_buildroot_sdk
+./relocate-sdk.sh
+source environment-setup
+cd path_to_egt_folder
+./autogen.sh
+./configure $CONFIGURE_FLAGS --prefix=path_to_install_folder --exec-prefix=path_to_install_folder
+make -j $(nproc)
+make install
+@endcode
+
+All files necessary for the target (applications, library, includes and shared
+resources) are installed in path_to_install_folder.
 
 @section started_yocto Cross Compiling With Yocto
 
@@ -177,6 +197,20 @@ EGT is included as a package as part of the
 build a complete SDK and target filesystem for a board, follow the
 instructions found in that project's
 [README](https://www.linux4sam.org/bin/view/Linux4SAM/PokyBuild#How_to_build_Poky_for_AT91).
+
+Run the SDK script to install it. Then:
+
+@code{.unparsed}
+cd path_to_egt_folder
+source /opt/poky-atmel/4.0.3/environment-setup-armv5e-poky-linux-gnueabi
+./autogen.sh
+./configure $CONFIGURE_FLAGS --prefix=path_to_install_folder
+make -j $(nproc)
+make install
+@endcode
+
+All files necessary for the target (applications, library, includes and shared
+resources) are installed in path_to_install_folder.
 
 @section started_windows Building for Windows
 
