@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/egtlog.h"
 #include "egt/detail/layout.h"
 #include "egt/frame.h"
 #include "egt/sizer.h"
@@ -36,6 +37,8 @@ static void run_and_apply(lay_context& ctx, lay_id parent,
     while (child != LAY_INVALID_ID)
     {
         lay_vec4 r = lay_get_rect(&ctx, child);
+        if (r[0] < 0 || r[1] < 0 || r[2] < 0 || r[3] < 0)
+            detail::warn("The layout library returned a negative value for coordinates: boundaries probably exceeded (-32 768 to 32 767)");
         re->rect = Rect(r[0], r[1], r[2], r[3]);
 
         lay_item_t* pchild = lay_get_item(&ctx, child);

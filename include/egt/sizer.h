@@ -88,6 +88,10 @@ protected:
 
 public:
 
+    /**
+     * @warning The layout library, that is used to position widgets, handles
+     * coordinates with 16-bits integers, be careful about overflows.
+     */
     void layout() override;
 
     /**
