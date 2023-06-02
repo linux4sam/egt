@@ -5,6 +5,67 @@
 Here, you can find the API changes from the version 1.0. In addition, some hints
 are provided to help you update your code.
 
+@section v1_7 1.7
+
+@subsection detail Detail
+
+@li add demangle() function to the API.
+
+@subsection filesystem Filesystem (C++ stdlib)
+
+@li move to c++17 std::filesystem
+@code{.unparsed}
+- #include <experimental/filesystem>
+- namespace fs = std::experimental::filesystem;
++ #include <filesystem>
++ namespace fs = std::filesystem;
+@endcode
+
+@subsection painter Painter
+
+@li remove the font_size() method as it mostly duplicates the text_size() method.
+
+@subsection serializer Serializer
+
+@li Remove add_node() and previous_node() methods.
+
+@li Add begin_child() and end_child() methods.
+
+@li Remove the level parameter of the add() method.
+
+@subsection textbox TextBox
+
+@li Remove justify parameter from prepare_text().
+
+@li Remove justify and orient parameters from compute_layout().
+
+@li Transform several static functions to instance methods: context(),
+tokenize(), compute_layout(), consolidate(), clear_selection(), set_selection(),
+get_line(), longest_prefix(), longest_suffix(), tag_default_aligned_line(),
+tag_left_aligned_line(), tag_right_aligned_line(), tag_line(), tag_text(),
+tag_line_selection(), tag_text_selection(), prepare_text(), get_cursor_rect(),
+draw_text().
+
+@li Add horizontal_scrollable and vertical_scrollable flags to TextFlag and some
+methods to handle it: text_area(), init_sliders(), resize_sliders(),
+update_hslider(), update_vslider(), update_sliders(), draw_sliders(),
+damage_component(), damage_hslider(), damage_vslider(), move_hslider(),
+move_vslider(), move_sliders().
+
+@li Add point2pos() method.
+
+@li Add beginning_of_line() and end_of_line() methods.
+
+@li Add up() and down() methods to handle UP and DOWN keys.
+
+@subsection widget Widget
+
+@li Children handling has been moved from Frame to Widget. It should be
+transparent for users. The main change is the set_parent() method that takes a
+Widget* parameter instead of a Frame* parameter. Now, Widget can be used to
+create widgets composed of several components. Prefer inheriting from Widget if
+users must not be able to use add or remove.
+
 @section v1_6 1.6
 
 @subsection cxx C++
