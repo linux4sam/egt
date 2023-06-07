@@ -15,9 +15,9 @@ libgtest_la_CPPFLAGS = -I$(top_srcdir)/external/googletest/googletest/include \
 libgtest_la_LDFLAGS = -pthread
 
 check_PROGRAMS = \
-test
+unittests
 
-test_SOURCES = \
+unittests_SOURCES = \
 main.cpp \
 widgets/button.cpp \
 widgets/combobox.cpp \
@@ -35,16 +35,16 @@ widgets/view.cpp \
 widgets/window.cpp
 
 if HAVE_GSTREAMER
-test_SOURCES += \
+unittests_SOURCES += \
 audio/audio.cpp \
 video/camera.cpp \
 video/video.cpp
 endif
 
-test_CPPFLAGS = -I$(top_srcdir)/external/googletest/googletest/include \
+unittests_CPPFLAGS = -I$(top_srcdir)/external/googletest/googletest/include \
 	-I$(top_srcdir)/external/googletest/googletest -pthread
-test_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
-test_LDADD = libgtest.la $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
-test_LDFLAGS = $(AM_LDFLAGS)
+unittests_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+unittests_LDADD = libgtest.la $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
+unittests_LDFLAGS = $(AM_LDFLAGS)
 
-TESTS = test
+TESTS = $(check_PROGRAMS)
