@@ -766,6 +766,11 @@ AC_ARG_ENABLE([snippets],
   [enable_snippets=$enableval], [enable_snippets=no])
 AM_CONDITIONAL([ENABLE_SNIPPETS], [test "x${enable_snippets}" = xyes])
 
+AC_ARG_ENABLE([unittests],
+  [AS_HELP_STRING([--enable-unittests], [build unit tests [default=no]])],
+  [enable_unittests=$enableval], [enable_unittests=no])
+AM_CONDITIONAL([ENABLE_UNITTESTS], [test "x${enable_unittests}" = xyes])
+
 AC_CONFIG_FILES([Makefile
 	src/Makefile
 	external/Makefile

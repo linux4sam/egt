@@ -17,6 +17,10 @@ libgtest_la_LDFLAGS = -pthread
 check_PROGRAMS = \
 unittests
 
+if ENABLE_UNITTESTS
+bin_PROGRAMS = $(check_PROGRAMS)
+endif
+
 unittests_SOURCES = \
 main.cpp \
 widgets/button.cpp \
