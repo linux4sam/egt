@@ -179,6 +179,11 @@ void PlaneWindow::show()
 {
     m_dirty = true;
     BasicWindow::show();
+    /*
+     * Force window drawing. It allows to not wait for the next draw iteration
+     * performed by the EventLoop.
+     */
+    begin_draw();
 }
 
 void PlaneWindow::hide()
