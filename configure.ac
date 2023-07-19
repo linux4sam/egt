@@ -613,8 +613,6 @@ AC_CHECK_HEADER([windows.h], [have_windows_h=yes], [have_windows_h=no])
 AM_CONDITIONAL([HAVE_WINDOWS_H], [test "x${have_windows_h}" = xyes])
 if test "x${have_windows_h}" = xyes; then
    AC_DEFINE(HAVE_WINDOWS_H, 1, [Have windows_h support])
-else
-   AX_APPEND_FLAG([-lstdc++fs], [LDFLAGS])
 fi
 
 AC_CHECK_PROG(XXD, xxd, yes)
