@@ -879,6 +879,15 @@ void TextBox::resize_sliders()
 
 DefaultDim TextBox::half_screens(DefaultDim size, DefaultDim screen_size)
 {
+    /*
+     * Sanity check to avoid zero division that can occurs in two cases:
+     * - When a TextBox is expanded, usually its size is not set. So, when
+     *   initializing the TextBox, the size is null.
+     * - When the screen_size is 1 as it will be divided by two.
+     */
+    if (screen_size < 2)
+        return 0;
+
     DefaultDim n = size;
     DefaultDim d = screen_size >> 1;
     return ((n + d - 1) / d) * d;
