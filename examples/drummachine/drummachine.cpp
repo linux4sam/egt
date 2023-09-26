@@ -5,6 +5,9 @@
  */
 #include <egt/ui>
 
+#include <iostream>
+#include <string>
+
 int main(int argc, char** argv)
 {
     egt::Application app(argc, argv);
@@ -45,7 +48,24 @@ int main(int argc, char** argv)
         button->color(egt::Palette::ColorId::border, egt::Palette::red, egt::Palette::GroupId::active);
         button->resize(egt::Size(100, 100));
 
-        auto sound = std::make_shared<egt::experimental::Sound>(drum.first);
+        std::shared_ptr<egt::experimental::Sound> sound;
+        try {
+            sound = std::make_shared<egt::experimental::Sound>(drum.first);
+        }
+        catch (...)
+        {
+            std::cout << "Can't open alsa 'default' device" << std::endl;
+            // 'default' alsa device is not set, try to fallback to classD device
+            for (auto& device : egt::experimental::Sound::enumerate_pcm_devices())
+            {
+                if (device.find("CLASSD") != std::string::npos)
+                {
+                    std::cout << "Try to fallback to alsa '" << device << "' device" << std::endl;
+                    sound = std::make_shared<egt::experimental::Sound>(drum.first, device);
+                    break;
+                }
+            }
+        }
         button->on_event([sound](egt::Event&)
         {
             sound->play();
