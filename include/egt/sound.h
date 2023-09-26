@@ -94,6 +94,14 @@ public:
 
     virtual ~Sound() noexcept;
 
+    /**
+     * Enumerate PCM devices.
+     *
+     * Enumerate PCM devices and fill the vector with their names.
+     * These names can be used for the device parameter of the constructors.
+     */
+    static std::vector<std::string> enumerate_pcm_devices();
+
 protected:
     /// @private
     void open_alsa_device(const std::string& device);
