@@ -5,6 +5,16 @@
 Here, you can find the API changes from the version 1.0. In addition, some hints
 are provided to help you update your code.
 
+@section v1_8 1.8
+
+@subsection sound Sound
+
+@li Add enumarate_pcm_device() method to get a list of device names available.
+
+@li Add media() method to set another file to play.
+
+@li Add stop() method.
+
 @section v1_7 1.7
 
 @subsection detail Detail
