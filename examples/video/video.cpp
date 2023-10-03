@@ -304,8 +304,8 @@ int main(int argc, char** argv)
         }
     });
 
-    ctrlwindow.show();
     player.show();
+    ctrlwindow.show();
     win.show();
 
     return app.run();
