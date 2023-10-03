@@ -1,34 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <egt>
+	<theme>
+		<property name="type">DefaultTheme</property>
+	</theme>
 	<widgets>
 		<widget name="Window0" type="TopWindow">
-			<property name="show">true</property>
 			<property name="pixelformat">argb8888</property>
 			<property name="windowhint">automatic</property>
+			<property name="show">true</property>
 			<property name="width">800</property>
 			<property name="height">480</property>
 			<property name="fillflags">solid</property>
 			<widget name="BoxSizer1" type="BoxSizer">
 				<property name="orient">flex</property>
 				<property name="justify">middle</property>
+				<property name="show">true</property>
 				<property name="width">800</property>
 				<property name="height">480</property>
-				<property name="align">expand_horizontal|expand_vertical</property>
+				<property name="align">expand</property>
 				<widget name="CircleWidget2" type="CircleWidget">
+					<property name="show">true</property>
 					<property name="x">200</property>
 					<property name="width">100</property>
 					<property name="height">100</property>
 					<property name="margin">10</property>
 					<property name="fillflags">blend</property>
-					<property name="radius">50.000000</property>
+					<property name="radius">50</property>
 				</widget>
 				<widget name="LineWidget3" type="LineWidget">
+					<property name="show">true</property>
 					<property name="x">300</property>
 					<property name="width">100</property>
 					<property name="height">100</property>
 					<property name="margin">10</property>
 				</widget>
 				<widget name="LineWidget4" type="LineWidget">
+					<property name="show">true</property>
 					<property name="x">400</property>
 					<property name="width">100</property>
 					<property name="height">100</property>
@@ -36,6 +43,7 @@
 					<property name="horizontal">false</property>
 				</widget>
 				<widget name="RectangleWidget5" type="RectangleWidget">
+					<property name="show">true</property>
 					<property name="x">500</property>
 					<property name="width">100</property>
 					<property name="height">100</property>

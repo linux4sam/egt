@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <egt>
+	<theme>
+		<property name="type">DefaultTheme</property>
+	</theme>
 	<widgets>
 		<widget name="Window0" type="TopWindow">
-			<property name="show">true</property>
 			<property name="pixelformat">argb8888</property>
 			<property name="windowhint">automatic</property>
+			<property name="show">true</property>
 			<property name="width">800</property>
 			<property name="height">480</property>
 			<property name="fillflags">solid</property>
@@ -14,128 +17,183 @@
 				<property name="n_row">6</property>
 				<property name="horizontal_space">5</property>
 				<property name="vertical_space">5</property>
+				<property name="show">true</property>
 				<property name="width">800</property>
 				<property name="height">480</property>
-				<property name="align">expand_horizontal|expand_vertical</property>
+				<property name="align">expand</property>
 				<property name="margin">5</property>
-				<widget name="Button2" type="Button">
-					<property name="x">5</property>
-					<property name="y">5</property>
-					<property name="width">260</property>
-					<property name="height">74</property>
-					<property name="align">expand_horizontal|expand_vertical</property>
-					<property name="grab_mouse">true</property>
-					<property name="fillflags">blend</property>
-					<property name="text">Button</property>
-					<property name="text_align">center_horizontal|center_vertical</property>
-				</widget>
-				<widget name="Button3" type="Button">
-					<property name="x">270</property>
-					<property name="y">5</property>
-					<property name="width">260</property>
-					<property name="height">74</property>
-					<property name="align">expand_horizontal|expand_vertical</property>
-					<property name="disabled">true</property>
-					<property name="grab_mouse">true</property>
-					<property name="fillflags">blend</property>
-					<property name="text">Disabled</property>
-					<property name="text_align">center_horizontal|center_vertical</property>
-				</widget>
-				<widget name="ImageButton4" type="ImageButton">
-					<property name="x">535</property>
-					<property name="y">5</property>
-					<property name="width">260</property>
-					<property name="height">74</property>
-					<property name="align">expand_horizontal|expand_vertical</property>
-					<property name="grab_mouse">true</property>
-					<property name="fillflags">blend</property>
-					<property name="text">Calculator</property>
-					<property name="text_align">center_horizontal|center_vertical</property>
-					<property name="showlabel">true</property>
-					<property name="image">icon:calculator.png</property>
-					<property name="image_align">left|expand_horizontal|expand_vertical</property>
-				</widget>
-				<widget name="ImageButton5" type="ImageButton">
-					<property name="x">5</property>
-					<property name="y">84</property>
-					<property name="width">260</property>
-					<property name="height">74</property>
-					<property name="align">expand_horizontal|expand_vertical</property>
-					<property name="grab_mouse">true</property>
-					<property name="fillflags">blend</property>
-					<property name="text">Calculator</property>
-					<property name="text_align">center_horizontal|center_vertical|left</property>
-					<property name="showlabel">true</property>
-					<property name="image">icon:calculator.png</property>
-					<property name="image_align">left|expand_horizontal|expand_vertical</property>
-				</widget>
-				<widget name="ImageButton6" type="ImageButton">
-					<property name="x">270</property>
-					<property name="y">84</property>
-					<property name="width">260</property>
-					<property name="height">74</property>
-					<property name="align">expand_horizontal|expand_vertical</property>
-					<property name="grab_mouse">true</property>
-					<property name="fillflags">blend</property>
-					<property name="text">Calculator</property>
-					<property name="text_align">center_horizontal|center_vertical|right</property>
-					<property name="showlabel">true</property>
-					<property name="image">icon:calculator.png</property>
-					<property name="image_align">left|expand_horizontal|expand_vertical</property>
-				</widget>
-				<widget name="ImageButton7" type="ImageButton">
-					<property name="x">535</property>
-					<property name="y">84</property>
-					<property name="width">260</property>
-					<property name="height">74</property>
-					<property name="align">expand_horizontal|expand_vertical</property>
-					<property name="grab_mouse">true</property>
-					<property name="fillflags">blend</property>
-					<property name="text">Calculator</property>
-					<property name="text_align">center_horizontal|center_vertical|top</property>
-					<property name="showlabel">true</property>
-					<property name="image">icon:calculator.png</property>
-					<property name="image_align">left|expand_horizontal|expand_vertical</property>
-				</widget>
-				<widget name="ImageButton8" type="ImageButton">
-					<property name="x">5</property>
-					<property name="y">163</property>
-					<property name="width">260</property>
-					<property name="height">74</property>
-					<property name="align">expand_horizontal|expand_vertical</property>
-					<property name="grab_mouse">true</property>
-					<property name="fillflags">blend</property>
-					<property name="text">Calculator</property>
-					<property name="text_align">center_horizontal|center_vertical|bottom</property>
-					<property name="showlabel">true</property>
-					<property name="image">icon:calculator.png</property>
-					<property name="image_align">right</property>
-				</widget>
-				<widget name="ImageButton9" type="ImageButton">
-					<property name="x">270</property>
-					<property name="y">163</property>
-					<property name="width">260</property>
-					<property name="height">74</property>
-					<property name="align">expand_horizontal|expand_vertical</property>
-					<property name="grab_mouse">true</property>
-					<property name="fillflags">blend</property>
-					<property name="text_align">center_horizontal|center_vertical</property>
-					<property name="showlabel">true</property>
-					<property name="image" hscale="2.312500" vscale="2.312500">icon:calculator.png</property>
-					<property name="image_align">center_horizontal|center_vertical|expand_horizontal|expand_vertical</property>
-				</widget>
-				<widget name="Button10" type="Button">
-					<property name="x">535</property>
-					<property name="y">163</property>
-					<property name="width">260</property>
-					<property name="height">74</property>
-					<property name="align">expand_horizontal|expand_vertical</property>
-					<property name="grab_mouse">true</property>
-					<property name="fillflags">blend</property>
-					<property name="text">Multiline
+				<cell>
+					<property name="column">0</property>
+					<property name="row">0</property>
+					<widget name="Button2" type="Button">
+						<property name="show">true</property>
+						<property name="x">5</property>
+						<property name="y">5</property>
+						<property name="width">260</property>
+						<property name="height">74</property>
+						<property name="align">expand</property>
+						<property name="grab_mouse">true</property>
+						<property name="border_radius">4</property>
+						<property name="fillflags">blend</property>
+						<property name="text">Button</property>
+						<property name="text_align">center</property>
+					</widget>
+				</cell>
+				<cell>
+					<property name="column">0</property>
+					<property name="row">1</property>
+					<widget name="ImageButton5" type="ImageButton">
+						<property name="show">true</property>
+						<property name="x">5</property>
+						<property name="y">84</property>
+						<property name="width">260</property>
+						<property name="height">74</property>
+						<property name="align">expand</property>
+						<property name="grab_mouse">true</property>
+						<property name="border_radius">4</property>
+						<property name="fillflags">blend</property>
+						<property name="text">Calculator</property>
+						<property name="text_align">center_vertical|left</property>
+						<property name="showlabel">true</property>
+						<property name="image">icon:calculator.png</property>
+						<property name="image_align">left|expand</property>
+					</widget>
+				</cell>
+				<cell>
+					<property name="column">0</property>
+					<property name="row">2</property>
+					<widget name="ImageButton8" type="ImageButton">
+						<property name="show">true</property>
+						<property name="x">5</property>
+						<property name="y">163</property>
+						<property name="width">260</property>
+						<property name="height">74</property>
+						<property name="align">expand</property>
+						<property name="grab_mouse">true</property>
+						<property name="border_radius">4</property>
+						<property name="fillflags">blend</property>
+						<property name="text">Calculator</property>
+						<property name="text_align">center_horizontal|bottom</property>
+						<property name="showlabel">true</property>
+						<property name="image">icon:calculator.png</property>
+						<property name="image_align">right</property>
+					</widget>
+				</cell>
+				<cell>
+					<property name="column">1</property>
+					<property name="row">0</property>
+					<widget name="Button3" type="Button">
+						<property name="show">true</property>
+						<property name="x">270</property>
+						<property name="y">5</property>
+						<property name="width">260</property>
+						<property name="height">74</property>
+						<property name="align">expand</property>
+						<property name="disabled">true</property>
+						<property name="grab_mouse">true</property>
+						<property name="border_radius">4</property>
+						<property name="fillflags">blend</property>
+						<property name="text">Disabled</property>
+						<property name="text_align">center</property>
+					</widget>
+				</cell>
+				<cell>
+					<property name="column">1</property>
+					<property name="row">1</property>
+					<widget name="ImageButton6" type="ImageButton">
+						<property name="show">true</property>
+						<property name="x">270</property>
+						<property name="y">84</property>
+						<property name="width">260</property>
+						<property name="height">74</property>
+						<property name="align">expand</property>
+						<property name="grab_mouse">true</property>
+						<property name="border_radius">4</property>
+						<property name="fillflags">blend</property>
+						<property name="text">Calculator</property>
+						<property name="text_align">center_vertical|right</property>
+						<property name="showlabel">true</property>
+						<property name="image">icon:calculator.png</property>
+						<property name="image_align">left|expand</property>
+					</widget>
+				</cell>
+				<cell>
+					<property name="column">1</property>
+					<property name="row">2</property>
+					<widget name="ImageButton9" type="ImageButton">
+						<property name="show">true</property>
+						<property name="x">270</property>
+						<property name="y">163</property>
+						<property name="width">260</property>
+						<property name="height">74</property>
+						<property name="align">expand</property>
+						<property name="grab_mouse">true</property>
+						<property name="border_radius">4</property>
+						<property name="fillflags">blend</property>
+						<property name="text_align">center</property>
+						<property name="showlabel">false</property>
+						<property name="image" hscale="2.3125" vscale="2.3125">icon:calculator.png</property>
+						<property name="image_align">center|expand</property>
+					</widget>
+				</cell>
+				<cell>
+					<property name="column">2</property>
+					<property name="row">0</property>
+					<widget name="ImageButton4" type="ImageButton">
+						<property name="show">true</property>
+						<property name="x">535</property>
+						<property name="y">5</property>
+						<property name="width">260</property>
+						<property name="height">74</property>
+						<property name="align">expand</property>
+						<property name="grab_mouse">true</property>
+						<property name="border_radius">4</property>
+						<property name="fillflags">blend</property>
+						<property name="text">Calculator</property>
+						<property name="text_align">center</property>
+						<property name="showlabel">true</property>
+						<property name="image">icon:calculator.png</property>
+						<property name="image_align">left|expand</property>
+					</widget>
+				</cell>
+				<cell>
+					<property name="column">2</property>
+					<property name="row">1</property>
+					<widget name="ImageButton7" type="ImageButton">
+						<property name="show">true</property>
+						<property name="x">535</property>
+						<property name="y">84</property>
+						<property name="width">260</property>
+						<property name="height">74</property>
+						<property name="align">expand</property>
+						<property name="grab_mouse">true</property>
+						<property name="border_radius">4</property>
+						<property name="fillflags">blend</property>
+						<property name="text">Calculator</property>
+						<property name="text_align">center_horizontal|top</property>
+						<property name="showlabel">true</property>
+						<property name="image">icon:calculator.png</property>
+						<property name="image_align">left|expand</property>
+					</widget>
+				</cell>
+				<cell>
+					<property name="column">2</property>
+					<property name="row">2</property>
+					<widget name="Button10" type="Button">
+						<property name="show">true</property>
+						<property name="x">535</property>
+						<property name="y">163</property>
+						<property name="width">260</property>
+						<property name="height">74</property>
+						<property name="align">expand</property>
+						<property name="grab_mouse">true</property>
+						<property name="border_radius">4</property>
+						<property name="fillflags">blend</property>
+						<property name="text">Multiline
 Button Text</property>
-					<property name="text_align">center_horizontal|center_vertical</property>
-				</widget>
+						<property name="text_align">center</property>
+					</widget>
+				</cell>
 			</widget>
 		</widget>
 	</widgets>

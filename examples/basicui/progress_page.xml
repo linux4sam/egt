@@ -1,95 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 <egt>
+	<theme>
+		<property name="type">DefaultTheme</property>
+	</theme>
 	<widgets>
 		<widget name="Window0" type="TopWindow">
-			<property name="show">true</property>
 			<property name="pixelformat">argb8888</property>
 			<property name="windowhint">automatic</property>
+			<property name="show">true</property>
 			<property name="width">800</property>
 			<property name="height">480</property>
 			<property name="fillflags">solid</property>
-			<widget name="BoxSizer1" type="VerticalBoxSizer">
+			<widget name="VerticalBoxSizer1" type="VerticalBoxSizer">
 				<property name="orient">vertical</property>
 				<property name="justify">middle</property>
+				<property name="show">true</property>
 				<property name="width">800</property>
 				<property name="height">480</property>
-				<property name="align">expand_horizontal|expand_vertical</property>
+				<property name="align">expand</property>
 				<widget name="StaticGrid2" type="StaticGrid">
 					<property name="column_priority">false</property>
 					<property name="n_col">2</property>
 					<property name="n_row">8</property>
 					<property name="horizontal_space">5</property>
 					<property name="vertical_space">5</property>
+					<property name="show">true</property>
 					<property name="width">800</property>
-					<property name="height">420</property>
-					<property name="align">expand_horizontal|expand_vertical</property>
+					<property name="height">423</property>
+					<property name="align">expand</property>
 					<property name="margin">5</property>
-					<widget name="SpinProgress3" type="SpinProgress">
-						<property name="x">5</property>
-						<property name="y">5</property>
-						<property name="width">392</property>
-						<property name="height">46</property>
-						<property name="align">expand_horizontal|expand_vertical</property>
-						<property name="fillflags">blend</property>
-						<property name="value" starting="0" ending="100">0</property>
-						<property name="show_label">true</property>
-					</widget>
-					<widget name="ProgressBar4" type="ProgressBar">
-						<property name="x">402</property>
-						<property name="y">5</property>
-						<property name="width">393</property>
-						<property name="height">46</property>
-						<property name="align">expand_horizontal|expand_vertical</property>
-						<property name="border">2</property>
-						<property name="fillflags">blend</property>
-						<property name="value" starting="0" ending="100">0</property>
-						<property name="show_label">true</property>
-					</widget>
-					<widget name="ProgressBar5" type="ProgressBar">
-						<property name="x">5</property>
-						<property name="y">56</property>
-						<property name="width">392</property>
-						<property name="height">46</property>
-						<property name="align">expand_horizontal|expand_vertical</property>
-						<property name="border">2</property>
-						<property name="fillflags">blend</property>
-						<property name="value" starting="0" ending="100">0</property>
-						<property name="show_label">false</property>
-					</widget>
+					<cell>
+						<property name="column">0</property>
+						<property name="row">0</property>
+						<widget name="SpinProgress3" type="SpinProgress">
+							<property name="show">true</property>
+							<property name="x">5</property>
+							<property name="y">5</property>
+							<property name="width">392</property>
+							<property name="height">47</property>
+							<property name="align">expand</property>
+							<property name="fillflags">blend</property>
+							<property name="value" starting="0" ending="100">0</property>
+							<property name="show_label">true</property>
+						</widget>
+					</cell>
+					<cell>
+						<property name="column">0</property>
+						<property name="row">1</property>
+						<widget name="ProgressBar5" type="ProgressBar">
+							<property name="show">true</property>
+							<property name="x">5</property>
+							<property name="y">57</property>
+							<property name="width">392</property>
+							<property name="height">47</property>
+							<property name="align">expand</property>
+							<property name="border">2</property>
+							<property name="fillflags">blend</property>
+							<property name="value" starting="0" ending="100">0</property>
+							<property name="show_label">false</property>
+						</widget>
+					</cell>
+					<cell>
+						<property name="column">1</property>
+						<property name="row">0</property>
+						<widget name="ProgressBar4" type="ProgressBar">
+							<property name="show">true</property>
+							<property name="x">402</property>
+							<property name="y">5</property>
+							<property name="width">393</property>
+							<property name="height">47</property>
+							<property name="align">expand</property>
+							<property name="border">2</property>
+							<property name="fillflags">blend</property>
+							<property name="value" starting="0" ending="100">0</property>
+							<property name="show_label">true</property>
+						</widget>
+					</cell>
 				</widget>
-				<widget name="BoxSizer6" type="HorizontalBoxSizer">
+				<widget name="HorizontalBoxSizer6" type="HorizontalBoxSizer">
 					<property name="orient">horizontal</property>
 					<property name="justify">middle</property>
-					<property name="y">420</property>
+					<property name="show">true</property>
+					<property name="y">423</property>
 					<property name="width">800</property>
-					<property name="height">60</property>
+					<property name="height">57</property>
 					<property name="align">expand_horizontal</property>
 					<widget name="Button7" type="Button">
-						<property name="x">281</property>
-						<property name="width">68</property>
-						<property name="height">60</property>
+						<property name="show">true</property>
+						<property name="x">293</property>
+						<property name="width">60</property>
+						<property name="height">57</property>
 						<property name="grab_mouse">true</property>
+						<property name="border_radius">4</property>
 						<property name="fillflags">blend</property>
 						<property name="text">Start</property>
-						<property name="text_align">center_horizontal|center_vertical</property>
+						<property name="text_align">center</property>
 					</widget>
 					<widget name="Button8" type="Button">
-						<property name="x">349</property>
-						<property name="width">62</property>
-						<property name="height">60</property>
+						<property name="show">true</property>
+						<property name="x">353</property>
+						<property name="width">57</property>
+						<property name="height">57</property>
 						<property name="grab_mouse">true</property>
+						<property name="border_radius">4</property>
 						<property name="fillflags">blend</property>
 						<property name="text">Stop</property>
-						<property name="text_align">center_horizontal|center_vertical</property>
+						<property name="text_align">center</property>
 					</widget>
 					<widget name="Button9" type="Button">
-						<property name="x">411</property>
-						<property name="width">107</property>
-						<property name="height">60</property>
+						<property name="show">true</property>
+						<property name="x">410</property>
+						<property name="width">96</property>
+						<property name="height">57</property>
 						<property name="grab_mouse">true</property>
+						<property name="border_radius">4</property>
 						<property name="fillflags">blend</property>
 						<property name="text">Resume</property>
-						<property name="text_align">center_horizontal|center_vertical</property>
+						<property name="text_align">center</property>
 					</widget>
 				</widget>
 			</widget>

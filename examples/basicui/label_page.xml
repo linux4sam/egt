@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <egt>
+	<theme>
+		<property name="type">DefaultTheme</property>
+	</theme>
 	<widgets>
 		<widget name="Window0" type="TopWindow">
-			<property name="show">true</property>
 			<property name="pixelformat">argb8888</property>
 			<property name="windowhint">automatic</property>
+			<property name="show">true</property>
 			<property name="width">800</property>
 			<property name="height">480</property>
 			<property name="fillflags">solid</property>
@@ -14,131 +17,187 @@
 				<property name="n_row">5</property>
 				<property name="horizontal_space">5</property>
 				<property name="vertical_space">5</property>
+				<property name="show">true</property>
 				<property name="width">800</property>
 				<property name="height">480</property>
-				<property name="align">expand_horizontal|expand_vertical</property>
+				<property name="align">expand</property>
 				<property name="margin">5</property>
-				<widget name="Label2" type="Label">
-					<property name="x">5</property>
-					<property name="y">5</property>
-					<property name="width">260</property>
-					<property name="height">90</property>
-					<property name="align">expand_horizontal|expand_vertical</property>
-					<property name="text">left align</property>
-					<property name="text_align">center_horizontal|center_vertical|left</property>
-				</widget>
-				<widget name="Label3" type="Label">
-					<property name="x">270</property>
-					<property name="y">5</property>
-					<property name="width">260</property>
-					<property name="height">90</property>
-					<property name="align">expand_horizontal|expand_vertical</property>
-					<property name="text">right align</property>
-					<property name="text_align">center_horizontal|center_vertical|right</property>
-				</widget>
-				<widget name="Label4" type="Label">
-					<property name="x">535</property>
-					<property name="y">5</property>
-					<property name="width">260</property>
-					<property name="height">90</property>
-					<property name="align">expand_horizontal|expand_vertical</property>
-					<property name="text">top align</property>
-					<property name="text_align">center_horizontal|center_vertical|top</property>
-				</widget>
-				<widget name="Label5" type="Label">
-					<property name="x">5</property>
-					<property name="y">100</property>
-					<property name="width">260</property>
-					<property name="height">90</property>
-					<property name="align">expand_horizontal|expand_vertical</property>
-					<property name="text">bottom align</property>
-					<property name="text_align">center_horizontal|center_vertical|bottom</property>
-				</widget>
-				<widget name="Label6" type="Label">
-					<property name="x">270</property>
-					<property name="y">100</property>
-					<property name="width">260</property>
-					<property name="height">90</property>
-					<property name="align">expand_horizontal|expand_vertical</property>
-					<property name="text">Multiline
+				<cell>
+					<property name="column">0</property>
+					<property name="row">0</property>
+					<widget name="Label2" type="Label">
+						<property name="show">true</property>
+						<property name="x">5</property>
+						<property name="y">5</property>
+						<property name="width">260</property>
+						<property name="height">90</property>
+						<property name="align">expand</property>
+						<property name="text">left align</property>
+						<property name="text_align">center_vertical|left</property>
+					</widget>
+				</cell>
+				<cell>
+					<property name="column">0</property>
+					<property name="row">1</property>
+					<widget name="Label5" type="Label">
+						<property name="show">true</property>
+						<property name="x">5</property>
+						<property name="y">100</property>
+						<property name="width">260</property>
+						<property name="height">90</property>
+						<property name="align">expand</property>
+						<property name="text">bottom align</property>
+						<property name="text_align">center_horizontal|bottom</property>
+					</widget>
+				</cell>
+				<cell>
+					<property name="column">0</property>
+					<property name="row">2</property>
+					<widget name="ImageLabel8" type="ImageLabel">
+						<property name="show">true</property>
+						<property name="x">5</property>
+						<property name="y">195</property>
+						<property name="width">260</property>
+						<property name="height">90</property>
+						<property name="align">expand</property>
+						<property name="text">Camera</property>
+						<property name="text_align">center</property>
+						<property name="showlabel">true</property>
+						<property name="image">icon:camera.png</property>
+						<property name="image_align">left|expand</property>
+					</widget>
+				</cell>
+				<cell>
+					<property name="column">0</property>
+					<property name="row">3</property>
+					<widget name="ImageLabel11" type="ImageLabel">
+						<property name="show">true</property>
+						<property name="x">5</property>
+						<property name="y">290</property>
+						<property name="width">260</property>
+						<property name="height">90</property>
+						<property name="align">expand</property>
+						<property name="border">1</property>
+						<property name="fillflags">blend</property>
+						<property name="text">Camera</property>
+						<property name="text_align">center_horizontal|bottom</property>
+						<property name="showlabel">true</property>
+						<property name="image">icon:camera.png</property>
+						<property name="image_align">left|expand</property>
+					</widget>
+				</cell>
+				<cell>
+					<property name="column">1</property>
+					<property name="row">0</property>
+					<widget name="Label3" type="Label">
+						<property name="show">true</property>
+						<property name="x">270</property>
+						<property name="y">5</property>
+						<property name="width">260</property>
+						<property name="height">90</property>
+						<property name="align">expand</property>
+						<property name="text">right align</property>
+						<property name="text_align">center_vertical|right</property>
+					</widget>
+				</cell>
+				<cell>
+					<property name="column">1</property>
+					<property name="row">1</property>
+					<widget name="Label6" type="Label">
+						<property name="show">true</property>
+						<property name="x">270</property>
+						<property name="y">100</property>
+						<property name="width">260</property>
+						<property name="height">90</property>
+						<property name="align">expand</property>
+						<property name="text">Multiline
 Label Text</property>
-					<property name="text_align">center_horizontal|center_vertical</property>
-				</widget>
-				<widget name="ImageLabel7" type="ImageLabel">
-					<property name="x">535</property>
-					<property name="y">100</property>
-					<property name="width">260</property>
-					<property name="height">90</property>
-					<property name="align">expand_horizontal|expand_vertical</property>
-					<property name="text">Lock</property>
-					<property name="text_align">center_horizontal|center_vertical</property>
-					<property name="showlabel">true</property>
-					<property name="image">icon:lock.png</property>
-					<property name="image_align">top</property>
-				</widget>
-				<widget name="ImageLabel8" type="ImageLabel">
-					<property name="x">5</property>
-					<property name="y">195</property>
-					<property name="width">260</property>
-					<property name="height">90</property>
-					<property name="align">expand_horizontal|expand_vertical</property>
-					<property name="text">Camera</property>
-					<property name="text_align">center_horizontal|center_vertical</property>
-					<property name="showlabel">true</property>
-					<property name="image">icon:camera.png</property>
-					<property name="image_align">left|expand_horizontal|expand_vertical</property>
-				</widget>
-				<widget name="ImageLabel9" type="ImageLabel">
-					<property name="x">270</property>
-					<property name="y">195</property>
-					<property name="width">260</property>
-					<property name="height">90</property>
-					<property name="align">expand_horizontal|expand_vertical</property>
-					<property name="text">Camera</property>
-					<property name="text_align">center_horizontal|center_vertical|right</property>
-					<property name="showlabel">true</property>
-					<property name="image">icon:camera.png</property>
-					<property name="image_align">right</property>
-				</widget>
-				<widget name="ImageLabel10" type="ImageLabel">
-					<property name="x">535</property>
-					<property name="y">195</property>
-					<property name="width">260</property>
-					<property name="height">90</property>
-					<property name="align">expand_horizontal|expand_vertical</property>
-					<property name="text">Camera</property>
-					<property name="text_align">center_horizontal|center_vertical|top</property>
-					<property name="showlabel">true</property>
-					<property name="image">icon:camera.png</property>
-					<property name="image_align">bottom</property>
-				</widget>
-				<widget name="ImageLabel11" type="ImageLabel">
-					<property name="x">5</property>
-					<property name="y">290</property>
-					<property name="width">260</property>
-					<property name="height">90</property>
-					<property name="align">expand_horizontal|expand_vertical</property>
-					<property name="border">1</property>
-					<property name="fillflags">blend</property>
-					<property name="text">Camera</property>
-					<property name="text_align">center_horizontal|center_vertical|bottom</property>
-					<property name="showlabel">true</property>
-					<property name="image">icon:camera.png</property>
-					<property name="image_align">left|expand_horizontal|expand_vertical</property>
-				</widget>
-				<widget name="ImageLabel12" type="ImageLabel">
-					<property name="x">270</property>
-					<property name="y">290</property>
-					<property name="width">260</property>
-					<property name="height">90</property>
-					<property name="align">expand_horizontal|expand_vertical</property>
-					<property name="border">1</property>
-					<property name="fillflags">blend</property>
-					<property name="text_align">center_horizontal|center_vertical</property>
-					<property name="showlabel">true</property>
-					<property name="image" hscale="2.750000" vscale="2.750000">icon:camera.png</property>
-					<property name="image_align">center_horizontal|center_vertical|expand_horizontal|expand_vertical</property>
-				</widget>
+						<property name="text_align">center</property>
+					</widget>
+				</cell>
+				<cell>
+					<property name="column">1</property>
+					<property name="row">2</property>
+					<widget name="ImageLabel9" type="ImageLabel">
+						<property name="show">true</property>
+						<property name="x">270</property>
+						<property name="y">195</property>
+						<property name="width">260</property>
+						<property name="height">90</property>
+						<property name="align">expand</property>
+						<property name="text">Camera</property>
+						<property name="text_align">center_vertical|right</property>
+						<property name="showlabel">true</property>
+						<property name="image">icon:camera.png</property>
+						<property name="image_align">right</property>
+					</widget>
+				</cell>
+				<cell>
+					<property name="column">1</property>
+					<property name="row">3</property>
+					<widget name="ImageLabel12" type="ImageLabel">
+						<property name="show">true</property>
+						<property name="x">270</property>
+						<property name="y">290</property>
+						<property name="width">260</property>
+						<property name="height">90</property>
+						<property name="align">expand</property>
+						<property name="border">1</property>
+						<property name="fillflags">blend</property>
+						<property name="text_align">center</property>
+						<property name="showlabel">false</property>
+						<property name="image" hscale="2.75" vscale="2.75">icon:camera.png</property>
+						<property name="image_align">center|expand</property>
+					</widget>
+				</cell>
+				<cell>
+					<property name="column">2</property>
+					<property name="row">0</property>
+					<widget name="Label4" type="Label">
+						<property name="show">true</property>
+						<property name="x">535</property>
+						<property name="y">5</property>
+						<property name="width">260</property>
+						<property name="height">90</property>
+						<property name="align">expand</property>
+						<property name="text">top align</property>
+						<property name="text_align">center_horizontal|top</property>
+					</widget>
+				</cell>
+				<cell>
+					<property name="column">2</property>
+					<property name="row">1</property>
+					<widget name="ImageLabel7" type="ImageLabel">
+						<property name="show">true</property>
+						<property name="x">535</property>
+						<property name="y">100</property>
+						<property name="width">260</property>
+						<property name="height">90</property>
+						<property name="align">expand</property>
+						<property name="text">Lock</property>
+						<property name="text_align">center</property>
+						<property name="showlabel">true</property>
+						<property name="image">icon:lock.png</property>
+						<property name="image_align">top</property>
+					</widget>
+				</cell>
+				<cell>
+					<property name="column">2</property>
+					<property name="row">2</property>
+					<widget name="ImageLabel10" type="ImageLabel">
+						<property name="show">true</property>
+						<property name="x">535</property>
+						<property name="y">195</property>
+						<property name="width">260</property>
+						<property name="height">90</property>
+						<property name="align">expand</property>
+						<property name="text">Camera</property>
+						<property name="text_align">center_horizontal|top</property>
+						<property name="showlabel">true</property>
+						<property name="image">icon:camera.png</property>
+						<property name="image_align">bottom</property>
+					</widget>
+				</cell>
 			</widget>
 		</widget>
 	</widgets>

@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <egt>
+	<theme>
+		<property name="type">DefaultTheme</property>
+	</theme>
 	<widgets>
 		<widget name="Window0" type="TopWindow">
+			<property name="pixelformat">argb8888</property>
+			<property name="windowhint">automatic</property>
+			<property name="show">true</property>
 			<property name="width">800</property>
 			<property name="height">480</property>
-			<property name="fillflags">solid</property>
-			<widget name="CameraWindow0" type="CameraWindow">
-				<property name="x">0</property>
-				<property name="y">0</property>
+			<widget name="Window2" type="CameraWindow">
+				<property name="device">/dev/video0</property>
+				<property name="pixelformat">yuyv</property>
+				<property name="windowhint">overlay</property>
+				<property name="show">true</property>
+				<property name="x">240</property>
+				<property name="y">120</property>
 				<property name="width">320</property>
 				<property name="height">240</property>
-				<property name="show">true</property>
-				<property name="align">center</property>
+				<property name="fillflags">solid</property>
 			</widget>
 		</widget>
 	</widgets>

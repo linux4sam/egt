@@ -1,21 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <egt>
+	<theme>
+		<property name="type">DefaultTheme</property>
+	</theme>
 	<widgets>
 		<widget name="Window0" type="TopWindow">
-			<property name="show">true</property>
 			<property name="pixelformat">argb8888</property>
 			<property name="windowhint">automatic</property>
+			<property name="show">true</property>
 			<property name="width">800</property>
 			<property name="height">480</property>
 			<property name="fillflags">solid</property>
 			<widget name="BoxSizer1" type="BoxSizer">
 				<property name="orient">horizontal</property>
 				<property name="justify">justify</property>
+				<property name="show">true</property>
 				<property name="width">800</property>
 				<property name="height">480</property>
-				<property name="align">expand_horizontal|expand_vertical</property>
+				<property name="align">expand</property>
 				<property name="padding">20</property>
 				<widget name="ListBox2" type="ListBox">
+					<property name="show">true</property>
 					<property name="x">20</property>
 					<property name="y">20</property>
 					<property name="width">200</property>
@@ -23,55 +28,57 @@
 					<property name="align">expand_vertical</property>
 					<property name="border">2</property>
 					<property name="fillflags">blend</property>
-					<property name="item" text_align="center_horizontal|center_vertical" selected="true">item 0</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 1</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 2</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 3</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 4</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 5</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 6</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 7</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 8</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 9</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 10</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 11</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 12</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 13</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 14</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 15</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 16</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 17</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 18</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 19</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 20</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 21</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 22</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 23</property>
-					<property name="item" text_align="center_horizontal|center_vertical">item 24</property>
+					<property name="item" text_align="center" selected="true">item 0</property>
+					<property name="item" text_align="center">item 1</property>
+					<property name="item" text_align="center">item 2</property>
+					<property name="item" text_align="center">item 3</property>
+					<property name="item" text_align="center">item 4</property>
+					<property name="item" text_align="center">item 5</property>
+					<property name="item" text_align="center">item 6</property>
+					<property name="item" text_align="center">item 7</property>
+					<property name="item" text_align="center">item 8</property>
+					<property name="item" text_align="center">item 9</property>
+					<property name="item" text_align="center">item 10</property>
+					<property name="item" text_align="center">item 11</property>
+					<property name="item" text_align="center">item 12</property>
+					<property name="item" text_align="center">item 13</property>
+					<property name="item" text_align="center">item 14</property>
+					<property name="item" text_align="center">item 15</property>
+					<property name="item" text_align="center">item 16</property>
+					<property name="item" text_align="center">item 17</property>
+					<property name="item" text_align="center">item 18</property>
+					<property name="item" text_align="center">item 19</property>
+					<property name="item" text_align="center">item 20</property>
+					<property name="item" text_align="center">item 21</property>
+					<property name="item" text_align="center">item 22</property>
+					<property name="item" text_align="center">item 23</property>
+					<property name="item" text_align="center">item 24</property>
 				</widget>
 				<widget name="ListBox32" type="ListBox">
+					<property name="show">true</property>
 					<property name="x">300</property>
 					<property name="y">90</property>
 					<property name="width">200</property>
 					<property name="height">300</property>
 					<property name="border">2</property>
 					<property name="fillflags">blend</property>
-					<property name="item" image="icon:ok.png" text_align="center_horizontal|center_vertical" selected="true">item 0</property>
-					<property name="item" image="icon:ok.png" text_align="center_horizontal|center_vertical">item 1</property>
-					<property name="item" image="icon:ok.png" text_align="center_horizontal|center_vertical">item 2</property>
-					<property name="item" image="icon:ok.png" text_align="center_horizontal|center_vertical">item 3</property>
-					<property name="item" image="icon:ok.png" text_align="center_horizontal|center_vertical">item 4</property>
+					<property name="item" image="icon:ok.png" text_align="center" selected="true">item 0</property>
+					<property name="item" image="icon:ok.png" text_align="center">item 1</property>
+					<property name="item" image="icon:ok.png" text_align="center">item 2</property>
+					<property name="item" image="icon:ok.png" text_align="center">item 3</property>
+					<property name="item" image="icon:ok.png" text_align="center">item 4</property>
 				</widget>
 				<widget name="ListBox42" type="ListBox">
+					<property name="show">true</property>
 					<property name="x">580</property>
 					<property name="y">178</property>
 					<property name="width">200</property>
 					<property name="height">124</property>
 					<property name="border">2</property>
 					<property name="fillflags">blend</property>
-					<property name="item" image="icon:help.png" text_align="center_horizontal|center_vertical" selected="true">Help</property>
-					<property name="item" image="icon:info.png" text_align="center_horizontal|center_vertical">Info</property>
-					<property name="item" image="icon:warning.png" text_align="center_horizontal|center_vertical">Warning</property>
+					<property name="item" image="icon:help.png" text_align="center" selected="true">Help</property>
+					<property name="item" image="icon:info.png" text_align="center">Info</property>
+					<property name="item" image="icon:warning.png" text_align="center">Warning</property>
 				</widget>
 			</widget>
 		</widget>

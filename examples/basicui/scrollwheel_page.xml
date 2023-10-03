@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <egt>
+	<theme>
+		<property name="type">DefaultTheme</property>
+	</theme>
 	<widgets>
 		<widget name="Window0" type="TopWindow">
+			<property name="pixelformat">argb8888</property>
+			<property name="windowhint">automatic</property>
+			<property name="show">true</property>
 			<property name="width">800</property>
 			<property name="height">480</property>
 			<property name="fillflags">solid</property>
 			<widget name="BoxSizer1" type="BoxSizer">
 				<property name="orient">horizontal</property>
 				<property name="justify">middle</property>
+				<property name="show">true</property>
 				<property name="width">800</property>
 				<property name="height">480</property>
-				<property name="align">expand_horizontal|expand_vertical</property>
+				<property name="align">expand</property>
 				<widget name="Scrollwheel2" type="Scrollwheel">
-					<property name="x">225</property>
+					<property name="show">true</property>
+					<property name="x">112</property>
 					<property name="y">190</property>
 					<property name="width">50</property>
 					<property name="height">100</property>
@@ -51,8 +59,9 @@
 					<property name="item">30</property>
 					<property name="item">31</property>
 				</widget>
-				<widget name="Scrollwheel6" type="Scrollwheel">
-					<property name="x">275</property>
+				<widget name="Scrollwheel7" type="Scrollwheel">
+					<property name="show">true</property>
+					<property name="x">162</property>
 					<property name="y">190</property>
 					<property name="width">200</property>
 					<property name="height">100</property>
@@ -73,8 +82,9 @@
 					<property name="item">December</property>
 					<property name="item"/>
 				</widget>
-				<widget name="Scrollwheel10" type="Scrollwheel">
-					<property name="x">475</property>
+				<widget name="Scrollwheel12" type="Scrollwheel">
+					<property name="show">true</property>
+					<property name="x">362</property>
 					<property name="y">190</property>
 					<property name="width">100</property>
 					<property name="height">100</property>
@@ -203,6 +213,33 @@
 					<property name="item">2018</property>
 					<property name="item">2019</property>
 					<property name="item" selected="true">2020</property>
+				</widget>
+				<widget name="Label17" type="Label">
+					<property name="show">true</property>
+					<property name="x">462</property>
+					<property name="y">225</property>
+					<property name="width">50</property>
+					<property name="height">30</property>
+					<property name="text">1</property>
+					<property name="text_align">center</property>
+				</widget>
+				<widget name="Label18" type="Label">
+					<property name="show">true</property>
+					<property name="x">512</property>
+					<property name="y">225</property>
+					<property name="width">100</property>
+					<property name="height">30</property>
+					<property name="text">May</property>
+					<property name="text_align">center</property>
+				</widget>
+				<widget name="Label19" type="Label">
+					<property name="show">true</property>
+					<property name="x">612</property>
+					<property name="y">225</property>
+					<property name="width">75</property>
+					<property name="height">30</property>
+					<property name="text">2020</property>
+					<property name="text_align">center</property>
 				</widget>
 			</widget>
 		</widget>
