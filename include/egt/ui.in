@@ -98,6 +98,11 @@
 #include <egt/svgimage.h>
 #endif
 
+@include_svgdeserial@
+#ifdef EGT_HAS_SVGDESERIAL
+#include <egt/svgdeserial.h>
+#endif
+
 @include_sound@
 #ifdef EGT_HAS_SOUND
 #include <egt/sound.h>

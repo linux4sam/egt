@@ -771,6 +771,14 @@ AC_ARG_ENABLE([unittests],
   [enable_unittests=$enableval], [enable_unittests=no])
 AM_CONDITIONAL([ENABLE_UNITTESTS], [test "x${enable_unittests}" = xyes])
 
+AC_ARG_ENABLE([svgdeserial],
+  [AS_HELP_STRING([--enable-svgdeserial], [build svgdeserial functionality [default=no]])],
+  [enable_svgdeserial=$enableval], [enable_svgdeserial=no])
+AM_CONDITIONAL([ENABLE_SVGDESERIAL], [test "x${enable_svgdeserial}" = xyes])
+if test "x${enable_svgdeserial}" = xyes; then
+   AC_SUBST(include_svgdeserial, ["#define EGT_HAS_SVGDESERIAL 1"])
+fi
+
 AC_CONFIG_FILES([Makefile
 	src/Makefile
 	external/Makefile

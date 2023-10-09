@@ -395,6 +395,14 @@ nobase_libegtinclude_HEADERS += \
 ../include/egt/virtualkeyboard.h
 endif
 
+if ENABLE_SVGDESERIAL
+libegt_la_SOURCES += \
+svgdeserial.cpp
+
+nobase_libegtinclude_HEADERS += \
+../include/egt/svgdeserial.h
+endif
+
 if OS_WIN32
 libegt_la_LIBADD += -lws2_32 -lintl
 endif
