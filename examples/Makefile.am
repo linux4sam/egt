@@ -99,6 +99,11 @@ bin_PROGRAMS += \
 virtualkeyboard/virtualkeyboard
 endif
 
+if ENABLE_SVGDESERIAL
+bin_PROGRAMS += \
+motorcycledash/motorcycledash
+endif
+
 EXTRA_DIST =
 CLEANFILES =
 
@@ -347,6 +352,15 @@ virtualkeyboard_virtualkeyboard_SOURCES = virtualkeyboard/virtualkeyboard.cpp
 virtualkeyboard_virtualkeyboard_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 virtualkeyboard_virtualkeyboard_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 virtualkeyboard_virtualkeyboard_LDFLAGS = $(AM_LDFLAGS)
+
+motorcycledash_motorcycledash_SOURCES = motorcycledash/motorcycledash.cpp
+motorcycledash_motorcycledash_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
+	-DEXAMPLEDATA=\"$(datadir)/egt/examples/motorcycledash\"
+motorcycledash_motorcycledash_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
+motorcycledash_motorcycledashdir = $(prefix)/share/egt/examples/motorcycledash
+motorcycledash_motorcycledash_DATA = $(wildcard $(top_srcdir)/examples/motorcycledash/eraw.bin) \
+  $(wildcard $(top_srcdir)/examples/motorcycledash/*.png)
+motorcycledash_motorcycledash_LDFLAGS = $(AM_LDFLAGS)
 
 TIDY_FLAGS = $(CUSTOM_CXXFLAGS)
 include ../src/Makefile.tidy
