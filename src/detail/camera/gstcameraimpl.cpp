@@ -511,6 +511,7 @@ void CameraImpl::stop()
         {
             detail::error("set pipeline to NULL state failed");
         }
+        gst_object_unref(m_appsink);
         g_object_unref(m_pipeline);
         m_pipeline = nullptr;
     }
