@@ -467,7 +467,21 @@ bool CameraImpl::start()
     gst_bus_add_watch(bus, &bus_callback, this);
     gst_object_unref(bus);
 
-    int ret = gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
+    /*
+     * GStreamer documentation states about GstParse that these functions take
+     * several measures to create somewhat dynamic pipelines. Due to that such
+     * pipelines are not always reusable (set the state to NULL and back to
+     * PLAYING).
+     */
+    int ret = gst_element_set_state(m_pipeline, GST_STATE_NULL);
+    if (ret == GST_STATE_CHANGE_FAILURE)
+    {
+        m_interface.on_error.invoke("failed to set pipeline to null state");
+        stop();
+        return false;
+    }
+
+    ret = gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
     if (ret == GST_STATE_CHANGE_FAILURE)
     {
         m_interface.on_error.invoke("failed to set pipeline to play state");
