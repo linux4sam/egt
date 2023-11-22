@@ -1912,8 +1912,12 @@ size_t TextBox::point2pos(const Point& p) const
         cairo_set_scaled_font(cr, font().scaled_font());
         for (size_t len = r.length(); len > 0; --len)
         {
+            auto first = r.text().begin();
+            auto last = first;
+            utf8::advance(last, len, r.text().end());
+            auto text = std::string(first, last);
             cairo_text_extents_t te;
-            cairo_text_extents(cr, r.text().substr(0, len).c_str(), &te);
+            cairo_text_extents(cr, text.c_str(), &te);
             if (te.x_advance <= delta_x)
             {
                 pos += len;
