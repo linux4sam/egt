@@ -7,11 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - Sound: add media, stop, and enumerate_pcm_devices methods to the API
 ### Fixed
-- GStreamer: fix a memory leak related to GStreamer usage.
+- GStreamer: fix memory leaks related to GStreamer usage.
 - PlaneWindow: the show method bypasses the EventLoop to display the overlay.
 It prevents glitches when switching from one window to another.
 - TextBox: fix a crash happening with sliders when there was no size defined
 for the textbox.
+- TextBox: fix position computation with UTF-8 characters.
 
 ## [1.7] - 2023-05-12
 ### Added
