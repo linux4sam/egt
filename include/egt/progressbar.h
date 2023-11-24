@@ -218,6 +218,8 @@ void ProgressBarType<T>::serialize(Serializer& serializer) const
     ValueRangeWidget<T>::serialize(serializer);
 
     serializer.add_property("show_label", detail::to_string(this->m_show_label));
+    if (show_percentage())
+        serializer.add_property("show_percentage", show_percentage());
 }
 
 template <class T>
@@ -228,6 +230,11 @@ void ProgressBarType<T>::deserialize(Serializer::Properties& props)
         if (std::get<0>(p) == "show_label")
         {
             m_show_label = detail::from_string(std::get<1>(p));
+            return true;
+        }
+        else if (std::get<0>(p) == "show_percentage")
+        {
+            show_percentage(detail::from_string(std::get<1>(p)));
             return true;
         }
         return false;
