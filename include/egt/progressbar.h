@@ -12,6 +12,7 @@
  */
 #include <egt/app.h>
 #include <egt/detail/alignment.h>
+#include <egt/detail/enum.h>
 #include <egt/detail/math.h>
 #include <egt/detail/meta.h>
 #include <egt/detail/screen/composerscreen.h>
@@ -26,6 +27,15 @@ namespace egt
 {
 inline namespace v1
 {
+
+/// ProgressBar Style
+enum class ProgressBarStyle
+{
+    left_to_right = 0, /* default */
+    right_to_left,
+    top_to_bottom,
+    bottom_to_top,
+};
 
 /**
  * Displays a progress bar based on a value.
@@ -100,15 +110,56 @@ public:
         widget.draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
         auto b = widget.content_area();
-        auto width = detail::normalize<float>(widget.value(),
-                                              widget.starting(),
-                                              widget.ending(), 0, b.width());
+        auto style = widget.style();
+        auto draw_bar = false;
+        Rect r;
 
-        if ((width > 0.0f) && b.height())
+        if (style == ProgressBarStyle::left_to_right ||
+            style == ProgressBarStyle::right_to_left)
+        {
+            /*
+             * Convert directly into DefaultDim to avoid rounding issues
+             * of '- width' when computing 'x' for the 'right_to_left' style.
+             */
+            DefaultDim width = detail::normalize<float>(widget.value(),
+                               widget.starting(),
+                               widget.ending(), 0, b.width());
+
+            if (width && b.height())
+            {
+                auto x = b.x();
+                if (style == ProgressBarStyle::right_to_left)
+                    x = b.x() + b.width() - width;
+                r = Rect(x, b.y(), width, b.height());
+                draw_bar = true;
+            }
+        }
+        else if (style == ProgressBarStyle::top_to_bottom ||
+                 style == ProgressBarStyle::bottom_to_top)
+        {
+            /*
+             * Convert directly into DefaultDim to avoid rounding issues
+             * of '- height' when computing 'y' for the 'bottom_to_top' style.
+             */
+            DefaultDim height = detail::normalize<float>(widget.value(),
+                                widget.starting(),
+                                widget.ending(), 0, b.height());
+
+            if (height && b.width())
+            {
+                auto y = b.y();
+                if (style == ProgressBarStyle::bottom_to_top)
+                    y = b.y() + b.height() - height;
+                r = Rect(b.x(), y, b.width(), height);
+                draw_bar = true;
+            }
+        }
+
+        if (draw_bar)
         {
             widget.theme().draw_box(painter,
                                     Theme::FillFlag::blend,
-                                    Rect(b.x(), b.y(), width, b.height()),
+                                    r,
                                     Color(),
                                     widget.color(Palette::ColorId::button_bg));
         }
@@ -189,6 +240,24 @@ public:
      */
     EGT_NODISCARD bool show_percentage() const { return m_show_percentage; }
 
+    /**
+     * Set the style of the progress bar.
+     *
+     * @param[in] style The selected style to draw the progress bar.
+     */
+    void style(ProgressBarStyle style)
+    {
+        if (detail::change_if_diff<>(m_style, style))
+        {
+            this->damage();
+        }
+    }
+
+    /**
+     * Get the style of the progress bar.
+     */
+    EGT_NODISCARD ProgressBarStyle style() const { return m_style; }
+
     void serialize(Serializer& serializer) const override;
 
 protected:
@@ -201,6 +270,11 @@ protected:
      * When true, the value is displayed in percentage.
      */
     bool m_show_percentage{false};
+
+    /**
+     * The style of the progress bar to be drawn.
+     */
+    ProgressBarStyle m_style{ProgressBarStyle::left_to_right};
 
 private:
     /// Default size.
@@ -220,6 +294,8 @@ void ProgressBarType<T>::serialize(Serializer& serializer) const
     serializer.add_property("show_label", detail::to_string(this->m_show_label));
     if (show_percentage())
         serializer.add_property("show_percentage", show_percentage());
+    if (style() != ProgressBarStyle::left_to_right)
+        serializer.add_property("style", detail::enum_to_string(style()));
 }
 
 template <class T>
@@ -235,6 +311,11 @@ void ProgressBarType<T>::deserialize(Serializer::Properties& props)
         else if (std::get<0>(p) == "show_percentage")
         {
             show_percentage(detail::from_string(std::get<1>(p)));
+            return true;
+        }
+        else if (std::get<0>(p) == "style")
+        {
+            style(detail::enum_from_string<ProgressBarStyle>(std::get<1>(p)));
             return true;
         }
         return false;
@@ -319,6 +400,10 @@ void ProgressBarType<T>::default_size(const Size& size)
 
     ProgressBarType<T>::m_default_size = size;
 }
+
+/// Enum string conversion map
+template<>
+EGT_API const std::pair<ProgressBarStyle, char const*> detail::EnumStrings<ProgressBarStyle>::data[4];
 
 /**
  * Displays a spinning progress meter.
