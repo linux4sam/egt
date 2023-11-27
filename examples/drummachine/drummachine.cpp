@@ -49,7 +49,8 @@ int main(int argc, char** argv)
         button->resize(egt::Size(100, 100));
 
         std::shared_ptr<egt::experimental::Sound> sound;
-        try {
+        try
+        {
             sound = std::make_shared<egt::experimental::Sound>(drum.first);
         }
         catch (...)
