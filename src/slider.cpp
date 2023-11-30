@@ -13,55 +13,15 @@ inline namespace v1
 {
 
 template<>
-void SliderType<float>::draw_label(Painter& painter, float value)
+std::string SliderType<float>::format_label(float value)
 {
-    const auto b = this->content_area();
-    auto handle = handle_box(value);
-
-    if (m_orient == Orientation::horizontal)
-        handle -= Point(0, b.height() / 2.);
-    else
-        handle -= Point(b.width() / 2., 0);
-
-    const auto text = detail::format(value, 2);
-    const auto f = TextWidget::scale_font(handle.size(), text, this->font());
-
-    painter.set(this->color(Palette::ColorId::label_text));
-    painter.set(f);
-
-    const auto text_size = painter.text_size(text);
-    const auto target = detail::align_algorithm(text_size,
-                        handle,
-                        AlignFlag::center,
-                        5);
-    painter.draw(target.point());
-    painter.draw(text);
+    return detail::format(value, 2);
 }
 
 template<>
-void SliderType<double>::draw_label(Painter& painter, double value)
+std::string SliderType<double>::format_label(double value)
 {
-    const auto b = this->content_area();
-    auto handle = handle_box(value);
-
-    if (m_orient == Orientation::horizontal)
-        handle -= Point(0, b.height() / 2.);
-    else
-        handle -= Point(b.width() / 2., 0);
-
-    const auto text = detail::format(value, 2);
-    const auto f = TextWidget::scale_font(handle.size(), text, this->font());
-
-    painter.set(this->color(Palette::ColorId::label_text));
-    painter.set(f);
-
-    const auto text_size = painter.text_size(text);
-    const auto target = detail::align_algorithm(text_size,
-                        handle,
-                        AlignFlag::center,
-                        5);
-    painter.draw(target.point());
-    painter.draw(text);
+    return detail::format(value, 2);
 }
 
 template<>

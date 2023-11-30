@@ -339,7 +339,7 @@ protected:
         else
             handle_rect -= Point(b.width() / 2., 0);
 
-        const auto text = std::to_string(value);
+        const auto text = format_label(value);
         const auto f = TextWidget::scale_font(handle_rect.size(), text, this->font());
 
         painter.set(this->color(Palette::ColorId::label_text));
@@ -359,6 +359,12 @@ protected:
 
     /// Draw the line.
     void draw_line(Painter& painter, float xp, float yp);
+
+    /// Format the label text.
+    static std::string format_label(T value)
+    {
+        return std::to_string(value);
+    }
 
     /// Orientation of the slider.
     Orientation m_orient{Orientation::horizontal};
@@ -720,13 +726,13 @@ void SliderType<T>::draw_line(Painter& painter, float xp, float yp)
     }
 }
 
-/// Draw the value label specialized for float.
+/// Format the value label specialized for float.
 template<>
-EGT_API void SliderType<float>::draw_label(Painter& painter, float value);
+EGT_API std::string SliderType<float>::format_label(float value);
 
-/// Draw the value label specialized for double.
+/// Format the value label specialized for double.
 template<>
-EGT_API void SliderType<double>::draw_label(Painter& painter, double value);
+EGT_API std::string SliderType<double>::format_label(double value);
 
 template <class T>
 void SliderType<T>::serialize(Serializer& serializer) const
