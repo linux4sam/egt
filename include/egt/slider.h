@@ -12,6 +12,7 @@
  */
 
 #include <egt/app.h>
+#include <egt/canvas.h>
 #include <egt/detail/alignment.h>
 #include <egt/detail/enum.h>
 #include <egt/detail/math.h>
@@ -301,9 +302,25 @@ protected:
         else
             value = detail::clamp<T>(value, this->m_end, this->m_start);
 
+        T prev_value = this->m_value;
         if (detail::change_if_diff<>(this->m_value, value))
         {
-            this->damage();
+            auto r = Rect::merge(handle_box(prev_value), handle_box());
+            this->damage(r);
+
+            if (slider_flags().is_set(SliderFlag::show_label))
+            {
+                std::string text;
+                Canvas canvas(Size(100, 100));
+                Painter painter(canvas.context());
+
+                auto label_rect = label_box(painter, prev_value, text);
+                this->damage(label_rect);
+
+                label_rect = label_box(painter, this->m_value, text);
+                this->damage(label_rect);
+            }
+
             if (m_live_update)
             {
                 this->on_value_changed.invoke();
@@ -328,8 +345,8 @@ protected:
     /// Get the handle box for the specified value.
     EGT_NODISCARD Rect handle_box(T value) const;
 
-    /// Draw the value label.
-    void draw_label(Painter& painter, T value)
+    /// Get the label box and text for the specified value.
+    EGT_NODISCARD Rect label_box(Painter& painter, T value, std::string& text) const
     {
         const auto b = this->content_area();
         auto handle_rect = handle_box(value);
@@ -339,7 +356,7 @@ protected:
         else
             handle_rect -= Point(b.width() / 2., 0);
 
-        const auto text = format_label(value);
+        text = format_label(value);
 
         painter.set(this->color(Palette::ColorId::label_text));
         painter.set(this->font());
@@ -369,6 +386,14 @@ protected:
                 target.y(b.y() + b.height() - target.height());
         }
 
+        return target;
+    }
+
+    /// Draw the value label.
+    void draw_label(Painter& painter, T value)
+    {
+        std::string text;
+        const auto target = label_box(painter, value, text);
         painter.draw(target.point());
         painter.draw(text);
     }
