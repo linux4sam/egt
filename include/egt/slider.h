@@ -495,44 +495,24 @@ void SliderType<T>::draw(Painter& painter, const Rect& /*rect*/)
     auto yp = b.y() + b.height() / 2.;
     auto xp = b.x() + b.width() / 2.;
 
-    if (m_orient == Orientation::horizontal)
+    if (slider_flags().is_set(SliderFlag::show_labels) ||
+        slider_flags().is_set(SliderFlag::show_label))
     {
-        if (slider_flags().is_set(SliderFlag::show_labels) ||
-            slider_flags().is_set(SliderFlag::show_label))
-        {
+        if (m_orient == Orientation::horizontal)
             yp += b.height() / 4.;
-
-            if (slider_flags().is_set(SliderFlag::show_label))
-            {
-                draw_label(painter, this->value());
-            }
-            else
-            {
-                draw_label(painter, this->starting());
-                draw_label(painter, this->starting() + ((this->ending() - this->starting()) / 2));
-                draw_label(painter, this->ending());
-            }
-        }
-    }
-    else
-    {
-        if (slider_flags().is_set(SliderFlag::show_labels) ||
-            slider_flags().is_set(SliderFlag::show_label))
-        {
+        else
             xp += b.width() / 4.;
 
-            if (slider_flags().is_set(SliderFlag::show_label))
-            {
-                draw_label(painter, this->value());
-            }
-            else
-            {
-                draw_label(painter, this->starting());
-                draw_label(painter, this->starting() + ((this->ending() - this->starting()) / 2));
-                draw_label(painter, this->ending());
-            }
+        if (slider_flags().is_set(SliderFlag::show_label))
+        {
+            draw_label(painter, this->value());
         }
-
+        else
+        {
+            draw_label(painter, this->starting());
+            draw_label(painter, this->starting() + ((this->ending() - this->starting()) / 2));
+            draw_label(painter, this->ending());
+        }
     }
 
     // line
