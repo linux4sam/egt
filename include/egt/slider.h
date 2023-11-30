@@ -340,16 +340,35 @@ protected:
             handle_rect -= Point(b.width() / 2., 0);
 
         const auto text = format_label(value);
-        const auto f = TextWidget::scale_font(handle_rect.size(), text, this->font());
 
         painter.set(this->color(Palette::ColorId::label_text));
-        painter.set(f);
+        painter.set(this->font());
 
         const auto text_size = painter.text_size(text);
-        const auto target = detail::align_algorithm(text_size,
-                            handle_rect,
-                            AlignFlag::center,
-                            5);
+        auto target = detail::align_algorithm(text_size,
+                                              handle_rect,
+                                              AlignFlag::center,
+                                              5);
+
+        /// When possible, force the label box within the content area.
+        if (target.width() <= b.width())
+        {
+            if (target.x() < b.x())
+                target.x(b.x());
+
+            if (target.x() + target.width() > b.x() + b.width())
+                target.x(b.x() + b.width() - target.width());
+        }
+
+        if (target.height() <= b.height())
+        {
+            if (target.y() < b.y())
+                target.y(b.y());
+
+            if (target.y() + target.height() > b.y() + b.height())
+                target.y(b.y() + b.height() - target.height());
+        }
+
         painter.draw(target.point());
         painter.draw(text);
     }
