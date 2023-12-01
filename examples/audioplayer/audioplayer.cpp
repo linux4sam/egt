@@ -6,7 +6,9 @@
 #include <cxxopts.hpp>
 #include <egt/asio.hpp>
 #include <egt/ui>
+#include <exception>
 #include <iomanip>
+#include <memory>
 #include <sstream>
 
 class Controls : public egt::StaticGrid
@@ -93,7 +95,7 @@ struct AudioRadial : public egt::experimental::Radial
     std::shared_ptr<egt::RangeValue<int>> m_value;
 };
 
-class AudioPlayerWindow : public egt::TopWindow
+class AudioPlayerWindow : public egt::Window
 {
 public:
     AudioPlayerWindow() = delete;
@@ -261,8 +263,25 @@ int main(int argc, char** argv)
 
     egt::Application::instance().screen()->high_fidelity();
 
-    AudioPlayerWindow win(args["input"].as<std::string>());
-    win.show();
+    egt::TopWindow top_window;
+
+    /*
+     * The AudioPlayerWindow has an AudioPlayer widget that throws an
+     * exception if there is no sound card.
+     */
+    try
+    {
+	auto win = std::make_shared<AudioPlayerWindow>(args["input"].as<std::string>());
+	top_window.add(egt::expand(win));
+	win->show();
+    }
+    catch (std::exception& e)
+    {
+	auto msg = std::make_shared<egt::Label>(e.what());
+	top_window.add(egt::center(msg));
+    }
+
+    top_window.show();
 
     return app.run();
 }
