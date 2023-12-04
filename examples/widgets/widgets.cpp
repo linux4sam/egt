@@ -287,11 +287,24 @@ struct ProgressPage : public egt::NotebookTab
         grid0->add(egt::expand(spinprogress));
 
         auto progressbar = std::make_shared<egt::ProgressBar>();
+        progressbar->show_label(false);
         grid0->add(egt::expand(progressbar));
 
         auto progressbar1 = std::make_shared<egt::ProgressBar>();
-        progressbar1->show_label(false);
+        progressbar1->style(egt::ProgressBarStyle::left_to_right);
         grid0->add(egt::expand(progressbar1));
+
+        auto progressbar2 = std::make_shared<egt::ProgressBar>();
+        progressbar2->style(egt::ProgressBarStyle::right_to_left);
+        grid0->add(egt::expand(progressbar2));
+
+        auto progressbar3 = std::make_shared<egt::ProgressBar>();
+        progressbar3->style(egt::ProgressBarStyle::top_to_bottom);
+        grid0->add(egt::expand(progressbar3));
+
+        auto progressbar4 = std::make_shared<egt::ProgressBar>();
+        progressbar4->style(egt::ProgressBarStyle::bottom_to_top);
+        grid0->add(egt::expand(progressbar4));
 
         auto hsizer = std::make_shared<egt::HorizontalBoxSizer>();
         vsizer->add(egt::expand_horizontal(hsizer));
@@ -323,6 +336,9 @@ struct ProgressPage : public egt::NotebookTab
         m_animators.push_back(demo_up_down_animator(spinprogress));
         m_animators.push_back(demo_up_down_animator(progressbar));
         m_animators.push_back(demo_up_down_animator(progressbar1));
+        m_animators.push_back(demo_up_down_animator(progressbar2));
+        m_animators.push_back(demo_up_down_animator(progressbar3));
+        m_animators.push_back(demo_up_down_animator(progressbar4));
     }
 
     std::vector<std::unique_ptr<egt::AnimationSequence>> m_animators;
