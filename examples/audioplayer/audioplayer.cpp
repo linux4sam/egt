@@ -272,7 +272,8 @@ int main(int argc, char** argv)
     try
     {
 	auto win = std::make_shared<AudioPlayerWindow>(args["input"].as<std::string>());
-	top_window.add(egt::expand(win));
+	win->resize(egt::Application::instance().screen()->size());
+	top_window.add(win);
 	win->show();
     }
     catch (std::exception& e)
