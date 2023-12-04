@@ -161,7 +161,10 @@ public:
                                     Theme::FillFlag::blend,
                                     r,
                                     Color(),
-                                    widget.color(Palette::ColorId::button_bg));
+                                    widget.color(Palette::ColorId::button_bg),
+                                    0,
+                                    0,
+                                    widget.border_radius());
         }
 
         if (widget.show_label())
