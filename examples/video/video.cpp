@@ -304,9 +304,10 @@ int main(int argc, char** argv)
         }
     });
 
+    win.show();
+    win.layout();
     player.show();
     ctrlwindow.show();
-    win.show();
 
     return app.run();
 }
