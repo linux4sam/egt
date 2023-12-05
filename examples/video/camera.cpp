@@ -216,9 +216,10 @@ int main(int argc, char** argv)
     });
     cputimer.start();
 
+    win.show();
+    win.layout();
     player.show();
     ctrlwindow.show();
-    win.show();
 
     return app.run();
 }
