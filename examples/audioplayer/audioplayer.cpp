@@ -95,21 +95,22 @@ struct AudioRadial : public egt::experimental::Radial
     std::shared_ptr<egt::RangeValue<int>> m_value;
 };
 
-class AudioPlayerWindow : public egt::Window
+class AudioPlayer : public egt::Widget
 {
 public:
-    AudioPlayerWindow() = delete;
+    AudioPlayer() = delete;
 
-    explicit AudioPlayerWindow(const std::string& uri)
+    explicit AudioPlayer(const std::string& uri)
         : m_colormap({egt::Color(76, 181, 253), egt::Color(34, 186, 133)})
+
     {
-        background(egt::Image("file:background.png"));
+        add_component(m_background);
 
         auto range0 = std::make_shared<egt::RangeValue<int>>(0, 100, 100);
         auto range1 = std::make_shared<egt::RangeValue<int>>(0, 100, 100);
         auto range2 = std::make_shared<egt::RangeValue<int>>(0, 100, 0);
 
-        m_dial = std::make_shared<AudioRadial>(range2);
+        m_dial = std::make_unique<AudioRadial>(range2);
         m_dial->add(range0, egt::Color(egt::Palette::white, 55), 21);
         m_dial->add(range1, egt::Color(17, 17, 17, 180), 13);
         egt::experimental::Radial::RadialFlags flags
@@ -120,8 +121,8 @@ public:
         auto range2handle = m_dial->add(range2, {}, 15, flags);
         m_dial->margin(50);
         m_dial->align(egt::AlignFlag::expand);
-        add(m_dial);
-        add(m_controls);
+        add_component(*m_dial.get());
+        add_component(m_controls);
 
         m_controls.m_play.on_click([this](egt::Event&)
         {
@@ -139,13 +140,12 @@ public:
             }
         });
 
-        auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_white.png;128"));
-        logo->align(egt::AlignFlag::left | egt::AlignFlag::top);
-        logo->margin(10);
-        add(logo);
+        m_logo.align(egt::AlignFlag::left | egt::AlignFlag::top);
+        m_logo.margin(10);
+        add_component(m_logo);
 
-        auto message_dialog = std::make_shared<egt::Dialog>(this->size() * 0.75);
-        message_dialog->title("Audio Player Example");
+        m_message_dialog.resize(this->size() * 0.75);
+        m_message_dialog.title("Audio Player Example");
         std::string dialog_text("This is an Ensemble Graphics "
                                 "Toolkit audio player example that "
                                 "uses egt::AudioPlayer to play mp3, "
@@ -153,30 +153,29 @@ public:
                                 "seamlessly.");
         auto text = std::make_shared<egt::TextBox>(dialog_text);
         text->readonly(true);
-        message_dialog->widget(expand(text));
-        message_dialog->button(egt::Dialog::ButtonId::button1, "");
-        message_dialog->button(egt::Dialog::ButtonId::button2, "OK");
-        add(message_dialog);
+        m_message_dialog.widget(expand(text));
+        m_message_dialog.button(egt::Dialog::ButtonId::button1, "");
+        m_message_dialog.button(egt::Dialog::ButtonId::button2, "OK");
+        add_component(m_message_dialog);
 
-        auto note = std::make_shared<egt::ImageButton>(egt::Image("file:note.png"));
-        note->fill_flags().clear();
-        note->align(egt::AlignFlag::right | egt::AlignFlag::bottom);
-        note->margin(10);
-        add(note);
-        note->on_click([message_dialog, text, dialog_text](egt::Event&)
+        note.fill_flags().clear();
+        note.align(egt::AlignFlag::right | egt::AlignFlag::bottom);
+        note.margin(10);
+        add_component(note);
+        note.on_click([this, text, dialog_text](egt::Event&)
         {
             text->text(dialog_text);
-            message_dialog->button(egt::Dialog::ButtonId::button2, "OK");
-            message_dialog->show_modal(true);
+            m_message_dialog.button(egt::Dialog::ButtonId::button2, "OK");
+            m_message_dialog.show_modal(true);
         });
 
-        m_player.on_error([message_dialog, text](const std::string & err)
+        m_player.on_error([this, text](const std::string & err)
         {
             if (!err.empty())
             {
                 text->text("Error : " + err);
-                message_dialog->button(egt::Dialog::ButtonId::button2, "");
-                message_dialog->show_modal(true);
+                m_message_dialog.button(egt::Dialog::ButtonId::button2, "");
+                m_message_dialog.show_modal(true);
             }
         });
 
@@ -234,11 +233,15 @@ public:
 
 protected:
 
-    std::shared_ptr<AudioRadial> m_dial;
+    std::unique_ptr<AudioRadial> m_dial;
     Controls m_controls;
     egt::AudioPlayer m_player;
     egt::AnimationSequence m_animation{true};
     egt::experimental::ColorMap m_colormap;
+    egt::ImageLabel m_background{egt::Image{"file:background.png"}};
+    egt::ImageLabel m_logo{(egt::Image("icon:egt_logo_white.png;128"))};
+    egt::Dialog m_message_dialog;
+    egt::ImageButton note{egt::Image("file:note.png")};
 };
 
 int main(int argc, char** argv)
@@ -271,15 +274,20 @@ int main(int argc, char** argv)
      */
     try
     {
-	auto win = std::make_shared<AudioPlayerWindow>(args["input"].as<std::string>());
-	win->resize(egt::Application::instance().screen()->size());
-	top_window.add(win);
-	win->show();
+        auto win = std::make_shared<AudioPlayer>(args["input"].as<std::string>());
+        top_window.add(egt::expand(win));
     }
     catch (std::exception& e)
     {
-	auto msg = std::make_shared<egt::Label>(e.what());
-	top_window.add(egt::center(msg));
+        top_window.color(egt::Palette::ColorId::bg, egt::Palette::black);
+
+        auto msg = std::make_shared<egt::Label>(e.what());
+        msg->border(2);
+        msg->fill_flags(egt::Theme::FillFlag::solid);
+        msg->color(egt::Palette::ColorId::border, egt::Palette::red);
+        msg->color(egt::Palette::ColorId::label_bg, egt::Palette::white);
+        msg->resize(egt::Application::instance().screen()->size() * 0.75);
+        top_window.add(egt::center(msg));
     }
 
     top_window.show();
