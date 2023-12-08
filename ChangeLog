@@ -3,13 +3,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [Unreleased]
+## [1.8] - 2023-12-08
 ### Added
+- The audioplayer example displays an error message when there is no sound
+card instead of crashing.
+- ProgressBar: add a style property to choose the direction: left to right,
+right to left, bottom to top, or top to bottom.
 - Sound: add media, stop, and enumerate_pcm_devices methods to the API
 ### Fixed
 - GStreamer: fix memory leaks related to GStreamer usage.
 - PlaneWindow: the show method bypasses the EventLoop to display the overlay.
 It prevents glitches when switching from one window to another.
+- ProgressBar: the show_percentage property is now serialized/deserialized.
 - TextBox: fix a crash happening with sliders when there was no size defined
 for the textbox.
 - TextBox: fix position computation with UTF-8 characters.
