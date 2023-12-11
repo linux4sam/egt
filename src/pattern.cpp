@@ -155,7 +155,13 @@ bool Pattern::operator==(const Pattern& rhs) const
     if (m_type == Type::solid)
         return m_color == rhs.m_color;
 
-    return m_impl == rhs.m_impl;
+    if (m_impl == rhs.m_impl)
+        return true;
+
+    if (!m_impl || !rhs.m_impl)
+        return false;
+
+    return *m_impl == *rhs.m_impl;
 }
 
 Pattern& Pattern::step(StepScaler offset, const Color& color)
