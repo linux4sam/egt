@@ -1706,7 +1706,7 @@ protected:
     SubordinatesArray m_subordinates;
 
     /// Return the array of child widgets.
-    EGT_NODISCARD const detail::Range<SubordinatesArray> children() const
+    EGT_NODISCARD const detail::Range<SubordinatesArray>& children() const
     {
         return m_children;
     }
