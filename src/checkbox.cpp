@@ -172,8 +172,7 @@ void CheckBox::default_draw(const CheckBox& widget, Painter& painter, const Rect
                                 border);
         // text
         painter.set(widget.color(Palette::ColorId::label_text));
-        auto size = painter.text_size(widget.text());
-        Rect target = detail::align_algorithm(size,
+        Rect target = detail::align_algorithm(text_size,
                                               text,
                                               widget.text_align());
         painter.draw(target.point());
