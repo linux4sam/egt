@@ -8,6 +8,7 @@
 #include <cairo.h>
 #include <deque>
 #include <sstream>
+#include <string.h>
 
 namespace egt
 {
@@ -161,17 +162,30 @@ Size Painter::text_size(const std::string& text)
     cairo_font_extents(m_cr.get(), &fontext);
     const double line_recommended_height = fontext.height;
 
-    std::istringstream lines(text);
-    std::string line;
     unsigned int n = 0;
     double line_max_width = 0;
-    while (std::getline(lines, line))
+
+    char* lines = strdup(text.c_str());
+    char* line = lines;
+    while (line)
     {
+        char* eol = strchr(line, '\n');
+        char* next = nullptr;
+
+        if (eol)
+        {
+            *eol = '\0';
+            next = eol + 1;
+        }
+
         cairo_text_extents_t textext;
-        cairo_text_extents(m_cr.get(), line.c_str(), &textext);
+        cairo_text_extents(m_cr.get(), line, &textext);
         line_max_width = std::max(line_max_width, textext.width);
         ++n;
+
+        line = next;
     }
+    free(lines);
 
     return {static_cast<Size::DimType>(std::floor(line_max_width + 1.0)),
             static_cast<Size::DimType>(std::floor(n * line_recommended_height + 1.0))};
