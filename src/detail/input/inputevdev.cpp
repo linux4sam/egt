@@ -64,9 +64,10 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
 
     int dx = 0;
     int dy = 0;
-    int x = 0;
-    int y = 0;
-    bool absolute_event = false;
+    int x = m_last_point.x();
+    int y = m_last_point.y();
+    int last_x = m_last_point.x();
+    int last_y = m_last_point.y();
 
     if (length == 0 || length % sizeof(e[0]) != 0)
     {
@@ -98,7 +99,6 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
             break;
 
         case EV_ABS:
-            absolute_event = true;
             switch (e->code)
             {
             case ABS_X:
@@ -113,6 +113,25 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
             break;
 
         case EV_KEY:
+            /*
+             * We are going through all the pending input events. The key
+             * event type can be in the middle of abs or rel event types. So we
+             * need to check if the pointer position has changed. If yes, it
+             * has to be updated to report an accurate key event.
+             */
+            if (dx != 0 || dy != 0)
+            {
+                m_last_point = DisplayPoint(m_last_point.x() + dx,
+                                            m_last_point.y() + dy);
+                dx = 0;
+                dy = 0;
+            }
+            else if (x != last_x || y != last_y)
+            {
+                m_last_point = DisplayPoint(x, y);
+                last_x = x;
+                last_y = y;
+            }
             switch (e->code)
             {
             case BTN_TOOL_PEN:
@@ -187,20 +206,17 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
         }
     }
 
-    if (absolute_event)
+    if (dx != 0 || dy != 0)
+    {
+        m_last_point = DisplayPoint(m_last_point.x() + dx, m_last_point.y() + dy);
+        Event event(EventId::raw_pointer_move, Pointer(m_last_point));
+        dispatch(event);
+    }
+    else if (x != last_x || y != last_y)
     {
         m_last_point = DisplayPoint(x, y);
         Event event(EventId::raw_pointer_move, Pointer(m_last_point));
         dispatch(event);
-    }
-    else
-    {
-        if (dx != 0 || dy != 0)
-        {
-            m_last_point = DisplayPoint(m_last_point.x() + dx, m_last_point.y() + dy);
-            Event event(EventId::raw_pointer_move, Pointer(m_last_point));
-            dispatch(event);
-        }
     }
 
     asio::async_read(m_input, asio::buffer(m_input_buf.data(), m_input_buf.size()),
