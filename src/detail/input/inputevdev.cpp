@@ -102,9 +102,11 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
             switch (e->code)
             {
             case ABS_X:
+            case ABS_MT_POSITION_X:
                 x = static_cast<double>(value);
                 break;
             case ABS_Y:
+            case ABS_MT_POSITION_Y:
                 y = static_cast<double>(value);
                 break;
             }
