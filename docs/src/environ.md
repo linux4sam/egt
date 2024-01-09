@@ -60,6 +60,8 @@ EGT_DEBUG=1 EGT_KMS_BUFFERS=1 ./egt_space
     - tslib
     - evdev
 
+    Specifying input devices remove the default backend.
+
     Use libinput and tslib to handle different touchscreens:
     @code{.sh}
     EGT_INPUT_DEVICES=libinput:/dev/input/touchscreen0,/dev/input/touchscreen1;tslib:/dev/input/touchscreen2

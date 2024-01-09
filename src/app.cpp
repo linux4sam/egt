@@ -341,6 +341,8 @@ void Application::setup_inputs()
         {
 #ifndef HAVE_LIBINPUT
             detail::warn("libinput requested but no support compiled in");
+#else
+            m_inputs.push_back(std::make_unique<detail::InputLibInput>(*this, device.second));
 #endif
         }
         else

@@ -15,6 +15,7 @@
 #include "egt/keycode.h"
 #include "egt/screen.h"
 #include <cstdarg>
+#include <filesystem>
 #include <libinput.h>
 #include <libudev.h>
 #include <linux/input.h>
@@ -118,17 +119,55 @@ static struct libinput* tools_open_udev(const char* seat)
     return libinput_handle;
 }
 
-InputLibInput::InputLibInput(Application& app)
+static bool tools_open_device(const std::filesystem::path& device,
+                              struct libinput** libinput_handle)
+{
+    if (!std::filesystem::exists(device))
+    {
+        detail::warn("{} doesn't exist", device);
+        return false;
+    }
+
+    /*
+     * No need to create several handles if there are several devices
+     * specified, just add the devices.
+     */
+    if (!*libinput_handle)
+        *libinput_handle =  libinput_path_create_context(&interface, nullptr);
+
+    detail::debug("inputlibinput: adding {}", device);
+    auto libinput_device = libinput_path_add_device(*libinput_handle, device.c_str());
+    if (!libinput_device)
+    {
+        detail::warn("can't add {}", device);
+        return false;
+    }
+
+    return true;
+}
+
+InputLibInput::InputLibInput(Application& app, const std::filesystem::path& device)
     : m_app(app),
       m_input(app.event().io()),
       m_impl(std::make_unique<LibInputImpl>())
 {
-    const char* seat_or_device = "seat0";
-    m_libinput_handle = tools_open_udev(seat_or_device);
-    if (!m_libinput_handle)
+    if (device.empty())
     {
-        detail::warn("could not open libinput device: {}", seat_or_device);
-        return;
+        const char* seat_or_device = "seat0";
+        m_libinput_handle = tools_open_udev(seat_or_device);
+        if (!m_libinput_handle)
+        {
+            detail::warn("could not open libinput device: {}", seat_or_device);
+            return;
+        }
+    }
+    else
+    {
+        if (!tools_open_device(device, &m_libinput_handle))
+        {
+            detail::warn("could not open libinput device: {}", device);
+            return;
+        }
     }
 
     m_input.assign(libinput_get_fd(m_libinput_handle));

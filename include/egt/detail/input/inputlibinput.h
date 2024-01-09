@@ -16,6 +16,7 @@
 #include <egt/asio.hpp>
 #include <egt/detail/meta.h>
 #include <egt/input.h>
+#include <filesystem>
 #include <memory>
 
 struct libinput;
@@ -41,7 +42,7 @@ public:
     /**
      * @throws std::runtime_error if unable to open device.
      */
-    explicit InputLibInput(Application& app);
+    explicit InputLibInput(Application& app, const std::filesystem::path& device = {});
 
     ~InputLibInput() noexcept override;
 
@@ -65,7 +66,7 @@ private:
     struct LibInputImpl;
     std::unique_ptr<LibInputImpl> m_impl;
 
-    struct libinput* m_libinput_handle;
+    struct libinput* m_libinput_handle {nullptr};
 
     /// The last point seen, indexed by slot, used for reference internally.
     std::array<DisplayPoint, 2> m_last_point{};
