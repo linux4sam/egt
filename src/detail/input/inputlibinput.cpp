@@ -83,7 +83,7 @@ static void log_handler(struct libinput*,
 
 static struct libinput* tools_open_udev(const char* seat, bool grab)
 {
-    struct libinput* li;
+    struct libinput* libinput_handle;
     struct udev* udev = udev_new();
 
     if (!udev)
@@ -92,8 +92,8 @@ static struct libinput* tools_open_udev(const char* seat, bool grab)
         return nullptr;
     }
 
-    li = libinput_udev_create_context(&interface, &grab, udev);
-    if (!li)
+    libinput_handle = libinput_udev_create_context(&interface, &grab, udev);
+    if (!libinput_handle)
     {
         detail::warn("Failed to initialize context from udev");
         udev_unref(udev);
@@ -102,20 +102,20 @@ static struct libinput* tools_open_udev(const char* seat, bool grab)
 
     if (libinput_verbose())
     {
-        libinput_log_set_handler(li, log_handler);
-        libinput_log_set_priority(li, LIBINPUT_LOG_PRIORITY_DEBUG);
+        libinput_log_set_handler(libinput_handle, log_handler);
+        libinput_log_set_priority(libinput_handle, LIBINPUT_LOG_PRIORITY_DEBUG);
     }
 
-    if (libinput_udev_assign_seat(li, seat))
+    if (libinput_udev_assign_seat(libinput_handle, seat))
     {
         detail::warn("failed to set seat");
-        libinput_unref(li);
+        libinput_unref(libinput_handle);
         udev_unref(udev);
         return nullptr;
     }
 
     udev_unref(udev);
-    return li;
+    return libinput_handle;
 }
 
 InputLibInput::InputLibInput(Application& app)
