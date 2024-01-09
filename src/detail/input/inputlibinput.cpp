@@ -81,7 +81,7 @@ static void log_handler(struct libinput*,
     detail::info(buffer);
 }
 
-static struct libinput* tools_open_udev(const char* seat, bool grab)
+static struct libinput* tools_open_udev(const char* seat)
 {
     struct libinput* libinput_handle;
     struct udev* udev = udev_new();
@@ -92,7 +92,7 @@ static struct libinput* tools_open_udev(const char* seat, bool grab)
         return nullptr;
     }
 
-    libinput_handle = libinput_udev_create_context(&interface, &grab, udev);
+    libinput_handle = libinput_udev_create_context(&interface, nullptr, udev);
     if (!libinput_handle)
     {
         detail::warn("Failed to initialize context from udev");
@@ -124,7 +124,7 @@ InputLibInput::InputLibInput(Application& app)
       m_impl(std::make_unique<LibInputImpl>())
 {
     const char* seat_or_device = "seat0";
-    m_libinput_handle = tools_open_udev(seat_or_device, false);
+    m_libinput_handle = tools_open_udev(seat_or_device);
     if (!m_libinput_handle)
     {
         detail::warn("could not open libinput device: {}", seat_or_device);
