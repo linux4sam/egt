@@ -350,7 +350,8 @@ void Application::setup_inputs()
     }
 
 #ifdef HAVE_LIBINPUT
-    m_inputs.push_back(std::make_unique<detail::InputLibInput>(*this));
+    if (m_inputs.empty())
+        m_inputs.push_back(std::make_unique<detail::InputLibInput>(*this));
 #endif
 }
 

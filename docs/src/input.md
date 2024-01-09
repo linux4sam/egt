@@ -14,7 +14,9 @@ raw evdev        | Keyboard, Mouse, Touchscreen, Other
 X11              | Keyboard, Mouse, Touchscreen
 
 
-See @subpage environ for some environment variables that are useful for configuring
+By default, EGT uses the libinput backend configured to use seat0, so input devices
+are automatically detected with the help of udev. To change this behavior, see
+@subpage environ for some environment variables that are useful for configuring
 input devices.
 
 @section input_mapping Keyboard Mapping
