@@ -82,41 +82,40 @@ static void log_handler(struct libinput*,
     detail::info(buffer);
 }
 
-static struct libinput* tools_open_udev(const char* seat)
+static bool tools_open_udev(const char* seat, struct libinput** libinput_handle)
 {
-    struct libinput* libinput_handle;
     struct udev* udev = udev_new();
 
     if (!udev)
     {
         detail::warn("Failed to initialize udev");
-        return nullptr;
+        return false;
     }
 
-    libinput_handle = libinput_udev_create_context(&interface, nullptr, udev);
-    if (!libinput_handle)
+    *libinput_handle = libinput_udev_create_context(&interface, nullptr, udev);
+    if (!*libinput_handle)
     {
         detail::warn("Failed to initialize context from udev");
         udev_unref(udev);
-        return nullptr;
+        return false;
     }
 
     if (libinput_verbose())
     {
-        libinput_log_set_handler(libinput_handle, log_handler);
-        libinput_log_set_priority(libinput_handle, LIBINPUT_LOG_PRIORITY_DEBUG);
+        libinput_log_set_handler(*libinput_handle, log_handler);
+        libinput_log_set_priority(*libinput_handle, LIBINPUT_LOG_PRIORITY_DEBUG);
     }
 
-    if (libinput_udev_assign_seat(libinput_handle, seat))
+    if (libinput_udev_assign_seat(*libinput_handle, seat))
     {
         detail::warn("failed to set seat");
-        libinput_unref(libinput_handle);
+        libinput_unref(*libinput_handle);
         udev_unref(udev);
-        return nullptr;
+        return false;
     }
 
     udev_unref(udev);
-    return libinput_handle;
+    return true;
 }
 
 static bool tools_open_device(const std::filesystem::path& device,
@@ -153,11 +152,10 @@ InputLibInput::InputLibInput(Application& app, const std::filesystem::path& devi
 {
     if (device.empty())
     {
-        const char* seat_or_device = "seat0";
-        m_libinput_handle = tools_open_udev(seat_or_device);
-        if (!m_libinput_handle)
+        const char* seat = "seat0";
+        if (!tools_open_udev(seat, &m_libinput_handle))
         {
-            detail::warn("could not open libinput device: {}", seat_or_device);
+            detail::warn("could not open libinput device: {}", seat);
             return;
         }
     }
