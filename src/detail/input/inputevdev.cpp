@@ -113,7 +113,6 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
         case EV_KEY:
             switch (e->code)
             {
-            case BTN_TOUCH:
             case BTN_TOOL_PEN:
             case BTN_TOOL_RUBBER:
             case BTN_TOOL_BRUSH:
@@ -141,6 +140,13 @@ void InputEvDev::handle_read(const asio::error_code& error, std::size_t length)
             {
                 Event event(value ? EventId::raw_pointer_down : EventId::raw_pointer_up,
                             Pointer(m_last_point, Pointer::Button::middle));
+                dispatch(event);
+                break;
+            }
+            case BTN_TOUCH:
+            {
+                Event event(value ? EventId::raw_pointer_down : EventId::raw_pointer_up,
+                            Pointer(m_last_point, Pointer::Button::none));
                 dispatch(event);
                 break;
             }
