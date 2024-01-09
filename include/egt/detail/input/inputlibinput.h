@@ -65,7 +65,7 @@ private:
     struct LibInputImpl;
     std::unique_ptr<LibInputImpl> m_impl;
 
-    struct libinput* li;
+    struct libinput* m_libinput_handle;
 
     /// The last point seen, indexed by slot, used for reference internally.
     std::array<DisplayPoint, 2> m_last_point{};

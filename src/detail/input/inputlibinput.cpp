@@ -124,14 +124,14 @@ InputLibInput::InputLibInput(Application& app)
       m_impl(std::make_unique<LibInputImpl>())
 {
     const char* seat_or_device = "seat0";
-    li = tools_open_udev(seat_or_device, false);
-    if (!li)
+    m_libinput_handle = tools_open_udev(seat_or_device, false);
+    if (!m_libinput_handle)
     {
         detail::warn("could not open libinput device: {}", seat_or_device);
         return;
     }
 
-    m_input.assign(libinput_get_fd(li));
+    m_input.assign(libinput_get_fd(m_libinput_handle));
 
     // go ahead and enumerate devices and start the first async_read
 #ifdef USE_PRIORITY_QUEUE
@@ -161,7 +161,7 @@ void InputLibInput::handle_event_device_notify(struct libinput_event* ev)
     else
         type = "removed";
 
-    li = libinput_event_get_context(ev);
+    m_libinput_handle = libinput_event_get_context(ev);
 
     // if the device is handled by another backend, disable libinput events
     for (auto& device : m_app.get_input_devices())
@@ -343,9 +343,9 @@ void InputLibInput::handle_read(const asio::error_code& error)
     {
         struct libinput_event* ev;
 
-        libinput_dispatch(li);
+        libinput_dispatch(m_libinput_handle);
 
-        while ((ev = libinput_get_event(li)))
+        while ((ev = libinput_get_event(m_libinput_handle)))
         {
             switch (libinput_event_get_type(ev))
             {
@@ -416,7 +416,7 @@ void InputLibInput::handle_read(const asio::error_code& error)
 
 InputLibInput::~InputLibInput() noexcept
 {
-    libinput_unref(li);
+    libinput_unref(m_libinput_handle);
 }
 
 }
