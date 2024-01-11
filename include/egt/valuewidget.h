@@ -187,14 +187,11 @@ public:
     /**
      * Set the start value.
      *
-     * start value cannot be the same as end value.
-     *
      * @param[in] v The start value.
      */
     void starting(T v)
     {
-        if (!detail::float_equal(static_cast<float>(v), static_cast<float>(m_end))
-            && detail::change_if_diff<>(m_start, v))
+        if (detail::change_if_diff<>(m_start, v))
         {
             T value = m_value;
             if (m_start < m_end)
@@ -212,14 +209,11 @@ public:
     /**
      * Set the end value.
      *
-     * end value cannot be the same as start value.
-     *
      * @param[in] v The end value.
      */
     void ending(T v)
     {
-        if (!detail::float_equal(static_cast<float>(v), static_cast<float>(m_end))
-            && detail::change_if_diff<>(m_end, v))
+        if (detail::change_if_diff<>(m_end, v))
         {
             T value = m_value;
             if (m_start < m_end)
