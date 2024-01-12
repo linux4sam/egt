@@ -228,10 +228,11 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
                     mrect.point().x(), mrect.point().y(), mrect.width(), mrect.height());
     painter.fill();
 
+    auto srect = to_subordinate(rect);
     if (hscrollable())
-        m_hslider.draw(painter, rect);
+        m_hslider.draw(painter, srect);
     if (vscrollable())
-        m_vslider.draw(painter, rect);
+        m_vslider.draw(painter, srect);
 }
 
 void ScrolledView::resize(const Size& size)
