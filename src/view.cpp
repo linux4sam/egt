@@ -31,7 +31,7 @@ ScrolledView::ScrolledView(const Rect& rect,
     name("ScrolledView" + std::to_string(m_widgetid));
 
     init_sliders();
-    resize_slider();
+    resize_sliders();
 }
 
 ScrolledView::ScrolledView(Frame& parent, const Rect& rect,
@@ -56,7 +56,7 @@ ScrolledView::ScrolledView(Serializer::Properties& props, bool is_derived) noexc
       m_vslider(0, 100, 0, Orientation::vertical)
 {
     init_sliders();
-    resize_slider();
+    resize_sliders();
 
     deserialize(props);
 
@@ -226,7 +226,7 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
 void ScrolledView::resize(const Size& size)
 {
     Frame::resize(size);
-    resize_slider();
+    resize_sliders();
 }
 
 void ScrolledView::layout()
@@ -253,7 +253,7 @@ void ScrolledView::layout()
 
     if (hold != hscrollable() || vold != vscrollable())
     {
-        resize_slider();
+        resize_sliders();
         damage();
     }
 
@@ -268,7 +268,7 @@ void ScrolledView::layout()
     }
 }
 
-void ScrolledView::resize_slider()
+void ScrolledView::resize_sliders()
 {
     if (hscrollable())
     {
