@@ -112,6 +112,9 @@ void ScrolledView::post_deserialize(Serializer::Properties& props)
 
 void ScrolledView::draw(Painter& painter, const Rect& rect)
 {
+    // draw the widget box
+    draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
+
     if (!m_canvas)
         return;
 
