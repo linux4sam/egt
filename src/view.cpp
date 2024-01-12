@@ -179,7 +179,7 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
     }
 
     // limit to content area
-    const auto mrect = Rect::intersection(to_child(box()), to_child(content_area()));
+    const auto mrect = to_child(content_area());
 
     /*
      * We really want a basic copy here. We don't want to take into account the
