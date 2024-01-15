@@ -103,13 +103,6 @@ public:
 
     void layout() override;
 
-    using Frame::damage;
-
-    void damage(const Rect& /*rect*/) override
-    {
-        Frame::damage(box());
-    }
-
     /**
      * Get the current offset.
      *
