@@ -286,8 +286,8 @@ Rect ScrolledView::super_rect() const
 Point ScrolledView::offset_max() const
 {
     const auto super = super_rect();
-    return Point(super.width() - content_area().width(),
-                 super.height() - content_area().height()) * -1;
+    return Point(super.width() - box().width(),
+                 super.height() - box().height()) * -1;
 }
 
 void ScrolledView::offset(Point offset)

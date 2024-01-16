@@ -241,9 +241,9 @@ protected:
         auto super = super_rect();
 
         m_hscrollable = (m_horizontal_policy == Policy::always) ||
-                        (m_horizontal_policy == Policy::as_needed && super.width() > content_area().width());
+                        (m_horizontal_policy == Policy::as_needed && super.width() > box().width());
         m_vscrollable = (m_vertical_policy == Policy::always) ||
-                        (m_vertical_policy == Policy::as_needed && super.height() > content_area().height());
+                        (m_vertical_policy == Policy::as_needed && super.height() > box().height());
 
         if (super.width() <= content_area().width())
             m_offset.x(0);
