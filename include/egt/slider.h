@@ -273,6 +273,9 @@ protected:
     /// Convert a value to an offset.
     EGT_NODISCARD int to_offset(int value) const
     {
+        if (detail::float_equal(static_cast<float>(this->m_start), static_cast<float>(this->m_end)))
+            return 0;
+
         const auto b = this->content_area();
         if (m_orient == Orientation::horizontal)
             return egt::detail::normalize<float>(value, this->m_start, this->m_end,
