@@ -227,9 +227,17 @@ void ScrolledView::layout()
 
 void ScrolledView::resize_sliders()
 {
+    // Almost the same as the content area, except we ignore the padding.
+    auto m = border() + margin();
+    auto c = box();
+    c += Point(m, m);
+    c -= Size(2 * m, 2 * m);
+    if (c.empty())
+        c.size(Size());
+
     if (hscrollable())
     {
-        auto b = box();
+        auto b = c;
         b.y(b.y() + b.height() - m_slider_dim);
         b.height(m_slider_dim);
 
@@ -242,7 +250,7 @@ void ScrolledView::resize_sliders()
 
     if (vscrollable())
     {
-        auto b = box();
+        auto b = c;
         b.x(b.x() + b.width() - m_slider_dim);
         b.width(m_slider_dim);
 
