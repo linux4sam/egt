@@ -290,7 +290,7 @@ void ScrolledView::resize_slider()
         if (vscrollable())
             b.width(b.width() - m_slider_dim);
 
-        m_hslider.move(b.point() - point());
+        m_hslider.move(to_subordinate(b.point()));
         m_hslider.resize(b.size());
     }
 
@@ -303,7 +303,7 @@ void ScrolledView::resize_slider()
         if (hscrollable())
             b.height(b.height() - m_slider_dim);
 
-        m_vslider.move(b.point() - point());
+        m_vslider.move(to_subordinate(b.point()));
         m_vslider.resize(b.size());
     }
 }
