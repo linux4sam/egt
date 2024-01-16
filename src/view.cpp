@@ -202,7 +202,7 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
 
     Painter::AutoSaveRestore sr(painter);
 
-    Point origin = point();
+    const auto& origin = point();
     if (origin.x() || origin.y())
     {
         //
