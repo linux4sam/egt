@@ -30,6 +30,9 @@ ScrolledView::ScrolledView(const Rect& rect,
 {
     name("ScrolledView" + std::to_string(m_widgetid));
 
+    // scrolled views are not transparent by default
+    fill_flags(Theme::FillFlag::solid);
+
     init_sliders();
     resize_sliders();
 }
@@ -122,35 +125,10 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
     // All children are drawn to the internal m_canvas.  Then, the proper part
     // of the canvas is drawn based on of the m_offset.
     //
+    m_canvas->zero();
     Painter cpainter(m_canvas->context());
 
     Rect crect = to_child(super_rect());
-
-    Palette::GroupId group = Palette::GroupId::normal;
-    if (disabled())
-        group = Palette::GroupId::disabled;
-    else if (active())
-        group = Palette::GroupId::active;
-
-    /*
-     * Children are drawn on a canvas which is a cairo surface. This
-     * surface will be copied to the composition surface.
-     * If the canvas has no background and a child as well, it can overlap the
-     * previous drawing. For instance, the child is a Label with no background,
-     * the new text will be drawn on the canvas then copied on the composition
-     * buffer overlapping the previous text. If there is a background for the
-     * canvas, it will 'erase' the previous text.
-     * To prevent this situation, we force the background drawing of the
-     * ScrolledView even if fill flags are set to none.
-     */
-    cpainter.set(color(Palette::ColorId::bg, group));
-    theme().draw_box(cpainter,
-                     Theme::FillFlag::solid,
-                     crect /*m_canvas->size()*//*to_child(box())*/,
-                     color(Palette::ColorId::border, group),
-                     color(Palette::ColorId::bg, group),
-                     border(),
-                     margin());
 
     for (auto& child : children())
     {
@@ -184,11 +162,6 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
     // limit to content area
     const auto mrect = to_child(content_area());
 
-    /*
-     * We really want a basic copy here. We don't want to take into account the
-     * previous drawing.
-     */
-    cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
     cairo_set_source_surface(painter.context().get(), m_canvas->surface().get(),
                              m_offset.x(), m_offset.y());
     cairo_rectangle(painter.context().get(),
