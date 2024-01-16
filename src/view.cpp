@@ -225,6 +225,11 @@ void ScrolledView::layout()
     bool hold = hscrollable();
     bool vold = vscrollable();
 
+    const auto super = super_rect();
+    m_offset_range = to_child(super - box().size());
+    // negate the offset range.
+    m_offset_range.point(m_offset_range.bottom_right() * -1);
+
     update_scrollable();
 
     if (hold != hscrollable() || vold != vscrollable())
@@ -235,7 +240,7 @@ void ScrolledView::layout()
 
     update_sliders();
 
-    auto s = super_rect().size();
+    auto s = super.size();
 
     if (!m_canvas || m_canvas->size() != s)
     {
@@ -289,23 +294,17 @@ Rect ScrolledView::super_rect() const
     return result;
 }
 
-Point ScrolledView::offset_max() const
-{
-    const auto super = super_rect();
-    return Point(super.width() - box().width(),
-                 super.height() - box().height()) * -1;
-}
-
 void ScrolledView::offset(Point offset)
 {
+    auto offmin = offset_min();
     auto offmax = offset_max();
-    if (offset.x() > 0)
-        offset.x(0);
+    if (offset.x() > offmin.x())
+        offset.x(offmin.x());
     else if (offset.x() < offmax.x())
         offset.x(offmax.x());
 
-    if (offset.y() > 0)
-        offset.y(0);
+    if (offset.y() > offmin.y())
+        offset.y(offmin.y());
     else if (offset.y() < offmax.y())
         offset.y(offmax.y());
 
@@ -318,20 +317,21 @@ void ScrolledView::offset(Point offset)
 
 void ScrolledView::update_sliders()
 {
+    const auto offmin = offset_min();
     const auto offmax = offset_max();
 
-    if (offmax.x() < 0)
+    if (offmax.x() < offmin.x())
     {
         const auto hslider_value =
-            egt::detail::normalize<float>(-m_offset.x(), 0, -offmax.x(), 0, 100);
+            egt::detail::normalize<float>(-m_offset.x(), -offmin.x(), -offmax.x(), 0, 100);
         if (!detail::float_equal(m_hslider.value(hslider_value), hslider_value))
             damage();
     }
 
-    if (offmax.y() < 0)
+    if (offmax.y() < offmin.y())
     {
         const auto vslider_value =
-            egt::detail::normalize<float>(-m_offset.y(), 0, -offmax.y(), 0, 100);
+            egt::detail::normalize<float>(-m_offset.y(), -offmin.y(), -offmax.y(), 0, 100);
         if (!detail::float_equal(m_vslider.value(vslider_value), vslider_value))
             damage();
     }

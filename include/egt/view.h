@@ -113,23 +113,37 @@ public:
     /**
      * Get the current offset.
      *
-     * @note The offset moves in the negative direction from zero.
+     * @note The offset moves in the negative direction.
      */
     EGT_NODISCARD Point offset() const { return m_offset; }
 
     /**
      * Set the position.
      *
-     * @note The offset moves in the negative direction from zero.
+     * @note The offset moves in the negative direction.
      */
     void offset(Point offset);
 
     /**
+     * Get the offset range currently possible.
+     *
+     * @note The offset moves in the negative direction.
+     */
+    EGT_NODISCARD const Rect& offset_range() const { return m_offset_range; };
+
+    /**
+     * Get the minimum offset currently possible.
+     *
+     * @note The offset moves in the negative direction.
+     */
+    EGT_NODISCARD Point offset_min() const { return offset_range().bottom_right(); }
+
+    /**
      * Get the maximum offset currently possible.
      *
-     * @note The offset moves in the negative direction from zero.
+     * @note The offset moves in the negative direction.
      */
-    EGT_NODISCARD Point offset_max() const;
+    EGT_NODISCARD Point offset_max() const { return offset_range().top_left(); }
 
     /**
      * Get the horizontal offset.
@@ -238,18 +252,12 @@ protected:
     /// Update scrollable settings based on current size
     void update_scrollable()
     {
-        auto super = super_rect();
+        const auto& r = offset_range();
 
         m_hscrollable = (m_horizontal_policy == Policy::always) ||
-                        (m_horizontal_policy == Policy::as_needed && super.width() > box().width());
+                        (m_horizontal_policy == Policy::as_needed && r.width() > 0);
         m_vscrollable = (m_vertical_policy == Policy::always) ||
-                        (m_vertical_policy == Policy::as_needed && super.height() > box().height());
-
-        if (super.width() <= content_area().width())
-            m_offset.x(0);
-
-        if (super.height() <= content_area().height())
-            m_offset.y(0);
+                        (m_vertical_policy == Policy::as_needed && r.height() > 0);
     }
 
     /// Initialize the sliders properties.
@@ -275,6 +283,9 @@ protected:
 
     /// Current offset of the view.
     Point m_offset;
+
+    /// Current offset range.
+    Rect m_offset_range;
 
     /// Horizontal slider shown when scrollable.
     Slider m_hslider;
