@@ -159,31 +159,7 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
         if (child->plane_window())
             continue;
 
-        if (child->box().intersect(crect))
-        {
-            // don't give a child a rectangle that is outside of its own box
-            const auto r = Rect::intersection(crect, child->box());
-            if (r.empty())
-                continue;
-
-            {
-                // no matter what the child draws, clip the output to only the
-                // rectangle we care about updating
-                Painter::AutoSaveRestore sr2(cpainter);
-                if (clip())
-                {
-                    cpainter.draw(r);
-                    cpainter.clip();
-                }
-
-                detail::code_timer(false, child->name() + " draw: ", [&]()
-                {
-                    child->draw(cpainter, r);
-                });
-            }
-
-            special_child_draw(cpainter, child.get());
-        }
+        draw_subordinate(cpainter, crect, child.get());
     }
 
     // change origin to paint canvas area and sliders
