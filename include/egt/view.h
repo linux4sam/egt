@@ -261,8 +261,8 @@ protected:
     /// Return the super rectangle that includes all of the child widgets.
     EGT_NODISCARD Rect super_rect() const;
 
-    /// Resize the slider whenever the size of this changes.
-    void resize_slider();
+    /// Resize the sliders whenever the size of these changes.
+    void resize_sliders();
 
     /// Deserialize ScrolledView properties.
     void deserialize(Serializer::Properties& props);
