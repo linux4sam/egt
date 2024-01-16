@@ -323,7 +323,7 @@ void ScrolledView::update_sliders()
     if (offmax.x() < offmin.x())
     {
         const auto hslider_value =
-            egt::detail::normalize<float>(-m_offset.x(), -offmin.x(), -offmax.x(), 0, 100);
+            egt::detail::normalize<float>(m_offset.x(), offmin.x(), offmax.x(), 0, 100);
         if (!detail::float_equal(m_hslider.value(hslider_value), hslider_value))
             damage();
     }
@@ -331,7 +331,7 @@ void ScrolledView::update_sliders()
     if (offmax.y() < offmin.y())
     {
         const auto vslider_value =
-            egt::detail::normalize<float>(-m_offset.y(), -offmin.y(), -offmax.y(), 0, 100);
+            egt::detail::normalize<float>(m_offset.y(), offmin.y(), offmax.y(), 0, 100);
         if (!detail::float_equal(m_vslider.value(vslider_value), vslider_value))
             damage();
     }
