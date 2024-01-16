@@ -275,11 +275,17 @@ void ScrolledView::resize_sliders()
 
 Rect ScrolledView::super_rect() const
 {
-    auto result = box();
+    // compute the "super content area" first.
+    auto result = content_area();
     for (const auto& child : children())
     {
         result = Rect::merge(result, child->to_parent(child->box()));
     }
+
+    // then add the moat around after, so all widgets can be entirely drawn.
+    const auto delta = moat();
+    result -= Point(delta, delta);
+    result += Size(2 * delta, 2 * delta);
     return result;
 }
 
