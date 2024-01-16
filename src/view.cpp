@@ -30,13 +30,7 @@ ScrolledView::ScrolledView(const Rect& rect,
 {
     name("ScrolledView" + std::to_string(m_widgetid));
 
-    m_hslider.slider_flags().set({Slider::SliderFlag::rectangle_handle,
-                                  Slider::SliderFlag::consistent_line});
-
-    m_vslider.slider_flags().set({Slider::SliderFlag::rectangle_handle,
-                                  Slider::SliderFlag::inverted,
-                                  Slider::SliderFlag::consistent_line});
-
+    init_sliders();
     resize_slider();
 }
 
@@ -61,13 +55,7 @@ ScrolledView::ScrolledView(Serializer::Properties& props, bool is_derived) noexc
       m_hslider(0, 100, 0, Orientation::horizontal),
       m_vslider(0, 100, 0, Orientation::vertical)
 {
-    m_hslider.slider_flags().set({Slider::SliderFlag::rectangle_handle,
-                                  Slider::SliderFlag::consistent_line});
-
-    m_vslider.slider_flags().set({Slider::SliderFlag::rectangle_handle,
-                                  Slider::SliderFlag::inverted,
-                                  Slider::SliderFlag::consistent_line});
-
+    init_sliders();
     resize_slider();
 
     deserialize(props);
@@ -457,6 +445,16 @@ ScrolledView::Policy ScrolledView::str2policy(const std::string& str)
     if (str == "always")
         return Policy::always;
     return Policy::as_needed;
+}
+
+void ScrolledView::init_sliders()
+{
+    m_hslider.slider_flags().set({Slider::SliderFlag::rectangle_handle,
+                                  Slider::SliderFlag::consistent_line});
+
+    m_vslider.slider_flags().set({Slider::SliderFlag::rectangle_handle,
+                                  Slider::SliderFlag::inverted,
+                                  Slider::SliderFlag::consistent_line});
 }
 
 }

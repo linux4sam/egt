@@ -252,6 +252,9 @@ protected:
             m_offset.y(0);
     }
 
+    /// Initialize the sliders properties.
+    void init_sliders();
+
     /// Update properties of the sliders.
     void update_sliders();
 
