@@ -23,8 +23,8 @@ ScrolledView::ScrolledView(const Rect& rect,
                            Policy horizontal_policy,
                            Policy vertical_policy) noexcept
     : Frame(rect),
-      m_hslider(0, 100, 0, Orientation::horizontal),
-      m_vslider(0, 100, 0, Orientation::vertical),
+      m_hslider(0, 0, 0, Orientation::horizontal),
+      m_vslider(0, 0, 0, Orientation::vertical),
       m_horizontal_policy(horizontal_policy),
       m_vertical_policy(vertical_policy)
 {
@@ -55,8 +55,8 @@ ScrolledView::ScrolledView(Frame& parent,
 
 ScrolledView::ScrolledView(Serializer::Properties& props, bool is_derived) noexcept
     : Frame(props, true),
-      m_hslider(0, 100, 0, Orientation::horizontal),
-      m_vslider(0, 100, 0, Orientation::vertical)
+      m_hslider(0, 0, 0, Orientation::horizontal),
+      m_vslider(0, 0, 0, Orientation::vertical)
 {
     init_sliders();
     resize_sliders();
@@ -280,23 +280,8 @@ Rect ScrolledView::super_rect() const
 
 void ScrolledView::offset(Point offset)
 {
-    auto offmin = offset_min();
-    auto offmax = offset_max();
-    if (offset.x() > offmin.x())
-        offset.x(offmin.x());
-    else if (offset.x() < offmax.x())
-        offset.x(offmax.x());
-
-    if (offset.y() > offmin.y())
-        offset.y(offmin.y());
-    else if (offset.y() < offmax.y())
-        offset.y(offmax.y());
-
-    if (detail::change_if_diff<>(m_offset, offset))
-    {
-        update_sliders();
-        damage();
-    }
+    m_hslider.value(offset.x());
+    m_vslider.value(offset.y());
 }
 
 void ScrolledView::update_sliders()
@@ -304,21 +289,11 @@ void ScrolledView::update_sliders()
     const auto offmin = offset_min();
     const auto offmax = offset_max();
 
-    if (offmax.x() < offmin.x())
-    {
-        const auto hslider_value =
-            egt::detail::normalize<float>(m_offset.x(), offmin.x(), offmax.x(), 0, 100);
-        if (!detail::float_equal(m_hslider.value(hslider_value), hslider_value))
-            damage();
-    }
+    m_hslider.starting(offmin.x());
+    m_hslider.ending(offmax.x());
 
-    if (offmax.y() < offmin.y())
-    {
-        const auto vslider_value =
-            egt::detail::normalize<float>(m_offset.y(), offmin.y(), offmax.y(), 0, 100);
-        if (!detail::float_equal(m_vslider.value(vslider_value), vslider_value))
-            damage();
-    }
+    m_vslider.starting(offmin.y());
+    m_vslider.ending(offmax.y());
 }
 
 void ScrolledView::handle(Event& event)
@@ -421,12 +396,21 @@ ScrolledView::Policy ScrolledView::str2policy(const std::string& str)
 
 void ScrolledView::init_sliders()
 {
+    auto redraw_content = [this]()
+    {
+        m_offset.x(m_hslider.value());
+        m_offset.y(m_vslider.value());
+        damage();
+    };
+
     m_hslider.slider_flags().set({Slider::SliderFlag::rectangle_handle,
                                   Slider::SliderFlag::consistent_line});
+    m_hslider.on_value_changed(redraw_content);
 
     m_vslider.slider_flags().set({Slider::SliderFlag::rectangle_handle,
                                   Slider::SliderFlag::inverted,
                                   Slider::SliderFlag::consistent_line});
+    m_vslider.on_value_changed(redraw_content);
 }
 
 }
