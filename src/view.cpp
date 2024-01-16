@@ -367,6 +367,17 @@ void ScrolledView::handle(Event& event)
          */
         Point pos = display_to_local(event.pointer().point) - m_offset;
 
+        /*
+         * The pointer position must be updated before delegating the
+         * event handling to the children.
+         */
+        const auto saved_point = event.pointer().point;
+        event.pointer().point -= DisplayPoint(m_offset);
+        auto reset = detail::on_scope_exit([&event, &saved_point]()
+        {
+            event.pointer().point = saved_point;
+        });
+
         for (auto& child : detail::reverse_iterate(m_subordinates))
         {
             if (child->readonly())
@@ -380,11 +391,6 @@ void ScrolledView::handle(Event& event)
 
             if (child->box().intersect(pos))
             {
-                /*
-                 * The pointer position must be updated before delegating the
-                 * event handling to the child.
-                 */
-                event.pointer().point -= DisplayPoint(m_offset);
                 child->handle(event);
                 if (event.quit())
                     return;
