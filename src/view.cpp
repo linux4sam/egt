@@ -118,34 +118,10 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
     // draw the widget box
     draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
 
-    if (!m_canvas)
-        return;
-
-    //
-    // All children are drawn to the internal m_canvas.  Then, the proper part
-    // of the canvas is drawn based on of the m_offset.
-    //
-    m_canvas->zero();
-    Painter cpainter(m_canvas->context());
-
-    Rect crect = to_child(super_rect());
-
-    for (auto& child : children())
-    {
-        if (!child->visible())
-            continue;
-
-        // don't draw plane frame as child - this is
-        // specifically handled by event loop
-        if (child->plane_window())
-            continue;
-
-        draw_subordinate(cpainter, crect, child.get());
-    }
-
-    // change origin to paint canvas area and sliders
+    // change origin to paint children and sliders
 
     Painter::AutoSaveRestore sr(painter);
+    auto cr = painter.context();
 
     const auto& origin = point();
     if (origin.x() || origin.y())
@@ -153,20 +129,40 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
         //
         // Origin about to change
         //
-        auto cr = painter.context();
         cairo_translate(cr.get(),
                         origin.x(),
                         origin.y());
     }
 
     // limit to content area
-    const auto mrect = to_child(content_area());
+    const auto content = content_area();
+    if (content.intersect(rect))
+    {
+        Painter::AutoSaveRestore sr2(painter);
 
-    cairo_set_source_surface(painter.context().get(), m_canvas->surface().get(),
-                             m_offset.x(), m_offset.y());
-    cairo_rectangle(painter.context().get(),
-                    mrect.point().x(), mrect.point().y(), mrect.width(), mrect.height());
-    painter.fill();
+        if (m_offset.x() || m_offset.y())
+        {
+            cairo_translate(cr.get(),
+                            m_offset.x(),
+                            m_offset.y());
+        }
+
+        auto r = Rect::intersection(rect, content);
+        auto crect = to_child(r) - m_offset;
+
+        for (auto& child : children())
+        {
+            if (!child->visible())
+                continue;
+
+            // don't draw plane frame as child - this is
+            // specifically handled by event loop
+            if (child->plane_window())
+                continue;
+
+            draw_subordinate(painter, crect, child.get());
+        }
+    }
 
     auto srect = to_subordinate(rect);
     if (hscrollable())
@@ -215,14 +211,6 @@ void ScrolledView::layout()
     }
 
     update_sliders();
-
-    auto s = super.size();
-
-    if (!m_canvas || m_canvas->size() != s)
-    {
-        m_canvas = std::make_unique<Canvas>(s);
-        damage();
-    }
 }
 
 void ScrolledView::resize_sliders()
