@@ -34,7 +34,7 @@ static bool handler_dispatch(Event& event, Event& eevent,
     if (eevent.id() != EventId::none)
     {
         handler(eevent);
-        if (event.quit())
+        if (eevent.quit())
             return true;
     }
 
