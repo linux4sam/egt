@@ -320,8 +320,6 @@ void StaticGrid::reposition()
             }
         }
     }
-
-    damage();
 }
 
 void StaticGrid::layout()
