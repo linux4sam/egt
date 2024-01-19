@@ -172,8 +172,6 @@ void StaticGrid::add(const std::shared_ptr<Widget>& widget)
 
                 Frame::add(widget);
 
-                reposition();
-
                 m_last_add_column = c;
                 m_last_add_row = std::distance(column.begin(), i);
 
@@ -197,8 +195,6 @@ void StaticGrid::add(const std::shared_ptr<Widget>& widget)
 
                     Frame::add(widget);
 
-                    reposition();
-
                     m_last_add_column = c;
                     m_last_add_row = r;
 
@@ -216,8 +212,6 @@ void StaticGrid::add(const std::shared_ptr<Widget>& widget, size_t column, size_
     if (widget->align().empty())
         widget->align(egt::AlignFlag::center);
 
-    Frame::add(widget);
-
     if (column >= m_cells.size())
         m_cells.resize(column + 1);
 
@@ -232,7 +226,7 @@ void StaticGrid::add(const std::shared_ptr<Widget>& widget, size_t column, size_
     m_last_add_column = column;
     m_last_add_row = row;
 
-    reposition();
+    Frame::add(widget);
 }
 
 Widget* StaticGrid::get(const GridPoint& point)
@@ -268,8 +262,6 @@ void StaticGrid::remove(Widget* widget)
             i->reset();
         }
     }
-
-    reposition();
 
     Frame::remove(widget);
 }
