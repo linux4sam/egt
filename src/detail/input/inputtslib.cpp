@@ -17,7 +17,7 @@ namespace detail
 {
 
 static constexpr auto CHANNELS = 2;
-static constexpr auto SAMPLE_COUNT = 20;
+static constexpr auto SAMPLE_COUNT = 1;
 
 struct tslibimpl
 {
@@ -82,117 +82,120 @@ void InputTslib::handle_read(const asio::error_code& error)
 
     struct ts_sample_mt** samp_mt = m_impl->samp_mt;
 
-    int ret = ts_read_mt(m_impl->ts, samp_mt, CHANNELS, SAMPLE_COUNT);
-    if (egt_unlikely(ret < 0))
+    do
     {
-        detail::warn("ts_read_mt error");
-        return;
-    }
-
-    std::array<bool, 2> move{};
-
-    for (int j = 0; j < ret; j++)
-    {
-        for (int i = 0; i < CHANNELS; i++)
+        int ret = ts_read_mt(m_impl->ts, samp_mt, CHANNELS, SAMPLE_COUNT);
+        if (egt_unlikely(ret < 0))
         {
+            detail::warn("ts_read_mt error");
+            break;
+        }
+
+        std::array<bool, 2> move{};
+
+        for (int j = 0; j < ret; j++)
+        {
+            for (int i = 0; i < CHANNELS; i++)
+            {
 #ifdef TSLIB_MT_VALID
-            if (egt_unlikely(!(samp_mt[j][i].valid & TSLIB_MT_VALID)))
-                continue;
+                if (egt_unlikely(!(samp_mt[j][i].valid & TSLIB_MT_VALID)))
+                    continue;
 #else
-            if (egt_unlikely(samp_mt[j][i].valid < 1))
-                continue;
+                if (egt_unlikely(samp_mt[j][i].valid < 1))
+                    continue;
 #endif
 
-            EGTLOG_TRACE("{}.{}: (slot {}) {} {} {} {} {} {}\n",
-                         samp_mt[j][i].tv.tv_sec,
-                         samp_mt[j][i].tv.tv_usec,
-                         samp_mt[j][i].slot,
-                         samp_mt[j][i].tool_type,
-                         samp_mt[j][i].x,
-                         samp_mt[j][i].y,
-                         samp_mt[j][i].pressure,
-                         samp_mt[j][i].distance,
-                         samp_mt[j][i].pen_down);
+                EGTLOG_TRACE("{}.{}: (slot {}) {} {} {} {} {} {}\n",
+                             samp_mt[j][i].tv.tv_sec,
+                             samp_mt[j][i].tv.tv_usec,
+                             samp_mt[j][i].slot,
+                             samp_mt[j][i].tool_type,
+                             samp_mt[j][i].x,
+                             samp_mt[j][i].y,
+                             samp_mt[j][i].pressure,
+                             samp_mt[j][i].distance,
+                             samp_mt[j][i].pen_down);
 
-            const auto x = samp_mt[j][i].x;
-            const auto y = samp_mt[j][i].y;
-            const auto slot = samp_mt[j][i].slot;
-            const auto pen_down = samp_mt[j][i].pen_down;
+                const auto x = samp_mt[j][i].x;
+                const auto y = samp_mt[j][i].y;
+                const auto slot = samp_mt[j][i].slot;
+                const auto pen_down = samp_mt[j][i].pen_down;
 
-            if (egt_unlikely(x < 0 || y < 0))
-                continue;
+                if (egt_unlikely(x < 0 || y < 0))
+                    continue;
 
-            if (m_active[slot])
-            {
-                if (pen_down == 0)
+                if (m_active[slot])
                 {
-                    m_active[slot] = false;
-
-                    EGTLOG_TRACE("mouse up {}", m_last_point[slot]);
-
-                    m_last_point[slot] = DisplayPoint(x, y);
-                    Event event(EventId::raw_pointer_up, Pointer(m_last_point[slot],
-                                Pointer::Button::left));
-                    dispatch(event);
-                }
-                else
-                {
-                    DisplayPoint point(x, y);
-                    if (delta(m_last_point[slot], point, 5))
+                    if (pen_down == 0)
                     {
-                        m_last_point[slot] = point;
-                        move[slot] = true;
-                    }
-                }
-            }
-            else
-            {
-                if (pen_down == 1)
-                {
-                    m_last_point[slot] = DisplayPoint(x, y);
+                        m_active[slot] = false;
 
-                    std::chrono::time_point<std::chrono::steady_clock, std::chrono::milliseconds> tv
-                    {
-                        std::chrono::milliseconds{samp_mt[j][i].tv.tv_sec * 1000 + samp_mt[j][i].tv.tv_usec / 1000}
-                    };
+                        EGTLOG_TRACE("mouse up {}", m_last_point[slot]);
 
-                    constexpr auto DOUBLE_CLICK_DELTA = 300;
-
-                    if (m_impl->last_down[slot].time_since_epoch().count() &&
-                        std::chrono::duration<double, std::milli>(tv - m_impl->last_down[slot]).count() < DOUBLE_CLICK_DELTA)
-                    {
-                        Event event(EventId::pointer_dblclick,
-                                    Pointer(m_last_point[slot], Pointer::Button::left));
+                        m_last_point[slot] = DisplayPoint(x, y);
+                        Event event(EventId::raw_pointer_up, Pointer(m_last_point[slot],
+                                    Pointer::Button::left));
                         dispatch(event);
                     }
                     else
                     {
-                        m_active[slot] = true;
-
-                        EGTLOG_TRACE("mouse down {}", m_last_point[slot]);
-
-                        Event event(EventId::raw_pointer_down,
-                                    Pointer(m_last_point[slot], Pointer::Button::left));
-                        dispatch(event);
+                        DisplayPoint point(x, y);
+                        if (delta(m_last_point[slot], point, 5))
+                        {
+                            m_last_point[slot] = point;
+                            move[slot] = true;
+                        }
                     }
+                }
+                else
+                {
+                    if (pen_down == 1)
+                    {
+                        m_last_point[slot] = DisplayPoint(x, y);
 
-                    m_impl->last_down[slot] = tv;
+                        std::chrono::time_point<std::chrono::steady_clock, std::chrono::milliseconds> tv
+                        {
+                            std::chrono::milliseconds{samp_mt[j][i].tv.tv_sec * 1000 + samp_mt[j][i].tv.tv_usec / 1000}
+                        };
+
+                        constexpr auto DOUBLE_CLICK_DELTA = 300;
+
+                        if (m_impl->last_down[slot].time_since_epoch().count() &&
+                            std::chrono::duration<double, std::milli>(tv - m_impl->last_down[slot]).count() < DOUBLE_CLICK_DELTA)
+                        {
+                            Event event(EventId::pointer_dblclick,
+                                        Pointer(m_last_point[slot], Pointer::Button::left));
+                            dispatch(event);
+                        }
+                        else
+                        {
+                            m_active[slot] = true;
+
+                            EGTLOG_TRACE("mouse down {}", m_last_point[slot]);
+
+                            Event event(EventId::raw_pointer_down,
+                                        Pointer(m_last_point[slot], Pointer::Button::left));
+                            dispatch(event);
+                        }
+
+                        m_impl->last_down[slot] = tv;
+                    }
                 }
             }
         }
-    }
 
-    for (size_t slot = 0; slot < move.size(); slot++)
-    {
-        if (move[slot])
+        for (size_t slot = 0; slot < move.size(); slot++)
         {
-            EGTLOG_TRACE("mouse move {}", m_last_point[slot]);
+            if (move[slot])
+            {
+                EGTLOG_TRACE("mouse move {}", m_last_point[slot]);
 
-            Event event(EventId::raw_pointer_move,
-                        Pointer(m_last_point[slot], Pointer::Button::left));
-            dispatch(event);
+                Event event(EventId::raw_pointer_move,
+                            Pointer(m_last_point[slot], Pointer::Button::left));
+                dispatch(event);
+            }
         }
-    }
+    } while (true);
 }
 
 InputTslib::~InputTslib() noexcept
