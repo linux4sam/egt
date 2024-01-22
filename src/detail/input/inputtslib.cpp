@@ -120,13 +120,14 @@ void InputTslib::handle_read(const asio::error_code& error)
                 const auto y = samp_mt[j][i].y;
                 const auto slot = samp_mt[j][i].slot;
                 const auto pen_down = samp_mt[j][i].pen_down;
+                const auto pressure = samp_mt[j][i].pressure;
 
                 if (egt_unlikely(x < 0 || y < 0))
                     continue;
 
                 if (m_active[slot])
                 {
-                    if (pen_down == 0)
+                    if (pen_down == 0 || pressure == 0)
                     {
                         m_active[slot] = false;
 
@@ -149,7 +150,7 @@ void InputTslib::handle_read(const asio::error_code& error)
                 }
                 else
                 {
-                    if (pen_down == 1)
+                    if (pen_down == 1 || pressure >= 1)
                     {
                         m_last_point[slot] = DisplayPoint(x, y);
 
