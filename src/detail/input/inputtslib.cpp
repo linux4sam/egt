@@ -63,6 +63,17 @@ static bool delta(const DisplayPoint& lhs, const DisplayPoint& rhs, int d)
 
 void InputTslib::handle_read(const asio::error_code& error)
 {
+    auto async_read = detail::on_scope_exit([this]()
+    {
+#ifdef USE_PRIORITY_QUEUE
+        asio::async_read(m_input, asio::null_buffers(),
+                         m_app.event().queue().wrap(detail::priorities::moderate, std::bind(&InputTslib::handle_read, this, std::placeholders::_1)));
+#else
+        asio::async_read(m_input, asio::null_buffers(),
+                         std::bind(&InputTslib::handle_read, this, std::placeholders::_1));
+#endif
+    });
+
     if (error)
     {
         detail::error("{}", error);
@@ -182,14 +193,6 @@ void InputTslib::handle_read(const asio::error_code& error)
             dispatch(event);
         }
     }
-
-#ifdef USE_PRIORITY_QUEUE
-    asio::async_read(m_input, asio::null_buffers(),
-                     m_app.event().queue().wrap(detail::priorities::moderate, std::bind(&InputTslib::handle_read, this, std::placeholders::_1)));
-#else
-    asio::async_read(m_input, asio::null_buffers(),
-                     std::bind(&InputTslib::handle_read, this, std::placeholders::_1));
-#endif
 }
 
 InputTslib::~InputTslib() noexcept
