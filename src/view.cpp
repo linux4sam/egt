@@ -324,16 +324,9 @@ void ScrolledView::handle(Event& event)
          * The pointer position must be updated before delegating the
          * event handling to the children.
          */
-        const auto saved_event = event;
+        Event::AutoSaveRestore sr(event);
         event.pointer().point -= DisplayPoint(m_offset);
         event.pointer().drag_start -= DisplayPoint(m_offset);
-        auto reset = detail::on_scope_exit([&event, &saved_event]()
-        {
-            bool stopped = event.quit();
-            event = saved_event;
-            if (stopped)
-                event.stop();
-        });
 
         for (auto& child : detail::reverse_iterate(m_subordinates))
         {
