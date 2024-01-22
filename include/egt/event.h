@@ -253,6 +253,8 @@ class Widget;
  */
 struct EGT_API Event : public EventArg
 {
+    struct AutoSaveRestore;
+
     constexpr Event() noexcept = default;
 
     /**
@@ -369,6 +371,33 @@ static_assert(detail::rule_of_5<Event>(), "must fulfill rule of 5");
 
 /// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Event& event);
+
+/**
+ * Scoped save and restore for an Event.
+ */
+struct EGT_API Event::AutoSaveRestore
+{
+    explicit AutoSaveRestore(Event& event) :
+    m_event(event),
+    m_saved_event(event)
+    {}
+
+    AutoSaveRestore(const AutoSaveRestore&) = delete;
+    AutoSaveRestore& operator=(const AutoSaveRestore&) = delete;
+    AutoSaveRestore(AutoSaveRestore&&) = delete;
+    AutoSaveRestore& operator=(AutoSaveRestore&&) = delete;
+
+    ~AutoSaveRestore()
+    {
+        bool stopped = m_event.quit();
+        m_event = m_saved_event;
+        if (stopped)
+            m_event.stop();
+    }
+
+    Event& m_event;
+    Event m_saved_event;
+};
 
 }
 }
