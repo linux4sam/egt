@@ -350,6 +350,23 @@ void ScrolledView::handle(Event& event)
 
         break;
     }
+
+    case EventId::keyboard_down:
+    case EventId::keyboard_up:
+    case EventId::keyboard_repeat:
+    {
+        for (auto& child : detail::reverse_iterate(m_subordinates))
+        {
+            if (!child->can_handle_event())
+                continue;
+
+            child->handle(event);
+            if (event.quit())
+                return;
+        }
+        break;
+    }
+
     default:
         break;
     }
