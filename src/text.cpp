@@ -1186,22 +1186,27 @@ void TextBox::handle(Event& event)
         break;
     }
 
-    case EventId::pointer_drag_start:
-    case EventId::pointer_drag:
-    {
-        auto p = display_to_local(event.pointer().point) + point();
-        if (text_area().intersect(p))
-        {
-            auto pos = point2pos(p);
-            auto start = std::min(m_select_drag_start, pos);
-            auto len = std::abs(static_cast<long long>(pos - m_select_drag_start));
-            selection(start, len);
-        }
-        break;
-    }
 
     default:
         break;
+    }
+}
+
+bool TextBox::on_drag_start(Event& event)
+{
+    on_drag(event);
+    return true;
+}
+
+void TextBox::on_drag(Event& event)
+{
+    auto p = display_to_local(event.pointer().point) + point();
+    if (text_area().intersect(p))
+    {
+        auto pos = point2pos(p);
+        auto start = std::min(m_select_drag_start, pos);
+        auto len = std::abs(static_cast<long long>(pos - m_select_drag_start));
+        selection(start, len);
     }
 }
 

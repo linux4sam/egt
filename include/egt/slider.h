@@ -157,6 +157,9 @@ public:
     {
         Widget::handle(event);
 
+        if (event.quit())
+            return;
+
         switch (event.id())
         {
         case EventId::raw_pointer_up:
@@ -164,27 +167,6 @@ public:
             {
                 m_invoke_pending = false;
                 this->on_value_changed.invoke();
-            }
-            break;
-        case EventId::pointer_drag_start:
-            m_start_offset = to_offset(this->m_value);
-            break;
-        case EventId::pointer_drag:
-            if (m_orient == Orientation::horizontal)
-            {
-                const auto diff = event.pointer().point - event.pointer().drag_start;
-                if (slider_flags().is_set(SliderFlag::inverted))
-                    update_value(to_value(m_start_offset - diff.x()));
-                else
-                    update_value(to_value(m_start_offset + diff.x()));
-            }
-            else
-            {
-                const auto diff = event.pointer().point - event.pointer().drag_start;
-                if (slider_flags().is_set(SliderFlag::inverted))
-                    update_value(to_value(m_start_offset + diff.y()));
-                else
-                    update_value(to_value(m_start_offset - diff.y()));
             }
             break;
         default:
@@ -269,6 +251,33 @@ public:
     void serialize(Serializer& serializer) const override;
 
 protected:
+
+    bool on_drag_start(Event& event) override
+    {
+        detail::ignoreparam(event);
+        m_start_offset = to_offset(this->m_value);
+        return true;
+    }
+
+    void on_drag(Event& event) override
+    {
+        if (m_orient == Orientation::horizontal)
+        {
+            const auto diff = event.pointer().point - event.pointer().drag_start;
+            if (slider_flags().is_set(SliderFlag::inverted))
+                update_value(to_value(m_start_offset - diff.x()));
+            else
+                update_value(to_value(m_start_offset + diff.x()));
+        }
+        else
+        {
+            const auto diff = event.pointer().point - event.pointer().drag_start;
+            if (slider_flags().is_set(SliderFlag::inverted))
+                update_value(to_value(m_start_offset + diff.y()));
+            else
+                update_value(to_value(m_start_offset - diff.y()));
+        }
+    }
 
     /// Convert a value to an offset.
     EGT_NODISCARD int to_offset(int value) const

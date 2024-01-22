@@ -1640,6 +1640,44 @@ protected:
     }
 
     /**
+     * Handle pointer drag events.
+     *
+     * This handles 'pointer_drag_start', 'pointer_drag' and 'pointer_drag_stop'
+     * events.
+     *
+     * @param event The drag event that occured.
+     */
+    virtual void handle_pointer_drag(Event& event);
+
+    /**
+     * What to do on 'pointer_drag_start' events.
+     *
+     * @param event The 'pointer_drag_start' event that occured.
+     *
+     * @return true if the event has been accepted.
+     */
+    virtual bool on_drag_start(Event& event) { detail::ignoreparam(event); return false; }
+
+    /**
+     * What to do on 'pointer_drag' events.
+     *
+     * @param event The 'pointer_drag' event that occured.
+     */
+    virtual void on_drag(Event& event) { detail::ignoreparam(event); }
+
+    /**
+     * What to do on 'pointer_drag_stop' events.
+     *
+     * @param event The 'pointer_drag_stop' event that occured.
+     */
+    virtual void on_drag_stop(Event& event) { detail::ignoreparam(event); }
+
+    /**
+     * Dragging status.
+     */
+    bool m_dragging{false};
+
+    /**
      * Bounding box.
      */
     Rect m_box;

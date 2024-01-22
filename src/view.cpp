@@ -288,22 +288,6 @@ void ScrolledView::handle(Event& event)
 {
     switch (event.id())
     {
-    case EventId::pointer_drag_start:
-        m_start_offset = m_offset;
-        break;
-    case EventId::pointer_drag:
-    {
-        auto diff = event.pointer().point -
-                    event.pointer().drag_start;
-        offset(m_start_offset + Point(diff.x(), diff.y()));
-        break;
-    }
-    default:
-        break;
-    }
-
-    switch (event.id())
-    {
     case EventId::raw_pointer_down:
     case EventId::raw_pointer_up:
     case EventId::raw_pointer_move:
@@ -333,7 +317,8 @@ void ScrolledView::handle(Event& event)
             if (!child->can_handle_event())
                 continue;
 
-            if (child->box().intersect(pos))
+            if (child->box().intersect(pos) ||
+                event.id() == EventId::pointer_drag)
             {
                 child->handle(event);
                 if (event.quit())
@@ -363,6 +348,22 @@ void ScrolledView::handle(Event& event)
     default:
         break;
     }
+
+    handle_pointer_drag(event);
+}
+
+bool ScrolledView::on_drag_start(Event& event)
+{
+    detail::ignoreparam(event);
+    m_start_offset = m_offset;
+    return true;
+}
+
+void ScrolledView::on_drag(Event& event)
+{
+    auto diff = event.pointer().point -
+                event.pointer().drag_start;
+    offset(m_start_offset + Point(diff.x(), diff.y()));
 }
 
 std::string ScrolledView::policy2str(Policy policy)

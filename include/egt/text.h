@@ -467,6 +467,16 @@ public:
 
 protected:
 
+    /**
+     * @override
+     */
+    bool on_drag_start(Event& event) override;
+
+    /**
+     * @override
+     */
+    void on_drag(Event& event) override;
+
     /// Get the rectangle of the text boundaries.
     EGT_NODISCARD Rect text_boundaries() const;
 

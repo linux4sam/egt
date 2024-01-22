@@ -167,7 +167,13 @@ void Widget::handle(Event& event)
                 if (!subordinate->can_handle_event())
                     continue;
 
-                if (subordinate->box().intersect(pos))
+                if (event.id() == EventId::pointer_drag)
+                {
+                    subordinate->handle(event);
+                    if (event.quit())
+                        return;
+                }
+                else if (subordinate->box().intersect(pos))
                 {
                     subordinate->handle(event);
                     break;
@@ -196,6 +202,75 @@ void Widget::handle(Event& event)
 
         default:
             break;
+        }
+    }
+
+    handle_pointer_drag(event);
+}
+
+void Widget::handle_pointer_drag(Event& event)
+{
+    if (event.quit())
+        return;
+
+    switch (event.id())
+    {
+    case EventId::pointer_drag_start:
+    case EventId::pointer_drag:
+    case EventId::pointer_drag_stop:
+        break;
+    default:
+        return;
+    }
+
+    if (event.id() == EventId::pointer_drag_start)
+    {
+        if (!m_dragging)
+        {
+            auto pos = display_to_local(event.pointer().drag_start) + point();
+            auto intersect = box().intersect(pos);
+
+            if (intersect && on_drag_start(event))
+            {
+                m_dragging = true;
+                event.stop();
+            }
+        }
+    }
+    else if (event.id() == EventId::pointer_drag_stop)
+    {
+        if (m_dragging)
+        {
+            on_drag_stop(event);
+            m_dragging = false;
+            event.stop();
+        }
+    }
+    else if (event.id() == EventId::pointer_drag)
+    {
+        if (m_dragging)
+        {
+            auto pos = display_to_local(event.pointer().point) + point();
+            auto intersect = box().intersect(pos);
+            
+            if (intersect)
+            {
+                on_drag(event);
+                event.stop();
+            }
+            else
+            {
+                auto p = pos;
+                p.x(detail::clamp(p.x(), box().left(), box().right()));
+                p.y(detail::clamp(p.y(), box().top(), box().bottom()));
+
+                Event e = event;
+                e.id(EventId::pointer_drag_stop);
+                e.pointer().point = local_to_display(p - point());
+                on_drag_stop(e);
+                m_dragging = false;
+                event.stop();
+            }
         }
     }
 }

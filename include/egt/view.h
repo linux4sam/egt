@@ -230,6 +230,10 @@ protected:
         damage(rect + m_offset);
     }
 
+    bool on_drag_start(Event& event) override;
+
+    void on_drag(Event& event) override;
+
     /// Horizontal scrollable
     EGT_NODISCARD bool hscrollable() const
     {
