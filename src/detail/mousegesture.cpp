@@ -41,7 +41,7 @@ Event MouseGesture::handle(const Event& event)
     {
         if (m_active)
         {
-            auto dragging = m_dragging;
+            const auto dragging = m_dragging;
 
             stop();
 
