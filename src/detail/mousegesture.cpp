@@ -18,6 +18,8 @@ MouseGesture::MouseGesture() noexcept
     // setup long click timer handler
     m_long_click_timer.on_timeout([this]()
     {
+        if (!m_holding)
+            m_holding = true;
         Event event(EventId::pointer_hold, Pointer(mouse_start()));
         invoke_handlers(event);
     });
@@ -42,6 +44,7 @@ Event MouseGesture::handle(const Event& event)
         if (m_active)
         {
             const auto dragging = m_dragging;
+            const auto holding = m_holding;
 
             stop();
 
@@ -51,7 +54,7 @@ Event MouseGesture::handle(const Event& event)
                 eevent.pointer().drag_start = mouse_start();
                 return eevent;
             }
-            else
+            else if (!holding)
                 return {EventId::pointer_click, event.pointer()};
         }
         break;
@@ -69,10 +72,6 @@ Event MouseGesture::handle(const Event& event)
                 {
                     m_dragging = true;
                     dragging_started = true;
-
-                    /// @bug This may be a problem.  It is possible the long click
-                    /// event will still be generated.
-                    m_long_click_timer.cancel();
                 }
             }
 
@@ -112,6 +111,7 @@ void MouseGesture::stop()
 {
     m_active = false;
     m_dragging = false;
+    m_holding = false;
     m_long_click_timer.cancel();
 }
 
