@@ -13,6 +13,8 @@ inline namespace v1
 namespace detail
 {
 
+DefaultDim MouseGesture::m_drag_enable_distance = 10;
+
 MouseGesture::MouseGesture() noexcept
 {
     // setup long click timer handler
@@ -66,9 +68,8 @@ Event MouseGesture::handle(const Event& event)
             bool dragging_started = false;
             if (!m_dragging)
             {
-                static constexpr auto DRAG_ENABLE_DISTANCE = 10;
                 auto distance = std::abs(mouse_start().distance_to(event.pointer().point));
-                if (distance >= DRAG_ENABLE_DISTANCE)
+                if (distance >= m_drag_enable_distance)
                 {
                     m_dragging = true;
                     dragging_started = true;

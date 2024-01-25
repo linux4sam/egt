@@ -75,6 +75,22 @@ public:
      */
     void stop();
 
+    /**
+     * Get the distance to travel to enable the drag mode.
+     */
+    EGT_NODISCARD static DefaultDim drag_enable_distance()
+    {
+        return m_drag_enable_distance;
+    }
+
+    /**
+     * Set the distance to travel to enable the drag mode.
+     */
+    static void drag_enable_distance(DefaultDim distance)
+    {
+        m_drag_enable_distance = distance;
+    }
+
 protected:
 
     /// Invoke an event on each of the handlers.
@@ -100,6 +116,9 @@ protected:
 
     /// Async timer for detecting long clicks.
     PeriodicTimer m_long_click_timer;
+
+    /// Cursor distance to enable the drag mode.
+    static DefaultDim m_drag_enable_distance;
 };
 
 }
