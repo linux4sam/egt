@@ -86,6 +86,9 @@ protected:
     /// Currently in the dragging state.
     bool m_dragging{false};
 
+    /// Currently in the holding state.
+    bool m_holding{false};
+
     /// The starting position of the mouse.
     DisplayPoint m_mouse_start_pos;
 
