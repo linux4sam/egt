@@ -8,6 +8,7 @@
 
 #include <cairo.h>
 #include <cstring>
+#include <egt/geometry.h>
 #include <egt/types.h>
 #include <fstream>
 #include <string>
@@ -145,26 +146,8 @@ public:
         return surface;
     }
 
-    static shared_cairo_surface_t load(const unsigned char* buf, size_t len)
+    static shared_cairo_surface_t read_surface_data(const unsigned char* buf, const unsigned char* buf_end, uint32_t width, uint32_t height)
     {
-        const auto buf_end = buf + len;
-        alignas(4) uint32_t magic = 0;
-        alignas(4) uint32_t width = 0;
-        alignas(4) uint32_t height = 0;
-
-        buf = readw(buf, magic, buf_end);
-        if (!buf)
-            return nullptr;
-        if (magic != egt_magic())
-            return nullptr;
-        buf = readw(buf, width, buf_end);
-        if (!buf)
-            return nullptr;
-        buf = readw(buf, height, buf_end);
-        if (!buf)
-            return nullptr;
-        buf += (sizeof(uint32_t) * 4);
-
         auto surface =
             shared_cairo_surface_t(cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
                                    width, height),
@@ -203,6 +186,65 @@ public:
         cairo_surface_mark_dirty(surface.get());
 
         return surface;
+    }
+
+    static shared_cairo_surface_t load(const unsigned char* buf, size_t len)
+    {
+        const auto buf_end = buf + len;
+        alignas(4) uint32_t magic = 0;
+        alignas(4) uint32_t width = 0;
+        alignas(4) uint32_t height = 0;
+
+        buf = readw(buf, magic, buf_end);
+        if (!buf)
+            return nullptr;
+        if (magic != egt_magic())
+            return nullptr;
+        buf = readw(buf, width, buf_end);
+        if (!buf)
+            return nullptr;
+        buf = readw(buf, height, buf_end);
+        if (!buf)
+            return nullptr;
+        buf += (sizeof(uint32_t) * 4);
+
+        return read_surface_data(buf, buf_end, width, height);
+    }
+
+    static shared_cairo_surface_t load(const unsigned char* buf, size_t len, std::shared_ptr<Rect>& rect)
+    {
+        const auto buf_end = buf + len;
+        alignas(4) uint32_t magic = 0;
+        alignas(4) uint32_t width = 0;
+        alignas(4) uint32_t height = 0;
+        alignas(4) int32_t x = 0;
+        alignas(4) int32_t y = 0;
+
+        buf = readw(buf, magic, buf_end);
+        if (!buf)
+            return nullptr;
+        if (magic != egt_magic())
+            return nullptr;
+        buf = readw(buf, width, buf_end);
+        if (!buf)
+            return nullptr;
+        buf = readw(buf, height, buf_end);
+        if (!buf)
+            return nullptr;
+        buf = readw(buf, x, buf_end);
+        if (!buf)
+            return nullptr;
+        buf = readw(buf, y, buf_end);
+        if (!buf)
+            return nullptr;
+        buf += (sizeof(uint32_t) * 2);
+
+        rect->x(x);
+        rect->y(y);
+        rect->width(width);
+        rect->height(height);
+
+        return read_surface_data(buf, buf_end, width, height);
     }
 
     static uint16_t next_diff_block(uint32_t* data, const uint32_t* end)
@@ -275,6 +317,64 @@ public:
             }
         }
         o.close();
+    }
+
+    static void save(const std::string& path, unsigned char* data, int32_t x, int32_t y, uint32_t width, uint32_t height, uint32_t* len)
+    {
+        uint32_t length = 0;
+        std::ofstream o(path, std::ios_base::app | std::ios_base::binary);
+        const auto magic = egt_magic();
+        o.write(reinterpret_cast<const char*>(&magic), sizeof(magic));
+        length += sizeof(magic);
+        o.write(reinterpret_cast<const char*>(&width), sizeof(width));
+        length += sizeof(width);
+        o.write(reinterpret_cast<const char*>(&height), sizeof(height));
+        length += sizeof(height);
+
+        //add x,y coordinate
+        o.write(reinterpret_cast<const char*>(&x), sizeof(x));
+        length += sizeof(x);
+        o.write(reinterpret_cast<const char*>(&y), sizeof(y));
+        length += sizeof(y);
+
+        uint32_t reserved = 0;
+        o.write(reinterpret_cast<const char*>(&reserved), sizeof(reserved));
+        o.write(reinterpret_cast<const char*>(&reserved), sizeof(reserved));
+        length += (2 * sizeof(reserved));
+
+        const auto start = reinterpret_cast<uint32_t*>(data);
+        auto offset = reinterpret_cast<uint32_t*>(data);
+        const auto end = reinterpret_cast<uint32_t*>(start + (width * height));
+
+        while (offset < end)
+        {
+            uint32_t value = 0;
+            auto same = next_same_block(offset, end, value);
+            if (same)
+            {
+                offset += same;
+                same |= 0x8000;
+                o.write(reinterpret_cast<const char*>(&same), sizeof(same));
+                length += sizeof(same);
+                o.write(reinterpret_cast<const char*>(&value), sizeof(value));
+                length += sizeof(value);
+            }
+            else
+            {
+                auto diff = next_diff_block(offset, end);
+                if (diff)
+                {
+                    o.write(reinterpret_cast<const char*>(&diff), sizeof(diff));
+                    length += sizeof(diff);
+                    o.write(reinterpret_cast<const char*>(offset), diff * sizeof(uint32_t));
+                    length += diff * sizeof(uint32_t);
+                    offset += diff;
+                }
+            }
+        }
+        o.close();
+
+        *len = length;
     }
 
 };
