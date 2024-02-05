@@ -24,7 +24,9 @@ const std::pair<EventId, char const*> detail::EnumStrings<EventId>::data[] =
     {EventId::raw_pointer_move, "raw_pointer_move"},
     {EventId::pointer_click, "pointer_click"},
     {EventId::pointer_dblclick, "pointer_dblclick"},
+    {EventId::pointer_hold_start, "pointer_hold_start"},
     {EventId::pointer_hold, "pointer_hold"},
+    {EventId::pointer_hold_stop, "pointer_hold_stop"},
     {EventId::pointer_drag_start, "pointer_drag_start"},
     {EventId::pointer_drag, "pointer_drag"},
     {EventId::pointer_drag_stop, "pointer_drag_stop"},
@@ -84,7 +86,9 @@ std::ostream& operator<<(std::ostream& os, const Event& event)
     case EventId::raw_pointer_move:
     case EventId::pointer_click:
     case EventId::pointer_dblclick:
+    case EventId::pointer_hold_start:
     case EventId::pointer_hold:
+    case EventId::pointer_hold_stop:
     case EventId::pointer_drag_start:
     case EventId::pointer_drag:
     case EventId::pointer_drag_stop:

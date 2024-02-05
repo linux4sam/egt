@@ -20,9 +20,16 @@ MouseGesture::MouseGesture() noexcept
     // setup long click timer handler
     m_long_click_timer.on_timeout([this]()
     {
+        Event event;
         if (!m_holding)
+        {
             m_holding = true;
-        Event event(EventId::pointer_hold, Pointer(mouse_start()));
+            event = Event(EventId::pointer_hold_start, Pointer(mouse_start()));
+        }
+        else
+        {
+            event = Event(EventId::pointer_hold, Pointer(mouse_start()));
+        }
         invoke_handlers(event);
     });
 }
@@ -56,8 +63,14 @@ Event MouseGesture::handle(const Event& event)
                 eevent.pointer().drag_start = mouse_start();
                 return eevent;
             }
-            else if (!holding)
+            if (holding)
+            {
+                return {EventId::pointer_hold_stop, event.pointer()};
+            }
+            else
+            {
                 return {EventId::pointer_click, event.pointer()};
+            }
         }
         break;
     }

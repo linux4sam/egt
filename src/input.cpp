@@ -94,7 +94,9 @@ void Input::dispatch(Event& event)
     case EventId::raw_pointer_move:
     case EventId::pointer_click:
     case EventId::pointer_dblclick:
+    case EventId::pointer_hold_start:
     case EventId::pointer_hold:
+    case EventId::pointer_hold_stop:
     case EventId::pointer_drag_start:
     case EventId::pointer_drag:
     case EventId::pointer_drag_stop:

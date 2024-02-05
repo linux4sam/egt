@@ -53,17 +53,19 @@ enum class EventId
     /** Pointer event. */
     pointer_click = detail::bit(4),
     pointer_dblclick = detail::bit(5),
-    pointer_hold = detail::bit(6),
-    pointer_drag_start = detail::bit(7),
-    pointer_drag = detail::bit(8),
-    pointer_drag_stop = detail::bit(9),
+    pointer_hold_start = detail::bit(6),
+    pointer_hold = detail::bit(7),
+    pointer_hold_stop = detail::bit(8),
+    pointer_drag_start = detail::bit(9),
+    pointer_drag = detail::bit(10),
+    pointer_drag_stop = detail::bit(11),
     ///@}
 
     ///@{
     /** Keyboard event. */
-    keyboard_down = detail::bit(10),
-    keyboard_up = detail::bit(11),
-    keyboard_repeat = detail::bit(12),
+    keyboard_down = detail::bit(12),
+    keyboard_up = detail::bit(13),
+    keyboard_repeat = detail::bit(14),
     ///@}
 };
 
