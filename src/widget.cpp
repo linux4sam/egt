@@ -673,8 +673,9 @@ void Widget::zorder(size_t rank)
 
 void Widget::zorder_down(const Widget* widget)
 {
-    auto begin = widget->component() ? m_components_begin : children().begin();
-    auto end = widget->component() ? m_subordinates.end() : children().end();
+    auto& range = range_from_widget(*widget);
+    auto begin = range.begin();
+    auto end = range.end();
 
     auto i = std::find_if(begin, end,
                           [widget](const auto & ptr)
@@ -699,8 +700,9 @@ void Widget::zorder_down(const Widget* widget)
 
 void Widget::zorder_up(const Widget* widget)
 {
-    auto begin = widget->component() ? m_components_begin : children().begin();
-    auto end = widget->component() ? m_subordinates.end() : children().end();
+    auto& range = range_from_widget(*widget);
+    auto begin = range.begin();
+    auto end = range.end();
 
     auto i = std::find_if(begin, end,
                           [widget](const auto & ptr)
@@ -728,8 +730,9 @@ void Widget::zorder_up(const Widget* widget)
 
 void Widget::zorder_bottom(const Widget* widget)
 {
-    auto begin = widget->component() ? m_components_begin : children().begin();
-    auto end = widget->component() ? m_subordinates.end() : children().end();
+    auto& range = range_from_widget(*widget);
+    auto begin = range.begin();
+    auto end = range.end();
 
     if (std::distance(begin, end) <= 1)
         return;
@@ -752,8 +755,9 @@ void Widget::zorder_bottom(const Widget* widget)
 
 void Widget::zorder_top(const Widget* widget)
 {
-    auto begin = widget->component() ? m_components_begin : children().begin();
-    auto end = widget->component() ? m_subordinates.end() : children().end();
+    auto& range = range_from_widget(*widget);
+    auto begin = range.begin();
+    auto end = range.end();
 
     if (std::distance(begin, end) <= 1)
         return;
@@ -793,8 +797,9 @@ size_t Widget::zorder(const Widget* widget) const
 
 void Widget::zorder(const Widget* widget, size_t rank)
 {
-    auto begin = widget->component() ? m_components_begin : children().begin();
-    auto end = widget->component() ? m_subordinates.end() : children().end();
+    auto& range = range_from_widget(*widget);
+    auto begin = range.begin();
+    auto end = range.end();
 
     auto i = std::find_if(begin, end,
                           [widget](const auto & ptr)

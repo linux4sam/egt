@@ -1749,6 +1749,18 @@ protected:
         m_components.end(m_subordinates.end());
     }
 
+    /// Return either components() or children() depending on widget.component()
+    EGT_NODISCARD detail::Range<SubordinatesArray>& range_from_widget(const Widget& widget)
+    {
+        return widget.component() ? components() : children();
+    }
+
+    /// Return either components() or children() depending on widget.component()
+    EGT_NODISCARD const detail::Range<SubordinatesArray>& range_from_widget(const Widget& widget) const
+    {
+        return widget.component() ? components() : children();
+    }
+
     /// Add a component.
     void add_component(Widget& widget);
 
