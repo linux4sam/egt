@@ -314,25 +314,15 @@ void ScrolledView::handle(Event& event)
     case EventId::pointer_drag:
     case EventId::pointer_drag_stop:
     {
-        /*
-         * The pointer position must be updated before delegating the
-         * event handling to the children.
-         */
-        const auto saved_point = event.pointer().point;
-        event.pointer().point -= DisplayPoint(m_offset);
-        auto reset = detail::on_scope_exit([&event, &saved_point]()
-        {
-            event.pointer().point = saved_point;
-        });
-
-        auto pos = display_to_local(event.pointer().point);
-
         for (auto& child : detail::reverse_iterate(m_subordinates))
         {
             if (!child->can_handle_event())
                 continue;
 
-            if (child->box().intersect(pos))
+            auto pos = child->display_to_local(event.pointer().point);
+            /* child->local_box() is protected within this context. */
+            auto local_box = Rect(child->size());
+            if (local_box.intersect(pos))
             {
                 child->handle(event);
                 break;
@@ -405,6 +395,21 @@ void ScrolledView::init_sliders()
                                   Slider::SliderFlag::inverted,
                                   Slider::SliderFlag::consistent_line});
     m_vslider.on_value_changed(redraw_content);
+}
+
+Point ScrolledView::point_from_subordinate(const Widget& subordinate) const
+{
+    auto p = Frame::point_from_subordinate(subordinate);
+
+    auto i = std::find_if(children().begin(), children().end(),
+                          [&subordinate](const auto & ptr)
+    {
+        return ptr.get() == &subordinate;
+    });
+    if (i != children().end())
+        p += m_offset;
+
+    return p;
 }
 
 }

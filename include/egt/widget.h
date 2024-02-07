@@ -1416,6 +1416,12 @@ protected:
         damage(rect);
     }
 
+    virtual Point point_from_subordinate(const Widget& subordinate) const
+    {
+        detail::ignoreparam(subordinate);
+        return point();
+    }
+
     /**
      * Cause the widget to draw itself and all of its children.
      *

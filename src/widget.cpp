@@ -126,14 +126,13 @@ void Widget::handle(Event& event)
         case EventId::pointer_drag:
         case EventId::pointer_drag_stop:
         {
-            auto pos = display_to_local(event.pointer().point);
-
             for (auto& subordinate : detail::reverse_iterate(m_subordinates))
             {
                 if (!subordinate->can_handle_event())
                     continue;
 
-                if (subordinate->box().intersect(pos))
+                auto pos = subordinate->display_to_local(event.pointer().point);
+                if (subordinate->local_box().intersect(pos))
                 {
                     subordinate->handle(event);
                     break;
@@ -1189,10 +1188,13 @@ DisplayPoint Widget::local_to_display(const Point& p) const
 {
     DisplayPoint p2(p.x(), p.y());
 
+    auto sub = this;
     auto par = parent();
     while (par)
     {
-        p2 += DisplayPoint(par->point().x(), par->point().y());
+        auto par_point = par->point_from_subordinate(*sub);
+        p2 += DisplayPoint(par_point.x(), par_point.y());
+        sub = par;
         par = par->parent();
     }
 
@@ -1203,10 +1205,12 @@ Point Widget::display_to_local(const DisplayPoint& p) const
 {
     Point p2(p.x(), p.y());
 
+    auto sub = this;
     auto par = parent();
     while (par)
     {
-        p2 -= par->point();
+        p2 -= par->point_from_subordinate(*sub);
+        sub = par;
         par = par->parent();
     }
 

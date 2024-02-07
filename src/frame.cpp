@@ -118,11 +118,10 @@ void Frame::remove_all()
 
 Widget* Frame::hit_test(const DisplayPoint& point)
 {
-    Point pos = display_to_local(point);
-
     for (auto& child : detail::reverse_iterate(m_subordinates))
     {
-        if (child->box().intersect(pos))
+        auto pos = child->display_to_local(point);
+        if (child->local_box().intersect(pos))
         {
             if (child->frame())
             {
@@ -137,6 +136,7 @@ Widget* Frame::hit_test(const DisplayPoint& point)
         }
     }
 
+    auto pos = display_to_local(point);
     if (local_box().intersect(pos))
         return this;
 

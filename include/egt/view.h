@@ -230,6 +230,8 @@ protected:
         damage(rect + m_offset);
     }
 
+    Point point_from_subordinate(const Widget& subordinate) const override;
+
     /// Horizontal scrollable
     EGT_NODISCARD bool hscrollable() const
     {
