@@ -144,6 +144,12 @@ public:
          * enabled by the widget itself).
          */
         user_drag = detail::bit(13),
+
+        /**
+         * has the user enabled 'pointer_drag*' events to be tracked when they
+         * cross the widget boundaries.
+         */
+        user_track_drag = detail::bit(14),
     };
 
     /// Widget flags
@@ -551,6 +557,22 @@ public:
                 flags().set(Widget::Flag::user_drag);
             else
                 flags().clear(Widget::Flag::user_drag);
+        }
+    }
+
+    EGT_NODISCARD bool user_track_drag() const
+    {
+        return flags().is_set(Widget::Flag::user_track_drag);
+    }
+
+    void user_track_drag(bool value)
+    {
+        if (flags().is_set(Widget::Flag::user_track_drag) != value)
+        {
+            if (value)
+                flags().set(Widget::Flag::user_track_drag);
+            else
+                flags().clear(Widget::Flag::user_track_drag);
         }
     }
 
@@ -1704,6 +1726,18 @@ protected:
     virtual bool internal_drag() const { return false; }
 
     /**
+     * Tell the continue_drag() method whether the widget tracks
+     * 'pointer_drag*' events once they have crossed out the widget boundaries.
+     * If not, a 'pointer_drag_stop' event is inserted wihtin the widget
+     * boundaries.
+     *
+     * @return true if and only if the widget tracks 'pointer_drag*' events.
+     */
+    bool track_drag() const { return internal_track_drag() || user_track_drag(); }
+
+    virtual bool internal_track_drag() const { return false; }
+
+    /**
      * Bounding box.
      */
     Rect m_box;
@@ -1956,7 +1990,7 @@ private:
 
 /// Enum string conversion map
 template<>
-EGT_API const std::pair<Widget::Flag, char const*> detail::EnumStrings<Widget::Flag>::data[14];
+EGT_API const std::pair<Widget::Flag, char const*> detail::EnumStrings<Widget::Flag>::data[15];
 
 /// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Widget::Flag& flag);

@@ -23,6 +23,7 @@ public:
         m_widget->grab_mouse(true);
         m_widget->no_layout(true);
         m_widget->user_drag(true);
+        m_widget->user_track_drag(true);
         m_widget->on_event([this](egt::Event & event)
         {
             handle(event);

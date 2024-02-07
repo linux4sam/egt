@@ -45,6 +45,7 @@ const std::pair<Widget::Flag, char const*> detail::EnumStrings<Widget::Flag>::da
     {Widget::Flag::checked, "checked"},
     {Widget::Flag::component, "component"},
     {Widget::Flag::user_drag, "user_drag"},
+    {Widget::Flag::user_track_drag, "user_track_drag"},
 };
 
 std::ostream& operator<<(std::ostream& os, const Widget::Flags& flags)
@@ -198,8 +199,24 @@ void Widget::start_drag(Event& event)
 
 void Widget::continue_drag(Event& event)
 {
-    if (event.id() == EventId::pointer_drag_stop)
+    auto pos = display_to_local(event.pointer().point);
+    const auto b = local_box();
+
+    if (track_drag() || b.intersect(pos))
+    {
+        if (event.id() == EventId::pointer_drag_stop)
+            detail::dragged(nullptr);
+    }
+    else
+    {
+        /* Make sure the pointer is within the box. */
+        pos.x(detail::clamp(pos.x(), 0, b.width()));
+        pos.y(detail::clamp(pos.y(), 0, b.height()));
+
+        event.id(EventId::pointer_drag_stop);
+        event.pointer().point = local_to_display(pos);
         detail::dragged(nullptr);
+    }
 
     handle(event);
 }

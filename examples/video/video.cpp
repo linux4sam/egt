@@ -269,6 +269,7 @@ int main(int argc, char** argv)
     });
 
     player.user_drag(true);
+    player.user_track_drag(true);
     player.on_event([&player, &win, &ssize](egt::Event & event)
     {
         static egt::Point drag_start_point;
