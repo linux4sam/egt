@@ -1829,6 +1829,11 @@ private:
     Theme::FillFlags m_fill_flags{};
 
     /**
+     * Common initializations done by all constructors.
+     */
+    void init(void);
+
+    /**
      * Font instance for the widget.
      *
      * @note This should not be accessed directly.  Always use the access

@@ -65,24 +65,7 @@ Widget::Widget(const Rect& rect, const Widget::Flags& flags) noexcept
       m_widgetid(global_widget_id++),
       m_widget_flags(flags)
 {
-    m_components_begin = m_subordinates.begin();
-    m_children.begin(m_subordinates.begin());
-    m_children.end(m_components_begin);
-
-    m_align.on_change([this]()
-    {
-        parent_layout();
-    });
-
-    on_gain_focus([this]()
-    {
-        m_focus = true;
-    });
-
-    on_lost_focus([this]()
-    {
-        m_focus = false;
-    });
+    init();
 }
 
 Widget::Widget(Serializer::Properties& props, bool is_derived) noexcept
@@ -92,24 +75,7 @@ Widget::Widget(Serializer::Properties& props, bool is_derived) noexcept
 
     m_user_requested_box = m_box;
 
-    m_components_begin = m_subordinates.begin();
-    m_children.begin(m_subordinates.begin());
-    m_children.end(m_components_begin);
-
-    m_align.on_change([this]()
-    {
-        parent_layout();
-    });
-
-    on_gain_focus([this]()
-    {
-        m_focus = true;
-    });
-
-    on_lost_focus([this]()
-    {
-        m_focus = false;
-    });
+    init();
 
     if (!is_derived)
         deserialize_leaf(props);
@@ -993,6 +959,28 @@ std::string Widget::type() const
     auto t = detail::demangle(typeid(*this).name());
     // for now, remove egt/v1 namespace only.
     return detail::replace_all(t, "egt::v1::", {});
+}
+
+void Widget::init(void)
+{
+    m_components_begin = m_subordinates.begin();
+    m_children.begin(m_subordinates.begin());
+    m_children.end(m_components_begin);
+
+    m_align.on_change([this]()
+    {
+        parent_layout();
+    });
+
+    on_gain_focus([this]()
+    {
+        m_focus = true;
+    });
+
+    on_lost_focus([this]()
+    {
+        m_focus = false;
+    });
 }
 
 void Widget::serialize(Serializer& serializer) const
