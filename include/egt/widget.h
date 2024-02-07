@@ -1720,6 +1720,35 @@ protected:
     /// Array of child widgets in the order they were added.
     detail::Range<SubordinatesArray> m_children;
 
+    /// Return the array of components widgets.
+    EGT_NODISCARD const detail::Range<SubordinatesArray>& components() const
+    {
+        return m_components;
+    }
+
+    /// Return the array of components widgets.
+    EGT_NODISCARD detail::Range<SubordinatesArray>& components()
+    {
+        return m_components;
+    }
+
+    /// Array of component widgets in the order they were added.
+    detail::Range<SubordinatesArray> m_components;
+
+    /**
+     * Update the 'm_children' and 'm_components' members.
+     *
+     * @note Should be called any time 'm_components_begin',
+     * m_subordonates.begin() or m_subordinates.end() have changed.
+     */
+    void update_subordinates_ranges()
+    {
+        m_children.begin(m_subordinates.begin());
+        m_children.end(m_components_begin);
+        m_components.begin(m_components_begin);
+        m_components.end(m_subordinates.end());
+    }
+
     /// Add a component.
     void add_component(Widget& widget);
 

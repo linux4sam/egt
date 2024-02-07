@@ -690,12 +690,8 @@ void Widget::zorder_down(const Widget* widget)
         if (to == begin)
         {
             if (widget->component())
-            {
                 m_components_begin = to;
-                children().end(m_components_begin);
-            }
-            else
-                children().begin(m_subordinates.begin());
+            update_subordinates_ranges();
         }
         layout();
     }
@@ -722,12 +718,8 @@ void Widget::zorder_up(const Widget* widget)
             if (i == begin)
             {
                 if (widget->component())
-                {
                     m_components_begin = i;
-                    children().end(m_components_begin);
-                }
-                else
-                    children().begin(m_subordinates.begin());
+                update_subordinates_ranges();
             }
             layout();
         }
@@ -752,12 +744,8 @@ void Widget::zorder_bottom(const Widget* widget)
     {
         m_subordinates.splice(begin, m_subordinates, i, std::next(i));
         if (widget->component())
-        {
             m_components_begin = i;
-            children().end(m_components_begin);
-        }
-        else
-            children().begin(m_subordinates.begin());
+        update_subordinates_ranges();
         layout();
     }
 }
@@ -781,12 +769,8 @@ void Widget::zorder_top(const Widget* widget)
         if (i == begin)
         {
             if (widget->component())
-            {
                 m_components_begin = std::next(i);
-                children().end(m_components_begin);
-            }
-            else
-                children().begin(m_subordinates.begin());
+            update_subordinates_ranges();
         }
         layout();
     }
@@ -831,12 +815,8 @@ void Widget::zorder(const Widget* widget, size_t rank)
             if (i == begin || j == begin)
             {
                 if (widget->component())
-                {
                     m_components_begin = i;
-                    children().end(m_components_begin);
-                }
-                else
-                    children().begin(m_subordinates.begin());
+                update_subordinates_ranges();
             }
             layout();
         }
@@ -964,8 +944,7 @@ std::string Widget::type() const
 void Widget::init(void)
 {
     m_components_begin = m_subordinates.begin();
-    m_children.begin(m_subordinates.begin());
-    m_children.end(m_components_begin);
+    update_subordinates_ranges();
 
     m_align.on_change([this]()
     {
@@ -1446,13 +1425,9 @@ void Widget::remove_component(Widget* widget)
         (*i)->m_parent = nullptr;
         (*i)->component(false);
         if (i == m_components_begin)
-        {
             m_components_begin = std::next(m_components_begin);
-            if (!children().size())
-                children().begin(m_components_begin);
-            children().end(m_components_begin);
-        }
         m_subordinates.erase(i);
+        update_subordinates_ranges();
     }
     else if (widget->m_parent == this)
     {
@@ -1467,24 +1442,15 @@ void Widget::add_component(Widget& widget)
     // will not delete it.
     auto w = std::shared_ptr<Widget>(&widget, [](Widget*) {});
 
-    bool first_subordinate = m_subordinates.empty();
-    bool first_component = (m_components_begin == m_subordinates.end());
+    bool first_component = components().empty();
 
     w->set_parent(this);
     w->component(true);
     m_subordinates.emplace_back(w);
 
-    if (first_subordinate)
-    {
-        m_components_begin = m_subordinates.begin();
-        m_children.begin(m_subordinates.begin());
-        m_children.end(m_components_begin);
-    }
-    else if (first_component)
-    {
-        std::advance(m_components_begin, -1);
-        m_children.end(m_components_begin);
-    }
+    if (first_component)
+        m_components_begin = std::prev(m_subordinates.end());
+    update_subordinates_ranges();
 }
 
 void Widget::component(bool value)
