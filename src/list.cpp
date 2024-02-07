@@ -131,14 +131,12 @@ void ListBox::handle(Event& event)
     {
     case EventId::pointer_click:
     {
-        Point pos = display_to_local(event.pointer().point);
-
         for (size_t i = 0; i < m_sizer.count_children(); i++)
         {
-            auto cbox = m_sizer.child_at(i)->box();
-            cbox.y(cbox.y() + m_view.offset().y());
+            auto item = m_sizer.child_at(i);
 
-            if (cbox.intersect(pos))
+            auto pos = item->display_to_local(event.pointer().point);
+            if (Rect(item->size()).intersect(pos))
             {
                 selected(i);
                 break;
