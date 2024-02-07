@@ -315,12 +315,6 @@ void ScrolledView::handle(Event& event)
     case EventId::pointer_drag_stop:
     {
         /*
-         * Take into account the offset to get the real position of the pointer
-         * in the ScrolledView.
-         */
-        Point pos = display_to_local(event.pointer().point) - m_offset;
-
-        /*
          * The pointer position must be updated before delegating the
          * event handling to the children.
          */
@@ -330,6 +324,8 @@ void ScrolledView::handle(Event& event)
         {
             event.pointer().point = saved_point;
         });
+
+        auto pos = display_to_local(event.pointer().point);
 
         for (auto& child : detail::reverse_iterate(m_subordinates))
         {
