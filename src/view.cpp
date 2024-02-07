@@ -339,8 +339,7 @@ void ScrolledView::handle(Event& event)
             if (child->box().intersect(pos))
             {
                 child->handle(event);
-                if (event.quit())
-                    return;
+                break;
             }
         }
 
