@@ -67,6 +67,36 @@ public:
         return m_end;
     }
 
+    typename T::reverse_iterator rbegin() noexcept
+    {
+        return std::reverse_iterator<typename T::iterator>(m_end);
+    }
+
+    typename T::reverse_iterator rend() noexcept
+    {
+        return std::reverse_iterator<typename T::iterator>(m_begin);
+    }
+
+    typename T::const_reverse_iterator rbegin() const noexcept
+    {
+        return std::reverse_iterator<typename T::const_iterator>(m_end);
+    }
+
+    typename T::const_reverse_iterator rend() const noexcept
+    {
+        return std::reverse_iterator<typename T::const_iterator>(m_begin);
+    }
+
+    typename T::const_reverse_iterator crbegin() const noexcept
+    {
+        return std::reverse_iterator<typename T::const_iterator>(m_end);
+    }
+
+    typename T::const_reverse_iterator crend() const noexcept
+    {
+        return std::reverse_iterator<typename T::const_iterator>(m_begin);
+    }
+
     size_t size() const noexcept
     {
         return std::distance(m_begin, m_end);
