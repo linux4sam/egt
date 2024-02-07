@@ -1135,8 +1135,8 @@ void Widget::deserialize(Serializer::Properties& props)
 
 Widget::~Widget() noexcept
 {
-    for (auto i = m_components_begin; i != m_subordinates.end(); i++)
-        remove_component((*i).get());
+    for (auto& i : components())
+        remove_component(i.get());
     detach();
 
     if (detail::mouse_grab() == this)
@@ -1413,12 +1413,12 @@ void Widget::remove_component(Widget* widget)
     if (!widget)
         return;
 
-    auto i = std::find_if(m_components_begin, m_subordinates.end(),
+    auto i = std::find_if(components().begin(), components().end(),
                           [widget](const auto & ptr)
     {
         return ptr.get() == widget;
     });
-    if (i != m_subordinates.end())
+    if (i != components().end())
     {
         // note order here - damage and then unset parent
         (*i)->damage();
