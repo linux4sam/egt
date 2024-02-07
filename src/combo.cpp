@@ -269,8 +269,7 @@ void ComboBox::handle(Event& event)
     {
     case EventId::pointer_click:
     {
-        const auto mouse = display_to_local(event.pointer().point);
-        if (local_box().intersect(mouse))
+        if (hit(event.pointer().point))
         {
             m_popup->show_modal();
         }

@@ -120,8 +120,7 @@ Widget* Frame::hit_test(const DisplayPoint& point)
 {
     for (auto& child : detail::reverse_iterate(m_subordinates))
     {
-        auto pos = child->display_to_local(point);
-        if (child->local_box().intersect(pos))
+        if (child->hit(point))
         {
             if (child->frame())
             {
@@ -136,8 +135,7 @@ Widget* Frame::hit_test(const DisplayPoint& point)
         }
     }
 
-    auto pos = display_to_local(point);
-    if (local_box().intersect(pos))
+    if (hit(point))
         return this;
 
     return nullptr;

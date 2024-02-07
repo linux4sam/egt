@@ -135,8 +135,7 @@ void ListBox::handle(Event& event)
         {
             auto item = m_sizer.child_at(i);
 
-            auto pos = item->display_to_local(event.pointer().point);
-            if (Rect(item->size()).intersect(pos))
+            if (item->hit(event.pointer().point))
             {
                 selected(i);
                 break;

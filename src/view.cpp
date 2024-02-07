@@ -319,10 +319,7 @@ void ScrolledView::handle(Event& event)
             if (!child->can_handle_event())
                 continue;
 
-            auto pos = child->display_to_local(event.pointer().point);
-            /* child->local_box() is protected within this context. */
-            auto local_box = Rect(child->size());
-            if (local_box.intersect(pos))
+            if (child->hit(event.pointer().point))
             {
                 child->handle(event);
                 break;

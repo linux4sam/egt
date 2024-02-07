@@ -131,8 +131,7 @@ void Widget::handle(Event& event)
                 if (!subordinate->can_handle_event())
                     continue;
 
-                auto pos = subordinate->display_to_local(event.pointer().point);
-                if (subordinate->local_box().intersect(pos))
+                if (subordinate->hit(event.pointer().point))
                 {
                     subordinate->handle(event);
                     break;

@@ -535,6 +535,15 @@ public:
     }
 
     /**
+     * Returns true if the DisplayPoint is within the widget box.
+     */
+    EGT_NODISCARD bool hit(const DisplayPoint& point) const
+    {
+        auto pos = display_to_local(point);
+        return local_box().intersect(pos);
+    }
+
+    /**
      * Set the grab_mouse state.
      *
      * @param[in] value When true, grab mouse events.

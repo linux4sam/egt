@@ -148,8 +148,7 @@ void Input::dispatch(Event& event)
         case EventId::pointer_drag:
         case EventId::pointer_drag_stop:
         {
-            const auto pos = w->display_to_local(event.pointer().point);
-            if (!Rect(w->size()).intersect(pos))
+            if (!w->hit(event.pointer().point))
                 continue;
             break;
         }
