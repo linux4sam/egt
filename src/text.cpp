@@ -820,7 +820,7 @@ void TextBox::init_sliders()
     m_hslider.on_value_changed.on_event(redraw);
     m_hslider.live_update(true);
     m_hslider.hide();
-    m_components.push_back(&m_hslider);
+    add_component(m_hslider);
 
     m_vslider.orient(Orientation::vertical);
     m_vslider.slider_flags().set({Slider::SliderFlag::rectangle_handle,
@@ -829,7 +829,7 @@ void TextBox::init_sliders()
     m_vslider.on_value_changed.on_event(redraw);
     m_vslider.live_update(true);
     m_vslider.hide();
-    m_components.push_back(&m_vslider);
+    add_component(m_vslider);
 
     resize_sliders();
 }
@@ -902,8 +902,6 @@ void TextBox::update_hslider()
             m_hslider.hide();
             if (m_hslider.value())
                 m_hslider.value(0);
-            else
-                damage_hslider();
         }
         return;
     }
@@ -916,21 +914,17 @@ void TextBox::update_hslider()
     if (visible && m_hslider.ending() != delta)
     {
         m_hslider.ending(delta);
-        damage_hslider();
     }
 
     if (visible && !m_hslider.visible())
     {
         m_hslider.show();
-        damage_hslider();
     }
     else if (!visible && m_hslider.visible())
     {
         m_hslider.hide();
         if (m_hslider.value())
             m_hslider.value(0);
-        else
-            damage_hslider();
     }
 }
 
@@ -943,8 +937,6 @@ void TextBox::update_vslider()
             m_vslider.hide();
             if (m_vslider.value())
                 m_vslider.value(0);
-            else
-                damage_vslider();
         }
         return;
     }
@@ -957,21 +949,17 @@ void TextBox::update_vslider()
     if (visible && m_vslider.ending() != delta)
     {
         m_vslider.ending(delta);
-        damage_vslider();
     }
 
     if (visible && !m_vslider.visible())
     {
         m_vslider.show();
-        damage_vslider();
     }
     else if (!visible && m_vslider.visible())
     {
         m_vslider.hide();
         if (m_vslider.value())
             m_vslider.value(0);
-        else
-            damage_vslider();
     }
 }
 
@@ -1179,42 +1167,6 @@ void TextBox::handle(Event& event)
     default:
         break;
     }
-
-    switch (event.id())
-    {
-    case EventId::raw_pointer_down:
-    case EventId::raw_pointer_up:
-    case EventId::raw_pointer_move:
-    case EventId::pointer_click:
-    case EventId::pointer_dblclick:
-    case EventId::pointer_hold:
-    case EventId::pointer_drag_start:
-    case EventId::pointer_drag:
-    case EventId::pointer_drag_stop:
-    {
-        auto pos = display_to_local(event.pointer().point);
-
-        for (auto& component : m_components)
-        {
-            if (!component->can_handle_event())
-                continue;
-
-            if (component->box().intersect(pos))
-            {
-                component->handle(event);
-                break;
-            }
-        }
-
-        break;
-    }
-
-    default:
-        break;
-    }
-
-    if (event.quit())
-        return;
 
     switch (event.id())
     {
