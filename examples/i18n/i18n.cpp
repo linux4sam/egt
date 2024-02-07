@@ -270,7 +270,7 @@ int main(int argc, char** argv)
             }
             catch (std::runtime_error&)
             {
-                std::cout << "can't create locale for es_ES.utf8" << std::endl;
+                std::cout << "can't create locale for zh_CN.utf8" << std::endl;
             }
         }
     });
