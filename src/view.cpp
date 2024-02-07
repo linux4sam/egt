@@ -333,13 +333,7 @@ void ScrolledView::handle(Event& event)
 
         for (auto& child : detail::reverse_iterate(m_subordinates))
         {
-            if (child->readonly())
-                continue;
-
-            if (child->disabled())
-                continue;
-
-            if (!child->visible())
+            if (!child->can_handle_event())
                 continue;
 
             if (child->box().intersect(pos))
