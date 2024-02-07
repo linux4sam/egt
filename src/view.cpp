@@ -286,6 +286,8 @@ void ScrolledView::update_sliders()
 
 void ScrolledView::handle(Event& event)
 {
+    Frame::handle(event);
+
     switch (event.id())
     {
     case EventId::pointer_drag_start:
@@ -298,53 +300,6 @@ void ScrolledView::handle(Event& event)
         offset(m_start_offset + Point(diff.x(), diff.y()));
         break;
     }
-    default:
-        break;
-    }
-
-    switch (event.id())
-    {
-    case EventId::raw_pointer_down:
-    case EventId::raw_pointer_up:
-    case EventId::raw_pointer_move:
-    case EventId::pointer_click:
-    case EventId::pointer_dblclick:
-    case EventId::pointer_hold:
-    case EventId::pointer_drag_start:
-    case EventId::pointer_drag:
-    case EventId::pointer_drag_stop:
-    {
-        for (auto& child : detail::reverse_iterate(m_subordinates))
-        {
-            if (!child->can_handle_event())
-                continue;
-
-            if (child->hit(event.pointer().point))
-            {
-                child->handle(event);
-                break;
-            }
-        }
-
-        break;
-    }
-
-    case EventId::keyboard_down:
-    case EventId::keyboard_up:
-    case EventId::keyboard_repeat:
-    {
-        for (auto& child : detail::reverse_iterate(m_subordinates))
-        {
-            if (!child->can_handle_event())
-                continue;
-
-            child->handle(event);
-            if (event.quit())
-                return;
-        }
-        break;
-    }
-
     default:
         break;
     }
