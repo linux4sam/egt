@@ -1265,7 +1265,7 @@ public:
      *
      * @see @ref geometry_coord
      */
-    DisplayPoint local_to_display(const Point& p);
+    DisplayPoint local_to_display(const Point& p) const;
 
     /**
      * Convert a display point to a local point.
@@ -1275,7 +1275,7 @@ public:
      *
      * @see @ref geometry_coord
      */
-    virtual Point display_to_local(const DisplayPoint& p);
+    virtual Point display_to_local(const DisplayPoint& p) const;
 
     /**
      * Get the widget Font.

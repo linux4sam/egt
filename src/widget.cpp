@@ -1185,7 +1185,7 @@ void Widget::parent_layout()
         parent()->layout();
 }
 
-DisplayPoint Widget::local_to_display(const Point& p)
+DisplayPoint Widget::local_to_display(const Point& p) const
 {
     DisplayPoint p2(p.x(), p.y());
 
@@ -1199,7 +1199,7 @@ DisplayPoint Widget::local_to_display(const Point& p)
     return p2 + DisplayPoint(x(), y());
 }
 
-Point Widget::display_to_local(const DisplayPoint& p)
+Point Widget::display_to_local(const DisplayPoint& p) const
 {
     Point p2(p.x(), p.y());
 
