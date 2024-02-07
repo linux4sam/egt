@@ -347,6 +347,24 @@ struct EGT_API Event : public EventArg
      */
     void grab(Widget* widget);
 
+    /**
+     * Stop the event from propagating but only after the current handle()
+     * completes.
+     */
+    void postpone_stop()
+    {
+        m_postponed_stop = true;
+    }
+
+    /**
+     * Was the event scheduled to be stopped just after the latest handle()
+     * completes?
+     */
+    EGT_NODISCARD bool postponed_quit() const
+    {
+        return m_postponed_stop;
+    }
+
 protected:
 
     /**
@@ -363,6 +381,11 @@ protected:
      * Pointer event data.
      */
     Pointer m_pointer;
+
+    /**
+     * Stop has be rescheduled for after handle() completes.
+     */
+    bool m_postponed_stop{false};
 };
 
 static_assert(detail::rule_of_5<Event>(), "must fulfill rule of 5");

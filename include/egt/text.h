@@ -467,6 +467,8 @@ public:
 
 protected:
 
+    bool internal_drag() const override { return true; }
+
     /// Get the rectangle of the text boundaries.
     EGT_NODISCARD Rect text_boundaries() const;
 

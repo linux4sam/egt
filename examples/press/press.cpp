@@ -130,6 +130,10 @@ public:
         egt::TopWindow::draw(painter, rect);
     }
 
+protected:
+
+    bool internal_drag() const override { return true; }
+
     egt::ImageButton m_clearbtn;
     egt::Canvas m_canvas;
 };

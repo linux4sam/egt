@@ -98,6 +98,10 @@ public:
         }
     }
 
+protected:
+
+    bool internal_drag() const override { return true; }
+
 private:
 
     void load()

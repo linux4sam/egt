@@ -29,11 +29,15 @@ static bool handler_dispatch(Event& event, Event& eevent,
                              const Callable& handler)
 {
     handler(event);
+    if (event.postponed_quit())
+        event.stop();
     if (event.quit())
         return true;
     if (eevent.id() != EventId::none)
     {
         handler(eevent);
+        if (eevent.postponed_quit())
+            eevent.stop();
         if (eevent.quit())
             return true;
     }
@@ -70,10 +74,38 @@ void Input::dispatch(Event& event)
         EGTLOG_TRACE("input event: {}", eevent);
     }
 
+    if (eevent.id() == EventId::pointer_drag_start)
+    {
+        // Always reset on new 'pointer_drag_start' event.
+        // The previous 'pointer_drag_stop' event may have not been
+        // processed by Widget::continue_drag() if it had been stopped
+        // earlier by some global handler.
+        detail::dragged(nullptr);
+    }
+
     if (handler_dispatch(event, eevent, [](Event & event) { m_global_handler.invoke_handlers(event); }))
     {
         return;
     }
+
+    /*
+     * Intercept and reroute 'pointer_drag' and 'pointer_drag_stop' events but
+     * not before global handlers had a chance to process those event first.
+     */
+    auto continue_drag = (eevent.id() == EventId::pointer_drag ||
+                          eevent.id() == EventId::pointer_drag_stop);
+    auto eevent_copy = eevent;
+    auto deferred_drag = detail::on_scope_exit([&eevent_copy, continue_drag]()
+    {
+        if (!continue_drag)
+            return;
+
+        auto target = detail::dragged();
+        if (target)
+            target->continue_drag(eevent_copy);
+    });
+    if (continue_drag)
+        eevent = Event(); // hide this event from handler_dispath()
 
     if (Application::instance().modal_window())
     {
@@ -175,6 +207,7 @@ namespace detail
 {
 static Widget* mouse_grab_widget = nullptr;
 static Widget* keyboard_focus_widget = nullptr;
+static Widget* dragged_widget = nullptr;
 
 Widget* mouse_grab()
 {
@@ -216,6 +249,16 @@ void keyboard_focus(Widget* widget)
 Widget* keyboard_focus()
 {
     return keyboard_focus_widget;
+}
+
+Widget* dragged()
+{
+    return dragged_widget;
+}
+
+void dragged(Widget* widget)
+{
+    dragged_widget = widget;
 }
 
 }

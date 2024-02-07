@@ -357,6 +357,8 @@ public:
 
 protected:
 
+    bool internal_drag() const override { return true; }
+
     /// @private
     template<class T2>
     struct ValueData

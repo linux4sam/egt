@@ -287,6 +287,10 @@ public:
         egt::TopWindow::draw(painter, rect);
     }
 
+protected:
+
+    bool internal_drag() const override { return true; }
+
     egt::Point m_last;
     std::unique_ptr<egt::VerticalBoxSizer> m_sizer;
     egt::ImageButton m_colorbtn;

@@ -225,6 +225,8 @@ public:
 
 protected:
 
+    bool internal_drag() const override { return true; }
+
     void damage_from_subordinate(const Rect& rect) override
     {
         damage(rect + m_offset);

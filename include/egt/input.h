@@ -124,6 +124,16 @@ EGT_API void keyboard_focus(Widget* widget);
  */
 EGT_API Widget* keyboard_focus();
 
+/**
+ * Get the current widget which is being dragged, or nullptr.
+ */
+EGT_API Widget* dragged();
+
+/**
+ * Set the current widget which is being dragged.
+ */
+EGT_API void dragged(Widget* widget);
+
 }
 
 }

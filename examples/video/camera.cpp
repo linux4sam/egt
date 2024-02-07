@@ -129,6 +129,7 @@ int main(int argc, char** argv)
     const auto wscale = static_cast<float>(egt::Application::instance().screen()->size().width()) / size.width();
     const auto hscale = static_cast<float>(egt::Application::instance().screen()->size().height()) / size.height();
 
+    player.user_drag(true);
     player.on_event([&player, &win, &size, wscale](egt::Event & event)
     {
         static egt::Point drag_start_point;

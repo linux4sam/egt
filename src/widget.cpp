@@ -44,6 +44,7 @@ const std::pair<Widget::Flag, char const*> detail::EnumStrings<Widget::Flag>::da
     {Widget::Flag::no_autoresize, "no_autoresize"},
     {Widget::Flag::checked, "checked"},
     {Widget::Flag::component, "component"},
+    {Widget::Flag::user_drag, "user_drag"},
 };
 
 std::ostream& operator<<(std::ostream& os, const Widget::Flags& flags)
@@ -123,8 +124,6 @@ void Widget::handle(Event& event)
         case EventId::pointer_dblclick:
         case EventId::pointer_hold:
         case EventId::pointer_drag_start:
-        case EventId::pointer_drag:
-        case EventId::pointer_drag_stop:
         {
             for (auto& subordinate : detail::reverse_iterate(m_subordinates))
             {
@@ -134,6 +133,8 @@ void Widget::handle(Event& event)
                 if (subordinate->hit(event.pointer().point))
                 {
                     subordinate->handle(event);
+                    if (event.postponed_quit())
+                        event.stop();
                     break;
                 }
             }
@@ -151,8 +152,10 @@ void Widget::handle(Event& event)
                     continue;
 
                 subordinate->handle(event);
+                if (event.postponed_quit())
+                    event.stop();
                 if (event.quit())
-                    return;
+                    break;
             }
 
             break;
@@ -162,6 +165,43 @@ void Widget::handle(Event& event)
             break;
         }
     }
+
+    if (event.quit())
+        return;
+
+    /*
+     * start_drag() must be executed only now to give a chance to subordinates
+     * catch the 'pointer_drag_start' event.
+     */
+    if (event.id() == EventId::pointer_drag_start)
+        start_drag(event);
+}
+
+void Widget::start_drag(Event& event)
+{
+    /* Do nothing if this widget doesn't accept drag events anyway. */
+    if (!accept_drag())
+        return;
+
+    /* Accept this event only it hits our widget box. */
+    if (!hit(event.pointer().drag_start))
+        return;
+
+    /*
+     * Don't stop the event immediately if an overridden handle() method still
+     * needs to process it, but reschedule the stop() for when this
+     * overridden handle() method completes.
+     */
+    event.postpone_stop();
+    detail::dragged(this);
+}
+
+void Widget::continue_drag(Event& event)
+{
+    if (event.id() == EventId::pointer_drag_stop)
+        detail::dragged(nullptr);
+
+    handle(event);
 }
 
 void Widget::move_to_center(const Point& point)
@@ -1147,6 +1187,9 @@ Widget::~Widget() noexcept
 
     if (detail::keyboard_focus() == this)
         detail::keyboard_focus(nullptr);
+
+    if (detail::dragged() == this)
+        detail::dragged(nullptr);
 }
 
 void Widget::set_parent(Widget* parent)

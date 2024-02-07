@@ -138,6 +138,12 @@ public:
          * Is the widget a component.
          */
         component = detail::bit(12),
+
+        /**
+         * Has the user enabled 'pointer_drag*' events (if not internally
+         * enabled by the widget itself).
+         */
+        user_drag = detail::bit(13),
     };
 
     /// Widget flags
@@ -243,6 +249,14 @@ public:
      * @param event The Event that occurred.
      */
     virtual void handle(Event& event);
+
+    /**
+     * Handle 'pointer_drag' and 'pointer_drag_stop' events.
+     * Called from Input::dispatch().
+     *
+     * @param event The drag event that occured.
+     */
+    void continue_drag(Event& event);
 
     /**
      * Resize the widget.
@@ -522,6 +536,22 @@ public:
             disable();
         else
             enable();
+    }
+
+    EGT_NODISCARD bool user_drag() const
+    {
+        return flags().is_set(Widget::Flag::user_drag);
+    }
+
+    void user_drag(bool value)
+    {
+        if (flags().is_set(Widget::Flag::user_drag) != value)
+        {
+            if (value)
+                flags().set(Widget::Flag::user_drag);
+            else
+                flags().clear(Widget::Flag::user_drag);
+        }
     }
 
     /**
@@ -1655,6 +1685,25 @@ protected:
     }
 
     /**
+     * Handle 'pointer_drag_start' events and decide whether they are caught
+     * by this widget.
+     * Called from handle().
+     *
+     * @param event The drag event that occured.
+     */
+    void start_drag(Event& event);
+
+    /**
+     * Tell the start_drag() method whether the widget accepts
+     * 'pointer_drag*' events.
+     *
+     * @return true if and only if the widget accepts 'pointer_drag*' events.
+     */
+    bool accept_drag() const { return internal_drag() || user_drag(); }
+
+    virtual bool internal_drag() const { return false; }
+
+    /**
      * Bounding box.
      */
     Rect m_box;
@@ -1907,7 +1956,7 @@ private:
 
 /// Enum string conversion map
 template<>
-EGT_API const std::pair<Widget::Flag, char const*> detail::EnumStrings<Widget::Flag>::data[13];
+EGT_API const std::pair<Widget::Flag, char const*> detail::EnumStrings<Widget::Flag>::data[14];
 
 /// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Widget::Flag& flag);
