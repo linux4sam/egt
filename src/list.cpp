@@ -25,7 +25,7 @@ ListBox::ListBox(const Rect& rect) noexcept
 
 ListBox::ListBox(const ItemArray& items, const Rect& rect) noexcept
     : Widget(rect),
-      m_view(ScrolledView::Policy::never),
+      m_view(),
       m_sizer(Orientation::vertical, Justification::start)
 {
     name("ListBox" + std::to_string(m_widgetid));
@@ -52,7 +52,7 @@ ListBox::ListBox(const ItemArray& items, const Rect& rect) noexcept
 
 ListBox::ListBox(Serializer::Properties& props, bool is_derived) noexcept
     : Widget(props, true),
-      m_view(ScrolledView::Policy::never),
+      m_view(),
       m_sizer(Orientation::vertical, Justification::start)
 {
     add_component(m_view);
@@ -87,7 +87,10 @@ void ListBox::add_item(const std::shared_ptr<StringItem>& item)
 
 void ListBox::add_item_private(const std::shared_ptr<StringItem>& item)
 {
-    item->align(AlignFlag::expand_horizontal);
+    if (m_orient == Orientation::vertical)
+        item->align(AlignFlag::expand_horizontal);
+    else
+        item->align(AlignFlag::expand_vertical);
 
     m_sizer.add(item);
 
@@ -211,9 +214,46 @@ void ListBox::scroll_bottom()
     m_view.offset(Point(m_view.offset().x(), m_view.offset_max().y()));
 }
 
+void ListBox::scroll_beginning()
+{
+    m_view.offset(m_view.offset_min());
+}
+
+void ListBox::scroll_end()
+{
+    m_view.offset(m_view.offset_max());
+}
+
+void ListBox::orient(Orientation orient)
+{
+    // Discard invalid values.
+    if (orient != Orientation::vertical && orient != Orientation::horizontal)
+        return;
+
+    if (detail::change_if_diff<>(m_orient, orient))
+    {
+        m_sizer.orient(orient);
+        if (orient == Orientation::vertical)
+        {
+            m_sizer.align(AlignFlag::expand_horizontal);
+            for (const auto& child : m_sizer.children())
+                child->align(AlignFlag::expand_horizontal);
+        }
+        else
+        {
+            m_sizer.align(AlignFlag::expand_vertical);
+            for (const auto& child : m_sizer.children())
+                child->align(AlignFlag::expand_vertical);
+        }
+        layout();
+    }
+}
+
 void ListBox::serialize(Serializer& serializer) const
 {
     Widget::serialize(serializer);
+
+    serializer.add_property("orient", std::string(detail::enum_to_string(m_orient)));
 
     for (size_t i = 0; i < m_sizer.count_children(); i++)
     {
@@ -239,7 +279,12 @@ void ListBox::deserialize(Serializer::Properties& props)
 {
     props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
     {
-        if (std::get<0>(p) == "item")
+        if (std::get<0>(p) == "orient")
+        {
+            orient(detail::enum_from_string<Orientation>(std::get<1>(p)));
+            return true;
+        }
+        else if (std::get<0>(p) == "item")
         {
             std::string text;
             Image image;

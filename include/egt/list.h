@@ -183,6 +183,31 @@ public:
      */
     void scroll_bottom();
 
+    /**
+     * Scroll all the way to the beginning of the list, either horizontally or
+     * vertically.
+     */
+    void scroll_beginning();
+
+    /**
+     * Scroll all the way to the end of the list, either horizontally or
+     * vertically.
+     */
+    void scroll_end();
+
+    /**
+     * Set the orientation of the list: either vertical or horizontal.
+     */
+    void orient(Orientation orient);
+
+    /**
+     * Get the orientation of the list: either vertical or horizontal.
+     */
+    EGT_NODISCARD Orientation orient() const
+    {
+        return m_orient;
+    }
+
     void serialize(Serializer& serializer) const override;
 
 protected:
@@ -192,6 +217,9 @@ protected:
 
     /// Internal sizer used to layout items.
     BoxSizer m_sizer;
+
+    /// List orientation, either vertical or horizontal.
+    Orientation m_orient{Orientation::vertical};
 
 private:
 
