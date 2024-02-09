@@ -30,6 +30,10 @@ int main(int argc, char** argv)
 
     egt::ImageLabel elogo(egt::Image("icon:egt_logo_white.png;128"));
     elogo.margin(10);
+    // The size needs to be set again since the margin has been modified.
+    const auto m = elogo.moat();
+    const auto elogo_size = elogo.image().size_orig() + egt::Size(2 * m, 2 * m);
+    elogo.resize(elogo_size);
     vsizer.add(elogo);
 
     egt::TextBox text("", egt::TextBox::TextFlag::multiline);
