@@ -29,7 +29,8 @@ int main(int argc, char** argv)
     const auto landscape = screen_size.width() >= screen_size.height();
 
     egt::VerticalBoxSizer vsizer;
-    win.add(expand(vsizer));
+    vsizer.align(egt::AlignFlag::center_horizontal);
+    win.add(expand_vertical(vsizer));
 
     egt::ImageLabel elogo(egt::Image("icon:egt_logo_white.png;128"));
     elogo.margin(10);
