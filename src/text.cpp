@@ -273,7 +273,7 @@ void TextBox::set_selection(TextRects& rects)
             else if (select_end < end)
             {
                 // Split it and select the head
-                TextRect tail(std::move(it->split(select_end - start, cr)));
+                TextRect tail(it->split(select_end - start, cr));
                 it->select();
                 it = rects.insert(std::next(it), std::move(tail));
             }
@@ -291,8 +291,8 @@ void TextBox::set_selection(TextRects& rects)
                 size_t head_len = select_start - start;
                 size_t mid_len = select_len;
 
-                TextRect mid(std::move(it->split(head_len, cr)));
-                TextRect tail(std::move(mid.split(mid_len, cr)));
+                TextRect mid(it->split(head_len, cr));
+                TextRect tail(mid.split(mid_len, cr));
                 mid.select();
                 it = rects.insert(std::next(it), std::move(mid));
                 it = rects.insert(std::next(it), std::move(tail));
@@ -300,7 +300,7 @@ void TextBox::set_selection(TextRects& rects)
             else
             {
                 // Split it and select the tail
-                TextRect tail(std::move(it->split(select_start - start, cr)));
+                TextRect tail(it->split(select_start - start, cr));
                 tail.select();
                 it = rects.insert(std::next(it), std::move(tail));
             }
@@ -450,7 +450,7 @@ void TextBox::tag_left_aligned_line(TextRects& prev,
 
     if (len && len < next_it->length())
     {
-        TextRect tail(std::move(next_it->split(len, context())));
+        TextRect tail(next_it->split(len, context()));
         prefix_rect.width(prefix_rect.width() + next_it->rect().width());
         next.insert(std::next(next_it), std::move(tail));
     }
