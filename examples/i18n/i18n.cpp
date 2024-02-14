@@ -119,6 +119,11 @@ int main(int argc, char** argv)
     egt::VerticalBoxSizer vsizer;
     vsizer.margin(10);
 
+    auto scaled_font_size = [&window](egt::Font::Size value)
+    {
+        return (value * window.width()) / 800.f;
+    };
+
     auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_black.png;128"));
     logo->margin(10);
     // The size needs to be set again since the margin has been modified.
@@ -149,19 +154,21 @@ int main(int argc, char** argv)
     utf8::append(0x0001f6b2, std::back_inserter(variations.back()));
     utf8::append(0x0001f3a3, std::back_inserter(variations.back()));
 
+    const auto text_font_size = scaled_font_size(30);
+    const auto emoji_font_size = scaled_font_size(16);
     int index = 0;
     for (auto& str : variations)
     {
         auto label = std::make_shared<egt::Label>(str);
         std::string face;
         if (index == static_cast<int>(variations.size()) - 1)
-            label->font(egt::Font("Noto Color Emoji", 16));
+            label->font(egt::Font("Noto Color Emoji", emoji_font_size));
         else if (index == 4)
-            label->font(egt::Font("Lohit Devanagari", 30));
+            label->font(egt::Font("Lohit Devanagari", text_font_size));
         else if (index == 1)
-            label->font(egt::Font("Noto Sans CJK SC", 30));
+            label->font(egt::Font("Noto Sans CJK SC", text_font_size));
         else
-            label->font(egt::Font("Free Sans", 30));
+            label->font(egt::Font("Free Sans", text_font_size));
 
         vsizer.add(label);
         index++;
@@ -228,7 +235,8 @@ int main(int argc, char** argv)
     window.add(egt::expand(page2));
 
     auto label = std::make_shared<egt::Label>(_("Hello World"));
-    label->font(egt::Font("Free Sans", 40, egt::Font::Weight::bold));
+    const auto label_font_size = scaled_font_size(40);
+    label->font(egt::Font("Free Sans", label_font_size, egt::Font::Weight::bold));
     egt::Rect label_box;
     label_box.width(window.width());
     label_box.height(window.height() * 30 / 100);
@@ -251,7 +259,7 @@ int main(int argc, char** argv)
             try
             {
                 std::locale loc_en("en_US.utf8");
-                label->font(egt::Font("Free Sans", 40, egt::Font::Weight::bold));
+                label->font(egt::Font("Free Sans", label_font_size, egt::Font::Weight::bold));
                 label->text(get_translated_string(loc_en));
             }
             catch (std::runtime_error&)
@@ -269,7 +277,7 @@ int main(int argc, char** argv)
             try
             {
                 std::locale loc_fr("fr_FR.utf8");
-                label->font(egt::Font("Free Sans", 40, egt::Font::Weight::bold));
+                label->font(egt::Font("Free Sans", label_font_size, egt::Font::Weight::bold));
                 label->text(get_translated_string(loc_fr));
             }
             catch (std::runtime_error&)
@@ -287,7 +295,7 @@ int main(int argc, char** argv)
             try
             {
                 std::locale loc_de("de_DE.utf8");
-                label->font(egt::Font("Free Sans", 40, egt::Font::Weight::bold));
+                label->font(egt::Font("Free Sans", label_font_size, egt::Font::Weight::bold));
                 label->text(get_translated_string(loc_de));
             }
             catch (std::runtime_error&)
@@ -305,7 +313,7 @@ int main(int argc, char** argv)
             try
             {
                 std::locale loc_es("es_ES.utf8");
-                label->font(egt::Font("Free Sans", 40, egt::Font::Weight::bold));
+                label->font(egt::Font("Free Sans", label_font_size, egt::Font::Weight::bold));
                 label->text(get_translated_string(loc_es));
             }
             catch (std::runtime_error&)
@@ -323,7 +331,7 @@ int main(int argc, char** argv)
             try
             {
                 std::locale loc_hi("hi_IN.utf8");
-                label->font(egt::Font("Lohit Devanagari", 40, egt::Font::Weight::bold));
+                label->font(egt::Font("Lohit Devanagari", label_font_size, egt::Font::Weight::bold));
                 label->text(get_translated_string(loc_hi));
             }
             catch (std::runtime_error&)
@@ -341,7 +349,7 @@ int main(int argc, char** argv)
             try
             {
                 std::locale loc_zh("zh_CN.utf8");
-                label->font(egt::Font("Noto Sans CJK SC", 40, egt::Font::Weight::bold));
+                label->font(egt::Font("Noto Sans CJK SC", label_font_size, egt::Font::Weight::bold));
                 label->text(get_translated_string(loc_zh));
             }
             catch (std::runtime_error&)
