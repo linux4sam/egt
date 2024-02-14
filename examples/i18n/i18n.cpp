@@ -181,16 +181,20 @@ int main(int argc, char** argv)
     sequence.add(delay);
     sequence.start();
 
-    egt::HorizontalBoxSizer hsizer;
-    hsizer.hide();
-    window.add(egt::expand(hsizer));
+    egt::Frame page2;
+    page2.hide();
+    window.add(egt::expand(page2));
 
     auto label = std::make_shared<egt::Label>(_("Hello World"));
     label->font(egt::Font("Free Sans", 40, egt::Font::Weight::bold));
-    hsizer.add(egt::expand(label));
+    egt::Rect label_box;
+    label_box.width(window.width());
+    label_box.height(window.height() * 30 / 100);
+    label->box(label_box);
+    page2.add(label);
 
     egt::VerticalBoxSizer ts_sizer;
-    hsizer.add(ts_sizer);
+    page2.add(ts_sizer);
 
     auto english = std::make_shared<egt::RadioBox>(ts_sizer, "English");
     egt::left(english);
@@ -314,6 +318,15 @@ int main(int argc, char** argv)
     radiobox_group->add(hindi);
     radiobox_group->add(chinese);
 
+    egt::Rect languages_boundaries;
+    languages_boundaries.y(window.height() * 30 / 100);
+    languages_boundaries.width(window.width());
+    languages_boundaries.height((window.height() * 70 / 100) - logo->height());
+    auto languages_box = egt::detail::align_algorithm(ts_sizer.box(),
+                                                      languages_boundaries,
+                                                      {egt::AlignFlag::center});
+    ts_sizer.box(languages_box);
+
     static bool flag = true;
     next->on_click([&](egt::Event&)
     {
@@ -321,7 +334,7 @@ int main(int argc, char** argv)
         {
             sequence.stop();
             vsizer.hide();
-            hsizer.show();
+            page2.show();
             next->image(egt::Image(egt::Image("icon:arrow_left.png;64")));
             next->align(egt::AlignFlag::left | egt::AlignFlag::bottom);
             flag = false;
@@ -358,7 +371,7 @@ int main(int argc, char** argv)
         }
         else
         {
-            hsizer.hide();
+            page2.hide();
             next->image(egt::Image(egt::Image("icon:arrow_right.png;64")));
             next->align(egt::AlignFlag::right | egt::AlignFlag::bottom);
             flag = true;
