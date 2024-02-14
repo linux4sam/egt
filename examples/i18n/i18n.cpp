@@ -76,6 +76,9 @@ int main(int argc, char** argv)
 
     auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_black.png;128"));
     logo->margin(10);
+    // The size needs to be set again since the margin has been modified.
+    const auto m = logo->moat();
+    logo->resize(logo->image().size_orig() + egt::Size(2 * m, 2 * m));
     logo->align(egt::AlignFlag::center_horizontal | egt::AlignFlag::bottom);
     window.add(logo);
 
