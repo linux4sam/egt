@@ -13,6 +13,48 @@
 
 #define _(String) gettext(String)
 
+class Language : public egt::StringItem
+{
+public:
+    Language(egt::ListBox& list,
+             const std::string& text = {})
+        : StringItem(text),
+          m_list(list)
+    {
+        m_list.add_item(*this);
+    }
+
+    egt::Signal<> on_checked_changed;
+
+    EGT_NODISCARD egt::Size min_size_hint() const override
+    {
+        if (!m_min_size.empty())
+            return m_min_size;
+
+        const auto carea = m_list.content_area();
+        const auto item_count = std::max<egt::DefaultDim>(1, m_list.item_count());
+        const auto height = carea.height() / item_count;
+        const auto width = carea.width();
+        return egt::Size(width, height);
+    }
+
+    void resize(const egt::Size& size) override
+    {
+        if (this->size() != size)
+        {
+            auto f = font();
+            // 45 is the height of each of the 6 Languages in 'm_list' for a
+            // 800x480 screen.
+            f.size(24 * size.height() / 45);
+            font(f);
+            StringItem::resize(size);
+        }
+    }
+
+protected:
+    egt::ListBox& m_list;
+};
+
 static std::string get_translated_string(const std::locale& loc)
 {
     std::string ts;
@@ -193,11 +235,15 @@ int main(int argc, char** argv)
     label->box(label_box);
     page2.add(label);
 
-    egt::VerticalBoxSizer ts_sizer;
-    page2.add(ts_sizer);
+    egt::ListBox languages;
+    languages.on_selected([&languages](size_t index)
+    {
+        auto language = std::static_pointer_cast<Language>(languages.item_at(index));
+        language->on_checked_changed.invoke();
+    });
+    page2.add(languages);
 
-    auto english = std::make_shared<egt::RadioBox>(ts_sizer, "English");
-    egt::left(english);
+    auto english = std::make_shared<Language>(languages, "English");
     english->on_checked_changed([&]()
     {
         if (english->checked())
@@ -215,8 +261,7 @@ int main(int argc, char** argv)
         }
     });
 
-    auto french = std::make_shared<egt::RadioBox>(ts_sizer, "French");
-    egt::left(french);
+    auto french = std::make_shared<Language>(languages, "French");
     french->on_checked_changed([&]()
     {
         if (french->checked())
@@ -234,8 +279,7 @@ int main(int argc, char** argv)
         }
     });
 
-    auto german = std::make_shared<egt::RadioBox>(ts_sizer, "German");
-    egt::left(german);
+    auto german = std::make_shared<Language>(languages, "German");
     german->on_checked_changed([&]()
     {
         if (german->checked())
@@ -253,8 +297,7 @@ int main(int argc, char** argv)
         }
     });
 
-    auto spanish = std::make_shared<egt::RadioBox>(ts_sizer, "Spanish");
-    egt::left(spanish);
+    auto spanish = std::make_shared<Language>(languages, "Spanish");
     spanish->on_checked_changed([&]()
     {
         if (spanish->checked())
@@ -272,8 +315,7 @@ int main(int argc, char** argv)
         }
     });
 
-    auto hindi = std::make_shared<egt::RadioBox>(ts_sizer, "Hindi");
-    egt::left(hindi);
+    auto hindi = std::make_shared<Language>(languages, "Hindi");
     hindi->on_checked_changed([&]()
     {
         if (hindi->checked())
@@ -291,8 +333,7 @@ int main(int argc, char** argv)
         }
     });
 
-    auto chinese = std::make_shared<egt::RadioBox>(ts_sizer, "Chinese");
-    egt::left(chinese);
+    auto chinese = std::make_shared<Language>(languages, "Chinese");
     chinese->on_checked_changed([&]()
     {
         if (chinese->checked())
@@ -310,22 +351,16 @@ int main(int argc, char** argv)
         }
     });
 
-    auto radiobox_group = std::make_unique<egt::ButtonGroup>(true);
-    radiobox_group->add(english);
-    radiobox_group->add(french);
-    radiobox_group->add(german);
-    radiobox_group->add(spanish);
-    radiobox_group->add(hindi);
-    radiobox_group->add(chinese);
-
     egt::Rect languages_boundaries;
     languages_boundaries.y(window.height() * 30 / 100);
     languages_boundaries.width(window.width());
     languages_boundaries.height((window.height() * 70 / 100) - logo->height());
-    auto languages_box = egt::detail::align_algorithm(ts_sizer.box(),
+    languages.width(languages_boundaries.width() * 60 / 100);
+    languages.height(languages_boundaries.height());
+    auto languages_box = egt::detail::align_algorithm(languages.box(),
                                                       languages_boundaries,
                                                       {egt::AlignFlag::center});
-    ts_sizer.box(languages_box);
+    languages.box(languages_box);
 
     static bool flag = true;
     next->on_click([&](egt::Event&)
@@ -344,27 +379,27 @@ int main(int argc, char** argv)
             {
                 if (lang.compare(0, 3, "fr_") == 0)
                 {
-                    french->checked(true);
+                    languages.selected(1);
                 }
                 else if (lang.compare(0, 3, "de_") == 0)
                 {
-                    german->checked(true);
+                    languages.selected(2);
                 }
                 else if (lang.compare(0, 3, "es_") == 0)
                 {
-                    spanish->checked(true);
+                    languages.selected(3);
                 }
                 else if (lang.compare(0, 5, "hi_IN") == 0)
                 {
-                    hindi->checked(true);
+                    languages.selected(4);
                 }
                 else if (lang.compare(0, 3, "zh_") == 0)
                 {
-                    chinese->checked(true);
+                    languages.selected(5);
                 }
                 else
                 {
-                    english->checked(true);
+                    languages.selected(0);
                 }
             }
 
