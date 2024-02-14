@@ -41,6 +41,9 @@ int main(int argc, char** argv)
     egt::add_search_path(EXAMPLEDATA);
 #endif
 
+    const auto screen_size = app.screen()->size();
+    const auto landscape = screen_size.width() >= screen_size.height();
+
     egt::Drawer<egt::Label>::draw([](egt::Label & widget, egt::Painter & painter, const egt::Rect & rect)
     {
         egt::detail::ignoreparam(rect);
@@ -124,25 +127,41 @@ int main(int argc, char** argv)
 
     window.add(vsizer);
 
-    int minx = 0 - vsizer.width();
-    int maxx = window.width();
-    int half = (window.width() - vsizer.width()) / 2;
+    int min, max, half;
+    if (landscape)
+    {
+        min = 0 - vsizer.width();
+        max = window.width();
+        half = (window.width() - vsizer.width()) / 2;
+    }
+    else
+    {
+        min = 0 - vsizer.height();
+        max = window.height();
+        half = (window.height() - vsizer.height()) / 2;
+    }
 
-    auto in = std::make_shared<egt::PropertyAnimator>(maxx, half,
+    auto in = std::make_shared<egt::PropertyAnimator>(max, half,
               std::chrono::seconds(3),
               egt::easing_exponential_easeout);
-    in->on_change([&vsizer](int value)
+    in->on_change([&vsizer, landscape](int value)
     {
-        vsizer.x(value);
+        if (landscape)
+            vsizer.x(value);
+        else
+            vsizer.y(value);
     });
 
-    auto out = std::make_shared<egt::PropertyAnimator>(half + 1, minx,
+    auto out = std::make_shared<egt::PropertyAnimator>(half + 1, min,
                std::chrono::seconds(3),
                egt::easing_exponential_easeout);
     out->reverse(true);
-    out->on_change([&vsizer](int value)
+    out->on_change([&vsizer, landscape](int value)
     {
-        vsizer.x(value);
+        if (landscape)
+            vsizer.x(value);
+        else
+            vsizer.y(value);
     });
 
     auto delay = std::make_shared<egt::AnimationDelay>(std::chrono::seconds(1));
