@@ -125,6 +125,15 @@ int main(int argc, char** argv)
         index++;
     }
 
+    // If align flags are not empty(), Widget::layout() and egt::detail_algorithm()
+    // prevents vsizer.point() from being lower than its parent content_area()),
+    // which breaks the animation.
+    // Therefore, vsizer is centered manually instead of using something like
+    // 'vsizer.align(egt::AlignFlag::center*)'.
+    if (landscape)
+        vsizer.y((window.height() - vsizer.height()) / 2);
+    else
+        vsizer.x((window.width() - vsizer.width()) / 2);
     window.add(vsizer);
 
     int min, max, half;
