@@ -337,9 +337,9 @@ int main(int argc, char** argv)
             vsizer.show();
             sequence.start();
         }
-        next->zorder_top();
     });
 
+    next->zorder_top();
     window.show();
 
     return app.run();
