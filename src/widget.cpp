@@ -1324,17 +1324,7 @@ void Widget::draw(Painter& painter, const Rect& rect)
     // origin
     if (!fill_flags().empty() || border())
     {
-        Palette::GroupId group = group();
-
-        theme().draw_box(painter,
-                         fill_flags(),
-                         box(),
-                         color(Palette::ColorId::border, group),
-                         color(Palette::ColorId::bg, group),
-                         border(),
-                         margin(),
-                         border_radius(),
-                         border_flags());
+        draw_box(painter, Palette::ColorId::bg, Palette::ColorId::border);
     }
     else if (Application::instance().is_composer())
     {
