@@ -320,29 +320,6 @@ void Window::main_window()
     damage();
 }
 
-void Window::background(const Image& image)
-{
-    fill_flags().clear();
-
-    if (m_background)
-    {
-        m_background->detach();
-        m_background.reset();
-    }
-
-    if (!image.empty())
-    {
-        m_background = std::make_unique<ImageLabel>(image);
-        m_background->align(AlignFlag::expand);
-        m_background->image_align(AlignFlag::expand);
-        add(*m_background);
-        m_background->zorder_bottom();
-        // auto scale of background image to fit the size of the window
-        m_background->keep_image_ratio(false);
-
-    }
-}
-
 void Window::serialize(Serializer& serializer) const
 {
     serializer.add_property("pixelformat", detail::enum_to_string<PixelFormat>(m_format_hint));

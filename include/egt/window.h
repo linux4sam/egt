@@ -159,18 +159,6 @@ public:
     using Frame::begin_draw;
 
     /**
-     * Set a background image of the window.
-     *
-     * The background image will automatically be scaled to fit the size of the
-     * window.
-     *
-     * @note This is not a special child widget, in the sense that you can
-     * technically put another child widget before the background using
-     * zorder.
-     */
-    void background(const Image& image);
-
-    /**
      * Get the pixel format of the window.
      */
     EGT_NODISCARD PixelFormat format() const
@@ -302,9 +290,6 @@ protected:
 
     /// Set this window as the main window.
     void main_window();
-
-    /// Optional background image.
-    std::unique_ptr<ImageLabel> m_background;
 
     /// @private
     PixelFormat m_format_hint;

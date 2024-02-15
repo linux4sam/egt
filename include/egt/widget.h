@@ -852,6 +852,40 @@ public:
                Palette::GroupId group = Palette::GroupId::normal);
 
     /**
+     * Get the background image, if any, for the current group.
+     *
+     * @param allow_fallback If true, return the 'normal' image if no image
+     *                       is set for the current Palette::GroupId.
+     */
+    EGT_NODISCARD Image* background(bool allow_fallback = false) const;
+
+    /**
+     * Get the background image, if any, for the given group.
+     *
+     * @param group Palette::GroupId to get.
+     * @param allow_fallback If true, return the 'normal' image if no image
+     *                       is set for the requested group.
+     */
+    EGT_NODISCARD Image* background(Palette::GroupId group,
+                                    bool allow_fallback = false) const;
+
+    /**
+     * Add an image background to the widget's box.
+     *
+     * @param image Image to set.
+     * @param group Palette::GroupId to set.
+     */
+    void background(const Image& image,
+                    Palette::GroupId group = Palette::GroupId::normal);
+
+    /**
+     * Remove an image background from the widget's box.
+     *
+     * @param group Palette::GroupId to set.
+     */
+    void reset_background(Palette::GroupId group = Palette::GroupId::normal);
+
+    /**
      * Get a pointer to the parent Widget, or nullptr if none exists.
      */
     Widget* parent();
@@ -1901,6 +1935,14 @@ private:
      * functions because this may not be a complete Palette.
      */
     std::unique_ptr<Palette> m_palette;
+
+    /**
+     * Optional background images.
+     */
+    mutable std::unique_ptr<Image> m_normal_bg;
+    mutable std::unique_ptr<Image> m_active_bg;
+    mutable std::unique_ptr<Image> m_disabled_bg;
+    mutable std::unique_ptr<Image> m_checked_bg;
 
     /**
      * Flags for the widget.

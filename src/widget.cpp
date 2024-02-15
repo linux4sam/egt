@@ -11,6 +11,7 @@
 #include "egt/detail/string.h"
 #include "egt/frame.h"
 #include "egt/geometry.h"
+#include "egt/image.h"
 #include "egt/input.h"
 #include "egt/painter.h"
 #include "egt/screen.h"
@@ -570,6 +571,102 @@ void Widget::color(Palette::ColorId id,
     }
 }
 
+Image* Widget::background(bool allow_fallback) const
+{
+    return background(group(), allow_fallback);
+}
+
+Image* Widget::background(Palette::GroupId group, bool allow_fallback) const
+{
+    std::unique_ptr<Image>* bg;
+
+    switch (group)
+    {
+    default:
+    case Palette::GroupId::normal:
+        bg = &m_normal_bg;
+        break;
+
+    case Palette::GroupId::active:
+        bg = (m_active_bg || !allow_fallback) ? &m_active_bg : &m_normal_bg;
+        break;
+
+    case Palette::GroupId::disabled:
+        bg = (m_disabled_bg || !allow_fallback) ? &m_disabled_bg : &m_normal_bg;
+        break;
+
+    case Palette::GroupId::checked:
+        bg = (m_checked_bg || !allow_fallback) ? &m_checked_bg : &m_normal_bg;
+        break;
+    }
+
+    return bg->get();
+}
+
+void Widget::background(const Image& image,
+                        Palette::GroupId group)
+{
+    std::unique_ptr<Image>* bg;
+
+    switch (group)
+    {
+    default:
+    case Palette::GroupId::normal:
+        bg = &m_normal_bg;
+        break;
+
+    case Palette::GroupId::active:
+        bg = &m_active_bg;
+        break;
+
+    case Palette::GroupId::disabled:
+        bg = &m_disabled_bg;
+        break;
+
+    case Palette::GroupId::checked:
+        bg = &m_checked_bg;
+        break;
+    }
+
+    // Copy the source image into the target.
+    *bg = std::make_unique<Image>(image);
+    if (group == this->group())
+        damage();
+}
+
+void Widget::reset_background(Palette::GroupId group)
+{
+    std::unique_ptr<Image>* bg;
+
+    switch (group)
+    {
+    default:
+    case Palette::GroupId::normal:
+        bg = &m_normal_bg;
+        break;
+
+    case Palette::GroupId::active:
+        bg = &m_active_bg;
+        break;
+
+    case Palette::GroupId::disabled:
+        bg = &m_disabled_bg;
+        break;
+
+    case Palette::GroupId::checked:
+        bg = &m_checked_bg;
+        break;
+    }
+
+    if (bg->get())
+    {
+        bg->reset();
+
+        if (group == this->group())
+            damage();
+    }
+}
+
 const Palette& Widget::palette() const
 {
     if (m_palette)
@@ -1070,6 +1167,14 @@ void Widget::serialize(Serializer& serializer) const
         serializer.add_property("fillflags", fill_flags().to_string());
     if (m_font)
         m_font->serialize("font", serializer);
+    if (m_normal_bg)
+        serializer.add_property("normal_bg", m_normal_bg->uri());
+    if (m_active_bg)
+        serializer.add_property("active_bg", m_active_bg->uri());
+    if (m_disabled_bg)
+        serializer.add_property("disabled_bg", m_disabled_bg->uri());
+    if (m_checked_bg)
+        serializer.add_property("checked_bg", m_checked_bg->uri());
     /**
      * widget color can be set by theme and using m_palette object.
      * during draw first m_palette is checked and if m_palette not
@@ -1176,6 +1281,18 @@ void Widget::deserialize(Serializer::Properties& props)
             font(f);
             break;
         }
+        case detail::hash("normal_bg"):
+            background(Image(value), Palette::GroupId::normal);
+            break;
+        case detail::hash("active_bg"):
+            background(Image(value), Palette::GroupId::active);
+            break;
+        case detail::hash("disabled_bg"):
+            background(Image(value), Palette::GroupId::disabled);
+            break;
+        case detail::hash("checked_bg"):
+            background(Image(value), Palette::GroupId::checked);
+            break;
         /**
          * widget color can be set by theme and using m_palette object.
          * during draw first m_palette is checked and if m_palette not

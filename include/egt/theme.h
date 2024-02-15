@@ -275,7 +275,8 @@ public:
                           DefaultDim border_width = 0,
                           DefaultDim margin_width = 0,
                           float border_radius = 0.0,
-                          const BorderFlags& border_flags = {}) const;
+                          const BorderFlags& border_flags = {},
+                          Image* background = nullptr) const;
 
     /**
      * Draw a circle using properties directly from the widget.
