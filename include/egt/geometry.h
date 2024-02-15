@@ -207,6 +207,13 @@ protected:
 
 /// PointType operator
 template<class Dim, detail::Compatible DimCompat>
+constexpr PointType<Dim, DimCompat> operator-(const PointType<Dim, DimCompat>& a) noexcept
+{
+    return PointType<Dim, DimCompat>(-a.x(), -a.y());
+}
+
+/// PointType operator
+template<class Dim, detail::Compatible DimCompat>
 constexpr bool operator==(const PointType<Dim, DimCompat>& lhs, const PointType<Dim, DimCompat>& rhs) noexcept
 {
     return lhs.x() == rhs.x() && lhs.y() == rhs.y();
