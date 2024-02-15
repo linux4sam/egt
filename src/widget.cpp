@@ -500,6 +500,19 @@ void Widget::add_damage(const Rect& rect)
     Screen::damage_algorithm(m_damage, r);
 }
 
+Palette::GroupId Widget::group() const
+{
+    Palette::GroupId group = Palette::GroupId::normal;
+    if (disabled())
+        group = Palette::GroupId::disabled;
+    else if (active())
+        group = Palette::GroupId::active;
+    else if (checked())
+        group = Palette::GroupId::checked;
+
+    return group;
+}
+
 void Widget::palette(const Palette& palette)
 {
     m_palette = std::make_unique<Palette>(palette);
@@ -517,15 +530,7 @@ void Widget::reset_palette()
 
 const Pattern& Widget::color(Palette::ColorId id) const
 {
-    Palette::GroupId group = Palette::GroupId::normal;
-    if (disabled())
-        group = Palette::GroupId::disabled;
-    else if (active())
-        group = Palette::GroupId::active;
-    else if (checked())
-        group = Palette::GroupId::checked;
-
-    return color(id, group);
+    return color(id, group());
 }
 
 const Pattern& Widget::color(Palette::ColorId id, Palette::GroupId group) const
@@ -1335,11 +1340,7 @@ void Widget::draw(Painter& painter, const Rect& rect)
     // origin
     if (!fill_flags().empty() || border())
     {
-        Palette::GroupId group = Palette::GroupId::normal;
-        if (disabled())
-            group = Palette::GroupId::disabled;
-        else if (active())
-            group = Palette::GroupId::active;
+        Palette::GroupId group = group();
 
         theme().draw_box(painter,
                          fill_flags(),

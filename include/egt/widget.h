@@ -774,6 +774,11 @@ public:
     EGT_NODISCARD Point center() const { return box().center(); }
 
     /**
+     * Get the current Palette::GroupId depending on the widget's state.
+     */
+    EGT_NODISCARD Palette::GroupId group() const;
+
+    /**
      * Set the widget instance Palette.
      *
      * This will replace any Palette instance currently owned by the Widget.

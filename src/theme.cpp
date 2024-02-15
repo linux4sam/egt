@@ -169,13 +169,7 @@ void Theme::draw_box(Painter& painter, const Widget& widget,
     if (type.empty() && !widget.border())
         return;
 
-    Palette::GroupId group = Palette::GroupId::normal;
-    if (widget.disabled())
-        group = Palette::GroupId::disabled;
-    else if (widget.active())
-        group = Palette::GroupId::active;
-    else if (widget.checked())
-        group = Palette::GroupId::checked;
+    Palette::GroupId group = widget.group();
 
     draw_box(painter,
              type,
