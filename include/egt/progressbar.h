@@ -991,8 +991,7 @@ public:
         painter.set(widget.font());
         const auto text_size = painter.text_size("999");
 
-        auto cr = painter.context().get();
-        cairo_translate(cr, b.center().x(), b.y() + b.height() - text_size.height());
+        painter.translate(Point(b.center().x(), b.y() + b.height() - text_size.height()));
 
         const auto dim = std::min<DefaultDim>(b.width() / 2, b.height());
         const float hw = dim - (text_size.width() * 2.0);

@@ -316,6 +316,12 @@ public:
 
     Painter& stroke();
 
+    Painter& translate(const PointF& point);
+
+    Painter& translate(const Point& point);
+
+    Painter& rotate(float angle);
+
     Size text_size(const std::string& text);
 
     void color_at(const Point& point, const Color& color) noexcept;

@@ -123,16 +123,8 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
     Painter::AutoSaveRestore sr(painter);
     auto cr = painter.context();
 
-    const auto& origin = point();
-    if (origin.x() || origin.y())
-    {
-        //
-        // Origin about to change
-        //
-        cairo_translate(cr.get(),
-                        origin.x(),
-                        origin.y());
-    }
+    // Origin about to change
+    painter.translate(point());
 
     // limit to content area
     const auto content = content_area();
@@ -140,12 +132,7 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
     {
         Painter::AutoSaveRestore sr2(painter);
 
-        if (m_offset.x() || m_offset.y())
-        {
-            cairo_translate(cr.get(),
-                            m_offset.x(),
-                            m_offset.y());
-        }
+        painter.translate(m_offset);
 
         auto r = Rect::intersection(rect, content);
         auto crect = to_child(r) - m_offset;

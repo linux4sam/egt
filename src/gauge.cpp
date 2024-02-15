@@ -71,8 +71,8 @@ static void draw_image(Painter& painter,
     Painter::AutoSaveRestore sr(painter);
     auto cr = painter.context().get();
 
-    cairo_translate(cr, point.x(), point.y());
-    cairo_rotate(cr, angle);
+    painter.translate(point);
+    painter.rotate(angle);
 
     /*
      * Some really odd artifact happens on the needle image edges *only* on
@@ -86,7 +86,7 @@ static void draw_image(Painter& painter,
     cairo_set_source_surface(cr, image.surface().get(),
                              -needle_center.x(), -needle_center.y());
 
-    cairo_paint(cr);
+    painter.paint();
 }
 
 void NeedleLayer::draw(Painter& painter, const Rect&)

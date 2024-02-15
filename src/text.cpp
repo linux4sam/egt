@@ -1025,13 +1025,7 @@ void TextBox::draw_sliders(Painter& painter, const Rect& rect)
     Painter::AutoSaveRestore sr(painter);
 
     const auto& origin = point();
-    if (origin.x() || origin.y())
-    {
-        auto cr = painter.context();
-        cairo_translate(cr.get(),
-                        origin.x(),
-                        origin.y());
-    }
+    painter.translate(origin);
 
     // Component rect
     const auto crect = rect - origin;

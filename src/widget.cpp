@@ -636,9 +636,7 @@ void Widget::paint(Painter& painter)
     Painter::AutoSaveRestore sr(painter);
 
     // move origin
-    cairo_translate(painter.context().get(),
-                    -x(),
-                    -y());
+    painter.translate(-point());
 
     draw(painter, box());
 }
@@ -1317,16 +1315,7 @@ void Widget::draw(Painter& painter, const Rect& rect)
     if (!has_screen())
     {
         const auto& origin = point();
-        if (origin.x() || origin.y())
-        {
-            //
-            // Origin about to change
-            //
-            auto cr = painter.context();
-            cairo_translate(cr.get(),
-                            origin.x(),
-                            origin.y());
-        }
+        painter.translate(origin);
 
         // adjust our child rect for comparison's below
         crect -= origin;

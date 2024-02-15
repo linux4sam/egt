@@ -226,6 +226,31 @@ Painter& Painter::stroke()
     return *this;
 }
 
+Painter& Painter::translate(const PointF& point)
+{
+    if (!detail::float_equal(point.x(), 0) ||
+        !detail::float_equal(point.y(), 0))
+        cairo_translate(m_cr.get(), point.x(), point.y());
+
+    return *this;
+}
+
+Painter& Painter::translate(const Point& point)
+{
+    if (point.x() || point.y())
+        cairo_translate(m_cr.get(), point.x(), point.y());
+
+    return *this;
+}
+
+Painter& Painter::rotate(float angle)
+{
+    if (!detail::float_equal(angle, 0))
+        cairo_rotate(m_cr.get(), angle);
+
+    return *this;
+}
+
 static inline Color get32(const unsigned char* data, size_t stride, const Point& point)
 {
     return Color::pixel32(*reinterpret_cast<const uint32_t*>(data + point.y() * stride + 4 * point.x()));

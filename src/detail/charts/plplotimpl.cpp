@@ -517,8 +517,7 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
     }
     auto cr = painter.context();
 
-    if (b.x() || b.y())
-        cairo_translate(cr.get(), b.x(), b.y());
+    painter.translate(b.point());
 
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
@@ -579,8 +578,7 @@ void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
 
     auto cr = painter.context();
 
-    if (b.x() || b.y())
-        cairo_translate(cr.get(), b.x(), b.y());
+    painter.translate(b.point());
 
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
@@ -652,8 +650,7 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
 
     auto cr = painter.context();
 
-    if (b.x() || b.y())
-        cairo_translate(cr.get(), b.x(), b.y());
+    painter.translate(b.point());
 
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
@@ -757,8 +754,7 @@ void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
 
     auto cr = painter.context();
 
-    if (b.x() || b.y())
-        cairo_translate(cr.get(), b.x(), b.y());
+    painter.translate(b.point());
 
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
@@ -838,8 +834,7 @@ void PlPlotPieChart::draw(Painter& painter, const Rect& rect)
 
     auto cr = painter.context();
 
-    if (b.x() || b.y())
-        cairo_translate(cr.get(), b.x(), b.y());
+    painter.translate(b.point());
 
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
