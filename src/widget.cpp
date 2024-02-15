@@ -1310,6 +1310,51 @@ void Widget::draw(Painter& painter, const Rect& rect)
 
     Painter::AutoSaveRestore sr(painter);
 
+    if (clip())
+    {
+        // clip the damage rectangle, otherwise we will draw this whole widget
+        // and then only draw the children inside the actual damage rect, which
+        // will cover them
+        painter.draw(rect);
+        painter.clip();
+    }
+
+    // draw our widget box, but now that the physical origin has possibly changed
+    // and our box() is relative to our parent, we have to adjust to our local
+    // origin
+    if (!fill_flags().empty() || border())
+    {
+        Palette::GroupId group = group();
+
+        theme().draw_box(painter,
+                         fill_flags(),
+                         box(),
+                         color(Palette::ColorId::border, group),
+                         color(Palette::ColorId::bg, group),
+                         border(),
+                         margin(),
+                         border_radius(),
+                         border_flags());
+    }
+    else if (Application::instance().is_composer())
+    {
+        constexpr static Color composer_border = Palette::black;
+        constexpr static Color composer_bg = Color(0x00000020);
+
+        theme().draw_box(painter,
+        {Theme::FillFlag::blend},
+        box(),
+        composer_border,
+        composer_bg,
+        1,
+        0,
+        0,
+        {});
+    }
+
+    if (m_subordinates.empty())
+        return;
+
     // child rect
     auto crect = rect;
 
@@ -1325,51 +1370,6 @@ void Widget::draw(Painter& painter, const Rect& rect)
         // adjust our child rect for comparison's below
         crect -= origin;
     }
-
-    if (clip())
-    {
-        // clip the damage rectangle, otherwise we will draw this whole widget
-        // and then only draw the children inside the actual damage rect, which
-        // will cover them
-        painter.draw(crect);
-        painter.clip();
-    }
-
-    // draw our widget box, but now that the physical origin has possibly changed
-    // and our box() is relative to our parent, we have to adjust to our local
-    // origin
-    if (!fill_flags().empty() || border())
-    {
-        Palette::GroupId group = group();
-
-        theme().draw_box(painter,
-                         fill_flags(),
-                         to_subordinate(box()),
-                         color(Palette::ColorId::border, group),
-                         color(Palette::ColorId::bg, group),
-                         border(),
-                         margin(),
-                         border_radius(),
-                         border_flags());
-    }
-    else if (Application::instance().is_composer())
-    {
-        constexpr static Color composer_border = Palette::black;
-        constexpr static Color composer_bg = Color(0x00000020);
-
-        theme().draw_box(painter,
-        {Theme::FillFlag::blend},
-        to_subordinate(box()),
-        composer_border,
-        composer_bg,
-        1,
-        0,
-        0,
-        {});
-    }
-
-    if (m_subordinates.empty())
-        return;
 
     // keep the crect inside our content area
     crect = Rect::intersection(crect, to_subordinate(content_area()));
