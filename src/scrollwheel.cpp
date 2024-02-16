@@ -137,7 +137,7 @@ void Scrollwheel::init(bool in_deserialize)
     if (!m_items.empty())
         m_label.text(m_items[m_selected]);
 
-    m_button_up.on_event([this](Event& event)
+    m_button_up.on_event([this](Event & event)
     {
         const auto event_id = event.id();
         if (event_id != EventId::pointer_hold && event_id != EventId::pointer_click)
@@ -166,7 +166,7 @@ void Scrollwheel::init(bool in_deserialize)
         on_value_changed.invoke();
     });
 
-    m_button_down.on_event([this](Event& event)
+    m_button_down.on_event([this](Event & event)
     {
         const auto event_id = event.id();
         if (event_id != EventId::pointer_hold && event_id != EventId::pointer_click)
