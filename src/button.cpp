@@ -197,9 +197,20 @@ Size Button::min_size_hint() const
     if (!m_text.empty())
     {
         auto s = text_size(m_text);
-        // add a little bit of fluff for touch
-        s *= Size(1, 3);
-        s += Size(s.width() / 2 + 5, 0);
+        if (m_text.find('\n') == m_text.npos)
+        {
+            // add a little bit of fluff for touch
+            s *= Size(1, 3);
+            s += Size(s.width() / 2 + 5, 0);
+        }
+        else
+        {
+            /*
+             * If the text is multiline, don't multiply the height by 3, it's
+             * too much, just add a little bit of extra space.
+             */
+            s += Size(s.width() / 2 + 5, 5);
+        }
         return s + Widget::min_size_hint();
     }
 
