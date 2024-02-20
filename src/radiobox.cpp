@@ -18,15 +18,9 @@ inline namespace v1
 
 RadioBox::RadioBox(const std::string& text,
                    const Rect& rect) noexcept
-    : Button(text, rect)
+    : Switch(text, rect)
 {
     name("RadioBox" + std::to_string(m_widgetid));
-
-    fill_flags().clear();
-    padding(5);
-    text_align(AlignFlag::left | AlignFlag::center_vertical);
-
-    grab_mouse(true);
 }
 
 RadioBox::RadioBox(Frame& parent,
@@ -35,30 +29,6 @@ RadioBox::RadioBox(Frame& parent,
     : RadioBox(text, rect)
 {
     parent.add(*this);
-}
-
-RadioBox::RadioBox(Serializer::Properties& props, bool is_derived) noexcept
-    : Button(props, true)
-{
-    deserialize(props);
-
-    if (!is_derived)
-        deserialize_leaf(props);
-}
-
-void RadioBox::handle(Event& event)
-{
-    // NOLINTNEXTLINE(bugprone-parent-virtual-call)
-    Widget::handle(event);
-
-    switch (event.id())
-    {
-    case EventId::pointer_click:
-        checked(!checked());
-        break;
-    default:
-        break;
-    }
 }
 
 void RadioBox::draw(Painter& painter, const Rect& rect)
@@ -199,19 +169,6 @@ void RadioBox::default_draw(const RadioBox& widget, Painter& painter, const Rect
     }
 }
 
-void RadioBox::text(const std::string& text)
-{
-    if (m_text != text)
-    {
-        if (text.empty())
-            show_label(false);
-        else
-            show_label(true);
-    }
-
-    Button::text(text);
-}
-
 Size RadioBox::min_size_hint() const
 {
     if (!m_min_size.empty())
@@ -227,34 +184,6 @@ Size RadioBox::min_size_hint() const
 
     // NOLINTNEXTLINE(bugprone-parent-virtual-call)
     return default_size() + Widget::min_size_hint();
-}
-
-void RadioBox::serialize(Serializer& serializer) const
-{
-    Button::serialize(serializer);
-
-    serializer.add_property("show_label", show_label());
-    if (!radiobox_align().empty())
-        serializer.add_property("radiobox_align", radiobox_align());
-}
-
-void RadioBox::deserialize(Serializer::Properties& props)
-{
-    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
-    {
-        switch (detail::hash(std::get<0>(p)))
-        {
-        case detail::hash("show_label"):
-            show_label(egt::detail::from_string(std::get<1>(p)));
-            break;
-        case detail::hash("radiobox_align"):
-            radiobox_align(AlignFlags(std::get<1>(p)));
-            break;
-        default:
-            return false;
-        }
-        return true;
-    }), props.end());
 }
 
 }

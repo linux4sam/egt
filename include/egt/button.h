@@ -230,6 +230,88 @@ public:
     }
 };
 
+class EGT_API Switch : public Button
+{
+public:
+
+    /**
+     * @param[in] basename The base name for the widget.
+     * @param[in] text The text to display.
+     * @param[in] rect Initial rectangle of the widget.
+     */
+    explicit Switch(const std::string& text = {},
+                    const Rect& rect = {}) noexcept;
+
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit Switch(Serializer::Properties& props) noexcept
+        : Switch(props, false)
+    {
+    }
+
+protected:
+
+    explicit Switch(Serializer::Properties& props, bool is_derived) noexcept;
+
+    void serialize(Serializer& serializer) const override;
+
+public:
+
+    void handle(Event& event) override;
+
+    using Button::text;
+    /**
+     * Set the text.
+     *
+     * It sets show_label to true if the string is not empty, to false
+     * otherwise.
+     *
+     * @param str The text string to set.
+     */
+    void text(const std::string& text) override;
+
+    /**
+     * Enable/disable showing the label text.
+     *
+     * @param[in] value When true, the label text is shown.
+     */
+    void show_label(bool value)
+    {
+        if (detail::change_if_diff<>(m_show_label, value))
+            damage();
+    }
+
+    /**
+     * Get the show label state.
+     */
+    EGT_NODISCARD bool show_label() const { return m_show_label; }
+
+    /**
+     * Set the alignement of the switch relative to the text.
+     *
+     * @param[in] align Only left, right, top, and bottom alignments are supported.
+     */
+    void switch_align(const AlignFlags& align)
+    {
+        if (detail::change_if_diff<>(m_switch_align, align))
+            damage();
+    }
+
+    /**
+     * Get the switch alignment.
+     */
+    EGT_NODISCARD AlignFlags switch_align() const { return m_switch_align; }
+
+private:
+
+    void deserialize(Serializer::Properties& props);
+
+    bool m_show_label{true};
+    /// Alignment of the switch relative to the text.
+    AlignFlags m_switch_align{AlignFlag::left};
+};
+
 /**
  * Experimental namespace.
  *

@@ -35,7 +35,7 @@ class Frame;
  *
  * @ingroup controls
  */
-class EGT_API CheckBox : public Button
+class EGT_API CheckBox : public Switch
 {
 public:
 
@@ -55,23 +55,7 @@ public:
                       const std::string& text = {},
                       const Rect& rect = {}) noexcept;
 
-    /**
-     * @param[in] props list of widget argument and its properties.
-     */
-    explicit CheckBox(Serializer::Properties& props) noexcept
-        : CheckBox(props, false)
-    {
-    }
-
-protected:
-
-    explicit CheckBox(Serializer::Properties& props, bool is_derived) noexcept;
-
-    void serialize(Serializer& serializer) const override;
-
-public:
-
-    void handle(Event& event) override;
+    using Switch::Switch;
 
     void draw(Painter& painter, const Rect& rect) override;
 
@@ -80,36 +64,9 @@ public:
      */
     static void default_draw(const CheckBox& widget, Painter& painter, const Rect& rect);
 
-    using Button::text;
-    /**
-     * Set the text.
-     *
-     * It sets show_label to true if the string is not empty, to false
-     * otherwise.
-     *
-     * @param str The text string to set.
-     */
-    void text(const std::string& text) override;
-
     using Button::min_size_hint;
 
     EGT_NODISCARD Size min_size_hint() const override;
-
-    /**
-     * Enable/disable showing the label text.
-     *
-     * @param[in] value When true, the label text is shown.
-     */
-    void show_label(bool value)
-    {
-        if (detail::change_if_diff<>(m_show_label, value))
-            damage();
-    }
-
-    /**
-     * Get the show label state.
-     */
-    EGT_NODISCARD bool show_label() const { return m_show_label; }
 
     /**
      * Set the alignment of the checkbox relative to the text.
@@ -118,21 +75,13 @@ public:
      */
     void checkbox_align(const AlignFlags& align)
     {
-        if (detail::change_if_diff<>(m_checkbox_align, align))
-            damage();
+        switch_align(align);
     }
 
     /**
      * Get the image alignment.
      */
-    EGT_NODISCARD AlignFlags checkbox_align() const { return m_checkbox_align; }
-
-private:
-    bool m_show_label{true};
-    /// Alignment of the checkbox relative to the text.
-    AlignFlags m_checkbox_align{AlignFlag::left};
-
-    void deserialize(Serializer::Properties& props);
+    EGT_NODISCARD AlignFlags checkbox_align() const { return switch_align(); }
 };
 
 /**

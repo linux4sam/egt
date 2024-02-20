@@ -223,5 +223,82 @@ Button::~Button() noexcept
         m_group->remove(this);
 }
 
+Switch::Switch(const std::string& text,
+               const Rect& rect) noexcept
+    : Button(text, rect)
+{
+    name("Switch" + std::to_string(m_widgetid));
+
+    fill_flags().clear();
+    padding(5);
+    text_align(AlignFlag::left | AlignFlag::center_vertical);
+
+    grab_mouse(true);
+}
+
+Switch::Switch(Serializer::Properties& props, bool is_derived) noexcept
+    : Button(props, true)
+{
+    deserialize(props);
+
+    if (!is_derived)
+        deserialize_leaf(props);
+}
+
+void Switch::serialize(Serializer& serializer) const
+{
+    Button::serialize(serializer);
+
+    serializer.add_property("show_label", show_label());
+    if (!switch_align().empty())
+        serializer.add_property("switch_align", switch_align());
+}
+
+void Switch::deserialize(Serializer::Properties& props)
+{
+    props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
+    {
+        switch (detail::hash(std::get<0>(p)))
+        {
+        case detail::hash("show_label"):
+            show_label(egt::detail::from_string(std::get<1>(p)));
+            break;
+        case detail::hash("switch_align"):
+            switch_align(AlignFlags(std::get<1>(p)));
+            break;
+        default:
+            return false;
+        }
+        return true;
+    }), props.end());
+}
+
+void Switch::handle(Event& event)
+{
+    // NOLINTNEXTLINE(bugprone-parent-virtual-call)
+    Widget::handle(event);
+
+    switch (event.id())
+    {
+    case EventId::pointer_click:
+        checked(!checked());
+    default:
+        break;
+    }
+}
+
+void Switch::text(const std::string& text)
+{
+    if (m_text != text)
+    {
+        if (text.empty())
+            show_label(false);
+        else
+            show_label(true);
+    }
+
+    Button::text(text);
+}
+
 }
 }
