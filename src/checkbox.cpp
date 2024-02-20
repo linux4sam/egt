@@ -32,6 +32,12 @@ CheckBox::CheckBox(Frame& parent,
 
 void CheckBox::draw_switch(Painter& painter, const Rect& handle) const
 {
+    if (switch_image(checked()))
+    {
+        Switch::draw_switch(painter, handle);
+        return;
+    }
+
     auto border = theme().default_border();
 
     theme().draw_box(painter, Theme::FillFlag::blend, handle,

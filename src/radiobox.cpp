@@ -31,6 +31,12 @@ RadioBox::RadioBox(Frame& parent,
 
 void RadioBox::draw_switch(Painter& painter, const Rect& handle) const
 {
+    if (switch_image(checked()))
+    {
+        Switch::draw_switch(painter, handle);
+        return;
+    }
+
     painter.draw(Circle(handle.center(),
                         (std::min(handle.width(), handle.height()) - theme().default_border() * 2) / 2.));
     painter.set(color(Palette::ColorId::button_fg));

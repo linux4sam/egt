@@ -317,9 +317,41 @@ public:
      */
     EGT_NODISCARD AlignFlags switch_align() const { return m_switch_align; }
 
+    /**
+     * Get the image, if any, used to draw the widget's switch, based on
+     * the value of its 'checked' flag.
+     *
+     * @param checked The boolean to select the switch image to return:
+     *                - false: m_normal_switch.get() is returned
+     *                - true: m_checked_switch.get() is returned
+     * @return The image used to draw the switch, if any, nullptr otherwise.
+     */
+    EGT_NODISCARD Image* switch_image(bool checked) const;
+
+    /**
+     * Add an image to draw the widget's switch, based on the value of its
+     * 'checked' flag.
+     *
+     * @param image Image to set.
+     * @param checked The boolean to select the switch image to set:
+     *                 - false: 'image' is copied into m_normal_switch.
+     *                 - true: 'image' is copied into m_checked_switch.
+     */
+    void switch_image(const Image& image, bool checked);
+
+    /**
+     * Remove the image, if any, used to draw the widget's switch, based on
+     * the value of its 'checked' flag.
+     *
+     * @param checked The boolean to select which switch image is reset:
+     *                - false: m_normal_switch is reset.
+     *                - true: m_checked_switch is reset.
+     */
+    void reset_switch_image(bool checked);
+
 protected:
 
-    virtual void draw_switch(Painter& painter, const Rect& handle) const = 0;
+    virtual void draw_switch(Painter& painter, const Rect& handle) const;
 
 private:
 
@@ -328,6 +360,12 @@ private:
     bool m_show_label{true};
     /// Alignment of the switch relative to the text.
     AlignFlags m_switch_align{AlignFlag::left};
+
+    /**
+     * Optional switch images.
+     */
+    mutable std::unique_ptr<Image> m_normal_switch;
+    mutable std::unique_ptr<Image> m_checked_switch;
 };
 
 /**

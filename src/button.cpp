@@ -253,12 +253,17 @@ void Switch::serialize(Serializer& serializer) const
     serializer.add_property("show_label", show_label());
     if (!switch_align().empty())
         serializer.add_property("switch_align", switch_align());
+    if (m_normal_switch)
+        serializer.add_property("normal_switch", m_normal_switch->uri());
+    if (m_checked_switch)
+        serializer.add_property("checked_switch", m_checked_switch->uri());
 }
 
 void Switch::deserialize(Serializer::Properties& props)
 {
     props.erase(std::remove_if(props.begin(), props.end(), [&](auto & p)
     {
+        auto value = std::get<1>(p);
         switch (detail::hash(std::get<0>(p)))
         {
         case detail::hash("show_label"):
@@ -266,6 +271,12 @@ void Switch::deserialize(Serializer::Properties& props)
             break;
         case detail::hash("switch_align"):
             switch_align(AlignFlags(std::get<1>(p)));
+            break;
+        case detail::hash("normal_switch"):
+            switch_image(Image(value), false);
+            break;
+        case detail::hash("checked_switch"):
+            switch_image(Image(value), true);
             break;
         default:
             return false;
@@ -394,6 +405,17 @@ void Switch::default_draw(const Switch& widget, Painter& painter, const Rect& re
     widget.draw_switch(painter, handle);
 }
 
+void Switch::draw_switch(Painter& painter, const Rect& handle) const
+{
+    auto* image = checked() ? m_checked_switch.get() : m_normal_switch.get();
+    if (!image)
+        return;
+
+    theme().draw_box(painter, Theme::FillFlag::blend, handle,
+                     Palette::transparent, Palette::transparent,
+                     0, 0, 0, {}, image);
+}
+
 void Switch::handle(Event& event)
 {
     // NOLINTNEXTLINE(bugprone-parent-virtual-call)
@@ -444,6 +466,35 @@ void Switch::text(const std::string& text)
     }
 
     Button::text(text);
+}
+
+Image* Switch::switch_image(bool checked) const
+{
+    auto& btn = checked ? m_checked_switch : m_normal_switch;
+
+    return btn.get();
+}
+
+void Switch::switch_image(const Image& image, bool checked)
+{
+    auto& btn = checked ? m_checked_switch : m_normal_switch;
+
+    btn = std::make_unique<Image>(image);
+    if (checked == this->checked())
+        damage();
+}
+
+void Switch::reset_switch_image(bool checked)
+{
+    auto& btn = checked ? m_checked_switch : m_normal_switch;
+
+    if (btn.get())
+    {
+        btn.reset();
+
+        if (checked == this->checked())
+            damage();
+    }
 }
 
 }
