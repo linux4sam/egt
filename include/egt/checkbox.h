@@ -57,13 +57,6 @@ public:
 
     using Switch::Switch;
 
-    void draw(Painter& painter, const Rect& rect) override;
-
-    /**
-     * Default draw method for the CheckBox.
-     */
-    static void default_draw(const CheckBox& widget, Painter& painter, const Rect& rect);
-
     /**
      * Set the alignment of the checkbox relative to the text.
      *
@@ -78,6 +71,10 @@ public:
      * Get the image alignment.
      */
     EGT_NODISCARD AlignFlags checkbox_align() const { return switch_align(); }
+
+protected:
+
+    void draw_switch(Painter& painter, const Rect& handle) const override;
 };
 
 /**

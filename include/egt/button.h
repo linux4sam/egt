@@ -260,6 +260,13 @@ public:
 
     void handle(Event& event) override;
 
+    void draw(Painter& painter, const Rect& rect) override;
+
+    /**
+     * Default draw method for the Switch.
+     */
+    static void default_draw(const Switch& widget, Painter& painter, const Rect& rect);
+
     using Button::min_size_hint;
 
     EGT_NODISCARD Size min_size_hint() const override;
@@ -309,6 +316,10 @@ public:
      * Get the switch alignment.
      */
     EGT_NODISCARD AlignFlags switch_align() const { return m_switch_align; }
+
+protected:
+
+    virtual void draw_switch(Painter& painter, const Rect& handle) const = 0;
 
 private:
 

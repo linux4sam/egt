@@ -5,8 +5,6 @@
  */
 #include "egt/button.h"
 #include "egt/checkbox.h"
-#include "egt/detail/alignment.h"
-#include "egt/detail/layout.h"
 #include "egt/frame.h"
 #include "egt/painter.h"
 #include "egt/serialize.h"
@@ -32,136 +30,21 @@ CheckBox::CheckBox(Frame& parent,
     parent.add(*this);
 }
 
-void CheckBox::draw(Painter& painter, const Rect& rect)
+void CheckBox::draw_switch(Painter& painter, const Rect& handle) const
 {
-    Drawer<CheckBox>::draw(*this, painter, rect);
-}
+    auto border = theme().default_border();
 
-void CheckBox::default_draw(const CheckBox& widget, Painter& painter, const Rect& /*rect*/)
-{
-    widget.draw_box(painter, Palette::ColorId::label_bg, Palette::ColorId::border);
+    theme().draw_box(painter, Theme::FillFlag::blend, handle,
+                     color(Palette::ColorId::button_fg),
+                     Palette::transparent,
+                     border);
 
-    auto b = widget.content_area();
-    auto border = widget.theme().default_border();
-    Rect handle;
-    std::vector<detail::LayoutRect> rects;
-
-    if (widget.show_label())
-    {
-        painter.set(widget.font());
-        auto text_size = painter.text_size(widget.text());
-
-        Rect text;
-        if (widget.checkbox_align().is_set(AlignFlag::bottom) ||
-            widget.checkbox_align().is_set(AlignFlag::top))
-        {
-            auto w = std::min<DefaultDim>(b.height() - text_size.height(), b.width());
-            if (w < 0)
-                w = b.height() * 0.15;
-
-            if (widget.checkbox_align().is_set(AlignFlag::bottom))
-            {
-                rects.emplace_back(0,
-                                   Rect(0, 0, b.width(), text_size.height()),
-                                   widget.padding() / 2);
-                rects.emplace_back(0,
-                                   Rect(0, 0, w, w),
-                                   0, 0, widget.padding() / 2);
-
-                detail::flex_layout(b, rects, Justification::start, Orientation::vertical);
-
-                text = rects[0].rect + b.point();
-                handle = rects[1].rect + b.point();
-            }
-            else
-            {
-                rects.emplace_back(0,
-                                   Rect(0, 0, w, w),
-                                   0, 0, widget.padding() / 2);
-                rects.emplace_back(0,
-                                   Rect(0, 0, b.width(), text_size.height()),
-                                   widget.padding() / 2);
-
-                detail::flex_layout(b, rects, Justification::start, Orientation::vertical);
-
-                handle = rects[0].rect + b.point();
-                text = rects[1].rect + b.point();
-            }
-        }
-        else
-        {
-            auto w = std::min<DefaultDim>(b.width() - text_size.width(), b.height());
-            if (w < 0)
-                w = b.width() * 0.15;
-
-            if (widget.checkbox_align().is_set(AlignFlag::left))
-            {
-                rects.emplace_back(0,
-                                   Rect(0, 0, w, w),
-                                   0, 0, widget.padding() / 2);
-                rects.emplace_back(0,
-                                   Rect(0, 0, b.width() - w, b.height()),
-                                   widget.padding() / 2);
-
-                detail::flex_layout(b, rects, Justification::start, Orientation::horizontal);
-
-                handle = rects[0].rect + b.point();
-                text = rects[1].rect + b.point();
-            }
-            else
-            {
-                rects.emplace_back(0,
-                                   Rect(0, 0, b.width() - w, b.height()),
-                                   widget.padding() / 2);
-                rects.emplace_back(0,
-                                   Rect(0, 0, w, w),
-                                   0, 0, widget.padding() / 2);
-
-                detail::flex_layout(b, rects, Justification::start, Orientation::horizontal);
-
-                text = rects[0].rect + b.point();
-                handle = rects[1].rect + b.point();
-            }
-        }
-
-        widget.theme().draw_box(painter, Theme::FillFlag::blend, handle,
-                                widget.color(Palette::ColorId::button_fg),
-                                Palette::transparent,
-                                border);
-        // text
-        painter.set(widget.color(Palette::ColorId::label_text));
-        Rect target = detail::align_algorithm(text_size,
-                                              text,
-                                              widget.text_align());
-        painter.draw(target.point());
-        painter.draw(widget.text());
-    }
-    else
-    {
-        auto w = std::min<DefaultDim>(b.width(), b.height());
-        if (w < 0)
-            w = b.width() * 0.15;
-
-        rects.emplace_back(0,
-                           Rect(0, 0, w, w),
-                           0, 0, widget.padding() / 2);
-
-        detail::flex_layout(b, rects, Justification::middle, Orientation::horizontal);
-
-        handle = rects[0].rect + b.point();
-
-        widget.theme().draw_box(painter, Theme::FillFlag::blend, handle,
-                                widget.color(Palette::ColorId::button_fg),
-                                Palette::transparent,
-                                border);
-    }
-
-    if (widget.checked())
+    if (checked())
     {
         // draw an "X"
         auto cr = painter.context().get();
         cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
-        painter.set(widget.color(Palette::ColorId::button_fg));
+        painter.set(color(Palette::ColorId::button_fg));
         painter.draw(handle.top_left() + Point(border, border),
                      handle.bottom_right() - Point(border, border));
         painter.draw(handle.top_right() + Point(-border, border),

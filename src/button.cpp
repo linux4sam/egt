@@ -8,6 +8,7 @@
 #include "egt/button.h"
 #include "egt/detail/alignment.h"
 #include "egt/detail/imagecache.h"
+#include "egt/detail/layout.h"
 #include "egt/detail/meta.h"
 #include "egt/detail/screen/composerscreen.h"
 #include "egt/frame.h"
@@ -271,6 +272,126 @@ void Switch::deserialize(Serializer::Properties& props)
         }
         return true;
     }), props.end());
+}
+
+void Switch::draw(Painter& painter, const Rect& rect)
+{
+    Drawer<Switch>::draw(*this, painter, rect);
+}
+
+void Switch::default_draw(const Switch& widget, Painter& painter, const Rect& rect)
+{
+    detail::ignoreparam(rect);
+
+    widget.draw_box(painter, Palette::ColorId::label_bg, Palette::ColorId::border);
+
+    auto b = widget.content_area();
+    std::vector<detail::LayoutRect> rects;
+    DefaultDim length;
+    Rect handle;
+
+    if (widget.show_label())
+    {
+        painter.set(widget.font());
+        auto text_size = painter.text_size(widget.text());
+
+        Rect text;
+        if (widget.switch_align().is_set(AlignFlag::right) ||
+            widget.switch_align().is_set(AlignFlag::left))
+        {
+            length = std::min<DefaultDim>(b.width() - text_size.width(), b.height());
+            if (length < 0)
+                length = b.width() * 0.15;
+
+            if (widget.switch_align().is_set(AlignFlag::right))
+            {
+                rects.emplace_back(0,
+                                   Rect(0, 0, b.width() - length, b.height()),
+                                   widget.padding() / 2);
+                rects.emplace_back(0,
+                                   Rect(0, 0, length, length),
+                                   0, 0, widget.padding() / 2);
+
+                detail::flex_layout(b, rects, Justification::start, Orientation::horizontal);
+
+                text = rects[0].rect + b.point();
+                handle = rects[1].rect + b.point();
+            }
+            else
+            {
+                rects.emplace_back(0,
+                                   Rect(0, 0, length, length),
+                                   0, 0, widget.padding() / 2);
+                rects.emplace_back(0,
+                                   Rect(0, 0, b.width() - length, b.height()),
+                                   widget.padding() / 2);
+
+                detail::flex_layout(b, rects, Justification::start, Orientation::horizontal);
+
+                handle = rects[0].rect + b.point();
+                text = rects[1].rect + b.point();
+            }
+        }
+        else
+        {
+            length = std::min<DefaultDim>(b.height() - text_size.height(), b.width());
+            if (length < 0)
+                length = b.height() * 0.15;
+
+            if (widget.switch_align().is_set(AlignFlag::bottom))
+            {
+                rects.emplace_back(0,
+                                   Rect(0, 0, b.width(), b.height() - length),
+                                   widget.padding() / 2);
+                rects.emplace_back(0,
+                                   Rect(0, 0, length, length),
+                                   0, 0, widget.padding() / 2);
+
+                detail::flex_layout(b, rects, Justification::start, Orientation::vertical);
+
+                text = rects[0].rect + b.point();
+                handle = rects[1].rect + b.point();
+            }
+            else
+            {
+                rects.emplace_back(0,
+                                   Rect(0, 0, length, length),
+                                   0, 0, widget.padding() / 2);
+                rects.emplace_back(0,
+                                   Rect(0, 0, b.width(), b.height() - length),
+                                   widget.padding() / 2);
+
+                detail::flex_layout(b, rects, Justification::start, Orientation::vertical);
+
+                handle = rects[0].rect + b.point();
+                text = rects[1].rect + b.point();
+            }
+        }
+
+        // text
+        painter.set(widget.color(Palette::ColorId::label_text));
+        Rect target = detail::align_algorithm(text_size,
+                                              text,
+                                              widget.text_align());
+        painter.draw(target.point());
+        painter.draw(widget.text());
+    }
+    else
+    {
+        length = std::min<DefaultDim>(b.width(), b.height());
+        if (length < 0)
+            length = b.width() * 0.15;
+
+        rects.emplace_back(0,
+                           Rect(0, 0, length, length),
+                           0, 0, widget.padding() / 2);
+
+        detail::flex_layout(b, rects, Justification::middle, Orientation::horizontal);
+
+        handle = rects[0].rect + b.point();
+    }
+
+    widget.draw_switch(painter, handle);
 }
 
 void Switch::handle(Event& event)
