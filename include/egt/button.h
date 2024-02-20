@@ -214,6 +214,8 @@ class CheckButton : public Button
 {
     using Button::Button;
 
+public:
+
     void handle(Event& event) override
     {
         Button::handle(event);
