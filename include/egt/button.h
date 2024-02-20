@@ -299,7 +299,10 @@ public:
     void switch_align(const AlignFlags& align)
     {
         if (detail::change_if_diff<>(m_switch_align, align))
+        {
             damage();
+            layout();
+        }
     }
 
     /**
