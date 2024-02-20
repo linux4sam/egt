@@ -260,6 +260,10 @@ public:
 
     void handle(Event& event) override;
 
+    using Button::min_size_hint;
+
+    EGT_NODISCARD Size min_size_hint() const override;
+
     using Button::text;
     /**
      * Set the text.

@@ -69,10 +69,6 @@ public:
 
     /// Default draw method for the widget.
     static void default_draw(const RadioBox& widget, Painter& painter, const Rect& rect);
-
-    using Button::min_size_hint;
-
-    EGT_NODISCARD Size min_size_hint() const override;
 };
 
 }

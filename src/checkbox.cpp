@@ -171,33 +171,6 @@ void CheckBox::default_draw(const CheckBox& widget, Painter& painter, const Rect
     }
 }
 
-Size CheckBox::min_size_hint() const
-{
-    if (!m_min_size.empty())
-        return m_min_size;
-
-    // NOLINTNEXTLINE(bugprone-parent-virtual-call)
-    const auto min_size = default_size() + Widget::min_size_hint();
-
-    if (!m_text.empty())
-    {
-        auto s = text_size(m_text);
-        s += Size(s.width() / 2 + 5, 0);
-        // NOLINTNEXTLINE(bugprone-parent-virtual-call)
-        s += Widget::min_size_hint();
-        if (s.width() < min_size.width())
-            s.width(min_size.width());
-        if (s.height() < min_size.height())
-            s.height(min_size.height());
-        return s;
-    }
-
-    /* if text is empty, use only 10% of min_size to
-     * draw checkbox alone.
-     */
-    return min_size * 0.10;
-}
-
 ToggleBox::ToggleBox(const Rect& rect) noexcept
     : CheckBox( {}, rect)
 {

@@ -287,6 +287,31 @@ void Switch::handle(Event& event)
     }
 }
 
+Size Switch::min_size_hint() const
+{
+    if (!m_min_size.empty())
+        return m_min_size;
+
+    auto s = Size(1, 1);
+    if (!m_text.empty())
+    {
+        s = text_size(m_text);
+        if (m_switch_align.empty() ||
+            m_switch_align.is_set(AlignFlag::left) ||
+            m_switch_align.is_set(AlignFlag::right))
+        {
+            s += Size(s.height(), 0);
+        }
+        else if (m_switch_align.is_set(AlignFlag::top) ||
+                 m_switch_align.is_set(AlignFlag::bottom))
+        {
+            s += Size(0, s.height());
+        }
+    }
+
+    return s + Widget::min_size_hint();
+}
+
 void Switch::text(const std::string& text)
 {
     if (m_text != text)

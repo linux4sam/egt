@@ -169,22 +169,5 @@ void RadioBox::default_draw(const RadioBox& widget, Painter& painter, const Rect
     }
 }
 
-Size RadioBox::min_size_hint() const
-{
-    if (!m_min_size.empty())
-        return m_min_size;
-
-    if (!m_text.empty())
-    {
-        auto s = text_size(m_text);
-        s += Size(s.width() / 2 + 5, 0);
-        // NOLINTNEXTLINE(bugprone-parent-virtual-call)
-        return s + Widget::min_size_hint();
-    }
-
-    // NOLINTNEXTLINE(bugprone-parent-virtual-call)
-    return default_size() + Widget::min_size_hint();
-}
-
 }
 }

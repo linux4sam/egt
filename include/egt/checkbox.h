@@ -64,10 +64,6 @@ public:
      */
     static void default_draw(const CheckBox& widget, Painter& painter, const Rect& rect);
 
-    using Button::min_size_hint;
-
-    EGT_NODISCARD Size min_size_hint() const override;
-
     /**
      * Set the alignment of the checkbox relative to the text.
      *
