@@ -210,7 +210,7 @@ using ImageButton = ImageHolder<Button, Palette::ColorId::button_bg, Palette::Co
  * Same as a normal Button, except it manipulates its checked state like a
  * RadioBox or CheckBox.
  */
-class CheckButton : public Button
+class EGT_API CheckButton : public Button
 {
     using Button::Button;
 
