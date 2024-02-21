@@ -37,6 +37,9 @@ public:
         auto egt_logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_black.png;128"));
         egt_logo->align(egt::AlignFlag::center_horizontal | egt::AlignFlag::top);
         egt_logo->margin(5);
+        // The size needs to be set again since the margin has been modified.
+        const auto m = egt_logo->moat();
+        egt_logo->resize(egt_logo->image().size_orig() + egt::Size(2 * m, 2 * m));
         add(egt_logo);
 
         m_animation.starting(0);
