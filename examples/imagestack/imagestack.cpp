@@ -22,7 +22,7 @@ public:
             no_layout(true);
 
             m_background.align(egt::AlignFlag::expand);
-            m_background.image_align(egt::AlignFlag::expand);
+            m_background.image_align(egt::AlignFlag::center | egt::AlignFlag::expand);
             add(m_background);
         }
 
@@ -113,7 +113,7 @@ private:
         {
             auto image = egt::Image("file:images/image" + std::to_string(x) + ".png");
             auto box = std::make_shared<LauncherItem>(image);
-            box->resize(egt::Size(width() / 4, height() - 80));
+            box->resize(egt::Size(width() / 4, height()));
             m_boxes.push_back(box);
         }
 
