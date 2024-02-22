@@ -904,6 +904,11 @@ public:
     EGT_NODISCARD virtual Screen* screen() const;
 
     /**
+     * Does this Widget have a screen?
+     */
+    EGT_NODISCARD virtual bool has_screen() const { return false; }
+
+    /**
      * Align the widget.
      *
      * This will align the widget relative to the box of its parent widget.
@@ -1674,11 +1679,6 @@ protected:
         else if (parent())
             parent()->special_child_draw(painter, widget);
     }
-
-    /**
-     * Does this Widget have a screen?
-     */
-    EGT_NODISCARD virtual bool has_screen() const { return false; }
 
     /**
      * Starting from this Widget, find the Widget that has a Screen.
