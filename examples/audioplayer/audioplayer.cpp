@@ -104,7 +104,8 @@ public:
         : m_colormap({egt::Color(76, 181, 253), egt::Color(34, 186, 133)})
 
     {
-        add_component(m_background);
+        fill_flags({egt::Theme::FillFlag::solid});
+        background(egt::Image("file:background.png"));
 
         auto range0 = std::make_shared<egt::RangeValue<int>>(0, 100, 100);
         auto range1 = std::make_shared<egt::RangeValue<int>>(0, 100, 100);
@@ -241,7 +242,6 @@ protected:
     egt::AudioPlayer m_player;
     egt::AnimationSequence m_animation{true};
     egt::experimental::ColorMap m_colormap;
-    egt::ImageLabel m_background{egt::Image{"file:background.png"}};
     egt::ImageLabel m_logo{(egt::Image("icon:egt_logo_white.png;128"))};
     egt::Dialog m_message_dialog;
     egt::ImageButton note{egt::Image("file:note.png")};
