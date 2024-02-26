@@ -148,7 +148,7 @@ public:
         m_logo.resize(m_logo.image().size_orig() + egt::Size(2 * m, 2 * m));
         add_component(m_logo);
 
-        m_message_dialog.resize(this->size() * 0.75);
+        m_message_dialog.ratio(75);
         m_message_dialog.title("Audio Player Example");
         std::string dialog_text("This is an Ensemble Graphics "
                                 "Toolkit audio player example that "
