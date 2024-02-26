@@ -155,7 +155,8 @@ public:
                                 "uses egt::AudioPlayer to play mp3, "
                                 "wav, ogg, and more audio formats "
                                 "seamlessly.");
-        auto text = std::make_shared<egt::TextBox>(dialog_text);
+        auto text = std::make_shared<egt::TextBox>(dialog_text,
+                    egt::TextBox::TextFlags({egt::TextBox::TextFlag::multiline, egt::TextBox::TextFlag::word_wrap}));
         text->readonly(true);
         m_message_dialog.widget(expand(text));
         m_message_dialog.button(egt::Dialog::ButtonId::button1, "");
