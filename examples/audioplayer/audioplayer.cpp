@@ -142,6 +142,9 @@ public:
 
         m_logo.align(egt::AlignFlag::left | egt::AlignFlag::top);
         m_logo.margin(10);
+        // The size needs to be set again since the margin has been modified.
+        const auto m = m_logo.moat();
+        m_logo.resize(m_logo.image().size_orig() + egt::Size(2 * m, 2 * m));
         add_component(m_logo);
 
         m_message_dialog.resize(this->size() * 0.75);
