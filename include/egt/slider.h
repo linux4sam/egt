@@ -271,6 +271,7 @@ public:
 protected:
 
     bool internal_drag() const override { return true; }
+    bool internal_track_drag() const override { return true; }
 
     /// Convert a value to an offset.
     EGT_NODISCARD int to_offset(int value) const
