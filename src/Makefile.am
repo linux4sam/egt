@@ -90,6 +90,7 @@ gauge.cpp \
 geometry.cpp \
 grid.cpp \
 image.cpp \
+imagegroup.cpp \
 images/bmp/cairo_bmp.c \
 images/bmp/cairo_bmp.h \
 input.cpp \
@@ -204,6 +205,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/grid.h \
 ../include/egt/image.h \
 ../include/egt/input.h \
+../include/egt/imagegroup.h \
 ../include/egt/imageholder.h \
 ../include/egt/keycode.h \
 ../include/egt/label.h \
