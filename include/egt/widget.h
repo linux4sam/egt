@@ -19,6 +19,7 @@
 #include <egt/flags.h>
 #include <egt/font.h>
 #include <egt/geometry.h>
+#include <egt/imagegroup.h>
 #include <egt/object.h>
 #include <egt/palette.h>
 #include <egt/screen.h>
@@ -1939,10 +1940,7 @@ private:
     /**
      * Optional background images.
      */
-    mutable std::unique_ptr<Image> m_normal_bg;
-    mutable std::unique_ptr<Image> m_active_bg;
-    mutable std::unique_ptr<Image> m_disabled_bg;
-    mutable std::unique_ptr<Image> m_checked_bg;
+    ImageGroup m_backgrounds{"bg"};
 
     /**
      * Flags for the widget.
