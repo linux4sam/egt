@@ -20,6 +20,7 @@
 #include <egt/detail/screen/composerscreen.h>
 #include <egt/flags.h>
 #include <egt/frame.h>
+#include <egt/imagegroup.h>
 #include <egt/painter.h>
 #include <egt/serialize.h>
 #include <egt/textwidget.h>
@@ -193,6 +194,32 @@ public:
     }
 
     void draw(Painter& painter, const Rect& rect) override;
+
+    /**
+     * Get the image, if any, to draw the slider's handle for the given group.
+     *
+     * @param[in] group Palette::GroupId to get.
+     * @param[in] allow_fallback If true, return the 'normal' image if no image
+     *                           is set for the requested group.
+     */
+    EGT_NODISCARD Image* handle_image(Palette::GroupId group,
+                                      bool allow_fallback = false) const;
+
+    /**
+     * Set the image used to draw the slider's handle.
+     *
+     * @param[in] image The image used to draw the handle.
+     * @param[in] group Palette::GroupId to set.
+     */
+    void handle_image(const Image& image,
+                      Palette::GroupId group = Palette::GroupId::normal);
+
+    /**
+     * Remove the image, if any, used to draw the slider's handle.
+     *
+     * @param[in] group Palette::GroupId to set.
+     */
+    void reset_handle_image(Palette::GroupId group = Palette::GroupId::normal);
 
     using ValueRangeWidget<T>::value;
 
@@ -437,6 +464,9 @@ private:
     static Signal<>::RegisterHandle m_default_size_handle;
     static void register_handler();
     static void unregister_handler();
+
+    /// Optional handle images.
+    ImageGroup m_handles{"handle"};
 
     void deserialize(Serializer::Properties& props);
 };
@@ -702,7 +732,18 @@ void SliderType<T>::draw_handle(Painter& painter)
 {
     const auto handle_rect = handle_box();
 
-    if (slider_flags().is_set(SliderFlag::round_handle))
+    auto* image = handle_image(this->group(), true);
+    if (image)
+    {
+        this->theme().draw_box(painter,
+                               Theme::FillFlag::blend,
+                               handle_rect,
+                               Palette::transparent,
+                               Palette::transparent,
+                               0, 0, 0, {},
+                               image);
+    }
+    else if (slider_flags().is_set(SliderFlag::round_handle))
     {
         this->theme().draw_circle(painter,
                                   Theme::FillFlag::blend,
@@ -791,6 +832,7 @@ void SliderType<T>::serialize(Serializer& serializer) const
 
     serializer.add_property("sliderflags", m_slider_flags.to_string());
     serializer.add_property("orient", detail::enum_to_string(orient()));
+    m_handles.serialize(serializer);
 }
 
 template <class T>
@@ -808,8 +850,34 @@ void SliderType<T>::deserialize(Serializer::Properties& props)
             orient(detail::enum_from_string<Orientation>(std::get<1>(p)));
             return true;
         }
+        else if (m_handles.deserialize(std::get<0>(p), std::get<1>(p)))
+        {
+            return true;
+        }
         return false;
     }), props.end());
+}
+
+template <class T>
+Image* SliderType<T>::handle_image(Palette::GroupId group, bool allow_fallback) const
+{
+    return m_handles.get(group, allow_fallback);
+}
+
+template <class T>
+void SliderType<T>::handle_image(const Image& image, Palette::GroupId group)
+{
+    m_handles.set(group, image);
+    if (group == this->group())
+        this->damage(handle_box());
+}
+
+template <class T>
+void SliderType<T>::reset_handle_image(Palette::GroupId group)
+{
+    auto changed = m_handles.reset(group);
+    if (changed && group == this->group())
+        this->damage(handle_box());
 }
 
 /// Enum string conversion map
