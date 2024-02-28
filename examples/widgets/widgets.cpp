@@ -15,15 +15,24 @@
 #include <string>
 #include <vector>
 
+static egt::Size content_size(bool landscape, const egt::Size& tab_size)
+{
+    const auto side_min = std::min<egt::DefaultDim>(tab_size.width(), tab_size.height());
+    const auto ratio = static_cast<double>(tab_size.width()) / tab_size.height();
+    const auto size = landscape ? tab_size : egt::Size(side_min, side_min * ratio);
+
+    return size * 0.9;
+}
+
 struct ButtonPage : public egt::NotebookTab
 {
-    ButtonPage()
+    ButtonPage(bool landscape, const egt::Size& tab_size)
     {
-        auto grid0 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(3, 6));
-        grid0->margin(5);
+        auto grid0 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(3, 3));
+        grid0->resize(content_size(landscape, tab_size));
         grid0->horizontal_space(5);
         grid0->vertical_space(5);
-        add(expand(grid0));
+        add(egt::center(grid0));
 
         grid0->add(egt::expand(std::make_shared<egt::Button>("Button", egt::Size(100, 40))));
 
@@ -60,13 +69,13 @@ struct ButtonPage : public egt::NotebookTab
 
 struct CheckBoxPage : public egt::NotebookTab
 {
-    CheckBoxPage()
+    CheckBoxPage(bool landscape, const egt::Size& tab_size)
     {
-        auto grid0 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(3, 10));
-        grid0->margin(5);
+        auto grid0 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(3, 4));
+        grid0->resize(content_size(landscape, tab_size));
         grid0->horizontal_space(5);
         grid0->vertical_space(5);
-        add(egt::expand(grid0));
+        add(egt::center(grid0));
 
         auto toggle1 = std::make_shared<egt::ToggleBox>();
         toggle1->toggle_text("Off", "On");
@@ -123,13 +132,13 @@ struct CheckBoxPage : public egt::NotebookTab
 
 struct LabelPage : public egt::NotebookTab
 {
-    LabelPage()
+    LabelPage(bool landscape, const egt::Size& tab_size)
     {
-        auto grid0 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(3, 5));
-        grid0->margin(5);
+        auto grid0 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(3, 4));
+        grid0->resize(content_size(landscape, tab_size));
         grid0->horizontal_space(5);
         grid0->vertical_space(5);
-        add(egt::expand(grid0));
+        add(egt::center(grid0));
 
         auto label1 = std::make_shared<egt::Label>("left align",
                       egt::AlignFlag::left | egt::AlignFlag::center_vertical);
@@ -629,6 +638,7 @@ int main(int argc, char** argv)
 
     const auto screen_size = app.screen()->size();
     const auto landscape = screen_size.width() >= screen_size.height();
+    auto tab_size = screen_size;
 
     egt::TopWindow win;
 
@@ -636,6 +646,7 @@ int main(int argc, char** argv)
     egt::expand(vsizer);
 
     const auto header_height = screen_size.height() * 0.2;
+    tab_size -= egt::Size(0, header_height);
     egt::HorizontalBoxSizer header;
     header.resize(egt::Size(0, header_height));
     vsizer.add(egt::expand_horizontal(header));
@@ -690,12 +701,14 @@ int main(int argc, char** argv)
     if (!landscape)
     {
         auto const list_height = std::max<egt::DefaultDim>(50, screen_size.height() * 0.05);
+        tab_size -= egt::Size(0, list_height);
         list.resize(egt::Size(0, list_height));
         list.orient(egt::Orientation::horizontal);
     }
     else
     {
         auto const list_width = std::max<egt::DefaultDim>(150, screen_size.width() * 0.2);
+        tab_size -= egt::Size(list_width, 0);
         list.resize(egt::Size(list_width, 0));
     }
 
@@ -703,10 +716,10 @@ int main(int argc, char** argv)
 
     const std::pair<std::string, std::shared_ptr<egt::NotebookTab>> pages[] =
     {
-        {"Buttons", std::make_shared<ButtonPage>()},
+        {"Buttons", std::make_shared<ButtonPage>(landscape, tab_size)},
         {"Text", std::make_shared<TextPage>()},
-        {"CheckBox", std::make_shared<CheckBoxPage>()},
-        {"Label", std::make_shared<LabelPage>()},
+        {"CheckBox", std::make_shared<CheckBoxPage>(landscape, tab_size)},
+        {"Label", std::make_shared<LabelPage>(landscape, tab_size)},
         {"Progress", std::make_shared<ProgressPage>()},
         {"Sliders", std::make_shared<SliderPage>()},
         {"Meters", std::make_shared<MeterPage>()},
