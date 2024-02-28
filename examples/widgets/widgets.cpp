@@ -597,27 +597,6 @@ struct ScrollwheelPage : public egt::NotebookTab
     }
 };
 
-struct FormPage : public egt::NotebookTab
-{
-    FormPage()
-    {
-        auto form = std::make_shared<egt::experimental::Form>("Information");
-        form->align(egt::AlignFlag::expand_vertical);
-        form->horizontal_ratio(50);
-        add(form);
-
-        form->add_group("Name");
-        form->add_option("First Name", std::make_shared<egt::TextBox>());
-        form->add_option("Last Name", std::make_shared<egt::TextBox>());
-        form->add_group("Settings");
-        form->add_option("Admin", std::make_shared<egt::CheckBox>());
-        auto toggle1 = std::make_shared<egt::ToggleBox>();
-        toggle1->toggle_text("On", "Off");
-        form->add_option("Active", toggle1);
-        form->add_option(std::make_shared<egt::Button>("Save"));
-    }
-};
-
 struct ShapesPage : public egt::NotebookTab
 {
     ShapesPage()
@@ -734,7 +713,6 @@ int main(int argc, char** argv)
         {"ComboBox", std::make_shared<ComboPage>()},
         {"ListBox", std::make_shared<ListPage>()},
         {"Scrollwheel", std::make_shared<ScrollwheelPage>()},
-        {"Form", std::make_shared<FormPage>()},
         {"Shapes", std::make_shared<ShapesPage>()},
     };
 
