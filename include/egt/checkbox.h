@@ -57,6 +57,8 @@ public:
 
     using Switch::Switch;
 
+    void draw(Painter& painter, const Rect& rect) override;
+
     /**
      * Set the alignment of the checkbox relative to the text.
      *

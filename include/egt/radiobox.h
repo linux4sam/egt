@@ -65,6 +65,8 @@ public:
      */
     EGT_NODISCARD AlignFlags radiobox_align() const { return switch_align(); }
 
+    void draw(Painter& painter, const Rect& rect) override;
+
 protected:
 
     void draw_switch(Painter& painter, const Rect& handle) const override;

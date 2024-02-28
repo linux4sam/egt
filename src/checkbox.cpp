@@ -30,6 +30,11 @@ CheckBox::CheckBox(Frame& parent,
     parent.add(*this);
 }
 
+void CheckBox::draw(Painter& painter, const Rect& rect)
+{
+    Drawer<CheckBox>::draw(*this, painter, rect);
+}
+
 void CheckBox::draw_switch(Painter& painter, const Rect& handle) const
 {
     if (switch_image(checked()))

@@ -29,6 +29,11 @@ RadioBox::RadioBox(Frame& parent,
     parent.add(*this);
 }
 
+void RadioBox::draw(Painter& painter, const Rect& rect)
+{
+    Drawer<RadioBox>::draw(*this, painter, rect);
+}
+
 void RadioBox::draw_switch(Painter& painter, const Rect& handle) const
 {
     if (switch_image(checked()))
