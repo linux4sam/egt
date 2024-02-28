@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "detail/utf8text.h"
+#include "egt/app.h"
 #include "egt/button.h"
 #include "egt/embed.h"
 #include "egt/input.h"
@@ -318,17 +319,18 @@ void VirtualKeyboard::key_multichoice(const std::shared_ptr<Key>& k)
 
 static PopupVirtualKeyboard* the_popup_virtual_keyboard = nullptr;
 
-PopupVirtualKeyboard::PopupVirtualKeyboard(const std::shared_ptr<VirtualKeyboard>& keyboard) noexcept
+PopupVirtualKeyboard::PopupVirtualKeyboard(const std::shared_ptr<VirtualKeyboard>& keyboard, Size size) noexcept
 {
     // Make the keyboard partially transparent.
     fill_flags(Theme::FillFlag::blend);
     color(Palette::ColorId::bg, Color(Palette::transparent, 80));
 
-    auto popup_width = Application::instance().screen()->size().width();
-    auto popup_height = Application::instance().screen()->size().height() * 0.4;
+    const auto screen_size = Application::instance().screen()->size();
+    if (size.empty())
+        size = egt::Size(screen_size.width(), screen_size.height() * 0.4);
 
-    resize(Size(popup_width, popup_height));
-    auto y_keyboard_position = Application::instance().screen()->size().height() - popup_height;
+    resize(size);
+    auto y_keyboard_position = screen_size.height() - size.height();
     move(Point(0, y_keyboard_position));
 
     m_vsizer.align(AlignFlag::expand);

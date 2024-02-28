@@ -308,7 +308,7 @@ public:
     /**
      * @param[in] keyboard The virtual keyboard to display.
      */
-    explicit PopupVirtualKeyboard(const std::shared_ptr<VirtualKeyboard>& keyboard) noexcept;
+    explicit PopupVirtualKeyboard(const std::shared_ptr<VirtualKeyboard>& keyboard, Size size = {}) noexcept;
 
 protected:
     /**
