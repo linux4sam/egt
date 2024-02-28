@@ -819,7 +819,10 @@ int main(int argc, char** argv)
 
 #ifdef EGT_HAS_VIRTUALKEYBOARD
     auto default_keyboard = std::make_shared<egt::VirtualKeyboard>();
-    egt::PopupVirtualKeyboard popup_keyboard {default_keyboard};
+    egt::Size keyboard_size;
+    if (!landscape)
+        keyboard_size = egt::Size(screen_size.width(), screen_size.height() * 0.25);
+    egt::PopupVirtualKeyboard popup_keyboard {default_keyboard, keyboard_size};
     win.add(popup_keyboard);
 #endif
 
