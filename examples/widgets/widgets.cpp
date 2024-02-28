@@ -466,19 +466,32 @@ struct SliderPage : public egt::NotebookTab
 
 struct MeterPage : public egt::NotebookTab
 {
-    MeterPage()
+    MeterPage(bool landscape, const egt::Size& tab_size)
     {
-        auto grid0 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(2, 2));
-        grid0->margin(10);
-        grid0->horizontal_space(10);
+        egt::StaticGrid::GridSize grid_size_cell;
+        egt::Size grid_size_px;
+        if (landscape)
+        {
+            grid_size_cell = {2, 2};
+            grid_size_px = tab_size * 0.9;
+        }
+        else
+        {
+            grid_size_cell = {1, 3};
+            grid_size_px = egt::Size(tab_size.width() * 0.9, tab_size.height() * 0.7);
+        }
+        auto grid0 = std::make_shared<egt::StaticGrid>(grid_size_cell);
+        grid0->resize(grid_size_px);
+        grid0->horizontal_space(20);
         grid0->vertical_space(10);
-        add(egt::expand(grid0));
+        add(egt::center(grid0));
 
         auto lp1 = std::make_shared<egt::LevelMeter>();
         lp1->num_bars(10);
         grid0->add(egt::expand(lp1));
 
         auto am1 = std::make_shared<egt::AnalogMeter>();
+        am1->margin(10);
         grid0->add(egt::expand(am1));
 
         auto r1 = std::make_shared<egt::experimental::Radial>();
@@ -764,7 +777,7 @@ int main(int argc, char** argv)
         {"Label", std::make_shared<LabelPage>(landscape, tab_size)},
         {"Progress", std::make_shared<ProgressPage>(landscape, tab_size)},
         {"Sliders", std::make_shared<SliderPage>(landscape, tab_size)},
-        {"Meters", std::make_shared<MeterPage>()},
+        {"Meters", std::make_shared<MeterPage>(landscape, tab_size)},
         {"ComboBox", std::make_shared<ComboPage>()},
         {"ListBox", std::make_shared<ListPage>()},
         {"Scrollwheel", std::make_shared<ScrollwheelPage>()},
