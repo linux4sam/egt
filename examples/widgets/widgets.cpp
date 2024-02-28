@@ -385,13 +385,25 @@ struct ProgressPage : public egt::NotebookTab
 
 struct SliderPage : public egt::NotebookTab
 {
-    SliderPage()
+    SliderPage(bool landscape, const egt::Size& tab_size)
     {
-        auto grid = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(3, 3));
-        grid->margin(5);
-        grid->horizontal_space(5);
-        grid->vertical_space(5);
-        add(egt::expand(grid));
+        egt::StaticGrid::GridSize grid_size_cell;
+        egt::Size grid_size_px;
+        if (landscape)
+        {
+            grid_size_cell = {3, 3};
+            grid_size_px = tab_size * 0.9;
+        }
+        else
+        {
+            grid_size_cell = {2, 5};
+            grid_size_px = egt::Size(tab_size.width() * 0.9, tab_size.height() * 0.7);
+        }
+        auto grid = std::make_shared<egt::StaticGrid>(grid_size_cell);
+        grid->resize(grid_size_px);
+        grid->horizontal_space(10);
+        grid->vertical_space(10);
+        add(egt::center(grid));
 
         auto slider1 = std::make_shared<egt::Slider>();
         slider1->value(50);
@@ -751,7 +763,7 @@ int main(int argc, char** argv)
         {"CheckBox", std::make_shared<CheckBoxPage>(landscape, tab_size)},
         {"Label", std::make_shared<LabelPage>(landscape, tab_size)},
         {"Progress", std::make_shared<ProgressPage>(landscape, tab_size)},
-        {"Sliders", std::make_shared<SliderPage>()},
+        {"Sliders", std::make_shared<SliderPage>(landscape, tab_size)},
         {"Meters", std::make_shared<MeterPage>()},
         {"ComboBox", std::make_shared<ComboPage>()},
         {"ListBox", std::make_shared<ListPage>()},
