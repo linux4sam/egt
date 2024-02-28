@@ -673,27 +673,32 @@ struct ScrollwheelPage : public egt::NotebookTab
 
 struct ShapesPage : public egt::NotebookTab
 {
-    ShapesPage()
+    ShapesPage(bool landscape)
     {
-        auto hsizer1 = std::make_shared<egt::BoxSizer>(egt::Orientation::flex);
-        add(egt::expand(hsizer1));
+        auto sizer = std::make_shared<egt::BoxSizer>(egt::Orientation::flex);
+        if (landscape)
+            sizer->orient(egt::Orientation::horizontal);
+        else
+            sizer->orient(egt::Orientation::vertical);
+
+        add(egt::center(sizer));
 
         auto circle = std::make_shared<egt::CircleWidget>(egt::Circle(egt::Point(), 50));
         circle->margin(10);
-        hsizer1->add(circle);
+        sizer->add(circle);
 
         auto hline = std::make_shared<egt::LineWidget>(egt::Size(100, 100));
         hline->margin(10);
-        hsizer1->add(hline);
+        sizer->add(hline);
 
         auto vline = std::make_shared<egt::LineWidget>(egt::Size(100, 100));
         vline->margin(10);
         vline->horizontal(false);
-        hsizer1->add(vline);
+        sizer->add(vline);
 
         auto rect = std::make_shared<egt::RectangleWidget>(egt::Size(100, 100));
         rect->margin(10);
-        hsizer1->add(rect);
+        sizer->add(rect);
     }
 };
 
@@ -791,7 +796,7 @@ int main(int argc, char** argv)
         {"ComboBox", std::make_shared<ComboPage>()},
         {"ListBox", std::make_shared<ListPage>(landscape, tab_size)},
         {"Scrollwheel", std::make_shared<ScrollwheelPage>()},
-        {"Shapes", std::make_shared<ShapesPage>()},
+        {"Shapes", std::make_shared<ShapesPage>(landscape)},
     };
 
     for (const auto& i : pages)
