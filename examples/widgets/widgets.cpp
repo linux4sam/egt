@@ -295,16 +295,28 @@ static std::unique_ptr<egt::AnimationSequence> demo_up_down_animator(std::shared
 
 struct ProgressPage : public egt::NotebookTab
 {
-    ProgressPage()
+    ProgressPage(bool landscape, const egt::Size& tab_size)
     {
         auto vsizer = std::make_shared<egt::VerticalBoxSizer>();
         add(egt::expand(vsizer));
 
-        auto grid0 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(2, 8));
-        grid0->margin(5);
-        grid0->horizontal_space(5);
+        egt::StaticGrid::GridSize grid_size_cell;
+        egt::Size grid_size_px;
+        if (landscape)
+        {
+            grid_size_cell = {2, 3};
+            grid_size_px = tab_size * 0.9;
+        }
+        else
+        {
+            grid_size_cell = {1, 6};
+            grid_size_px = egt::Size(tab_size.width() * 0.9, tab_size.height() * 0.66);
+        }
+        auto grid0 = std::make_shared<egt::StaticGrid>(grid_size_cell);
+        grid0->resize(grid_size_px);
+        grid0->horizontal_space(20);
         grid0->vertical_space(5);
-        vsizer->add(egt::expand(grid0));
+        vsizer->add(egt::center(grid0));
 
         auto spinprogress = std::make_shared<egt::SpinProgress>();
         grid0->add(egt::expand(spinprogress));
@@ -330,9 +342,11 @@ struct ProgressPage : public egt::NotebookTab
         grid0->add(egt::expand(progressbar4));
 
         auto hsizer = std::make_shared<egt::HorizontalBoxSizer>();
+        hsizer->margin(20);
         vsizer->add(egt::expand_horizontal(hsizer));
 
         auto start = std::make_shared<egt::Button>("Start");
+        start->margin(5);
         hsizer->add(start);
         start->on_click([this](egt::Event&)
         {
@@ -341,6 +355,7 @@ struct ProgressPage : public egt::NotebookTab
         });
 
         auto stop = std::make_shared<egt::Button>("Stop");
+        stop->margin(5);
         hsizer->add(stop);
         stop->on_click([this](egt::Event&)
         {
@@ -349,6 +364,7 @@ struct ProgressPage : public egt::NotebookTab
         });
 
         auto resume = std::make_shared<egt::Button>("Resume");
+        resume->margin(5);
         hsizer->add(resume);
         resume->on_click([this](egt::Event&)
         {
@@ -734,7 +750,7 @@ int main(int argc, char** argv)
         {"Text", std::make_shared<TextPage>(landscape, tab_size)},
         {"CheckBox", std::make_shared<CheckBoxPage>(landscape, tab_size)},
         {"Label", std::make_shared<LabelPage>(landscape, tab_size)},
-        {"Progress", std::make_shared<ProgressPage>()},
+        {"Progress", std::make_shared<ProgressPage>(landscape, tab_size)},
         {"Sliders", std::make_shared<SliderPage>()},
         {"Meters", std::make_shared<MeterPage>()},
         {"ComboBox", std::make_shared<ComboPage>()},
