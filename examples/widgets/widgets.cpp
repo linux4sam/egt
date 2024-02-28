@@ -647,6 +647,10 @@ struct ShapesPage : public egt::NotebookTab
 int main(int argc, char** argv)
 {
     egt::Application app(argc, argv);
+
+    const auto screen_size = app.screen()->size();
+    const auto landscape = screen_size.width() >= screen_size.height();
+
     egt::TopWindow win;
 
     egt::VerticalBoxSizer vsizer(win);
@@ -692,11 +696,23 @@ int main(int argc, char** argv)
         win.damage();
     });
 
-    egt::BoxSizer hsizer(egt::Orientation::horizontal);
-    vsizer.add(egt::expand(hsizer));
+    egt::BoxSizer content_sizer;
+    if (!landscape)
+        content_sizer.orient(egt::Orientation::vertical);
+    vsizer.add(egt::expand(content_sizer));
 
     egt::ListBox list;
-    list.resize(egt::Size(150, 0));
+    if (!landscape)
+    {
+        auto const list_height = std::max<egt::DefaultDim>(50, screen_size.height() * 0.05);
+        list.resize(egt::Size(0, list_height));
+        list.orient(egt::Orientation::horizontal);
+    }
+    else
+    {
+        auto const list_width = std::max<egt::DefaultDim>(150, screen_size.width() * 0.2);
+        list.resize(egt::Size(list_width, 0));
+    }
 
     egt::Notebook notebook;
 
@@ -722,8 +738,12 @@ int main(int argc, char** argv)
         notebook.add(i.second);
     }
 
-    hsizer.add(egt::expand_vertical(list));
-    hsizer.add(egt::expand(notebook));
+    if (landscape)
+        egt::expand_vertical(list);
+    else
+        egt::expand_horizontal(list);
+    content_sizer.add(list);
+    content_sizer.add(egt::expand(notebook));
 
     list.on_selected_changed([&notebook, &list]()
     {
