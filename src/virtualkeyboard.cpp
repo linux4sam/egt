@@ -337,9 +337,10 @@ PopupVirtualKeyboard::PopupVirtualKeyboard(const std::shared_ptr<VirtualKeyboard
     add(m_vsizer);
 
     m_hsizer.align(AlignFlag::top | AlignFlag::right);
+    m_hsizer.resize(Size(size.width() * 0.2, size.height() * 0.15));
     m_vsizer.add(m_hsizer);
 
-    m_top_bottom_button.align(AlignFlag::top | AlignFlag::right);
+    m_top_bottom_button.margin(5);
     m_top_bottom_button.on_event([this, y_keyboard_position](Event&)
     {
         if (m_bottom_positionned)
@@ -355,9 +356,9 @@ PopupVirtualKeyboard::PopupVirtualKeyboard(const std::shared_ptr<VirtualKeyboard
 
         m_bottom_positionned = !m_bottom_positionned;
     }, {EventId::pointer_click});
-    m_hsizer.add(m_top_bottom_button);
+    m_hsizer.add(expand(m_top_bottom_button));
 
-    m_close_button.align(AlignFlag::top | AlignFlag::right);
+    m_close_button.margin(5);
     m_close_button.on_event([this, y_keyboard_position](Event&)
     {
         hide();
@@ -366,7 +367,7 @@ PopupVirtualKeyboard::PopupVirtualKeyboard(const std::shared_ptr<VirtualKeyboard
         m_top_bottom_button.image(Image("res:internal_arrow_up"));
         m_bottom_positionned = true;
     }, {EventId::pointer_click});
-    m_hsizer.add(m_close_button);
+    m_hsizer.add(expand(m_close_button));
 
     keyboard->align(AlignFlag::expand);
     m_vsizer.add(keyboard);
