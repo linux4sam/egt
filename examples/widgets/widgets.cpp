@@ -15,7 +15,7 @@
 #include <string>
 #include <vector>
 
-static egt::Size content_size(bool landscape, const egt::Size& tab_size)
+static egt::Size content_size_small(bool landscape, const egt::Size& tab_size)
 {
     const auto side_min = std::min<egt::DefaultDim>(tab_size.width(), tab_size.height());
     const auto ratio = static_cast<double>(tab_size.width()) / tab_size.height();
@@ -24,12 +24,17 @@ static egt::Size content_size(bool landscape, const egt::Size& tab_size)
     return size * 0.9;
 }
 
+static egt::Size content_size_wide(bool landscape, const egt::Size& tab_size)
+{
+    return landscape ? tab_size * 0.9 : egt::Size(tab_size.width() * 0.9, tab_size.height() * 0.7);
+}
+
 struct ButtonPage : public egt::NotebookTab
 {
     ButtonPage(bool landscape, const egt::Size& tab_size)
     {
         auto grid0 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(3, 3));
-        grid0->resize(content_size(landscape, tab_size));
+        grid0->resize(content_size_small(landscape, tab_size));
         grid0->horizontal_space(5);
         grid0->vertical_space(5);
         add(egt::center(grid0));
@@ -72,7 +77,7 @@ struct CheckBoxPage : public egt::NotebookTab
     CheckBoxPage(bool landscape, const egt::Size& tab_size)
     {
         auto grid0 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(3, 4));
-        grid0->resize(content_size(landscape, tab_size));
+        grid0->resize(content_size_small(landscape, tab_size));
         grid0->horizontal_space(5);
         grid0->vertical_space(5);
         add(egt::center(grid0));
@@ -135,7 +140,7 @@ struct LabelPage : public egt::NotebookTab
     LabelPage(bool landscape, const egt::Size& tab_size)
     {
         auto grid0 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(3, 4));
-        grid0->resize(content_size(landscape, tab_size));
+        grid0->resize(content_size_small(landscape, tab_size));
         grid0->horizontal_space(5);
         grid0->vertical_space(5);
         add(egt::center(grid0));
@@ -198,15 +203,8 @@ struct TextPage : public egt::NotebookTab
         auto sizer = std::make_shared<egt::BoxSizer>();
         egt::Size content_size;
         if (!landscape)
-        {
             sizer->orient(egt::Orientation::vertical);
-            content_size = egt::Size(tab_size.width() * 0.9, tab_size.height() * 0.5);
-        }
-        else
-        {
-            content_size = tab_size * 0.9;
-        }
-        sizer->resize(content_size);
+        sizer->resize(content_size_wide(landscape, tab_size));
         add(egt::center(sizer));
 
         egt::StaticGrid::GridSize grid_size;
@@ -301,19 +299,12 @@ struct ProgressPage : public egt::NotebookTab
         add(egt::expand(vsizer));
 
         egt::StaticGrid::GridSize grid_size_cell;
-        egt::Size grid_size_px;
         if (landscape)
-        {
             grid_size_cell = {2, 3};
-            grid_size_px = tab_size * 0.9;
-        }
         else
-        {
             grid_size_cell = {1, 6};
-            grid_size_px = egt::Size(tab_size.width() * 0.9, tab_size.height() * 0.66);
-        }
         auto grid0 = std::make_shared<egt::StaticGrid>(grid_size_cell);
-        grid0->resize(grid_size_px);
+        grid0->resize(content_size_wide(landscape, tab_size));
         grid0->horizontal_space(20);
         grid0->vertical_space(5);
         vsizer->add(egt::center(grid0));
@@ -388,19 +379,12 @@ struct SliderPage : public egt::NotebookTab
     SliderPage(bool landscape, const egt::Size& tab_size)
     {
         egt::StaticGrid::GridSize grid_size_cell;
-        egt::Size grid_size_px;
         if (landscape)
-        {
             grid_size_cell = {3, 3};
-            grid_size_px = tab_size * 0.9;
-        }
         else
-        {
             grid_size_cell = {2, 5};
-            grid_size_px = egt::Size(tab_size.width() * 0.9, tab_size.height() * 0.7);
-        }
         auto grid = std::make_shared<egt::StaticGrid>(grid_size_cell);
-        grid->resize(grid_size_px);
+        grid->resize(content_size_wide(landscape, tab_size));
         grid->horizontal_space(10);
         grid->vertical_space(10);
         add(egt::center(grid));
@@ -469,19 +453,12 @@ struct MeterPage : public egt::NotebookTab
     MeterPage(bool landscape, const egt::Size& tab_size)
     {
         egt::StaticGrid::GridSize grid_size_cell;
-        egt::Size grid_size_px;
         if (landscape)
-        {
             grid_size_cell = {2, 2};
-            grid_size_px = tab_size * 0.9;
-        }
         else
-        {
             grid_size_cell = {1, 3};
-            grid_size_px = egt::Size(tab_size.width() * 0.9, tab_size.height() * 0.7);
-        }
         auto grid0 = std::make_shared<egt::StaticGrid>(grid_size_cell);
-        grid0->resize(grid_size_px);
+        grid0->resize(content_size_wide(landscape, tab_size));
         grid0->horizontal_space(20);
         grid0->vertical_space(10);
         add(egt::center(grid0));
@@ -552,11 +529,7 @@ struct ListPage : public egt::NotebookTab
 {
     ListPage(bool landscape, const egt::Size& tab_size)
     {
-        egt::Size content_size;
-        if (landscape)
-            content_size = tab_size * 0.9;
-        else
-            content_size = egt::Size(tab_size.width() * 0.9, tab_size.height() * 0.7);
+        egt::Size content_size = content_size_wide(landscape, tab_size);
         auto hsizer1 = std::make_shared<egt::BoxSizer>(egt::Orientation::horizontal,
                        egt::Justification::justify);
         hsizer1->resize(content_size);
