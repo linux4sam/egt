@@ -656,12 +656,18 @@ int main(int argc, char** argv)
     egt::VerticalBoxSizer vsizer(win);
     egt::expand(vsizer);
 
-    egt::Frame frame(egt::Size(0, 60));
-    vsizer.add(egt::expand_horizontal(frame));
+    const auto header_height = screen_size.height() * 0.2;
+    egt::HorizontalBoxSizer header;
+    header.resize(egt::Size(0, header_height));
+    vsizer.add(egt::expand_horizontal(header));
 
-    egt::ImageLabel logo(egt::Image("icon:egt_logo_black.png;128"));
+    egt::ImageLabel logo(egt::Image("icon:egt_logo_black.svg;svg"));
+    if (landscape)
+        logo.height(header_height * 0.8);
+    else
+        logo.height(header_height * 0.5);
     logo.align(egt::AlignFlag::center);
-    frame.add(logo);
+    header.add(egt::expand_horizontal(logo));
 
     const std::pair<std::string, std::function<std::unique_ptr<egt::Theme>()>> combo_items[] =
     {
@@ -674,12 +680,12 @@ int main(int argc, char** argv)
         {"Ultra Violet", []{ return std::make_unique<egt::UltraVioletTheme>(); }}
     };
 
-    egt::ComboBox combo;
+    egt::ComboBox combo(egt::Rect(egt::Size(screen_size.width() / 4, 25)));
     for (const auto& i : combo_items)
         combo.add_item(std::make_shared<egt::StringItem>(i.first));
     combo.align(egt::AlignFlag::center_vertical | egt::AlignFlag::right);
     combo.margin(5);
-    frame.add(combo);
+    header.add(combo);
 
     combo.on_selected_changed([&combo_items, &combo, &win]()
     {
