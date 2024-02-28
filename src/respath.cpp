@@ -121,7 +121,16 @@ SchemeType resolve_path(const std::string& path, std::string& result)
 
         std::string icon_prefix = "32px";
         if (!uri.icon_size().empty())
-            icon_prefix = uri.icon_size() + "px";
+        {
+            try
+            {
+                icon_prefix = std::to_string(std::stoul(uri.icon_size())) + "px";
+            }
+            catch (...)
+            {
+                icon_prefix = uri.icon_size();
+            }
+        }
         result = resolve_file_path(icon_prefix + "/" + result, {egt_icons_dir});
         break;
     }
