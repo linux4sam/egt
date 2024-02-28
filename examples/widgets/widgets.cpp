@@ -193,19 +193,32 @@ struct LabelPage : public egt::NotebookTab
 
 struct TextPage : public egt::NotebookTab
 {
-    TextPage()
+    TextPage(bool landscape, const egt::Size& tab_size)
     {
-        auto grid1 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(2, 1));
-        grid1->margin(5);
-        grid1->horizontal_space(5);
-        grid1->vertical_space(5);
-        add(egt::expand(grid1));
+        auto sizer = std::make_shared<egt::BoxSizer>();
+        egt::Size content_size;
+        if (!landscape)
+        {
+            sizer->orient(egt::Orientation::vertical);
+            content_size = egt::Size(tab_size.width() * 0.9, tab_size.height() * 0.5);
+        }
+        else
+        {
+            content_size = tab_size * 0.9;
+        }
+        sizer->resize(content_size);
+        add(egt::center(sizer));
 
-        auto grid0 = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize(1, 10));
+        egt::StaticGrid::GridSize grid_size;
+        if (landscape)
+            grid_size = egt::StaticGrid::GridSize(1, 6);
+        else
+            grid_size = egt::StaticGrid::GridSize(2, 3);
+        auto grid0 = std::make_shared<egt::StaticGrid>(grid_size);
         grid0->margin(5);
         grid0->horizontal_space(5);
         grid0->vertical_space(5);
-        grid1->add(egt::expand(grid0));
+        sizer->add(egt::expand(grid0));
 
         auto text1 = std::make_shared<egt::TextBox>("text 1", egt::TextBox::TextFlag::fit_to_width);
         grid0->add(egt::expand(text1));
@@ -247,7 +260,8 @@ struct TextPage : public egt::NotebookTab
                          " supports UTF-8 encoding.  See: \u2190\u2191\u2192\u2193",
                          egt::TextBox::TextFlags({egt::TextBox::TextFlag::multiline, egt::TextBox::TextFlag::word_wrap}));
         text7->selection(4, 25);
-        grid1->add(egt::expand(text7));
+        text7->margin(5);
+        sizer->add(egt::expand(text7));
     }
 };
 
@@ -717,7 +731,7 @@ int main(int argc, char** argv)
     const std::pair<std::string, std::shared_ptr<egt::NotebookTab>> pages[] =
     {
         {"Buttons", std::make_shared<ButtonPage>(landscape, tab_size)},
-        {"Text", std::make_shared<TextPage>()},
+        {"Text", std::make_shared<TextPage>(landscape, tab_size)},
         {"CheckBox", std::make_shared<CheckBoxPage>(landscape, tab_size)},
         {"Label", std::make_shared<LabelPage>(landscape, tab_size)},
         {"Progress", std::make_shared<ProgressPage>()},
