@@ -301,7 +301,7 @@ protected:
     bool internal_track_drag() const override { return true; }
 
     /// Convert a value to an offset.
-    EGT_NODISCARD int to_offset(int value) const
+    EGT_NODISCARD int to_offset(T value) const
     {
         if (detail::float_equal(static_cast<float>(this->m_start), static_cast<float>(this->m_end)))
             return 0;
