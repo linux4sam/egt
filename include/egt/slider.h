@@ -330,13 +330,8 @@ protected:
     /// Update the value without notifying the handlers.
     void update_value(T value)
     {
-        if (this->m_start < this->m_end)
-            value = detail::clamp<T>(value, this->m_start, this->m_end);
-        else
-            value = detail::clamp<T>(value, this->m_end, this->m_start);
-
         T prev_value = this->m_value;
-        if (detail::change_if_diff<>(this->m_value, value))
+        if (this->set_value(value))
         {
             auto r = Rect::merge(handle_box(prev_value), handle_box());
             this->damage(r);
