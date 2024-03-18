@@ -296,7 +296,6 @@ struct ProgressPage : public egt::NotebookTab
 
         const auto grid_size_cell = landscape ? egt::StaticGrid::GridSize(2, 3) : egt::StaticGrid::GridSize(1, 6);
         auto grid0 = std::make_shared<egt::StaticGrid>(grid_size_cell);
-        grid0->resize(content_size_wide(landscape, tab_size));
         grid0->horizontal_space(20);
         grid0->vertical_space(5);
         vsizer->add(egt::center(grid0));
@@ -361,6 +360,9 @@ struct ProgressPage : public egt::NotebookTab
         m_animators.push_back(demo_up_down_animator(progressbar2));
         m_animators.push_back(demo_up_down_animator(progressbar3));
         m_animators.push_back(demo_up_down_animator(progressbar4));
+
+        const auto content_size = content_size_wide(landscape, tab_size);
+        grid0->resize(content_size - egt::Size(0, hsizer->height()));
     }
 
     std::vector<std::unique_ptr<egt::AnimationSequence>> m_animators;
