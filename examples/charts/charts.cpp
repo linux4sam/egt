@@ -12,15 +12,12 @@
 #include <egt/themes/sky.h>
 #include <egt/themes/ultraviolet.h>
 #include <egt/ui>
-#include <random>
+#include <cstdlib>
 #include <string>
 
 static int random_item(int start, int end)
 {
-    std::random_device r;
-    std::default_random_engine e {r()};
-    std::uniform_int_distribution<int> dist(start, end);
-    return dist(e);
+    return std::rand() % (end - start) + start;
 }
 
 static std::shared_ptr<egt::ListBox> chart_axis_type(const std::shared_ptr<egt::ChartBase>& chart)
