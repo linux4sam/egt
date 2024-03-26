@@ -1,0 +1,6 @@
+#ifndef EGT_GITVERSION_H
+#define EGT_GITVERSION_H
+
+#cmakedefine GIT_VERSION @GIT_VERSION@
+
+#endif /* EGT_GITVERSION_H */

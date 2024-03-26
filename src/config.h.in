@@ -1,0 +1,97 @@
+#include "gitversion.h"
+
+/* Enable virtualkeyboard support */
+#cmakedefine ENABLE_VIRTUALKEYBOARD @ENABLE_VIRTUALKEYBOARD@
+
+/* Have alsa support */
+#cmakedefine HAVE_ALSA @HAVE_ALSA@
+
+/* Have cairo gfx2d support */
+#cmakedefine HAVE_CAIRO_GFX2D @HAVE_CAIRO_GFX2D@
+
+/* Have __cxa_demangle */
+#cmakedefine HAVE_CXA_DEMANGLE @HAVE_CXA_DEMANGLE@
+
+/* Define to 1 if you have the <cxxabi.h> header file. */
+#cmakedefine HAVE_CXXABI_H @HAVE_CXXABI_H@
+
+/* extcairo found */
+#cmakedefine HAVE_EXTCAIRO
+
+/* Have fontconfig support */
+#cmakedefine HAVE_FONTCONFIG @HAVE_FONTCONFIG@
+
+/* Define to 1 if you have the <glob.h> header file. */
+#cmakedefine HAVE_GLOB_H @HAVE_GLOB_H@
+
+/* Have gstreamer support */
+#cmakedefine HAVE_GSTREAMER @HAVE_GSTREAMER@
+
+/* Have gstreamer-plugin-base1.0-dev support */
+#cmakedefine HAVE_GSTREAMER_PBDEV @HAVE_GSTREAMER_PBDEV@
+
+/* Have gstreamer pbutils support */
+#cmakedefine HAVE_GSTREAMER_PBUTILS @HAVE_GSTREAMER_PBUTILS@
+
+/* Have libcurl support */
+#cmakedefine HAVE_LIBCURL @HAVE_LIBCURL@
+
+/* Have libdrm support */
+#cmakedefine HAVE_LIBDRM @HAVE_LIBDRM@
+
+/* Have libinput support */
+#cmakedefine HAVE_LIBINPUT @HAVE_LIBINPUT@
+
+/* Have libintl support */
+#cmakedefine HAVE_LIBINTL @HAVE_LIBINTL@
+
+/* Have libjpeg support */
+#cmakedefine HAVE_LIBJPEG @HAVE_LIBJPEG@
+
+/* Have libmagic support */
+#cmakedefine HAVE_LIBMAGIC @HAVE_LIBMAGIC@
+
+/* Have libplanes support */
+#cmakedefine HAVE_LIBPLANES @HAVE_LIBPLANES@
+
+/* Have librsvg support */
+#cmakedefine HAVE_LIBRSVG @HAVE_LIBRSVG@
+
+/* Define to 1 if you have the <linux/gpio.h> header file. */
+#cmakedefine HAVE_LINUX_GPIO_H @HAVE_LINUX_GPIO_H@
+
+/* Have linux/input.h support */
+#cmakedefine HAVE_LINUX_INPUT_H @HAVE_LINUX_INPUT_H@
+
+/* Have lua support */
+#cmakedefine HAVE_LUA @HAVE_LUA@
+
+/* Have plplot support */
+#cmakedefine HAVE_PLPLOT @HAVE_PLPLOT@
+
+/* Have sdl2 support */
+#cmakedefine HAVE_SDL2 @HAVE_SDL2@
+
+/* Have simd support */
+#cmakedefine HAVE_SIMD @HAVE_SIMD@
+
+/* Have sndfile support */
+#cmakedefine HAVE_SNDFILE @HAVE_SNDFILE@
+
+/* Have tslib support */
+#cmakedefine HAVE_TSLIB @HAVE_TSLIB@
+
+/* Have windows.h support */
+#cmakedefine HAVE_WINDOWS_H @HAVE_WINDOWS_H@
+
+/* Have x11 support */
+#cmakedefine HAVE_X11 @HAVE_X11@
+
+/* Have xkbcommon support */
+#cmakedefine HAVE_XKBCOMMON @HAVE_XKBCOMMON@
+
+/* Have zlib support */
+#cmakedefine HAVE_ZLIB @HAVE_ZLIB@
+
+/* Define to the version of this package. */
+#cmakedefine PACKAGE_VERSION "@PACKAGE_VERSION@"

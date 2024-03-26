@@ -1,0 +1,23 @@
+#!/bin/bash
+# SPDX-License-Identifier: Apache-2.0
+#
+# Copyright (c) 2024 Microchip Technology Inc. and its subsidiaries.
+# All rights reserved.
+#
+# Script to get, if applicable, the current state of the git tree.
+#
+
+if test -d ".git"; then
+    if test $UID -eq 0; then
+        if test $UID -ne $(stat -c %u .git); then
+	    git_tree_user=$(stat -c %U .git)
+	    if test $? -eq 0 -a "$git_tree_user" != "UNKNOWN"; then
+	        switch_user="su $git_tree_user -c"
+	    else
+	        switch_user="true"
+	    fi
+	fi
+    fi
+fi
+
+$switch_user scripts/git_version.sh $(pwd)
