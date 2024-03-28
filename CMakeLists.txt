@@ -6,6 +6,10 @@ project(
     DESCRIPTION "A linux graphic library for Microchip MPUs"
     LANGUAGES C;CXX;ASM
 )
+#set(PROJECT_VERSION_RC 0)
+if (DEFINED PROJECT_VERSION_RC)
+    string(APPEND PROJECT_VERSION "-rc${PROJECT_VERSION_RC}")
+endif()
 
 include(CheckIncludeFile)
 include(CheckIncludeFileCXX)
