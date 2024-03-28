@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 3.23)
 
 project(
     libegt
-    VERSION 1.8
+    VERSION 1.9
     DESCRIPTION "A linux graphic library for Microchip MPUs"
     LANGUAGES C;CXX;ASM
 )
-#set(PROJECT_VERSION_RC 0)
+set(PROJECT_VERSION_RC 1)
 if (DEFINED PROJECT_VERSION_RC)
     string(APPEND PROJECT_VERSION "-rc${PROJECT_VERSION_RC}")
 endif()
