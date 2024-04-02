@@ -127,12 +127,15 @@ void Widget::handle(Event& event)
         case EventId::pointer_hold:
         case EventId::pointer_drag_start:
         {
+            const auto p = display_to_local(event.pointer().point) + point();
+
             for (auto& subordinate : detail::reverse_iterate(m_subordinates))
             {
                 if (!subordinate->can_handle_event())
                     continue;
 
-                if (subordinate->hit(event.pointer().point))
+                const auto p2 = p - point_from_subordinate(*subordinate);
+                if (subordinate->box().intersect(p2))
                 {
                     subordinate->handle(event);
                     if (event.postponed_quit())
