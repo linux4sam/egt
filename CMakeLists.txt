@@ -44,6 +44,20 @@ CHECK_INCLUDE_FILE(windows.h HAVE_WINDOWS_H)
 check_cxx_symbol_exists(__cxa_demangle "cxxabi.h" HAVE_CXA_DEMANGLE)
 check_symbol_exists(gettext "libintl.h" HAVE_LIBINTL)
 
+find_package(Git QUIET)
+if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+    option(GIT_SUBMODULE "Check submodules during build" ON)
+    if(GIT_SUBMODULE)
+        message(STATUS "Submodule update")
+        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+                        RESULT_VARIABLE GIT_SUBMOD_RESULT)
+        if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+            message(FATAL_ERROR "git submodule update --init --recursive failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+        endif()
+    endif()
+endif()
+
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(CAIRO REQUIRED cairo>=1.14.6)
