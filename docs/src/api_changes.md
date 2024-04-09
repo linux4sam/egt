@@ -5,6 +5,98 @@
 Here, you can find the API changes from the version 1.0. In addition, some hints
 are provided to help you update your code.
 
+@section v1_9 1.9
+
+@subsection checkbutton CheckButton
+
+@li The class is added to the API.
+
+@li The handle() method is now public as it should have been.
+
+@subsection event Event
+
+@li Add postpone_stop() and posptponed_quit() methods to handle event propagation.
+
+@subsection imagegroup ImageGroup
+
+@li New utility class to handle images tied to a palette group id.
+
+@subsection inputlibinput InputLibInput
+
+@li Add an optional device argument to the constructor.
+
+@subsection listbox ListBox
+
+@li Add orient() getter and setter to handle the orientation: either vertical or horizontal.
+
+@li Add scroll_beginning/end() methods.
+
+@subsection mousegesture MouseGesture
+
+@li Add drag_enable_distance() setter and getter to configure the distance to travel to enable drag mode.
+
+@subsection painter Painter
+
+@li Add translate() and rotate() methods to abstract Cairo translation and rotation.
+
+@subsection pointtype PointType
+
+@li Add unary 'operator-'.
+
+@subsection rangevalue RangeValue
+
+@li Add rbegin(), rend(), crbegin(), and crend() iterators.
+
+@subsection scrolledview ScrolledView
+
+@li Add init_sliders() method.
+
+@li Rename resize_slider() into resize_sliders();
+
+@subsection slider Slider
+
+@li Add format_label() method to handle the formatting of the value.
+
+@li Add handle_image() setter and getter, and the reset_handle_method() to manage an optional image to draw for the handle.
+
+@li Fix the prototype of the to_offset() method. The 'value' parameter should be 'T' rather than 'int'.
+
+@subsection switch Switch
+
+@li Add the Switch class to factorize code from CheckBox and RadioBox which now inherits from it.
+
+@subsection valuerangewidget ValueRangeWidget
+
+@li Add an optional step parameter to the constructor and stepping() getter and setter. Step describes the difference between two consecutive values of the range.
+
+@li Add the set_value() method to factorize code.
+
+@subsection widget Widget
+
+@li children() returns a reference rather than a value.
+
+@li Add init() method to factorize code.
+
+@li Add components() getters.
+
+@li Add update_subordinates_ranges() method to factorize code.
+
+@li Add the range_from_widget() method to return the proper subordinate range, either children or components depending on the type of the subordinate given as argument.
+
+@li Constify local_to_display() and display_to_local() methods.
+
+@li Add the point_from_subordinate() virtual method to return the widget point coordinates, but from the point of view of one of its subordinates.
+
+@li Add the hit() method to test whether a DisplayPoint lays within a widget box.
+
+@li Add dragged() setter and getter for the current widget which is being dragged.
+
+@li Add group() method to retrieve the palette group id depending on the widget state.
+
+@li Add background() setter and getter, and the reset_background() method to handle the image background per palette group.
+
+@li The has_screen() method is now public.
+
 @section v1_8 1.8
 
 @subsection progressbar ProgressBar
