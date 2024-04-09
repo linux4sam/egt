@@ -3,6 +3,57 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9] - unreleased
+### Added
+- CMake: add support for the CMake build system in addition to the autotools
+one.
+- ImageGroup: new utility class to handled images tied to a palette group id.
+- MouseGesture: the distance to travel to enable the drag mode is
+configurable.
+- PointType: add unary 'operator-'.
+- resolve_path: add support for the svg icons.
+- ScrolledView: handle keyboard events.
+- Slider: an image can be used for the handle.
+- Switch: new class to factorize code from Checkbox and RadioBox. It provides
+support for an image that depends on the checked flag.
+- ValueRangeWidget: add support for steps to manage the difference between two
+consecutive values of the range.
+- Widget: all widgets can set an image background per palette group.
+### Changed
+- Application: change input backend logic. libinput was always enabled. Now,
+libinput is used only if it is requested with the help of the
+EGT_INPUT_DEVICES environment variable or if there is no valid input backend
+configured.
+- Button: reduce the minimal size hint for multiline text buttons.
+- Checkbox: performance improvement.
+- Check|RadioBox: if the widget's text is not empty, then the minimum size
+hint is computed from the text height.
+- ListBox: add the horizontal orientation.
+- MouseGesture: continue to emit the hold event when dragging starts. When
+holding ends, don't send a pointer_click event.
+- ScrolledView: rework to improve its behavior.
+- ScrolledView: no longer damage the whole box if not needed.
+- ScrolledView: pass mouse events only to the first child that intersects.
+- Slider: damage only the handle, line and label rects when the value is
+updated.
+- ValueRangeWidget: allow m_start and m_end to be equal.
+- Widget: send drag events only to the widgets which accepted the drag start.
+Before, it was sent unconditionally.
+- Widget: stop handling drag events when they leave the dragged widget box.
+- Widget:
+- Rework the layout of several examples.
+### Fixed
+- CheckButton: the handle() method is now public, and is exported to the API.
+- Input: fix evedev support.
+- Input: fix tslib support.
+- Pattern: fix the == operator.
+- Slider: don't shrink the size of the label based on the size of the handle.
+- ScrolledView: fix non-zero moat handling.
+- ScrolledView: fix the drawing of boarders.
+- ScrolledView: handle other fill flags than solid.
+- ScrolledView: draw sliders within the widget borders.
+- Theme: fix draw_box() to display the plane windows at the right position.
+
 ## [1.8] - 2023-12-08
 ### Added
 - The audioplayer example displays an error message when there is no sound
