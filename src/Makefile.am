@@ -292,12 +292,6 @@ detail/camera/gstcaptureimpl.h \
 detail/video/gstmeta.cpp \
 detail/video/gstmeta.h
 
-if HAVE_LIBPLANES
-libegt_la_SOURCES += \
-detail/video/gstkmssinkimpl.cpp \
-detail/video/gstkmssinkimpl.h
-endif
-
 nobase_libegtinclude_HEADERS += \
 ../include/egt/audio.h \
 ../include/egt/video.h \

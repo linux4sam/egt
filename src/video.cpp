@@ -9,7 +9,6 @@
 
 #include "detail/egtlog.h"
 #include "detail/video/gstappsinkimpl.h"
-#include "detail/video/gstkmssinkimpl.h"
 #include "egt/app.h"
 #include "egt/detail/filesystem.h"
 #include "egt/respath.h"
@@ -24,31 +23,6 @@ inline namespace v1
 {
 namespace detail
 {
-
-/**
- * Check if target device is sama5d4 for using hardware
- * decoder.
- */
-
-bool is_target_sama5d4()
-{
-    std::ifstream infile("/proc/device-tree/model");
-    if (infile.is_open())
-    {
-        std::string line;
-        while (getline(infile, line))
-        {
-            EGTLOG_DEBUG("CPU: {}", line);
-            if (line.find("SAMA5D4") != std::string::npos)
-            {
-                infile.close();
-                return true;
-            }
-        }
-        infile.close();
-    }
-    return false;
-}
 
 /*
  * Check if audio playback device is present
@@ -117,18 +91,8 @@ VideoWindow::VideoWindow(Serializer::Properties& props, bool is_derived)
 
 void VideoWindow::create_impl(const Size& size)
 {
-    if (plane_window() && detail::is_target_sama5d4())
-    {
-        EGTLOG_DEBUG("VideoWindow: Using KMS sink");
-#ifdef HAVE_LIBPLANES
-        m_video_impl = std::make_unique<detail::GstKmsSinkImpl>(*this, size, detail::is_target_sama5d4());
-#endif
-    }
-    else
-    {
-        EGTLOG_DEBUG("VideoWindow: Using APP sink");
-        m_video_impl = std::make_unique<detail::GstAppSinkImpl>(*this, size);
-    }
+    EGTLOG_DEBUG("VideoWindow: Using APP sink");
+    m_video_impl = std::make_unique<detail::GstAppSinkImpl>(*this, size);
 }
 
 void VideoWindow::draw(Painter& painter, const Rect& rect)
@@ -219,11 +183,7 @@ void VideoWindow::scale(float hscale, float vscale)
 
 void VideoWindow::resize(const Size& size)
 {
-    /*
-     * sama5d4 does not support changing video resolution dynamically
-     * due to g1kmssink in client mode.
-     */
-    if ((box().size() != size) && (!detail::is_target_sama5d4()))
+    if (box().size() != size)
     {
         pause();
         Window::resize(size);

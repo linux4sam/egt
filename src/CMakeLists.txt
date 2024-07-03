@@ -324,10 +324,6 @@ if(GSTREAMER_PLUGINS_BASE_DEV_FOUND)
         ${CMAKE_SOURCE_DIR}/include/egt/camera.h
         ${CMAKE_SOURCE_DIR}/include/egt/capture.h
     )
-
-    if(LIBPLANES_FOUND)
-        target_sources(egt PRIVATE detail/video/gstkmssinkimpl.cpp)
-    endif()
 endif()
 
 if(HAVE_LINUX_INPUT_H)

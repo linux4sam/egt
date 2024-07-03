@@ -23,13 +23,10 @@ namespace detail
 {
 /// @todo these functions should be internal
 /// @private
-bool is_target_sama5d4();
-/// @private
 bool audio_device();
 /// @private
 WindowHint check_windowhint(WindowHint& hint);
 class GstDecoderImpl;
-class GstKmsSinkImpl;
 class GstAppSinkImpl;
 }
 
@@ -276,7 +273,6 @@ protected:
     std::unique_ptr<detail::GstDecoderImpl> m_video_impl;
 
     friend class detail::GstDecoderImpl;
-    friend class detail::GstKmsSinkImpl;
     friend class detail::GstAppSinkImpl;
 
 private:
