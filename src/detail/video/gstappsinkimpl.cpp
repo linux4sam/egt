@@ -173,23 +173,6 @@ GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
 
 std::string GstAppSinkImpl::create_pipeline()
 {
-    std::string video_format;
-#ifdef HAVE_LIBPLANES
-    if (m_interface.plane_window())
-    {
-        auto s = reinterpret_cast<detail::KMSOverlay*>(m_interface.screen());
-        assert(s);
-        PixelFormat fmt = detail::egt_format(s->get_plane_format());
-        EGTLOG_DEBUG("egt_format = {}", fmt);
-
-        video_format = detail::gstreamer_format(fmt);
-    }
-    else
-#endif
-    {
-        video_format = "RGB16";
-    }
-
     std::string a_pipe;
     /*
      * GstURIDecodeBin caps are propagated to GstDecodeBin. Its caps must a be a
@@ -212,6 +195,8 @@ std::string GstAppSinkImpl::create_pipeline()
         m_interface.resize(Size(32, 32));
     }
 
+    const auto format = m_interface.format();
+    std::string video_format = detail::gstreamer_format(format);
     const auto video_caps_filter =
         fmt::format("caps=video/x-raw,width={},height={},format={}",
                     m_size.width(), m_size.height(), video_format);
@@ -321,7 +306,9 @@ void GstAppSinkImpl::resize(const Size& size)
     {
         if (m_pipeline && m_vcapsfilter)
         {
-            std::string vs = fmt::format("video/x-raw,width={},height={},format=RGB16", size.width(), size.height());
+            const auto format = m_interface.format();
+            std::string vs = fmt::format("video/x-raw,width={},height={},format={}",
+                                         size.width(), size.height(), detail::gstreamer_format(format));
             GstCaps* caps = gst_caps_from_string(vs.c_str());
             // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
             g_object_set(G_OBJECT(m_vcapsfilter), "caps", caps, NULL);
