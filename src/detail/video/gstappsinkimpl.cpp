@@ -173,7 +173,7 @@ GstFlowReturn GstAppSinkImpl::on_new_buffer(GstElement* elt, gpointer data)
 
 std::string GstAppSinkImpl::create_pipeline()
 {
-    std::string vc = " ! videoconvert ! video/x-raw,format=";
+    std::string video_format;
 #ifdef HAVE_LIBPLANES
     if (m_interface.plane_window())
     {
@@ -182,12 +182,12 @@ std::string GstAppSinkImpl::create_pipeline()
         PixelFormat fmt = detail::egt_format(s->get_plane_format());
         EGTLOG_DEBUG("egt_format = {}", fmt);
 
-        vc += detail::gstreamer_format(fmt);
+        video_format = detail::gstreamer_format(fmt);
     }
     else
 #endif
     {
-        vc += "RGB16";
+        video_format = "RGB16";
     }
 
     std::string a_pipe;
@@ -212,18 +212,15 @@ std::string GstAppSinkImpl::create_pipeline()
         m_interface.resize(Size(32, 32));
     }
 
-    std::string vscapf = " ! capsfilter name=vcaps";
-    if ((m_size.width() > 32) && (m_size.height() > 32))
-    {
-        vscapf = fmt::format(vscapf + " caps=video/x-raw,width={},height={} ",
-                             m_size.width(), m_size.height());
-    }
+    const auto video_caps_filter =
+        fmt::format("caps=video/x-raw,width={},height={},format={}",
+                    m_size.width(), m_size.height(), video_format);
 
     static constexpr auto pipeline =
         "uridecodebin uri={} expose-all-streams=false name=video " \
-        " {} video. {} ! videoscale {} ! appsink name=appsink video. {} ";
+        " {} video. ! videoconvert ! videoscale ! capsfilter name=vcaps {} ! appsink name=appsink video. {} ";
 
-    return fmt::format(pipeline, m_uri, caps, vc, vscapf, a_pipe);
+    return fmt::format(pipeline, m_uri, caps, video_caps_filter, a_pipe);
 }
 
 /* This function takes a textual representation of a pipeline
@@ -324,7 +321,7 @@ void GstAppSinkImpl::resize(const Size& size)
     {
         if (m_pipeline && m_vcapsfilter)
         {
-            std::string vs = fmt::format("video/x-raw,width={},height={}", size.width(), size.height());
+            std::string vs = fmt::format("video/x-raw,width={},height={},format=RGB16", size.width(), size.height());
             GstCaps* caps = gst_caps_from_string(vs.c_str());
             // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
             g_object_set(G_OBJECT(m_vcapsfilter), "caps", caps, NULL);
