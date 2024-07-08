@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_SRC_DETAIL_CAMERA_GSTCAMERAIMPL_H
-#define EGT_SRC_DETAIL_CAMERA_GSTCAMERAIMPL_H
+#ifndef EGT_SRC_DETAIL_MULTIMEDIA_GSTCAMERAIMPL_H
+#define EGT_SRC_DETAIL_MULTIMEDIA_GSTCAMERAIMPL_H
 
 #include "egt/camera.h"
 #include <gst/gst.h>

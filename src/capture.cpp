@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/capture.h"
-#include "detail/camera/gstcaptureimpl.h"
+#include "detail/multimedia/gstcaptureimpl.h"
 
 namespace egt
 {

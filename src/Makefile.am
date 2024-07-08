@@ -284,11 +284,11 @@ detail/multimedia/gstappsinkimpl.h \
 detail/multimedia/gstdecoderimpl.cpp \
 detail/multimedia/gstdecoderimpl.h \
 camera.cpp \
-detail/camera/gstcameraimpl.cpp \
-detail/camera/gstcameraimpl.h \
+detail/multimedia/gstcameraimpl.cpp \
+detail/multimedia/gstcameraimpl.h \
 capture.cpp \
-detail/camera/gstcaptureimpl.cpp \
-detail/camera/gstcaptureimpl.h \
+detail/multimedia/gstcaptureimpl.cpp \
+detail/multimedia/gstcaptureimpl.h \
 detail/multimedia/gstmeta.cpp \
 detail/multimedia/gstmeta.h
 

@@ -7,7 +7,7 @@
 #include "config.h"
 #endif
 
-#include "detail/camera/gstcameraimpl.h"
+#include "detail/multimedia/gstcameraimpl.h"
 #include "detail/egtlog.h"
 #include "detail/multimedia/gstmeta.h"
 #include "egt/app.h"

@@ -313,9 +313,9 @@ if(GSTREAMER_PLUGINS_BASE_DEV_FOUND)
         detail/multimedia/gstappsinkimpl.cpp
         detail/multimedia/gstdecoderimpl.cpp
         camera.cpp
-        detail/camera/gstcameraimpl.cpp
+        detail/multimedia/gstcameraimpl.cpp
         capture.cpp
-        detail/camera/gstcaptureimpl.cpp
+        detail/multimedia/gstcaptureimpl.cpp
         detail/multimedia/gstmeta.cpp
     )
     target_sources(egt PUBLIC FILE_SET HEADERS FILES

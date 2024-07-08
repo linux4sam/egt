@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_SRC_DETAIL_CAMERA_GSTCAPTUREIMPL_H
-#define EGT_SRC_DETAIL_CAMERA_GSTCAPTUREIMPL_H
+#ifndef EGT_SRC_DETAIL_MULTIMEDIA_GSTCAPTUREIMPL_H
+#define EGT_SRC_DETAIL_MULTIMEDIA_GSTCAPTUREIMPL_H
 
 #include "egt/capture.h"
 #include <condition_variable>
