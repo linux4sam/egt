@@ -1,4 +1,39 @@
-Makefile
+# Compiled Object files
+**/.DS_Store
+*.slo
+*.lo
+*.o
+*.obj
+*.mo
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# CMake
+**/cmake-build-debug
+**/CMakeCache.txt
+**/cmake_install.cmake
+**/install_manifest.txt
+**/CMakeFiles/
+**/CTestTestfile.cmake
+**/*.cbp
+**/CMakeScripts
+**/compile_commands.json
+
+# Autotools
 Makefile.in
 /aclocal.m4
 /autom4te.cache/
@@ -7,9 +42,11 @@ Makefile.in
 /stamp-h?
 .deps/
 .dirstamp
-*.o
-*.lo
-*.la
+git.version
+
+# Makefile
+**/Makefile
+
 *~
 /compile
 /depcomp
@@ -30,6 +67,5 @@ TAGS
 .settings
 .vscode
 *.gch
-*.exe
 test-driver
 build
