@@ -589,6 +589,7 @@ bool GstDecoderImpl::create_pipeline(const std::string& pipeline_desc)
     {
         detail::error("failed to get vcaps element");
         m_interface.on_error.invoke("failed to get vcaps element");
+        destroyPipeline();
         return false;
     }
 
@@ -598,6 +599,7 @@ bool GstDecoderImpl::create_pipeline(const std::string& pipeline_desc)
     {
         detail::error("failed to get app sink element");
         m_interface.on_error.invoke("failed to get app sink element");
+        destroyPipeline();
         return false;
     }
 
@@ -609,6 +611,7 @@ bool GstDecoderImpl::create_pipeline(const std::string& pipeline_desc)
         {
             detail::error("failed to get volume element");
             m_interface.on_error.invoke("failed to get volume element");
+            destroyPipeline();
             return false;
         }
     }
