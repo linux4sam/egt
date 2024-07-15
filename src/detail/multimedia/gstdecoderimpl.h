@@ -95,10 +95,7 @@ protected:
     GMainLoop* m_gmain_loop{nullptr};
     std::thread m_gmain_thread;
     guint m_eventsource_id{0};
-    std::string m_vcodec;
-    std::string m_acodec;
     bool m_audiotrack{false};
-    std::string m_container;
     GstElement* m_vcapsfilter{nullptr};
 
     static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data);

@@ -425,19 +425,8 @@ void GstDecoderImpl::get_stream_info(GstDiscovererStreamInfo* info)
         if (desc)
         {
             std::string type = std::string(gst_discoverer_stream_info_get_stream_type_nick(info));
-            if (!type.compare("video"))
-            {
-                m_vcodec = desc.get();
-            }
-            else if (!type.compare("audio"))
-            {
-                m_acodec = desc.get();
+            if (!type.compare("audio"))
                 m_audiotrack = true;
-            }
-            else if (!type.compare("container"))
-            {
-                m_container = desc.get();
-            }
             EGTLOG_DEBUG("{} : {}", type, std::string(desc.get()));
         }
     }
