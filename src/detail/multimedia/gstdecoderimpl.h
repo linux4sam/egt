@@ -102,7 +102,6 @@ protected:
 
 #ifdef HAVE_GSTREAMER_PBUTILS
     bool start_discoverer();
-    void get_stream_info(GstDiscovererStreamInfo* info);
 #endif
 
     GstElement* m_appsink{nullptr};

@@ -381,55 +381,14 @@ bool GstDecoderImpl::start_discoverer()
         break;
     }
 
-    std::unique_ptr<GstDiscovererStreamInfo, GstDeleter<void, g_object_unref>>
-            sinfo{gst_discoverer_info_get_stream_info(info.get())};
-    if (!sinfo)
+    GList* audio_streams = gst_discoverer_info_get_audio_streams(info.get());
+    if (audio_streams)
     {
-        detail::error("failed to get stream info");
-        m_interface.on_error.invoke("failed to get stream info");
-        return false;
+        m_audiotrack = true;
+        gst_discoverer_stream_info_list_free(audio_streams);
     }
 
-    std::unique_ptr<GList, GstDeleter<GList, gst_discoverer_stream_info_list_free>>
-            streams{gst_discoverer_container_info_get_streams(GST_DISCOVERER_CONTAINER_INFO(sinfo.get()))};
-    if (!streams)
-    {
-        detail::error("failed to get stream info list");
-        m_interface.on_error.invoke("failed to get stream info list");
-        return false;
-    }
-
-    GList* cinfo = streams.get();
-    while (cinfo)
-    {
-        GstDiscovererStreamInfo* tmpinf = (GstDiscovererStreamInfo*)cinfo->data;
-        get_stream_info(tmpinf);
-        cinfo = cinfo->next;
-    }
     return true;
-}
-
-/* Print information regarding a stream */
-void GstDecoderImpl::get_stream_info(GstDiscovererStreamInfo* info)
-{
-    std::unique_ptr<GstCaps, GstDeleter<GstCaps, gst_caps_unref>>
-            caps{gst_discoverer_stream_info_get_caps(info)};
-    if (caps)
-    {
-        std::shared_ptr<gchar> desc;
-        if (gst_caps_is_fixed(caps.get()))
-            desc.reset(gst_pb_utils_get_codec_description(caps.get()), g_free);
-        else
-            desc.reset(gst_caps_to_string(caps.get()), g_free);
-
-        if (desc)
-        {
-            std::string type = std::string(gst_discoverer_stream_info_get_stream_type_nick(info));
-            if (!type.compare("audio"))
-                m_audiotrack = true;
-            EGTLOG_DEBUG("{} : {}", type, std::string(desc.get()));
-        }
-    }
 }
 #endif
 
