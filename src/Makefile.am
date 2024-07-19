@@ -279,18 +279,18 @@ if HAVE_GSTREAMER
 libegt_la_SOURCES += \
 audio.cpp \
 video.cpp \
-detail/video/gstappsinkimpl.cpp \
-detail/video/gstappsinkimpl.h \
-detail/video/gstdecoderimpl.cpp \
-detail/video/gstdecoderimpl.h \
+detail/multimedia/gstappsinkimpl.cpp \
+detail/multimedia/gstappsinkimpl.h \
+detail/multimedia/gstdecoderimpl.cpp \
+detail/multimedia/gstdecoderimpl.h \
 camera.cpp \
 detail/camera/gstcameraimpl.cpp \
 detail/camera/gstcameraimpl.h \
 capture.cpp \
 detail/camera/gstcaptureimpl.cpp \
 detail/camera/gstcaptureimpl.h \
-detail/video/gstmeta.cpp \
-detail/video/gstmeta.h
+detail/multimedia/gstmeta.cpp \
+detail/multimedia/gstmeta.h
 
 nobase_libegtinclude_HEADERS += \
 ../include/egt/audio.h \

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "detail/video/gstmeta.h"
+#include "detail/multimedia/gstmeta.h"
 
 #include <string>
 

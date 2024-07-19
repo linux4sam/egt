@@ -9,7 +9,7 @@
 
 #include "detail/camera/gstcameraimpl.h"
 #include "detail/egtlog.h"
-#include "detail/video/gstmeta.h"
+#include "detail/multimedia/gstmeta.h"
 #include "egt/app.h"
 #ifdef HAVE_LIBPLANES
 #include "egt/detail/screen/kmsoverlay.h"

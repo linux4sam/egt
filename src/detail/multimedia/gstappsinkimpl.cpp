@@ -8,8 +8,8 @@
 #endif
 
 #include "detail/egtlog.h"
-#include "detail/video/gstappsinkimpl.h"
-#include "detail/video/gstmeta.h"
+#include "detail/multimedia/gstappsinkimpl.h"
+#include "detail/multimedia/gstmeta.h"
 #include "egt/app.h"
 #include "egt/types.h"
 #include "egt/uri.h"

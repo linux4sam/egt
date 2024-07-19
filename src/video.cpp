@@ -8,7 +8,7 @@
 #endif
 
 #include "detail/egtlog.h"
-#include "detail/video/gstappsinkimpl.h"
+#include "detail/multimedia/gstappsinkimpl.h"
 #include "egt/app.h"
 #include "egt/detail/filesystem.h"
 #include "egt/respath.h"

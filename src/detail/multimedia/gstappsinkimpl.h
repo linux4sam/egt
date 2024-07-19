@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_SRC_DETAIL_VIDEO_GSTAPPSINKIMPL_H
-#define EGT_SRC_DETAIL_VIDEO_GSTAPPSINKIMPL_H
+#ifndef EGT_SRC_DETAIL_MULTIMEDIA_GSTAPPSINKIMPL_H
+#define EGT_SRC_DETAIL_MULTIMEDIA_GSTAPPSINKIMPL_H
 
-#include "detail/video/gstdecoderimpl.h"
+#include "detail/multimedia/gstdecoderimpl.h"
 #include <gst/app/gstappsink.h>
 #include <string>
 

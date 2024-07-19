@@ -310,13 +310,13 @@ if(GSTREAMER_PLUGINS_BASE_DEV_FOUND)
     target_sources(egt PRIVATE
         audio.cpp
         video.cpp
-        detail/video/gstappsinkimpl.cpp
-        detail/video/gstdecoderimpl.cpp
+        detail/multimedia/gstappsinkimpl.cpp
+        detail/multimedia/gstdecoderimpl.cpp
         camera.cpp
         detail/camera/gstcameraimpl.cpp
         capture.cpp
         detail/camera/gstcaptureimpl.cpp
-        detail/video/gstmeta.cpp
+        detail/multimedia/gstmeta.cpp
     )
     target_sources(egt PUBLIC FILE_SET HEADERS FILES
         ${CMAKE_SOURCE_DIR}/include/egt/audio.h

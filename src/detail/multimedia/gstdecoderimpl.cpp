@@ -5,8 +5,8 @@
  */
 
 #include "detail/egtlog.h"
-#include "detail/video/gstdecoderimpl.h"
-#include "detail/video/gstmeta.h"
+#include "detail/multimedia/gstdecoderimpl.h"
+#include "detail/multimedia/gstmeta.h"
 #include "egt/app.h"
 #include <exception>
 #include <fstream>

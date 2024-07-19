@@ -10,7 +10,7 @@
 #include "detail/egtlog.h"
 #include "detail/camera/gstcameraimpl.h"
 #include "detail/camera/gstcaptureimpl.h"
-#include "detail/video/gstmeta.h"
+#include "detail/multimedia/gstmeta.h"
 #include "egt/app.h"
 #include "egt/detail/meta.h"
 #include "egt/types.h"

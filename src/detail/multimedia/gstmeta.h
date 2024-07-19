@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef EGT_SRC_DETAIL_VIDEO_GSTMETA_H
-#define EGT_SRC_DETAIL_VIDEO_GSTMETA_H
+#ifndef EGT_SRC_DETAIL_MULTIMEDIA_GSTMETA_H
+#define EGT_SRC_DETAIL_MULTIMEDIA_GSTMETA_H
 
 #include "egt/detail/filesystem.h"
 #include "detail/egtlog.h"
