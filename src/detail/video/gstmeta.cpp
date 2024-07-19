@@ -20,6 +20,25 @@ inline namespace v1
 namespace detail
 {
 
+void gstreamer_init()
+{
+    GError* err = nullptr;
+    if (!gst_init_check(nullptr, nullptr, &err))
+    {
+        std::string ss = "failed to initialize gstreamer: ";
+        if (err && err->message)
+        {
+            ss = ss + err->message;
+            g_error_free(err);
+        }
+        else
+        {
+            ss = ss + "unknown error";
+        }
+        throw std::runtime_error(ss);
+    }
+}
+
 std::string gstreamer_get_device_path(GstDevice* device)
 {
     std::string devnode;

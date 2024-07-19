@@ -31,28 +31,7 @@ GstAppSinkImpl::GstAppSinkImpl(VideoWindow& iface, const Size& size)
     : GstDecoderImpl(iface, size),
       m_appsink(nullptr)
 {
-    static constexpr auto plugins =
-    {
-        "libgstcoreelements.so",
-        "libgsttypefindfunctions.so",
-        "libgstplayback.so",
-        "libgstavi.so",
-        "libgstisomp4.so",
-        "libgstapp.so",
-        "libgstmpeg2dec.so",
-        "libgstvideoscale.so",
-        "libgstvideoconvert.so",
-        "libgstvolume.so",
-        "libgstaudioparsers.so",
-        "libgstaudiorate.so",
-        "libgstaudioconvert.so",
-        "libgstaudioresample.so",
-        "libgstautodetect.so",
-        "libgstalsa.so",
-        "libgstlibav.so",
-        "libgstvideoparsersbad.so",
-    };
-    detail::gstreamer_init_plugins(plugins);
+    detail::gstreamer_init();
 }
 
 void GstAppSinkImpl::draw(Painter& painter, const Rect& rect)

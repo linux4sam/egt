@@ -34,24 +34,7 @@ CameraImpl::CameraImpl(CameraWindow& iface, const Rect& rect,
       m_devnode(device),
       m_rect(rect)
 {
-    static constexpr auto plugins =
-    {
-        "libgstcoreelements.so",
-        "libgsttypefindfunctions.so",
-        "libgstplayback.so",
-        "libgstapp.so",
-        "libgstvideo4linux2.so",
-        "libgstvideoscale.so",
-        "libgstvideoconvert.so",
-        "libgstlibav.so",
-        "libgstvideoparsersbad.so",
-        "libgstaudioparsers.so",
-        "libgstaudiorate.so",
-        "libgstaudioconvert.so",
-        "libgstaudioresample.so",
-        "libgstautodetect.so",
-    };
-    detail::gstreamer_init_plugins(plugins);
+    detail::gstreamer_init();
 
     m_gmain_loop = g_main_loop_new(nullptr, FALSE);
     m_gmain_thread = std::thread(g_main_loop_run, m_gmain_loop);

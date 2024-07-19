@@ -221,21 +221,7 @@ AudioPlayer::AudioPlayer()
     if (!detail::audio_device())
         throw std::runtime_error("no sound cards");
 
-    static constexpr auto plugins =
-    {
-        "libgstcoreelements.so",
-        "libgsttypefindfunctions.so",
-        "libgstplayback.so",
-        "libgstvolume.so",
-        "libgstaudioparsers.so",
-        "libgstaudiorate.so",
-        "libgstaudioconvert.so",
-        "libgstaudioresample.so",
-        "libgstautodetect.so",
-        "libgstalsa.so",
-        "libgstlibav.so",
-    };
-    detail::gstreamer_init_plugins(plugins);
+    detail::gstreamer_init();
 }
 
 AudioPlayer::AudioPlayer(const std::string& uri)

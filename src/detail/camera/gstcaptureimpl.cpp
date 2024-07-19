@@ -38,21 +38,7 @@ CaptureImpl::CaptureImpl(experimental::CameraCapture& iface,
       m_container(container),
       m_devnode(device)
 {
-    static constexpr auto plugins =
-    {
-        "libgstcoreelements.so",
-        "libgsttypefindfunctions.so",
-        "libgstplayback.so",
-        "libgstapp.so",
-        "libgstvideo4linux2.so",
-        "libgstvideoscale.so",
-        "libgstvideoconvert.so",
-        "libgstavi.so",
-        "libgstmpegtsmux.so",
-        "libgstlibav.so",
-        "libgstvideoparsersbad.so",
-    };
-    detail::gstreamer_init_plugins(plugins);
+    detail::gstreamer_init();
 
     m_gmainLoop = g_main_loop_new(nullptr, FALSE);
     m_gmainThread = std::thread(g_main_loop_run, m_gmainLoop);
