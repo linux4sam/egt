@@ -279,8 +279,6 @@ if HAVE_GSTREAMER
 libegt_la_SOURCES += \
 audio.cpp \
 video.cpp \
-detail/multimedia/gstappsinkimpl.cpp \
-detail/multimedia/gstappsinkimpl.h \
 detail/multimedia/gstdecoderimpl.cpp \
 detail/multimedia/gstdecoderimpl.h \
 camera.cpp \

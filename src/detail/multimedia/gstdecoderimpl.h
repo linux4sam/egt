@@ -41,18 +41,15 @@ public:
 
     explicit GstDecoderImpl(VideoWindow& iface, const Size& size);
 
-    virtual bool media(const std::string& uri) = 0;
+    bool media(const std::string& uri);
 
-    virtual void draw(Painter& painter, const Rect& rect) = 0;
+    void draw(Painter& painter, const Rect& rect);
 
-    virtual std::string create_pipeline() = 0;
+    std::string create_pipeline();
 
-    virtual void scale(float scalex, float scaley) = 0;
+    void scale(float scalex, float scaley);
 
-    virtual void resize(const Size& size)
-    {
-        ignoreparam(size);
-    }
+    virtual void resize(const Size& size);
 
     virtual bool play();
 
@@ -105,6 +102,11 @@ protected:
     bool start_discoverer();
     void get_stream_info(GstDiscovererStreamInfo* info);
 #endif
+
+    GstElement* m_appsink{nullptr};
+    GstSample* m_videosample{nullptr};
+    static GstFlowReturn on_new_buffer(GstElement* elt, gpointer data);
+    static gboolean post_position(gpointer data);
 };
 
 } // end of namespace detail

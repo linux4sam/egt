@@ -8,7 +8,7 @@
 #endif
 
 #include "detail/egtlog.h"
-#include "detail/multimedia/gstappsinkimpl.h"
+#include "detail/multimedia/gstdecoderimpl.h"
 #include "egt/app.h"
 #include "egt/detail/filesystem.h"
 #include "egt/respath.h"
@@ -91,8 +91,7 @@ VideoWindow::VideoWindow(Serializer::Properties& props, bool is_derived)
 
 void VideoWindow::create_impl(const Size& size)
 {
-    EGTLOG_DEBUG("VideoWindow: Using APP sink");
-    m_video_impl = std::make_unique<detail::GstAppSinkImpl>(*this, size);
+    m_video_impl = std::make_unique<detail::GstDecoderImpl>(*this, size);
 }
 
 void VideoWindow::draw(Painter& painter, const Rect& rect)
