@@ -22,19 +22,16 @@ namespace detail
 
 void gstreamer_init()
 {
-    GError* err = nullptr;
-    if (!gst_init_check(nullptr, nullptr, &err))
+    GError* gst_err = nullptr;
+    if (!gst_init_check(nullptr, nullptr, &gst_err))
     {
+        detail::GstErrorHandle err;
+        err.reset(gst_err);
         std::string ss = "failed to initialize gstreamer: ";
         if (err && err->message)
-        {
             ss = ss + err->message;
-            g_error_free(err);
-        }
         else
-        {
             ss = ss + "unknown error";
-        }
         throw std::runtime_error(ss);
     }
 }
