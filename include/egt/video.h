@@ -249,6 +249,8 @@ public:
      */
     EGT_NODISCARD bool has_audio() const;
 
+    void gst_custom_pipeline(const std::string& pipeline_desc);
+
     void serialize(Serializer& serializer) const override;
 
     ~VideoWindow() noexcept override;

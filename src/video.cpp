@@ -196,6 +196,11 @@ bool VideoWindow::has_audio() const
     return m_video_impl->has_audio();
 }
 
+void VideoWindow::gst_custom_pipeline(const std::string& pipeline_desc)
+{
+    m_video_impl->custom_pipeline(pipeline_desc);
+}
+
 void VideoWindow::serialize(Serializer& serializer) const
 {
     serializer.add_property("uri", m_uri);
