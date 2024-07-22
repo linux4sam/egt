@@ -45,7 +45,16 @@ bool GstDecoderImpl::playing() const
 
 bool GstDecoderImpl::play()
 {
-    if (m_pipeline && !playing())
+    if (!m_pipeline)
+    {
+        const auto buffer = create_pipeline_desc();
+        EGTLOG_DEBUG("{}", buffer);
+
+        if (!create_pipeline(buffer))
+            return false;
+    }
+
+    if (!playing())
     {
         auto ret = gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
         if (ret == GST_STATE_CHANGE_FAILURE)
@@ -673,9 +682,6 @@ bool GstDecoderImpl::create_pipeline(const std::string& pipeline_desc)
     return true;
 }
 
-/* This function takes a textual representation of a pipeline
- * and create an actual pipeline
- */
 bool GstDecoderImpl::media(const std::string& uri)
 {
     if (detail::change_if_diff(m_uri, uri))
@@ -694,11 +700,6 @@ bool GstDecoderImpl::media(const std::string& uri)
             }
         }
 #endif
-
-        const auto buffer = create_pipeline_desc();
-        EGTLOG_DEBUG("{}", buffer);
-
-        return create_pipeline(buffer);
     }
 
     return true;
