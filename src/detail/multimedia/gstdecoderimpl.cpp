@@ -583,6 +583,9 @@ GstFlowReturn GstDecoderImpl::on_new_buffer(GstElement* elt, gpointer data)
 
 std::string GstDecoderImpl::create_pipeline_desc()
 {
+    if (!m_custom_pipeline_desc.empty())
+        return m_custom_pipeline_desc;
+
     std::string a_pipe;
     /*
      * GstURIDecodeBin caps are propagated to GstDecodeBin. Its caps must a be a
@@ -703,6 +706,11 @@ bool GstDecoderImpl::media(const std::string& uri)
     }
 
     return true;
+}
+
+void GstDecoderImpl::custom_pipeline(const std::string& pipeline_description)
+{
+    m_custom_pipeline_desc = pipeline_description;
 }
 
 void GstDecoderImpl::scale(float scalex, float scaley)

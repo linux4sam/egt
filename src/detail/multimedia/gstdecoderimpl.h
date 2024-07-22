@@ -45,6 +45,8 @@ public:
 
     void draw(Painter& painter, const Rect& rect);
 
+    void custom_pipeline(const std::string& pipeline_desc);
+
     std::string create_pipeline_desc();
 
     bool create_pipeline(const std::string& pipeline_desc);
@@ -78,6 +80,7 @@ public:
 protected:
     VideoWindow& m_interface;
     GstElement* m_pipeline{nullptr};
+    std::string m_custom_pipeline_desc{};
     Size m_size;
     gboolean m_audiodevice;
     int64_t m_start{0};
