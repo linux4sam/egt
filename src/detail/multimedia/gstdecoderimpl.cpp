@@ -609,6 +609,70 @@ std::string GstDecoderImpl::create_pipeline_desc()
     return fmt::format(pipeline, m_uri, caps, video_caps_filter, a_pipe);
 }
 
+bool GstDecoderImpl::create_pipeline(const std::string& pipeline_desc)
+{
+    GError* error = nullptr;
+    m_pipeline = gst_parse_launch(pipeline_desc.c_str(), &error);
+    if (!m_pipeline)
+    {
+        if (error && error->message)
+        {
+            detail::error("{}", error->message);
+            m_interface.on_error.invoke(error->message);
+        }
+        return false;
+    }
+
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
+    m_vcapsfilter = gst_bin_get_by_name(GST_BIN(m_pipeline), "vcaps");
+    if (!m_vcapsfilter)
+    {
+        detail::error("failed to get vcaps element");
+        m_interface.on_error.invoke("failed to get vcaps element");
+        return false;
+    }
+
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
+    m_appsink = gst_bin_get_by_name(GST_BIN(m_pipeline), "appsink");
+    if (!m_appsink)
+    {
+        detail::error("failed to get app sink element");
+        m_interface.on_error.invoke("failed to get app sink element");
+        return false;
+    }
+
+    if (m_audiodevice && m_audiotrack)
+    {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
+        m_volume = gst_bin_get_by_name(GST_BIN(m_pipeline), "volume");
+        if (!m_volume)
+        {
+            detail::error("failed to get volume element");
+            m_interface.on_error.invoke("failed to get volume element");
+            return false;
+        }
+    }
+
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
+    g_object_set(G_OBJECT(m_appsink), "emit-signals", TRUE, "sync", TRUE, nullptr);
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
+    g_signal_connect(m_appsink, "new-sample", G_CALLBACK(on_new_buffer), this);
+
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
+    m_bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));
+    m_bus_watchid = gst_bus_add_watch(m_bus, &bus_callback, this);
+
+    g_timeout_add(5000, static_cast<GSourceFunc>(&post_position), this);
+
+    if (!m_gmain_loop)
+    {
+        m_gmain_loop = g_main_loop_new(nullptr, false);
+        m_gmain_thread = std::thread(g_main_loop_run, m_gmain_loop);
+    }
+
+    return true;
+}
+
 /* This function takes a textual representation of a pipeline
  * and create an actual pipeline
  */
@@ -634,65 +698,9 @@ bool GstDecoderImpl::media(const std::string& uri)
         const auto buffer = create_pipeline_desc();
         EGTLOG_DEBUG("{}", buffer);
 
-        GError* error = nullptr;
-        m_pipeline = gst_parse_launch(buffer.c_str(), &error);
-        if (!m_pipeline)
-        {
-            if (error && error->message)
-            {
-                detail::error("{}", error->message);
-                m_interface.on_error.invoke(error->message);
-            }
-            return false;
-        }
-
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
-        m_vcapsfilter = gst_bin_get_by_name(GST_BIN(m_pipeline), "vcaps");
-        if (!m_vcapsfilter)
-        {
-            detail::error("failed to get vcaps element");
-            m_interface.on_error.invoke("failed to get vcaps element");
-            return false;
-        }
-
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
-        m_appsink = gst_bin_get_by_name(GST_BIN(m_pipeline), "appsink");
-        if (!m_appsink)
-        {
-            detail::error("failed to get app sink element");
-            m_interface.on_error.invoke("failed to get app sink element");
-            return false;
-        }
-
-        if (m_audiodevice && m_audiotrack)
-        {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
-            m_volume = gst_bin_get_by_name(GST_BIN(m_pipeline), "volume");
-            if (!m_volume)
-            {
-                detail::error("failed to get volume element");
-                m_interface.on_error.invoke("failed to get volume element");
-                return false;
-            }
-        }
-
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
-        g_object_set(G_OBJECT(m_appsink), "emit-signals", TRUE, "sync", TRUE, nullptr);
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
-        g_signal_connect(m_appsink, "new-sample", G_CALLBACK(on_new_buffer), this);
-
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
-        m_bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));
-        m_bus_watchid = gst_bus_add_watch(m_bus, &bus_callback, this);
-
-        g_timeout_add(5000, static_cast<GSourceFunc>(&post_position), this);
-
-        if (!m_gmain_loop)
-        {
-            m_gmain_loop = g_main_loop_new(nullptr, false);
-            m_gmain_thread = std::thread(g_main_loop_run, m_gmain_loop);
-        }
+        return create_pipeline(buffer);
     }
+
     return true;
 }
 

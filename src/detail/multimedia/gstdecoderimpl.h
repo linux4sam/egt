@@ -47,6 +47,8 @@ public:
 
     std::string create_pipeline_desc();
 
+    bool create_pipeline(const std::string& pipeline_desc);
+
     void scale(float scalex, float scaley);
 
     virtual void resize(const Size& size);
