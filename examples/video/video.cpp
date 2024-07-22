@@ -72,11 +72,12 @@ int main(int argc, char** argv)
     ("i,input", "URI to video file. If there is a '&' in the URI, escape it with \\ or surround the URI with double quotes.", cxxopts::value<std::string>())
     ("width", "Width of the stream", cxxopts::value<int>()->default_value("320"))
     ("height", "Height of the stream", cxxopts::value<int>()->default_value("192"))
-    ("f,format", "Pixel format", cxxopts::value<std::string>()->default_value(is_target_sama5d4() ? "xrgb8888" : "yuv420"), "[egt::PixelFormat]");
+    ("f,format", "Pixel format", cxxopts::value<std::string>()->default_value(is_target_sama5d4() ? "xrgb8888" : "yuv420"), "[egt::PixelFormat]")
+    ("pipeline", "Custom pipeline that is given to GStreamer without any changes. It discards previous options. It must contains a capsfilter for video named vcaps and an appsink named appsink, for instance: capsfilter caps=video/x-raw,format=RGB16,width=320,height=192 name=vcaps ! appsink name=appsink", cxxopts::value<std::string>());
     auto args = options.parse(argc, argv);
 
     if (args.count("help") ||
-        !args.count("input"))
+        (!args.count("input") && !args.count("pipeline")))
     {
         std::cout << options.help() << std::endl;
         return 0;
@@ -84,7 +85,8 @@ int main(int argc, char** argv)
 
     egt::Size size(args["width"].as<int>(), args["height"].as<int>());
     auto format = egt::detail::enum_from_string<egt::PixelFormat>(args["format"].as<std::string>());
-    auto input(args["input"].as<std::string>());
+    const auto input = args.count("pipeline") ? args["pipeline"].as<std::string>() : args["input"].as<std::string>();
+    const auto is_pipeline = args.count("pipeline") ? true : false;
 
     egt::Application app(argc, argv);
 #ifdef EXAMPLEDATA
@@ -241,9 +243,12 @@ int main(int argc, char** argv)
     cputimer.start();
 
     // wait to start playing the video until the window is shown
-    win.on_show([&player, input, &position, &ctrlwindow, &volume, &volumei, &hpos]()
+    win.on_show([&player, input, is_pipeline, &position, &ctrlwindow, &volume, &volumei, &hpos]()
     {
-        player.media(input);
+        if (is_pipeline)
+            player.gst_custom_pipeline(input);
+        else
+            player.media(input);
 
         if (!player.has_audio())
         {
