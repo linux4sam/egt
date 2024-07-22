@@ -572,7 +572,7 @@ GstFlowReturn GstDecoderImpl::on_new_buffer(GstElement* elt, gpointer data)
     return GST_FLOW_ERROR;
 }
 
-std::string GstDecoderImpl::create_pipeline()
+std::string GstDecoderImpl::create_pipeline_desc()
 {
     std::string a_pipe;
     /*
@@ -631,7 +631,7 @@ bool GstDecoderImpl::media(const std::string& uri)
         }
 #endif
 
-        const auto buffer = create_pipeline();
+        const auto buffer = create_pipeline_desc();
         EGTLOG_DEBUG("{}", buffer);
 
         GError* error = nullptr;

@@ -45,7 +45,7 @@ public:
 
     void draw(Painter& painter, const Rect& rect);
 
-    std::string create_pipeline();
+    std::string create_pipeline_desc();
 
     void scale(float scalex, float scaley);
 
