@@ -534,18 +534,20 @@ std::string GstDecoderImpl::create_pipeline_desc()
     if (!m_custom_pipeline_desc.empty())
         return m_custom_pipeline_desc;
 
-    std::string a_pipe;
+    const auto src_plugin = std::string{"uridecodebin"};
     /*
      * GstURIDecodeBin caps are propagated to GstDecodeBin. Its caps must a be a
      * superset of the inner decoder element. So make this superset large enough
      * to contain the inner decoder's caps that have features.
      */
-    std::string caps = " caps=video/x-raw(ANY)";
-    if (m_audiodevice && m_audiotrack)
-    {
-        caps += ";audio/x-raw(ANY)";
-        a_pipe = "! queue ! audioconvert ! volume name=volume ! autoaudiosink sync=false";
-    }
+    auto src_plugin_properties = "uri=" + m_uri + " name=video caps=video/x-raw(ANY)";
+    if (has_audio())
+        src_plugin_properties += ";audio/x-raw(ANY)";
+    const auto src = src_plugin + " " + src_plugin_properties;
+
+    const auto audio = (m_audiodevice && m_audiotrack)
+                       ? "video. ! queue ! audioconvert ! volume name=volume ! autoaudiosink sync=false"
+                       : "";
 
     if (!m_interface.plane_window() && m_size.empty())
     {
@@ -557,16 +559,14 @@ std::string GstDecoderImpl::create_pipeline_desc()
     }
 
     const auto format = m_interface.format();
-    std::string video_format = detail::gstreamer_format(format);
     const auto video_caps_filter =
         fmt::format("caps=video/x-raw,width={},height={},format={}",
-                    m_size.width(), m_size.height(), video_format);
+                    m_size.width(), m_size.height(), detail::gstreamer_format(format));
 
     static constexpr auto pipeline =
-        "uridecodebin uri={} expose-all-streams=false name=video " \
-        " {} video. ! videoconvert ! videoscale ! capsfilter name=vcaps {} ! appsink name=appsink video. {} ";
+        "{} video. ! videoconvert ! videoscale ! capsfilter name=vcaps {} ! appsink name=appsink {} ";
 
-    return fmt::format(pipeline, m_uri, caps, video_caps_filter, a_pipe);
+    return fmt::format(pipeline, src, video_caps_filter, audio);
 }
 
 bool GstDecoderImpl::create_pipeline(const std::string& pipeline_desc)
