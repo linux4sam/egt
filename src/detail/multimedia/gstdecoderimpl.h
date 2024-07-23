@@ -90,6 +90,7 @@ protected:
     gboolean m_seek_enabled{false};
     gboolean m_seekdone{false};
     std::string m_uri;
+    std::string m_devnode{};
     GstBus* m_bus{nullptr};
     guint m_bus_watchid{0};
     GMainLoop* m_gmain_loop{nullptr};

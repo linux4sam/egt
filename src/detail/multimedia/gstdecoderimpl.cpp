@@ -534,15 +534,31 @@ std::string GstDecoderImpl::create_pipeline_desc()
     if (!m_custom_pipeline_desc.empty())
         return m_custom_pipeline_desc;
 
-    const auto src_plugin = std::string{"uridecodebin"};
+    auto src_plugin = std::string{};
+    auto src_plugin_properties = std::string{};
     /*
-     * GstURIDecodeBin caps are propagated to GstDecodeBin. Its caps must a be a
-     * superset of the inner decoder element. So make this superset large enough
-     * to contain the inner decoder's caps that have features.
+     * The uridecodebin deals with files not devices. If we detect that users
+     * provide a video device path, let's switch to the v4l2src plugin.
      */
-    auto src_plugin_properties = "uri=" + m_uri + " name=video caps=video/x-raw(ANY)";
-    if (has_audio())
-        src_plugin_properties += ";audio/x-raw(ANY)";
+    if (m_devnode.empty())
+    {
+        /*
+         * GstURIDecodeBin caps are propagated to GstDecodeBin. Its caps must a be a
+         * superset of the inner decoder element. So make this superset large enough
+         * to contain the inner decoder's caps that have features.
+         */
+        src_plugin = "uridecodebin";
+        src_plugin_properties = "uri=" + m_uri + " name=video caps=video/x-raw(ANY)";
+        if (has_audio())
+            src_plugin_properties += ";audio/x-raw(ANY)";
+
+    }
+    else
+    {
+        src_plugin = "v4l2src";
+        src_plugin_properties = "device=" + m_devnode + " name=video";
+    }
+
     const auto src = src_plugin + " " + src_plugin_properties;
 
     const auto audio = (m_audiodevice && m_audiotrack)
@@ -643,17 +659,31 @@ bool GstDecoderImpl::media(const std::string& uri)
         /* Make sure we don't leave orphan references */
         destroyPipeline();
 
-#ifdef HAVE_GSTREAMER_PBUTILS
-        Uri u(m_uri);
-        if (u.scheme() != "rtsp")
+        const auto pos = m_uri.find("/dev/video");
+        if (pos == std::string::npos)
         {
-            if (!start_discoverer())
+            m_devnode = "";
+#ifdef HAVE_GSTREAMER_PBUTILS
+            Uri u(m_uri);
+            if (u.scheme() != "rtsp")
             {
-                detail::error("media file discoverer failed");
-                return false;
+                if (!start_discoverer())
+                {
+                    detail::error("media file discoverer failed");
+                    return false;
+                }
             }
-        }
 #endif
+        }
+        else
+        {
+            /*
+             * Extract the device path. In the case of a video device, for
+             * the pipeline description, we just want the device path and not
+             * an uri.
+             */
+            m_devnode = std::string{m_uri.begin() + pos, m_uri.end()};
+        }
     }
 
     return true;
