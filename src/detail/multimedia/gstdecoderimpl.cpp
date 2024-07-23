@@ -28,6 +28,9 @@ GstDecoderImpl::GstDecoderImpl(VideoWindow& iface, const Size& size)
       m_audiodevice(detail::audio_device())
 {
     detail::gstreamer_init();
+
+    m_gmain_loop = g_main_loop_new(nullptr, false);
+    m_gmain_thread = std::thread(g_main_loop_run, m_gmain_loop);
 }
 
 bool GstDecoderImpl::playing() const
@@ -168,25 +171,27 @@ void GstDecoderImpl::destroyPipeline()
             g_source_remove(m_eventsource_id);
             m_eventsource_id = 0;
         }
-
-        if (m_gmain_loop)
-        {
-            /*
-             * check loop is running to avoid race condition when stop is called too early
-             */
-            if (g_main_loop_is_running(m_gmain_loop))
-            {
-                //stop loop and wait
-                g_main_loop_quit(m_gmain_loop);
-            }
-            m_gmain_thread.join();
-            g_main_loop_unref(m_gmain_loop);
-            m_gmain_loop = nullptr;
-        }
     }
 }
 
-GstDecoderImpl::~GstDecoderImpl() = default;
+GstDecoderImpl::~GstDecoderImpl()
+{
+    destroyPipeline();
+
+    if (m_gmain_loop)
+    {
+        /*
+         * check loop is running to avoid race condition when stop is called too early
+         */
+        if (g_main_loop_is_running(m_gmain_loop))
+        {
+            //stop loop and wait
+            g_main_loop_quit(m_gmain_loop);
+        }
+        m_gmain_thread.join();
+        g_main_loop_unref(m_gmain_loop);
+    }
+}
 
 gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer data)
 {
@@ -642,12 +647,6 @@ bool GstDecoderImpl::create_pipeline(const std::string& pipeline_desc)
     m_bus_watchid = gst_bus_add_watch(m_bus, &bus_callback, this);
 
     g_timeout_add(5000, static_cast<GSourceFunc>(&post_position), this);
-
-    if (!m_gmain_loop)
-    {
-        m_gmain_loop = g_main_loop_new(nullptr, false);
-        m_gmain_thread = std::thread(g_main_loop_run, m_gmain_loop);
-    }
 
     return true;
 }
