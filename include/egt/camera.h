@@ -23,7 +23,7 @@ inline namespace v1
 
 namespace detail
 {
-class CameraImpl;
+class GstDecoderImpl;
 }
 
 /**
@@ -37,6 +37,11 @@ class CameraImpl;
  */
 class EGT_API CameraWindow : public Window
 {
+protected:
+
+    /// @private
+    std::unique_ptr<detail::GstDecoderImpl> m_camera_impl;
+
 public:
 
     /**
@@ -46,17 +51,17 @@ public:
     /**
      * Generated when an error occurs.
      */
-    Signal<const std::string&> on_error;
+    SignalW<const std::string&> on_error;
 
     /**
      * Generated when an USB camera connected.
      */
-    Signal<const std::string&> on_connect;
+    SignalW<const std::string&> on_connect;
 
     /**
      * Generated when an USB camera disconnected.
      */
-    Signal<const std::string&> on_disconnect;
+    SignalW<const std::string&> on_disconnect;
     /** @} */
 
     /**
@@ -164,11 +169,6 @@ public:
     void serialize(Serializer& serializer) const override;
 
     ~CameraWindow() noexcept override;
-
-protected:
-
-    /// @private
-    std::unique_ptr<detail::CameraImpl> m_camera_impl;
 
 private:
 

@@ -1082,6 +1082,81 @@ EGT_NODISCARD bool GstDecoderImpl::loopback() const
     return m_loopback;
 }
 
+std::tuple<std::string, std::string, std::string, std::vector<std::tuple<int, int>>>
+get_camera_device_caps(const std::string& dev_name)
+{
+    GstDeviceMonitor* monitor = gst_device_monitor_new();
+
+    GstCaps* caps = gst_caps_new_empty_simple("video/x-raw");
+    gst_device_monitor_add_filter(monitor, "Video/Source", caps);
+    gst_caps_unref(caps);
+
+    std::string caps_name;
+    std::string caps_format;
+    std::vector<std::tuple<int, int>> resolutions;
+
+    GList* devlist = gst_device_monitor_get_devices(monitor);
+    for (GList* i = g_list_first(devlist); i; i = g_list_next(i))
+    {
+        auto device = static_cast<GstDevice*>(i->data);
+        if (device == nullptr)
+            continue;
+
+        // Probe all device properties and store them internally:
+        GstStringHandle display_name{gst_device_get_display_name(device)};
+        EGTLOG_DEBUG("name : {}", display_name.get());
+
+        GstStringHandle dev_string{gst_device_get_device_class(device)};
+        EGTLOG_DEBUG("class : {}", dev_string.get());
+
+        if (gstreamer_get_device_path(device) != dev_name)
+            continue;
+
+        caps = gst_device_get_caps(device);
+        if (caps)
+        {
+            resolutions.clear();
+            int size = gst_caps_get_size(caps);
+            EGTLOG_DEBUG("caps : ");
+            for (int j = 0; j < size; ++j)
+            {
+                GstStructure* s = gst_caps_get_structure(caps, j);
+                std::string name = std::string(gst_structure_get_name(s));
+                if (name == "video/x-raw")
+                {
+                    int width = 0;
+                    int height = 0;
+                    caps_name = name;
+                    gst_structure_get_int(s, "width", &width);
+                    gst_structure_get_int(s, "height", &height);
+                    const gchar* str = gst_structure_get_string(s, "format");
+                    caps_format = str ? str : "";
+                    resolutions.emplace_back(std::make_tuple(width, height));
+                    EGTLOG_DEBUG("{}, format=(string){}, width=(int){}, "
+                                 "height=(int){}", caps_name, caps_format, width, height);
+                }
+            }
+
+            if (!resolutions.empty())
+            {
+                // sort by camera width
+                std::sort(resolutions.begin(), resolutions.end(), [](
+                              std::tuple<int, int>& t1,
+                              std::tuple<int, int>& t2)
+                {
+                    return std::get<0>(t1) < std::get<0>(t2);
+                });
+            }
+            gst_caps_unref(caps);
+        }
+
+        break;
+    }
+    g_list_free(devlist);
+
+    return std::make_tuple(dev_name, caps_name, caps_format, resolutions);
+}
+
 } // end of namespace detail
 
 } // end of namespace v1

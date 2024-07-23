@@ -282,8 +282,6 @@ video.cpp \
 detail/multimedia/gstdecoderimpl.cpp \
 detail/multimedia/gstdecoderimpl.h \
 camera.cpp \
-detail/multimedia/gstcameraimpl.cpp \
-detail/multimedia/gstcameraimpl.h \
 capture.cpp \
 detail/multimedia/gstcaptureimpl.cpp \
 detail/multimedia/gstcaptureimpl.h \

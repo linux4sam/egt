@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/camera.h"
-#include "detail/multimedia/gstcameraimpl.h"
+#include "detail/multimedia/gstdecoderimpl.h"
 #include "egt/video.h"
 
 namespace egt
@@ -23,12 +23,20 @@ CameraWindow::CameraWindow(const Rect& rect,
                            PixelFormat format_hint,
                            WindowHint hint)
     : Window(rect, format_hint, detail::check_windowhint(hint)),
-      m_camera_impl(std::make_unique<detail::CameraImpl>(*this, rect, device))
-{}
+      m_camera_impl(std::make_unique<detail::GstDecoderImpl>(*this, rect.size())),
+      on_error(&m_camera_impl->on_error),
+      on_connect(&m_camera_impl->on_connect),
+      on_disconnect(&m_camera_impl->on_disconnect)
+{
+    m_camera_impl->device(device);
+}
 
 CameraWindow::CameraWindow(Serializer::Properties& props, bool is_derived)
     : Window(props, true),
-      m_camera_impl(std::make_unique<detail::CameraImpl>(*this, box(), ""))
+      m_camera_impl(std::make_unique<detail::GstDecoderImpl>(*this, box().size())),
+      on_error(&m_camera_impl->on_error),
+      on_connect(&m_camera_impl->on_connect),
+      on_disconnect(&m_camera_impl->on_disconnect)
 {
     deserialize(props);
 

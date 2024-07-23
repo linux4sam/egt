@@ -159,6 +159,9 @@ protected:
     bool m_loopback{false};
 };
 
+std::tuple<std::string, std::string, std::string, std::vector<std::tuple<int, int>>>
+get_camera_device_caps(const std::string& dev_name);
+
 } // end of namespace detail
 
 } // end of namespace v1

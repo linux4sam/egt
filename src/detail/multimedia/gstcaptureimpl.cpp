@@ -8,7 +8,7 @@
 #endif
 
 #include "detail/egtlog.h"
-#include "detail/multimedia/gstcameraimpl.h"
+#include "detail/multimedia/gstdecoderimpl.h"
 #include "detail/multimedia/gstcaptureimpl.h"
 #include "detail/multimedia/gstmeta.h"
 #include "egt/app.h"

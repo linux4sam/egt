@@ -312,7 +312,6 @@ if(GSTREAMER_PLUGINS_BASE_DEV_FOUND)
         video.cpp
         detail/multimedia/gstdecoderimpl.cpp
         camera.cpp
-        detail/multimedia/gstcameraimpl.cpp
         capture.cpp
         detail/multimedia/gstcaptureimpl.cpp
         detail/multimedia/gstmeta.cpp
