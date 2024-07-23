@@ -268,9 +268,6 @@ protected:
     /// media file
     std::string m_uri;
 
-    /// Create the internal implementation.
-    void create_impl(const Size& size);
-
     /// @private
     std::unique_ptr<detail::GstDecoderImpl> m_video_impl;
 

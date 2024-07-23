@@ -59,11 +59,10 @@ WindowHint check_windowhint(WindowHint& hint)
 } // End of detail.
 
 VideoWindow::VideoWindow(const Rect& rect, PixelFormat format, WindowHint hint)
-    : Window(rect, format, detail::check_windowhint(hint))
+    : Window(rect, format, detail::check_windowhint(hint)),
+      m_video_impl(std::make_unique<detail::GstDecoderImpl>(*this, rect.size()))
 {
     fill_flags().clear();
-
-    create_impl(rect.size());
 }
 
 VideoWindow::VideoWindow(const Rect& rect, const std::string& uri,
@@ -77,21 +76,15 @@ VideoWindow::VideoWindow(const Rect& rect, const std::string& uri,
 }
 
 VideoWindow::VideoWindow(Serializer::Properties& props, bool is_derived)
-    : Window(props, true)
+    : Window(props, true),
+      m_video_impl(std::make_unique<detail::GstDecoderImpl>(*this, box().size()))
 {
     fill_flags().clear();
-
-    create_impl(box().size());
 
     deserialize(props);
 
     if (!is_derived)
         deserialize_leaf(props);
-}
-
-void VideoWindow::create_impl(const Size& size)
-{
-    m_video_impl = std::make_unique<detail::GstDecoderImpl>(*this, size);
 }
 
 void VideoWindow::draw(Painter& painter, const Rect& rect)
