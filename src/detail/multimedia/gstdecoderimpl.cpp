@@ -22,7 +22,7 @@ inline namespace v1
 namespace detail
 {
 
-GstDecoderImpl::GstDecoderImpl(VideoWindow& iface, const Size& size)
+GstDecoderImpl::GstDecoderImpl(Window& iface, const Size& size)
     : m_interface(iface),
       m_size(size),
       m_audiodevice(detail::audio_device())
