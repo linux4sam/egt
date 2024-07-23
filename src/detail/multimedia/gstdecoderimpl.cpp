@@ -213,7 +213,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
             {
                 asio::post(Application::instance().event().io(), [impl, error = std::move(error)]()
                 {
-                    impl->m_interface.on_error.invoke(error->message);
+                    impl->on_error.invoke(error->message);
                 });
             }
         }
@@ -264,7 +264,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
             {
                 asio::post(Application::instance().event().io(), [impl]()
                 {
-                    impl->m_interface.on_eos.invoke();
+                    impl->on_eos.invoke();
                 });
             }
         }
@@ -305,7 +305,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
             {
                 asio::post(Application::instance().event().io(), [impl]()
                 {
-                    impl->m_interface.on_state_changed.invoke();
+                    impl->on_state_changed.invoke();
                 });
             }
         }
@@ -331,7 +331,7 @@ bool GstDecoderImpl::start_discoverer()
     if (!discoverer)
     {
         detail::error("error creating discoverer instance: {} ", std::string(err1->message));
-        m_interface.on_error.invoke("error creating discoverer instance: " + std::string(err1->message));
+        on_error.invoke("error creating discoverer instance: " + std::string(err1->message));
         g_clear_error(&err1);
         return false;
     }
@@ -347,33 +347,33 @@ bool GstDecoderImpl::start_discoverer()
     case GST_DISCOVERER_URI_INVALID:
     {
         detail::error("invalid URI: {}", m_uri);
-        m_interface.on_error.invoke("invalid URI: " + m_uri);
+        on_error.invoke("invalid URI: " + m_uri);
         return false;
     }
     case GST_DISCOVERER_ERROR:
     {
         detail::error("error: {} ", std::string(err2->message));
-        m_interface.on_error.invoke("error: " + std::string(err2->message));
+        on_error.invoke("error: " + std::string(err2->message));
         break;
     }
     case GST_DISCOVERER_TIMEOUT:
     {
 
         detail::error("gst discoverer timeout");
-        m_interface.on_error.invoke("gst discoverer timeout");
+        on_error.invoke("gst discoverer timeout");
         return false;
     }
     case GST_DISCOVERER_BUSY:
     {
         detail::error("gst discoverer busy");
-        m_interface.on_error.invoke("gst discoverer busy");
+        on_error.invoke("gst discoverer busy");
         return false;
     }
     case GST_DISCOVERER_MISSING_PLUGINS:
     {
         const GstStructure* s = gst_discoverer_info_get_misc(info.get());
         GstStringHandle str{gst_structure_to_string(s)};
-        m_interface.on_error.invoke(str.get());
+        on_error.invoke(str.get());
         return false;
     }
     case GST_DISCOVERER_OK:
@@ -594,7 +594,7 @@ bool GstDecoderImpl::create_pipeline(const std::string& pipeline_desc)
         if (error && error->message)
         {
             detail::error("{}", error->message);
-            m_interface.on_error.invoke(error->message);
+            on_error.invoke(error->message);
         }
         return false;
     }
@@ -604,7 +604,7 @@ bool GstDecoderImpl::create_pipeline(const std::string& pipeline_desc)
     if (!m_vcapsfilter)
     {
         detail::error("failed to get vcaps element");
-        m_interface.on_error.invoke("failed to get vcaps element");
+        on_error.invoke("failed to get vcaps element");
         destroyPipeline();
         return false;
     }
@@ -614,7 +614,7 @@ bool GstDecoderImpl::create_pipeline(const std::string& pipeline_desc)
     if (!m_appsink)
     {
         detail::error("failed to get app sink element");
-        m_interface.on_error.invoke("failed to get app sink element");
+        on_error.invoke("failed to get app sink element");
         destroyPipeline();
         return false;
     }
@@ -626,7 +626,7 @@ bool GstDecoderImpl::create_pipeline(const std::string& pipeline_desc)
         if (!m_volume)
         {
             detail::error("failed to get volume element");
-            m_interface.on_error.invoke("failed to get volume element");
+            on_error.invoke("failed to get volume element");
             destroyPipeline();
             return false;
         }
@@ -731,7 +731,7 @@ gboolean GstDecoderImpl::post_position(gpointer data)
     {
         asio::post(Application::instance().event().io(), [impl]()
         {
-            impl->m_interface.on_position_changed.invoke(impl->m_position);
+            impl->on_position_changed.invoke(impl->m_position);
         });
     }
 

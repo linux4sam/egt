@@ -43,6 +43,14 @@ class GstAppSinkImpl;
  */
 class EGT_API VideoWindow : public Window
 {
+protected:
+    /// @private
+    /*
+     * Must be declared before SignalW members to match the order of members
+     * in the constructor initialization lists.
+     */
+    std::unique_ptr<detail::GstDecoderImpl> m_video_impl;
+
 public:
 
     /**
@@ -50,16 +58,16 @@ public:
      * @{
      */
     /// Invoked when the position of the player changes.
-    Signal<int64_t> on_position_changed;
+    SignalW<int64_t> on_position_changed;
 
     /// Invoked when an error occurs.
-    Signal<const std::string&> on_error;
+    SignalW<const std::string&> on_error;
 
     /// Invoked on end of stream.
-    Signal<> on_eos;
+    SignalW<> on_eos;
 
     /// Invoked when the state of the player changes.
-    Signal<> on_state_changed;
+    SignalW<> on_state_changed;
     /** @} */
 
     /**
@@ -267,9 +275,6 @@ protected:
 
     /// media file
     std::string m_uri;
-
-    /// @private
-    std::unique_ptr<detail::GstDecoderImpl> m_video_impl;
 
     friend class detail::GstDecoderImpl;
     friend class detail::GstAppSinkImpl;

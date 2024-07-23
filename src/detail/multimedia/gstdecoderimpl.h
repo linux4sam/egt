@@ -31,6 +31,22 @@ namespace detail
 class GstDecoderImpl
 {
 public:
+    /**
+     * Event signal.
+     * @{
+     */
+    /// Invoked when the position of the player changes.
+    Signal<int64_t> on_position_changed;
+
+    /// Invoked when an error occurs.
+    Signal<const std::string&> on_error;
+
+    /// Invoked on end of stream.
+    Signal<> on_eos;
+
+    /// Invoked when the state of the player changes.
+    Signal<> on_state_changed;
+    /** @} */
 
     // special functions deleted because they are never used
     GstDecoderImpl() = delete;
