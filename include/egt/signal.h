@@ -179,6 +179,75 @@ private:
     bool m_enabled{true};
 };
 
+template<typename... Args>
+class SignalW
+{
+public:
+
+    enum
+    {
+        INVALID_HANDLE = 0,
+    };
+
+    using EventCallback = std::function<void(Args...)>;
+
+    using RegisterHandle = uint32_t;
+
+    SignalW(Signal<Args...>* src)
+    {
+        m_src_signal = src;
+    }
+
+    RegisterHandle on_event(const EventCallback& handler)
+    {
+        return m_src_signal->on_event(handler);
+    }
+
+    inline RegisterHandle operator()(const EventCallback& handler)
+    {
+        return m_src_signal->on_event(handler);
+    }
+
+    void invoke(Args... args)
+    {
+        m_src_signal->invoke(args...);
+    }
+
+    void clear()
+    {
+        m_src_signal->clear();
+    }
+
+    void remove(RegisterHandle handle)
+    {
+        m_src_signal->remove(handle);
+    }
+
+    void disable()
+    {
+        m_src_signal->disable();
+    }
+
+    void enable()
+    {
+        m_src_signal->enable();
+    }
+
+    EGT_NODISCARD bool enabled() const
+    {
+        return m_src_signal->enable();
+    }
+
+    void set_src_signal(Signal<>* src)
+    {
+        m_src_signal = src;
+    }
+
+protected:
+    Signal<Args...>* m_src_signal{nullptr};
+
+};
+
 }
 }
 
