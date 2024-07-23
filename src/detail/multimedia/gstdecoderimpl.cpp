@@ -285,8 +285,8 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
     break;
     case GST_MESSAGE_EOS:
     {
-        EGTLOG_DEBUG("loopback: {}", (impl->m_interface.loopback() ? "TRUE" : "FALSE"));
-        if (impl->m_interface.loopback())
+        EGTLOG_DEBUG("loopback: {}", (impl->loopback() ? "TRUE" : "FALSE"));
+        if (impl->loopback())
         {
             gst_element_seek(impl->m_pipeline, 1.0, GST_FORMAT_TIME,
                              GST_SEEK_FLAG_FLUSH,
@@ -1070,6 +1070,16 @@ std::string GstDecoderImpl::device() const
 std::vector<std::string> GstDecoderImpl::get_camera_device_list()
 {
     return m_devices;
+}
+
+void GstDecoderImpl::loopback(bool enable)
+{
+    m_loopback = enable;
+}
+
+EGT_NODISCARD bool GstDecoderImpl::loopback() const
+{
+    return m_loopback;
 }
 
 } // end of namespace detail

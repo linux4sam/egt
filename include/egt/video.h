@@ -212,20 +212,14 @@ public:
      *
      * @param enable enable/disable loop-back mode.
      */
-    void loopback(bool enable)
-    {
-        m_loopback = enable;
-    }
+    void loopback(bool enable);
 
     /**
      * Get loop-back state
      *
      * @return true/false based on loop-back state
      */
-    EGT_NODISCARD bool loopback() const
-    {
-        return m_loopback;
-    }
+    EGT_NODISCARD bool loopback() const;
 
     using Window::scale;
     void scale(float hscale, float vscale) override;
@@ -264,9 +258,6 @@ public:
     ~VideoWindow() noexcept override;
 
 protected:
-    /// Loopback enabled.
-    bool m_loopback{false};
-
     /// Horizontal scale value.
     float m_hscale{1.0};
 

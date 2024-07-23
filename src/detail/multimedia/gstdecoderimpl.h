@@ -107,6 +107,10 @@ public:
 
     std::vector<std::string> list_devices();
 
+    void loopback(bool enable);
+
+    EGT_NODISCARD bool loopback() const;
+
     virtual ~GstDecoderImpl();
 
 protected:
@@ -151,6 +155,8 @@ protected:
     void get_camera_device_caps();
 
     static gboolean device_monitor_bus_callback(GstBus* bus, GstMessage* message, gpointer data);
+
+    bool m_loopback{false};
 };
 
 } // end of namespace detail

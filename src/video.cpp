@@ -202,6 +202,16 @@ void VideoWindow::gst_custom_pipeline(const std::string& pipeline_desc)
     m_video_impl->custom_pipeline(pipeline_desc);
 }
 
+void VideoWindow::loopback(bool enable)
+{
+    m_video_impl->loopback(enable);
+}
+
+bool VideoWindow::loopback() const
+{
+    return m_video_impl->loopback();
+}
+
 void VideoWindow::serialize(Serializer& serializer) const
 {
     serializer.add_property("uri", m_uri);
