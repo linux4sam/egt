@@ -46,6 +46,12 @@ public:
 
     /// Invoked when the state of the player changes.
     Signal<> on_state_changed;
+
+    /// Invoked when a video device is connected.
+    Signal<const std::string&> on_connect;
+
+    /// Invoked when a video device is disconnected.
+    Signal<const std::string&> on_disconnect;
     /** @} */
 
     // special functions deleted because they are never used
@@ -91,6 +97,16 @@ public:
 
     virtual void destroyPipeline();
 
+    bool start();
+
+    void stop();
+
+    void device(const std::string& device);
+
+    std::string device() const;
+
+    std::vector<std::string> list_devices();
+
     virtual ~GstDecoderImpl();
 
 protected:
@@ -125,6 +141,16 @@ protected:
     GstSample* m_videosample{nullptr};
     static GstFlowReturn on_new_buffer(GstElement* elt, gpointer data);
     static gboolean post_position(gpointer data);
+
+    std::string m_caps_name;
+    std::string m_caps_format;
+    std::vector<std::tuple<int, int>> m_resolutions;
+    std::vector<std::string> m_devices;
+    GstDeviceMonitor* m_device_monitor{nullptr};
+    std::vector<std::string> get_camera_device_list();
+    void get_camera_device_caps();
+
+    static gboolean device_monitor_bus_callback(GstBus* bus, GstMessage* message, gpointer data);
 };
 
 } // end of namespace detail

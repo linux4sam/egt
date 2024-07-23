@@ -31,6 +31,31 @@ GstDecoderImpl::GstDecoderImpl(VideoWindow& iface, const Size& size)
 
     m_gmain_loop = g_main_loop_new(nullptr, false);
     m_gmain_thread = std::thread(g_main_loop_run, m_gmain_loop);
+
+    m_device_monitor = gst_device_monitor_new();
+
+    GstCaps* caps = gst_caps_new_empty_simple("video/x-raw");
+    gst_device_monitor_add_filter(m_device_monitor, "Video/Source", caps);
+    gst_caps_unref(caps);
+
+    GList* devlist = gst_device_monitor_get_devices(m_device_monitor);
+    for (GList* i = g_list_first(devlist); i; i = g_list_next(i))
+    {
+        auto device = static_cast<GstDevice*>(i->data);
+        if (!device)
+            continue;
+
+        const std::string devnode = gstreamer_get_device_path(device);
+
+        if (std::find(m_devices.begin(), m_devices.end(), devnode) == m_devices.end())
+            m_devices.push_back(devnode);
+    }
+    g_list_free(devlist);
+
+    GstBus* bus = gst_device_monitor_get_bus(m_device_monitor);
+    gst_bus_add_watch(bus, &device_monitor_bus_callback, this);
+
+    gst_device_monitor_start(m_device_monitor);
 }
 
 bool GstDecoderImpl::playing() const
@@ -177,6 +202,13 @@ void GstDecoderImpl::destroyPipeline()
 GstDecoderImpl::~GstDecoderImpl()
 {
     destroyPipeline();
+
+    if (m_device_monitor)
+    {
+        GstBus* bus = gst_device_monitor_get_bus(m_device_monitor);
+        gst_bus_remove_watch(bus);
+        gst_device_monitor_stop(m_device_monitor);
+    }
 
     if (m_gmain_loop)
     {
@@ -735,6 +767,309 @@ gboolean GstDecoderImpl::post_position(gpointer data)
     }
 
     return true;
+}
+
+bool GstDecoderImpl::start()
+{
+    get_camera_device_caps();
+
+    Rect box;
+    /*
+     * At this stage, the interface m_box may no longer represent the original
+     * size requested by the user if scaling occured. So compute the content
+     * area based on the m_user_requested_box. If the user requested box is
+     * empty, let's consider the user relies on automatic layout, then use the
+     * window box.
+     */
+    if (!m_interface.user_requested_box().empty())
+    {
+        box = m_interface.user_requested_box();
+        auto m = m_interface.moat();
+        box += Point(m, m);
+        box -= Size(2. * m, 2. * m);
+        if (box.empty())
+            box = Rect(m_interface.point(), m_interface.size());
+    }
+    else
+    {
+        box = m_interface.content_area();
+    }
+    EGTLOG_DEBUG("box = {}", box);
+
+    /*
+     * if user constructs a default constructor, then size of
+     * the camerawindow is zero for BasicWindow and 32x32 for
+     * plane window. due to which pipeline initialization fails
+     * incase of BasicWindow. as a fix resize the camerawindow
+     * to 32x32.
+     */
+    if ((box.width() < 32) && (box.height() < 32))
+    {
+        m_interface.resize(Size(32, 32));
+        m_size = Size(32, 32);
+        box = m_interface.content_area();
+    }
+
+    /*
+     * Here we try to match camera resolution with camerawindow size
+     * and add scaling to pipeline if size does not match.
+     * note: adding scaling to may effects performance and this way
+     * now users can set any size for camera window.
+     */
+    auto w = box.width();
+    auto h = box.height();
+    if (!m_resolutions.empty())
+    {
+        auto index = std::distance(m_resolutions.begin(),
+                                   std::lower_bound(m_resolutions.begin(), m_resolutions.end(),
+                                           std::make_tuple(box.width(), box.height())));
+
+        w = std::get<0>(m_resolutions.at(index));
+        h = std::get<1>(m_resolutions.at(index));
+
+        EGTLOG_DEBUG("closest match of camerawindow : {} is {} ", box.size(), Size(w, h));
+    }
+
+    std::string vscale;
+    if ((w != box.width()) || (h != box.height()))
+    {
+        vscale = fmt::format(" videoscale ! video/x-raw,width={},height={} !", box.width(), box.height());
+        EGTLOG_DEBUG("scaling video: {} to {} ", Size(w, h), box.size());
+    }
+
+    const auto gst_format = detail::gstreamer_format(m_interface.format());
+    EGTLOG_DEBUG("format: {}  ", gst_format);
+
+    static constexpr auto appsink_pipe =
+        "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={} ! {} " \
+        "appsink name=appsink async=false enable-last-sample=false sync=true";
+
+    const std::string pipe = fmt::format(appsink_pipe, m_devnode, w, h, gst_format, vscale);
+
+    EGTLOG_DEBUG(pipe);
+
+    /* Make sure we don't leave orphan references */
+    stop();
+
+    GError* error = nullptr;
+    m_pipeline = gst_parse_launch(pipe.c_str(), &error);
+    if (!m_pipeline)
+    {
+        on_error.invoke(fmt::format("failed to create pipeline: {}", error->message));
+        return false;
+    }
+
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
+    m_appsink = gst_bin_get_by_name(GST_BIN(m_pipeline), "appsink");
+    if (!m_appsink)
+    {
+        on_error.invoke("failed to get app sink element");
+        return false;
+    }
+
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
+    g_object_set(G_OBJECT(m_appsink), "emit-signals", TRUE, "sync", TRUE, nullptr);
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
+    g_signal_connect(m_appsink, "new-sample", G_CALLBACK(on_new_buffer), this);
+
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
+    GstBus* bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));
+    gst_bus_add_watch(bus, &bus_callback, this);
+    gst_object_unref(bus);
+
+    /*
+     * GStreamer documentation states about GstParse that these functions take
+     * several measures to create somewhat dynamic pipelines. Due to that such
+     * pipelines are not always reusable (set the state to NULL and back to
+     * PLAYING).
+     */
+    int ret = gst_element_set_state(m_pipeline, GST_STATE_NULL);
+    if (ret == GST_STATE_CHANGE_FAILURE)
+    {
+        on_error.invoke("failed to set pipeline to null state");
+        stop();
+        return false;
+    }
+
+    ret = gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
+    if (ret == GST_STATE_CHANGE_FAILURE)
+    {
+        on_error.invoke("failed to set pipeline to play state");
+        stop();
+        return false;
+    }
+    return true;
+}
+
+void GstDecoderImpl::stop()
+{
+    if (m_pipeline)
+    {
+        GstStateChangeReturn ret = gst_element_set_state(m_pipeline, GST_STATE_NULL);
+        if (GST_STATE_CHANGE_FAILURE == ret)
+        {
+            detail::error("set pipeline to NULL state failed");
+        }
+
+        gst_bus_remove_watch(GST_ELEMENT_BUS(m_pipeline));
+
+        gst_object_unref(m_appsink);
+        g_object_unref(m_pipeline);
+        m_pipeline = nullptr;
+    }
+}
+
+gboolean GstDecoderImpl::device_monitor_bus_callback(GstBus* bus, GstMessage* message, gpointer data)
+{
+    ignoreparam(bus);
+
+    auto impl = static_cast<GstDecoderImpl*>(data);
+
+    EGTLOG_TRACE("gst message: {}", GST_MESSAGE_TYPE_NAME(message));
+
+    switch (GST_MESSAGE_TYPE(message))
+    {
+    case GST_MESSAGE_DEVICE_ADDED:
+    {
+        GstDevice* device;
+        gst_message_parse_device_added(message, &device);
+
+        const std::string devnode = gstreamer_get_device_path(device);
+
+        if (std::find(impl->m_devices.begin(), impl->m_devices.end(), devnode) != impl->m_devices.end())
+            break;
+
+        impl->m_devices.push_back(devnode);
+
+        if (Application::check_instance())
+        {
+            asio::post(Application::instance().event().io(), [impl, devnode]()
+            {
+                impl->on_connect.invoke(devnode);
+            });
+        }
+
+        break;
+    }
+    case GST_MESSAGE_DEVICE_REMOVED:
+    {
+        GstDevice* device;
+        gst_message_parse_device_removed(message, &device);
+
+        const std::string devnode = gstreamer_get_device_path(device);
+        const auto i = std::find(impl->m_devices.begin(), impl->m_devices.end(), devnode);
+        if (i == impl->m_devices.end())
+            break;
+
+        impl->m_devices.erase(i);
+
+        /**
+         * invoke disconnect only if current device is
+         * disconnected.
+         */
+        if (devnode != impl->m_devnode)
+            break;
+
+        asio::post(Application::instance().event().io(), [impl, devnode]()
+        {
+            impl->on_disconnect.invoke(devnode);
+        });
+        break;
+    }
+    default:
+        break;
+    }
+
+    /* we want to be notified again if there is a message on the bus, so
+     * returning true (false means we want to stop watching for messages
+     * on the bus and our callback should not be called again)
+     */
+    return true;
+}
+
+void GstDecoderImpl::get_camera_device_caps()
+{
+    GList* devlist = gst_device_monitor_get_devices(m_device_monitor);
+    for (GList* i = g_list_first(devlist); i; i = g_list_next(i))
+    {
+        auto device = static_cast<GstDevice*>(i->data);
+        if (device == nullptr)
+            continue;
+
+        // Probe all device properties and store them internally:
+        GstStringHandle display_name{gst_device_get_display_name(device)};
+        EGTLOG_DEBUG("name : {}", display_name.get());
+
+        GstStringHandle dev_string{gst_device_get_device_class(device)};
+        EGTLOG_DEBUG("class : {}", dev_string.get());
+
+        if (gstreamer_get_device_path(device) != m_devnode)
+            continue;
+
+        GstCaps* caps = gst_device_get_caps(device);
+        if (caps)
+        {
+            m_resolutions.clear();
+            int size = gst_caps_get_size(caps);
+            EGTLOG_DEBUG("caps : ");
+            for (int j = 0; j < size; ++j)
+            {
+                GstStructure* s = gst_caps_get_structure(caps, j);
+                std::string name = std::string(gst_structure_get_name(s));
+                if (name == "video/x-raw")
+                {
+                    int width = 0;
+                    int height = 0;
+                    m_caps_name = name;
+                    gst_structure_get_int(s, "width", &width);
+                    gst_structure_get_int(s, "height", &height);
+                    const gchar* str = gst_structure_get_string(s, "format");
+                    m_caps_format = str ? str : "";
+                    m_resolutions.emplace_back(std::make_tuple(width, height));
+                    EGTLOG_DEBUG("{}, format=(string){}, width=(int){}, "
+                                 "height=(int){}", m_caps_name, m_caps_format, width, height);
+                }
+            }
+
+            if (!m_resolutions.empty())
+            {
+                // sort by camera width
+                std::sort(m_resolutions.begin(), m_resolutions.end(), [](
+                              std::tuple<int, int>& t1,
+                              std::tuple<int, int>& t2)
+                {
+                    return std::get<0>(t1) < std::get<0>(t2);
+                });
+            }
+            gst_caps_unref(caps);
+        }
+    }
+    g_list_free(devlist);
+}
+
+std::vector<std::string> GstDecoderImpl::list_devices()
+{
+    return get_camera_device_list();
+}
+
+void GstDecoderImpl::device(const std::string& device)
+{
+    if ((m_devnode != device) || !m_pipeline)
+    {
+        stop();
+        m_devnode = device;
+        start();
+    }
+}
+
+std::string GstDecoderImpl::device() const
+{
+    return m_devnode;
+}
+
+std::vector<std::string> GstDecoderImpl::get_camera_device_list()
+{
+    return m_devices;
 }
 
 } // end of namespace detail
