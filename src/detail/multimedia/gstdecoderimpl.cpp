@@ -851,31 +851,8 @@ bool GstDecoderImpl::start()
     /* Make sure we don't leave orphan references */
     stop();
 
-    GError* error = nullptr;
-    m_pipeline = gst_parse_launch(pipe.c_str(), &error);
-    if (!m_pipeline)
-    {
-        on_error.invoke(fmt::format("failed to create pipeline: {}", error->message));
+    if (!create_pipeline(pipe))
         return false;
-    }
-
-    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
-    m_appsink = gst_bin_get_by_name(GST_BIN(m_pipeline), "appsink");
-    if (!m_appsink)
-    {
-        on_error.invoke("failed to get app sink element");
-        return false;
-    }
-
-    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
-    g_object_set(G_OBJECT(m_appsink), "emit-signals", TRUE, "sync", TRUE, nullptr);
-    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
-    g_signal_connect(m_appsink, "new-sample", G_CALLBACK(on_new_buffer), this);
-
-    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
-    GstBus* bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));
-    gst_bus_add_watch(bus, &bus_callback, this);
-    gst_object_unref(bus);
 
     /*
      * GStreamer documentation states about GstParse that these functions take
