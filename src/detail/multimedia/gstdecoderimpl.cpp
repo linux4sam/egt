@@ -841,7 +841,7 @@ bool GstDecoderImpl::start()
     EGTLOG_DEBUG("format: {}  ", gst_format);
 
     static constexpr auto appsink_pipe =
-        "v4l2src device={} ! videoconvert ! video/x-raw,width={},height={},format={} ! {} " \
+        "v4l2src device={} ! videoconvert ! capsfilter name=vcaps caps=video/x-raw,width={},height={},format={} ! {} " \
         "appsink name=appsink async=false enable-last-sample=false sync=true";
 
     const std::string pipe = fmt::format(appsink_pipe, m_devnode, w, h, gst_format, vscale);
