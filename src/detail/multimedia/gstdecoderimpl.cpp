@@ -568,6 +568,52 @@ GstFlowReturn GstDecoderImpl::on_new_buffer(GstElement* elt, gpointer data)
 
 std::string GstDecoderImpl::create_pipeline_desc()
 {
+    auto size = m_size;
+    /*
+     * When we check if the interface is a plane window, we assume that the
+     * plane is a heo overlay. Unfortunately there is no way to check the type
+     * of the overlay, there is not such information at the kernel level.
+     */
+    if (m_interface.plane_window())
+    {
+        /*
+        * In the case of an heo plane, if scaling occurred, the window had been
+        * resized and is no longer corresponding to the original size. It means
+        * that configuring the pipeline with this new size will cause two issues:
+        * - Software scaling will happen as the video size is now different from
+        * the window size.
+        * - The heo plane is still configured to scale the video so we'll do a
+        * hardware scaling in addition to the software scaling.
+        */
+        if (!m_interface.user_requested_box().empty())
+        {
+            size = m_interface.user_requested_box().size();
+            const auto moat = m_interface.moat();
+            size -= Size(2. * moat, 2. * moat);
+        }
+        else
+        {
+            size = m_interface.content_area().size();
+        }
+    }
+
+    /*
+     * If no size is provided when constructing a video or camera window, a
+     * plane implementation has a size set to 32x32 while a basic window
+     * implementation has a size set to 0x0. If we want to display of video,
+     * we need a size higher than 0x0! So, resize the window to 32x32 for
+     * consistency with the default size for plane window.
+     */
+    if (m_size.empty())
+    {
+        m_interface.resize(Size(32, 32));
+        m_size = Size(32, 32);
+        const auto moat = m_interface.moat();
+        size = Size(32, 32) - Size(2. * moat, 2. * moat);
+    }
+
+    EGTLOG_DEBUG("size = {}", size);
+
     if (!m_custom_pipeline_desc.empty())
         return m_custom_pipeline_desc;
 
@@ -588,12 +634,33 @@ std::string GstDecoderImpl::create_pipeline_desc()
         src_plugin_properties = "uri=" + m_uri + " name=video caps=video/x-raw(ANY)";
         if (has_audio())
             src_plugin_properties += ";audio/x-raw(ANY)";
-
     }
     else
     {
         src_plugin = "v4l2src";
         src_plugin_properties = "device=" + m_devnode + " name=video";
+
+        /*
+         * Let's find which resolution supported by the device matches the
+         * best the content area size. The goal is to force the ouput of the
+         * v4l2scr plugin to this resolution with a caps element. Not sure,
+         * it is really needed, GStreamer sounds smart enough to choose the
+         * resolution regarding the full pipeline description.
+         */
+        get_camera_device_caps();
+
+        if (!m_resolutions.empty())
+        {
+            auto index = std::distance(m_resolutions.begin(),
+                                       std::lower_bound(m_resolutions.begin(), m_resolutions.end(),
+                                                        std::make_tuple(m_size.width(), m_size.height())));
+
+            const auto width = std::get<0>(m_resolutions.at(index));
+            const auto height = std::get<1>(m_resolutions.at(index));
+
+            EGTLOG_DEBUG("window size: {}, closest device resolution : {}", m_size, Size(width, height));
+            src_plugin_properties += fmt::format(" ! video/x-raw,width={},height={}", width, height);
+        }
     }
 
     const auto src = src_plugin + " " + src_plugin_properties;
@@ -602,19 +669,10 @@ std::string GstDecoderImpl::create_pipeline_desc()
                        ? "video. ! queue ! audioconvert ! volume name=volume ! autoaudiosink sync=false"
                        : "";
 
-    if (!m_interface.plane_window() && m_size.empty())
-    {
-        /*
-         * If size is empty, then PlaneWindow is created with size(32,32) but not for
-         * BasicWindow. so resizing BasicWindow to size(32,32).
-         */
-        m_interface.resize(Size(32, 32));
-    }
-
     const auto format = m_interface.format();
     const auto video_caps_filter =
         fmt::format("caps=video/x-raw,width={},height={},format={}",
-                    m_size.width(), m_size.height(), detail::gstreamer_format(format));
+                    size.width(), size.height(), detail::gstreamer_format(format));
 
     static constexpr auto pipeline =
         "{} video. ! videoconvert ! videoscale ! capsfilter name=vcaps {} ! appsink name=appsink {} ";
@@ -771,82 +829,8 @@ gboolean GstDecoderImpl::post_position(gpointer data)
 
 bool GstDecoderImpl::start()
 {
-    get_camera_device_caps();
-
-    Rect box;
-    /*
-     * At this stage, the interface m_box may no longer represent the original
-     * size requested by the user if scaling occured. So compute the content
-     * area based on the m_user_requested_box. If the user requested box is
-     * empty, let's consider the user relies on automatic layout, then use the
-     * window box.
-     */
-    if (!m_interface.user_requested_box().empty())
-    {
-        box = m_interface.user_requested_box();
-        auto m = m_interface.moat();
-        box += Point(m, m);
-        box -= Size(2. * m, 2. * m);
-        if (box.empty())
-            box = Rect(m_interface.point(), m_interface.size());
-    }
-    else
-    {
-        box = m_interface.content_area();
-    }
-    EGTLOG_DEBUG("box = {}", box);
-
-    /*
-     * if user constructs a default constructor, then size of
-     * the camerawindow is zero for BasicWindow and 32x32 for
-     * plane window. due to which pipeline initialization fails
-     * incase of BasicWindow. as a fix resize the camerawindow
-     * to 32x32.
-     */
-    if ((box.width() < 32) && (box.height() < 32))
-    {
-        m_interface.resize(Size(32, 32));
-        m_size = Size(32, 32);
-        box = m_interface.content_area();
-    }
-
-    /*
-     * Here we try to match camera resolution with camerawindow size
-     * and add scaling to pipeline if size does not match.
-     * note: adding scaling to may effects performance and this way
-     * now users can set any size for camera window.
-     */
-    auto w = box.width();
-    auto h = box.height();
-    if (!m_resolutions.empty())
-    {
-        auto index = std::distance(m_resolutions.begin(),
-                                   std::lower_bound(m_resolutions.begin(), m_resolutions.end(),
-                                           std::make_tuple(box.width(), box.height())));
-
-        w = std::get<0>(m_resolutions.at(index));
-        h = std::get<1>(m_resolutions.at(index));
-
-        EGTLOG_DEBUG("closest match of camerawindow : {} is {} ", box.size(), Size(w, h));
-    }
-
-    std::string vscale;
-    if ((w != box.width()) || (h != box.height()))
-    {
-        vscale = fmt::format(" videoscale ! video/x-raw,width={},height={} !", box.width(), box.height());
-        EGTLOG_DEBUG("scaling video: {} to {} ", Size(w, h), box.size());
-    }
-
-    const auto gst_format = detail::gstreamer_format(m_interface.format());
-    EGTLOG_DEBUG("format: {}  ", gst_format);
-
-    static constexpr auto appsink_pipe =
-        "v4l2src device={} ! videoconvert ! capsfilter name=vcaps caps=video/x-raw,width={},height={},format={} ! {} " \
-        "appsink name=appsink async=false enable-last-sample=false sync=true";
-
-    const std::string pipe = fmt::format(appsink_pipe, m_devnode, w, h, gst_format, vscale);
-
-    EGTLOG_DEBUG(pipe);
+    const std::string pipe = create_pipeline_desc();
+    EGTLOG_DEBUG("pipeline description: {}", pipe);
 
     /* Make sure we don't leave orphan references */
     stop();
