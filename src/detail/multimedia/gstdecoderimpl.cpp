@@ -864,20 +864,7 @@ bool GstDecoderImpl::start()
 
 void GstDecoderImpl::stop()
 {
-    if (m_pipeline)
-    {
-        GstStateChangeReturn ret = gst_element_set_state(m_pipeline, GST_STATE_NULL);
-        if (GST_STATE_CHANGE_FAILURE == ret)
-        {
-            detail::error("set pipeline to NULL state failed");
-        }
-
-        gst_bus_remove_watch(GST_ELEMENT_BUS(m_pipeline));
-
-        gst_object_unref(m_appsink);
-        g_object_unref(m_pipeline);
-        m_pipeline = nullptr;
-    }
+    destroyPipeline();
 }
 
 gboolean GstDecoderImpl::device_monitor_bus_callback(GstBus* bus, GstMessage* message, gpointer data)
