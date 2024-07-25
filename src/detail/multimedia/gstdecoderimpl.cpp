@@ -736,7 +736,7 @@ bool GstDecoderImpl::create_pipeline(const std::string& pipeline_desc)
     m_bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));
     m_bus_watchid = gst_bus_add_watch(m_bus, &bus_callback, this);
 
-    g_timeout_add(5000, static_cast<GSourceFunc>(&post_position), this);
+    m_eventsource_id = g_timeout_add(5000, static_cast<GSourceFunc>(&post_position), this);
 
     return true;
 }
