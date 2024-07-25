@@ -76,10 +76,24 @@ bool GstDecoderImpl::play()
     if (!m_pipeline)
     {
         const auto buffer = create_pipeline_desc();
-        EGTLOG_DEBUG("{}", buffer);
+        EGTLOG_DEBUG("pipeline description: {}", buffer);
 
         if (!create_pipeline(buffer))
             return false;
+
+        /*
+         * GStreamer documentation states about GstParse that these functions take
+         * several measures to create somewhat dynamic pipelines. Due to that such
+         * pipelines are not always reusable (set the state to NULL and back to
+         * PLAYING).
+         */
+        auto ret = gst_element_set_state(m_pipeline, GST_STATE_NULL);
+        if (ret == GST_STATE_CHANGE_FAILURE)
+        {
+            on_error.invoke("failed to set pipeline to null state");
+            destroyPipeline();
+            return false;
+        }
     }
 
     if (!playing())
@@ -829,37 +843,10 @@ gboolean GstDecoderImpl::post_position(gpointer data)
 
 bool GstDecoderImpl::start()
 {
-    const std::string pipe = create_pipeline_desc();
-    EGTLOG_DEBUG("pipeline description: {}", pipe);
-
     /* Make sure we don't leave orphan references */
     stop();
 
-    if (!create_pipeline(pipe))
-        return false;
-
-    /*
-     * GStreamer documentation states about GstParse that these functions take
-     * several measures to create somewhat dynamic pipelines. Due to that such
-     * pipelines are not always reusable (set the state to NULL and back to
-     * PLAYING).
-     */
-    int ret = gst_element_set_state(m_pipeline, GST_STATE_NULL);
-    if (ret == GST_STATE_CHANGE_FAILURE)
-    {
-        on_error.invoke("failed to set pipeline to null state");
-        stop();
-        return false;
-    }
-
-    ret = gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
-    if (ret == GST_STATE_CHANGE_FAILURE)
-    {
-        on_error.invoke("failed to set pipeline to play state");
-        stop();
-        return false;
-    }
-    return true;
+    return play();
 }
 
 void GstDecoderImpl::stop()
