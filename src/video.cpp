@@ -165,18 +165,17 @@ bool VideoWindow::seek(int64_t pos)
 
 void VideoWindow::scale(float hscale, float vscale)
 {
-    auto xs = detail::change_if_diff<float>(m_hscale, hscale);
-    auto ys = detail::change_if_diff<float>(m_vscale, vscale);
-
-    if (xs || ys)
+    if (!detail::float_equal(hscale, m_hscale) || !detail::float_equal(vscale,m_vscale))
     {
         if (!plane_window())
         {
+            m_hscale = hscale;
+            m_vscale = vscale;
             m_video_impl->scale(m_hscale, m_vscale);
         }
         else
         {
-            Window::scale(m_hscale, m_vscale);
+            Window::scale(hscale, vscale);
         }
     }
 }

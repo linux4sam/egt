@@ -228,22 +228,6 @@ public:
     void resize(const Size& s) override;
 
     /**
-     * Get horizontal scale value.
-     */
-    EGT_NODISCARD float hscale() const
-    {
-        return m_hscale;
-    }
-
-    /**
-     * Get vertical scale value.
-     */
-    EGT_NODISCARD float vscale() const
-    {
-        return m_vscale;
-    }
-
-    /**
      * check for audio is supported. check is done based on
      * sound device and audio track present in media file.
      *
@@ -258,12 +242,6 @@ public:
     ~VideoWindow() noexcept override;
 
 protected:
-    /// Horizontal scale value.
-    float m_hscale{1.0};
-
-    /// Vertical scale value.
-    float m_vscale{1.0};
-
     /// media file
     std::string m_uri;
 

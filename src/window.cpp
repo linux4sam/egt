@@ -217,8 +217,12 @@ void Window::scale(float hscale, float vscale)
     if (egt_unlikely(Application::instance().m_main_window == this))
         return;
 
-    if (m_impl)
-        m_impl->scale(hscale, vscale);
+    const auto xs = detail::change_if_diff<float>(m_hscale, hscale);
+    const auto ys = detail::change_if_diff<float>(m_vscale, vscale);
+
+    if (xs || ys)
+        if (m_impl)
+            m_impl->scale(m_hscale, m_vscale);
 }
 
 void Window::create_impl(const Rect& rect,

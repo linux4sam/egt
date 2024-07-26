@@ -146,6 +146,22 @@ public:
 
     void scale(float hscale, float vscale) override;
 
+    /**
+     * Get horizontal scale value.
+     */
+    EGT_NODISCARD float hscale() const
+    {
+        return m_hscale;
+    }
+
+    /**
+     * Get vertical scale value.
+     */
+    EGT_NODISCARD float vscale() const
+    {
+        return m_vscale;
+    }
+
     void paint(Painter& painter) override;
 
     /*
@@ -296,6 +312,12 @@ protected:
 
     /// @private
     WindowHint m_hint;
+
+    /// Horizontal scale value.
+    float m_hscale{1.0};
+
+    /// Vertical scale value.
+    float m_vscale{1.0};
 
     friend class detail::WindowImpl;
     friend class detail::PlaneWindow;

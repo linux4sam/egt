@@ -161,33 +161,11 @@ public:
 
     void scale(float hscale, float vscale) override;
 
-    /**
-     * Get horizontal scale value.
-     */
-    EGT_NODISCARD float hscale() const
-    {
-        return m_hscale;
-    }
-
-    /**
-     * Get vertical scale value.
-     */
-    EGT_NODISCARD float vscale() const
-    {
-        return m_vscale;
-    }
-
     void serialize(Serializer& serializer) const override;
 
     ~CameraWindow() noexcept override;
 
 protected:
-
-    /// Horizontal scale value.
-    float m_hscale{1.0};
-
-    /// Vertical scale value.
-    float m_vscale{1.0};
 
     /// @private
     std::unique_ptr<detail::CameraImpl> m_camera_impl;
