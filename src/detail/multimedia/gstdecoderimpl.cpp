@@ -10,6 +10,7 @@
 #include "egt/detail/screen/kmsoverlay.h"
 #include "egt/app.h"
 #include "egt/uri.h"
+#include "egt/detail/math.h"
 #include <exception>
 #include <fstream>
 #include <sstream>
@@ -522,7 +523,8 @@ GstFlowReturn GstDecoderImpl::on_new_buffer(GstElement* elt, gpointer data)
              * the window and video size are different and it won't lead to a
              * crash.
              */
-            if (impl->m_interface.hscale() == 1.0 && impl->m_interface.vscale() == 1.0)
+            if (detail::float_equal(impl->m_interface.hscale(), 1.0f)
+                && detail::float_equal(impl->m_interface.vscale(), 1.0f))
             {
                 if (b.size() != vs)
                 {
