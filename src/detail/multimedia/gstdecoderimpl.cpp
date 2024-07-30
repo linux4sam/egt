@@ -647,14 +647,14 @@ std::string GstDecoderImpl::create_pipeline_desc()
          * to contain the inner decoder's caps that have features.
          */
         src_plugin = "uridecodebin";
-        src_plugin_properties = "uri=" + m_uri + " name=video caps=video/x-raw(ANY)";
+        src_plugin_properties = "uri=" + m_uri + " name=source caps=video/x-raw(ANY)";
         if (has_audio())
             src_plugin_properties += ";audio/x-raw(ANY)";
     }
     else
     {
         src_plugin = "v4l2src";
-        src_plugin_properties = "device=" + m_devnode + " name=video";
+        src_plugin_properties = "device=" + m_devnode;
 
         /*
          * Let's find which resolution supported by the device matches the
@@ -675,14 +675,14 @@ std::string GstDecoderImpl::create_pipeline_desc()
             const auto height = std::get<1>(m_resolutions.at(index));
 
             EGTLOG_DEBUG("window size: {}, closest device resolution : {}", m_size, Size(width, height));
-            src_plugin_properties += fmt::format(" ! video/x-raw,width={},height={}", width, height);
+            src_plugin_properties += fmt::format(" ! video/x-raw,width={},height={} ! tee name=source", width, height);
         }
     }
 
     const auto src = src_plugin + " " + src_plugin_properties;
 
     const auto audio = (m_audiodevice && m_audiotrack)
-                       ? "video. ! queue ! audioconvert ! volume name=volume ! autoaudiosink sync=false"
+                       ? "source. ! queue ! audioconvert ! volume name=volume ! autoaudiosink sync=false"
                        : "";
 
     const auto format = m_interface.format();
@@ -691,7 +691,7 @@ std::string GstDecoderImpl::create_pipeline_desc()
                     size.width(), size.height(), detail::gstreamer_format(format));
 
     static constexpr auto pipeline =
-        "{} video. ! videoconvert ! videoscale ! capsfilter name=vcaps {} ! appsink name=appsink {} ";
+        "{} ! videoconvert ! videoscale ! capsfilter name=vcaps {} ! appsink name=appsink {} ";
 
     return fmt::format(pipeline, src, video_caps_filter, audio);
 }
