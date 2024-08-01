@@ -91,12 +91,13 @@ int main(int argc, char** argv)
         auto ndev = dlist.at(dlist.size() - 1);
         std::cout << " setting new device " << ndev << std::endl;
         player.device(ndev);
+        player.play();
     });
 
     // wait to start playing the video until the window is shown
     win.on_show([&player]()
     {
-        player.start();
+        player.play();
     });
 
     player.on_error([&errlabel](const std::string & err)

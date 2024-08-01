@@ -75,27 +75,7 @@ bool GstDecoderImpl::playing() const
 bool GstDecoderImpl::play()
 {
     if (!m_pipeline)
-    {
-        const auto buffer = create_pipeline_desc();
-        EGTLOG_DEBUG("pipeline description: {}", buffer);
-
-        if (!create_pipeline(buffer))
-            return false;
-
-        /*
-         * GStreamer documentation states about GstParse that these functions take
-         * several measures to create somewhat dynamic pipelines. Due to that such
-         * pipelines are not always reusable (set the state to NULL and back to
-         * PLAYING).
-         */
-        auto ret = gst_element_set_state(m_pipeline, GST_STATE_NULL);
-        if (ret == GST_STATE_CHANGE_FAILURE)
-        {
-            on_error.invoke("failed to set pipeline to null state");
-            destroyPipeline();
-            return false;
-        }
-    }
+        start();
 
     if (!playing())
     {
@@ -761,9 +741,6 @@ bool GstDecoderImpl::media(const std::string& uri)
 {
     if (detail::change_if_diff(m_uri, uri))
     {
-        /* Make sure we don't leave orphan references */
-        destroyPipeline();
-
         const auto pos = m_uri.find("/dev/video");
         if (pos == std::string::npos)
         {
@@ -848,7 +825,27 @@ bool GstDecoderImpl::start()
     /* Make sure we don't leave orphan references */
     stop();
 
-    return play();
+    const auto buffer = create_pipeline_desc();
+    EGTLOG_DEBUG("pipeline description: {}", buffer);
+
+    if (!create_pipeline(buffer))
+        return false;
+
+    /*
+     * GStreamer documentation states about GstParse that these functions take
+     * several measures to create somewhat dynamic pipelines. Due to that such
+     * pipelines are not always reusable (set the state to NULL and back to
+     * PLAYING).
+     */
+    auto ret = gst_element_set_state(m_pipeline, GST_STATE_NULL);
+    if (ret == GST_STATE_CHANGE_FAILURE)
+    {
+        on_error.invoke("failed to set pipeline to null state");
+        destroyPipeline();
+        return false;
+    }
+
+    return true;
 }
 
 void GstDecoderImpl::stop()
@@ -991,12 +988,7 @@ std::vector<std::string> GstDecoderImpl::list_devices()
 
 void GstDecoderImpl::device(const std::string& device)
 {
-    if ((m_devnode != device) || !m_pipeline)
-    {
-        stop();
-        m_devnode = device;
-        start();
-    }
+    detail::change_if_diff(m_devnode, device);
 }
 
 std::string GstDecoderImpl::device() const

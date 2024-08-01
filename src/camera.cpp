@@ -55,6 +55,16 @@ bool CameraWindow::start()
     return m_camera_impl->start();
 }
 
+bool CameraWindow::playing() const
+{
+    return m_camera_impl->playing();
+}
+
+bool CameraWindow::play()
+{
+    return m_camera_impl->play();
+}
+
 void CameraWindow::device(const std::string& device)
 {
     m_camera_impl->device(device);

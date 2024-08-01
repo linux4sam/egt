@@ -140,6 +140,19 @@ public:
      */
     bool start();
 
+    /**
+     * Set the camera pipeline to the play state. In other words, play the
+     * video from the camera.
+     */
+    bool play();
+
+    /**
+     * Check is the camera pipeline in play state.
+     *
+     * @return true on success
+     */
+    EGT_NODISCARD bool playing() const;
+
     /*
      * set camera device node.
      *
