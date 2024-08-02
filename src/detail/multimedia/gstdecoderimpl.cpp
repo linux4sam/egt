@@ -988,7 +988,7 @@ std::vector<std::string> GstDecoderImpl::list_devices()
 
 void GstDecoderImpl::device(const std::string& device)
 {
-    detail::change_if_diff(m_devnode, device);
+    media(device);
 }
 
 std::string GstDecoderImpl::device() const
