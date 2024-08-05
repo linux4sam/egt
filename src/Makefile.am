@@ -281,6 +281,12 @@ audio.cpp \
 video.cpp \
 detail/multimedia/gstdecoderimpl.cpp \
 detail/multimedia/gstdecoderimpl.h \
+detail/multimedia/gstsrc.cpp \
+detail/multimedia/gstsrc.h \
+detail/multimedia/gsturidecodebin.cpp \
+detail/multimedia/gsturidecodebin.h \
+detail/multimedia/gstv4l2src.cpp \
+detail/multimedia/gstv4l2src.h \
 camera.cpp \
 capture.cpp \
 detail/multimedia/gstcaptureimpl.cpp \

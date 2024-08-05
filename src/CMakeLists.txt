@@ -311,6 +311,9 @@ if(GSTREAMER_PLUGINS_BASE_DEV_FOUND)
         audio.cpp
         video.cpp
         detail/multimedia/gstdecoderimpl.cpp
+        detail/multimedia/gstsrc.cpp
+        detail/multimedia/gsturidecodebin.cpp
+        detail/multimedia/gstv4l2src.cpp
         camera.cpp
         capture.cpp
         detail/multimedia/gstcaptureimpl.cpp

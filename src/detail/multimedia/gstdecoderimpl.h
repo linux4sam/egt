@@ -10,6 +10,7 @@
 #include "config.h"
 #endif
 
+#include "detail/multimedia/gstsrc.h"
 #include "egt/geometry.h"
 #include "egt/painter.h"
 #include "egt/video.h"
@@ -111,6 +112,10 @@ public:
 
     EGT_NODISCARD bool loopback() const;
 
+    void enable_video(bool enable);
+
+    void enable_audio(bool enable);
+
     virtual ~GstDecoderImpl();
 
 protected:
@@ -132,14 +137,9 @@ protected:
     GMainLoop* m_gmain_loop{nullptr};
     std::thread m_gmain_thread;
     guint m_eventsource_id{0};
-    bool m_audiotrack{false};
     GstElement* m_vcapsfilter{nullptr};
 
     static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data);
-
-#ifdef HAVE_GSTREAMER_PBUTILS
-    bool start_discoverer();
-#endif
 
     GstElement* m_appsink{nullptr};
     GstSample* m_videosample{nullptr};
@@ -157,6 +157,10 @@ protected:
     static gboolean device_monitor_bus_callback(GstBus* bus, GstMessage* message, gpointer data);
 
     bool m_loopback{false};
+
+    std::unique_ptr<GstSrc> m_src;
+    bool m_video_enabled{true};
+    bool m_audio_enabled{true};
 };
 
 std::tuple<std::string, std::string, std::string, std::vector<std::tuple<int, int>>>

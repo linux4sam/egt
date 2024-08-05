@@ -164,7 +164,7 @@ int64_t GstDecoderImpl::position() const
 
 bool GstDecoderImpl::has_audio() const
 {
-    return (m_audiodevice && m_audiotrack);
+    return m_src->has_audio();
 }
 
 void GstDecoderImpl::destroyPipeline()
@@ -353,76 +353,6 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
      */
     return true;
 }
-
-#ifdef HAVE_GSTREAMER_PBUTILS
-bool GstDecoderImpl::start_discoverer()
-{
-    GError* err1 = nullptr;
-    std::unique_ptr<GstDiscoverer, GstDeleter<void, g_object_unref>>
-            discoverer{gst_discoverer_new(5 * GST_SECOND, &err1)};
-    if (!discoverer)
-    {
-        detail::error("error creating discoverer instance: {} ", std::string(err1->message));
-        on_error.invoke("error creating discoverer instance: " + std::string(err1->message));
-        g_clear_error(&err1);
-        return false;
-    }
-
-    GError* err2 = nullptr;
-    std::unique_ptr<GstDiscovererInfo, GstDeleter<void, g_object_unref>>
-            info{gst_discoverer_discover_uri(discoverer.get(), m_uri.c_str(), &err2)};
-
-    GstDiscovererResult result = gst_discoverer_info_get_result(info.get());
-    EGTLOG_DEBUG("result: {} ", result);
-    switch (result)
-    {
-    case GST_DISCOVERER_URI_INVALID:
-    {
-        detail::error("invalid URI: {}", m_uri);
-        on_error.invoke("invalid URI: " + m_uri);
-        return false;
-    }
-    case GST_DISCOVERER_ERROR:
-    {
-        detail::error("error: {} ", std::string(err2->message));
-        on_error.invoke("error: " + std::string(err2->message));
-        break;
-    }
-    case GST_DISCOVERER_TIMEOUT:
-    {
-
-        detail::error("gst discoverer timeout");
-        on_error.invoke("gst discoverer timeout");
-        return false;
-    }
-    case GST_DISCOVERER_BUSY:
-    {
-        detail::error("gst discoverer busy");
-        on_error.invoke("gst discoverer busy");
-        return false;
-    }
-    case GST_DISCOVERER_MISSING_PLUGINS:
-    {
-        const GstStructure* s = gst_discoverer_info_get_misc(info.get());
-        GstStringHandle str{gst_structure_to_string(s)};
-        on_error.invoke(str.get());
-        return false;
-    }
-    case GST_DISCOVERER_OK:
-        EGTLOG_DEBUG("success");
-        break;
-    }
-
-    GList* audio_streams = gst_discoverer_info_get_audio_streams(info.get());
-    if (audio_streams)
-    {
-        m_audiotrack = true;
-        gst_discoverer_stream_info_list_free(audio_streams);
-    }
-
-    return true;
-}
-#endif
 
 void GstDecoderImpl::draw(Painter& painter, const Rect& rect)
 {
@@ -613,55 +543,7 @@ std::string GstDecoderImpl::create_pipeline_desc()
     if (!m_custom_pipeline_desc.empty())
         return m_custom_pipeline_desc;
 
-    auto src_plugin = std::string{};
-    auto src_plugin_properties = std::string{};
-    /*
-     * The uridecodebin deals with files not devices. If we detect that users
-     * provide a video device path, let's switch to the v4l2src plugin.
-     */
-    if (m_devnode.empty())
-    {
-        /*
-         * GstURIDecodeBin caps are propagated to GstDecodeBin. Its caps must a be a
-         * superset of the inner decoder element. So make this superset large enough
-         * to contain the inner decoder's caps that have features.
-         */
-        src_plugin = "uridecodebin";
-        src_plugin_properties = "uri=" + m_uri + " name=source caps=video/x-raw(ANY)";
-        if (has_audio())
-            src_plugin_properties += ";audio/x-raw(ANY)";
-    }
-    else
-    {
-        src_plugin = "v4l2src";
-        src_plugin_properties = "device=" + m_devnode;
-
-        /*
-         * Let's find which resolution supported by the device matches the
-         * best the content area size. The goal is to force the ouput of the
-         * v4l2scr plugin to this resolution with a caps element. Not sure,
-         * it is really needed, GStreamer sounds smart enough to choose the
-         * resolution regarding the full pipeline description.
-         */
-        get_camera_device_caps();
-
-        if (!m_resolutions.empty())
-        {
-            auto index = std::distance(m_resolutions.begin(),
-                                       std::lower_bound(m_resolutions.begin(), m_resolutions.end(),
-                                                        std::make_tuple(m_size.width(), m_size.height())));
-
-            const auto width = std::get<0>(m_resolutions.at(index));
-            const auto height = std::get<1>(m_resolutions.at(index));
-
-            EGTLOG_DEBUG("window size: {}, closest device resolution : {}", m_size, Size(width, height));
-            src_plugin_properties += fmt::format(" ! video/x-raw,width={},height={} ! tee name=source", width, height);
-        }
-    }
-
-    const auto src = src_plugin + " " + src_plugin_properties;
-
-    const auto audio = (m_audiodevice && m_audiotrack)
+    const auto audio = (m_src->has_audio())
                        ? "source. ! queue ! audioconvert ! volume name=volume ! autoaudiosink sync=false"
                        : "";
 
@@ -673,7 +555,7 @@ std::string GstDecoderImpl::create_pipeline_desc()
     static constexpr auto pipeline =
         "{} ! videoconvert ! videoscale ! capsfilter name=vcaps {} ! appsink name=appsink {} ";
 
-    return fmt::format(pipeline, src, video_caps_filter, audio);
+    return fmt::format(pipeline, m_src->description(), video_caps_filter, audio);
 }
 
 bool GstDecoderImpl::create_pipeline(const std::string& pipeline_desc)
@@ -710,7 +592,7 @@ bool GstDecoderImpl::create_pipeline(const std::string& pipeline_desc)
         return false;
     }
 
-    if (m_audiodevice && m_audiotrack)
+    if (m_src->has_audio())
     {
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
         m_volume = gst_bin_get_by_name(GST_BIN(m_pipeline), "volume");
@@ -741,31 +623,9 @@ bool GstDecoderImpl::media(const std::string& uri)
 {
     if (detail::change_if_diff(m_uri, uri))
     {
-        const auto pos = m_uri.find("/dev/video");
-        if (pos == std::string::npos)
-        {
-            m_devnode = "";
-#ifdef HAVE_GSTREAMER_PBUTILS
-            Uri u(m_uri);
-            if (u.scheme() != "rtsp")
-            {
-                if (!start_discoverer())
-                {
-                    detail::error("media file discoverer failed");
-                    return false;
-                }
-            }
-#endif
-        }
-        else
-        {
-            /*
-             * Extract the device path. In the case of a video device, for
-             * the pipeline description, we just want the device path and not
-             * an uri.
-             */
-            m_devnode = std::string{m_uri.begin() + pos, m_uri.end()};
-        }
+        m_src = GstSrc::create(*this, m_uri, m_video_enabled, m_audio_enabled && m_audiodevice);
+        if (!m_src)
+            return false;
     }
 
     return true;
@@ -1009,6 +869,16 @@ void GstDecoderImpl::loopback(bool enable)
 EGT_NODISCARD bool GstDecoderImpl::loopback() const
 {
     return m_loopback;
+}
+
+void GstDecoderImpl::enable_video(bool enable)
+{
+    m_video_enabled = enable;
+}
+
+void GstDecoderImpl::enable_audio(bool enable)
+{
+    m_audio_enabled = enable;
 }
 
 std::tuple<std::string, std::string, std::string, std::vector<std::tuple<int, int>>>
