@@ -4,38 +4,39 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "egt/capture.h"
-#include "detail/multimedia/gstcaptureimpl.h"
+#include "detail/multimedia/gstdecoderimpl.h"
 
 namespace egt
 {
 inline namespace v1
 {
-namespace experimental
-{
-
-CameraCapture::CameraCapture()
-    : CameraCapture("output.avi")
-{}
 
 CameraCapture::CameraCapture(const std::string& output,
-                             ContainerType container,
                              PixelFormat format,
                              const std::string& device)
-    : m_impl(std::make_unique<detail::CaptureImpl>(*this, output, format,
-             container, device))
-{}
+    : m_impl(std::make_unique<detail::GstDecoderImpl>(nullptr, Size())),
+      on_error(&m_impl->on_error),
+      on_connect(&m_impl->on_connect),
+      on_disconnect(&m_impl->on_disconnect)
+{
+    m_impl->media(device);
+    m_impl->output(output, Size(320, 240) , format);
+}
 
 void CameraCapture::set_output(const std::string& output,
-                               ContainerType container,
+                               const Size& size,
                                PixelFormat format)
 {
     stop();
-    m_impl->set_output(output, container, format);
+    m_impl->output(output, size, format);
 }
 
 bool CameraCapture::start()
 {
-    return m_impl->start();
+    if (!m_impl->start())
+        return false;
+
+    return m_impl->play();
 }
 
 void CameraCapture::stop()
@@ -45,6 +46,5 @@ void CameraCapture::stop()
 
 CameraCapture::~CameraCapture() = default;
 
-}
 }
 }

@@ -6,6 +6,7 @@
 
 #include "detail/egtlog.h"
 #include "detail/multimedia/gstappsink.h"
+#include "detail/multimedia/gstfilesink.h"
 #include "detail/multimedia/gstdecoderimpl.h"
 #include "detail/multimedia/gstmeta.h"
 #include "egt/detail/screen/kmsoverlay.h"
@@ -370,7 +371,10 @@ void GstDecoderImpl::draw(Painter& painter, const Rect& rect)
 
 std::string GstDecoderImpl::create_pipeline_desc()
 {
-    m_sink = std::make_unique<GstAppSink>(*this, m_size, *m_interface);
+    if (m_interface)
+        m_sink = std::make_unique<GstAppSink>(*this, m_size, *m_interface);
+    else if (!m_output.empty())
+        m_sink = std::make_unique<GstFileSink>(*this, m_size, m_output_format, m_output);
 
     if (!m_custom_pipeline_desc.empty())
         return m_custom_pipeline_desc;
@@ -678,6 +682,14 @@ void GstDecoderImpl::enable_video(bool enable)
 void GstDecoderImpl::enable_audio(bool enable)
 {
     m_audio_enabled = enable;
+}
+
+void GstDecoderImpl::output(const std::string& file, const Size& size, PixelFormat format)
+{
+    destroyPipeline();
+    m_output = file;
+    m_output_format = format;
+    m_size = size;
 }
 
 std::tuple<std::string, std::string, std::string, std::vector<std::tuple<int, int>>>

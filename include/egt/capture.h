@@ -24,11 +24,8 @@ inline namespace v1
 
 namespace detail
 {
-class CaptureImpl;
+class GstDecoderImpl;
 }
-
-namespace experimental
-{
 
 /**
  * Capture a camera video feed directly to an output file.
@@ -42,6 +39,11 @@ namespace experimental
  */
 class EGT_API CameraCapture : public Object
 {
+protected:
+
+    /// Internal capture implementation.
+    std::unique_ptr<detail::GstDecoderImpl> m_impl;
+
 public:
 
     /**
@@ -51,29 +53,18 @@ public:
     /**
      * Invoked when an error occurs.
      */
-    Signal<const std::string&> on_error;
+    SignalW<const std::string&> on_error;
 
     /**
      * Generated when an USB camera connected.
      */
-    Signal<const std::string&> on_connect;
+    SignalW<const std::string&> on_connect;
 
     /**
      * Generated when an USB camera disconnected.
      */
-    Signal<const std::string&> on_disconnect;
+    SignalW<const std::string&> on_disconnect;
     /** @} */
-
-    /**
-     * Output container type.
-     */
-    enum class ContainerType
-    {
-        avi,
-        mpeg2ts
-    };
-
-    CameraCapture();
 
     /**
      * @param[in] output The output file path.
@@ -82,7 +73,6 @@ public:
      * @param[in] device The camera device.
      */
     explicit CameraCapture(const std::string& output,
-                           ContainerType container = ContainerType::avi,
                            PixelFormat format = PixelFormat::yuyv,
                            const std::string& device = "/dev/video0");
 
@@ -102,7 +92,7 @@ public:
      * @param[in] format The input pixel format.
      */
     void set_output(const std::string& output,
-                    ContainerType container = ContainerType::avi,
+                    const Size& size,
                     PixelFormat format = PixelFormat::yuyv);
 
     /**
@@ -119,13 +109,8 @@ public:
 
     ~CameraCapture() override;
 
-protected:
-
-    /// Internal capture implementation.
-    std::unique_ptr<detail::CaptureImpl> m_impl;
 };
 
-}
 }
 }
 

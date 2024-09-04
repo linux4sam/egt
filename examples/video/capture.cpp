@@ -25,10 +25,7 @@ int main(int argc, char** argv)
     egt::Application app(argc, argv);
 
     auto dev(args["device"].as<std::string>());
-    egt::experimental::CameraCapture capture(args["file"].as<std::string>(),
-            egt::experimental::CameraCapture::ContainerType::avi,
-            egt::PixelFormat::yuyv,
-            dev);
+    egt::CameraCapture capture(args["file"].as<std::string>(), egt::PixelFormat::yuyv, dev);
 
     capture.on_error([&app](const std::string & err)
     {

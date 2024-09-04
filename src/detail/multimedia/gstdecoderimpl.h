@@ -117,6 +117,8 @@ public:
 
     void enable_audio(bool enable);
 
+    void output(const std::string& file, const Size& size, PixelFormat format);
+
     virtual ~GstDecoderImpl();
 
 protected:
@@ -161,6 +163,9 @@ protected:
     bool m_audio_enabled{true};
 
     std::unique_ptr<GstSink> m_sink;
+
+    std::string m_output{};
+    PixelFormat m_output_format{};
 
     friend class GstSink;
     friend class GstAppSink;

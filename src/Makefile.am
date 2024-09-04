@@ -291,10 +291,10 @@ detail/multimedia/gstsink.cpp \
 detail/multimedia/gstsink.h \
 detail/multimedia/gstappsink.cpp \
 detail/multimedia/gstappsink.h \
+detail/multimedia/gstfilesink.cpp \
+detail/multimedia/gstfilesink.h \
 camera.cpp \
 capture.cpp \
-detail/multimedia/gstcaptureimpl.cpp \
-detail/multimedia/gstcaptureimpl.h \
 detail/multimedia/gstmeta.cpp \
 detail/multimedia/gstmeta.h
 

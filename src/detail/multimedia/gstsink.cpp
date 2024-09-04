@@ -9,6 +9,7 @@
 #include "detail/egtlog.h"
 #include "detail/multimedia/gstdecoderimpl.h"
 #include "detail/multimedia/gstappsink.h"
+#include "detail/multimedia/gstfilesink.h"
 
 namespace egt
 {
