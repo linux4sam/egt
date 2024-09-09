@@ -29,7 +29,7 @@ inline namespace v1
 
 namespace detail
 {
-struct AudioPlayerImpl;
+class GstDecoderImpl;
 }
 
 /**
@@ -39,6 +39,11 @@ struct AudioPlayerImpl;
  */
 class EGT_API AudioPlayer : public Object
 {
+protected:
+
+    /// Implementation pointer.
+    std::unique_ptr<detail::GstDecoderImpl> m_impl;
+
 public:
 
     /**
@@ -48,22 +53,22 @@ public:
     /**
      * Invoked when the position of the player changes.
      */
-    Signal<uint64_t> on_position_changed;
+    SignalW<int64_t> on_position_changed;
 
     /**
      * Invoked when an error occurs.
      */
-    Signal<const std::string&> on_error;
+    SignalW<const std::string&> on_error;
 
     /**
      * Invoked on end of stream.
      */
-    Signal<> on_eos;
+    SignalW<> on_eos;
 
     /**
      * Invoked when the state of the player changes.
      */
-    Signal<> on_state_changed;
+    SignalW<> on_state_changed;
     /** @} */
 
     AudioPlayer();
@@ -151,23 +156,6 @@ public:
     EGT_NODISCARD bool playing() const;
 
     ~AudioPlayer() noexcept override;
-
-protected:
-
-    /**
-     * Send pipeline to null state
-     * @return true on success
-     */
-    bool null();
-
-    /// Create the pipeline.
-    bool createPipeline(const std::string& uri);
-
-    /// Destroy the pipeline.
-    void destroyPipeline();
-
-    /// Implementation pointer.
-    std::unique_ptr<detail::AudioPlayerImpl> m_impl;
 };
 
 }

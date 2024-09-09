@@ -133,6 +133,17 @@ bool GstDecoderImpl::volume(int volume)
     return true;
 }
 
+
+bool GstDecoderImpl::mute(bool mute)
+{
+    if (!m_volume)
+        return false;
+
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
+    g_object_set(m_volume, "mute", mute, nullptr);
+    return true;
+}
+
 bool GstDecoderImpl::seek(int64_t time)
 {
     /* previous seek still in progress */
@@ -380,10 +391,12 @@ std::string GstDecoderImpl::create_pipeline_desc()
         return m_custom_pipeline_desc;
 
     const auto audio = (m_src->has_audio())
-                       ? "source. ! queue ! audioconvert ! volume name=volume ! autoaudiosink sync=false"
+                       ? "source. ! queue ! audioconvert ! volume name=volume ! autoaudiosink"
                        : "";
-
-    return fmt::format("{} ! {} {}", m_src->description(), m_sink->description(), audio);
+    if (!m_sink)
+        return fmt::format("{} {}", m_src->description(), audio);
+    else
+        return fmt::format("{} ! {} {}", m_src->description(), m_sink->description(), audio);
 }
 
 bool GstDecoderImpl::create_pipeline(const std::string& pipeline_desc)
@@ -416,17 +429,19 @@ bool GstDecoderImpl::create_pipeline(const std::string& pipeline_desc)
         }
     }
 
-    if (!m_sink->post_initialize())
-    {
-        destroyPipeline();
-        return false;
+    if (m_sink) {
+        if (!m_sink->post_initialize())
+        {
+            destroyPipeline();
+            return false;
+        }
     }
 
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
     m_bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));
     m_bus_watchid = gst_bus_add_watch(m_bus, &bus_callback, this);
 
-    m_eventsource_id = g_timeout_add(5000, static_cast<GSourceFunc>(&post_position), this);
+    m_eventsource_id = g_timeout_add(900, static_cast<GSourceFunc>(&post_position), this);
 
     return true;
 }
@@ -471,6 +486,12 @@ void GstDecoderImpl::resize(const Size& size)
 gboolean GstDecoderImpl::post_position(gpointer data)
 {
     auto impl = static_cast<GstDecoderImpl*>(data);
+
+    if (impl->playing())
+    {
+        gst_element_query_position(impl->m_pipeline, GST_FORMAT_TIME, &impl->m_position);
+        gst_element_query_duration(impl->m_pipeline, GST_FORMAT_TIME, &impl->m_duration);
+    }
 
     if (Application::check_instance())
     {

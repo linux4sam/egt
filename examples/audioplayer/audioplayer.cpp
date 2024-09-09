@@ -11,6 +11,16 @@
 #include <memory>
 #include <sstream>
 
+inline uint64_t nsec_to_sec(uint64_t s)
+{
+    return (s / 1000000000ULL);
+}
+
+inline uint64_t sec_to_nsec(int s)
+{
+    return (s * 1000000000ULL);
+}
+
 class Controls : public egt::StaticGrid
 {
 public:
@@ -187,18 +197,18 @@ public:
         // handle input event to seek player
         m_dial->on_user_input_changed([this, range2]()
         {
-            m_player.seek(range2->value());
+            m_player.seek(sec_to_nsec(range2->value()));
         });
 
         m_player.on_position_changed([this, range2](uint64_t position)
         {
             if (m_player.playing())
             {
-                auto duration = static_cast<int>(m_player.duration());
+                auto duration = static_cast<int>(nsec_to_sec(m_player.duration()));
                 if (duration > 0)
                     range2->end(duration);
 
-                range2->value(static_cast<int>(position));
+                range2->value(static_cast<int>(nsec_to_sec(position)));
             }
         });
 

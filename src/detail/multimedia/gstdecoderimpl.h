@@ -89,6 +89,8 @@ public:
 
     virtual int volume() const;
 
+    virtual bool mute(bool mute);
+
     int64_t duration() const;
 
     int64_t position() const;
