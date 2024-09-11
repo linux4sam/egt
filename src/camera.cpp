@@ -23,7 +23,7 @@ CameraWindow::CameraWindow(const Rect& rect,
                            PixelFormat format_hint,
                            WindowHint hint)
     : Window(rect, format_hint, detail::check_windowhint(hint)),
-      m_camera_impl(std::make_unique<detail::GstDecoderImpl>(*this, rect.size())),
+      m_camera_impl(std::make_unique<detail::GstDecoderImpl>(this, rect.size())),
       on_error(&m_camera_impl->on_error),
       on_connect(&m_camera_impl->on_connect),
       on_disconnect(&m_camera_impl->on_disconnect)
@@ -33,7 +33,7 @@ CameraWindow::CameraWindow(const Rect& rect,
 
 CameraWindow::CameraWindow(Serializer::Properties& props, bool is_derived)
     : Window(props, true),
-      m_camera_impl(std::make_unique<detail::GstDecoderImpl>(*this, box().size())),
+      m_camera_impl(std::make_unique<detail::GstDecoderImpl>(this, box().size())),
       on_error(&m_camera_impl->on_error),
       on_connect(&m_camera_impl->on_connect),
       on_disconnect(&m_camera_impl->on_disconnect)

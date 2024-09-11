@@ -60,7 +60,7 @@ WindowHint check_windowhint(WindowHint& hint)
 
 VideoWindow::VideoWindow(const Rect& rect, PixelFormat format, WindowHint hint)
     : Window(rect, format, detail::check_windowhint(hint)),
-      m_video_impl(std::make_unique<detail::GstDecoderImpl>(*this, rect.size())),
+      m_video_impl(std::make_unique<detail::GstDecoderImpl>(this, rect.size())),
       on_position_changed(&m_video_impl->on_position_changed),
       on_error(&m_video_impl->on_error),
       on_eos(&m_video_impl->on_eos),
@@ -81,7 +81,7 @@ VideoWindow::VideoWindow(const Rect& rect, const std::string& uri,
 
 VideoWindow::VideoWindow(Serializer::Properties& props, bool is_derived)
     : Window(props, true),
-      m_video_impl(std::make_unique<detail::GstDecoderImpl>(*this, box().size())),
+      m_video_impl(std::make_unique<detail::GstDecoderImpl>(this, box().size())),
       on_position_changed(&m_video_impl->on_position_changed),
       on_error(&m_video_impl->on_error),
       on_eos(&m_video_impl->on_eos),
