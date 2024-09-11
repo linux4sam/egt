@@ -10,6 +10,7 @@
 #include "config.h"
 #endif
 
+#include "detail/multimedia/gstsink.h"
 #include "detail/multimedia/gstsrc.h"
 #include "egt/geometry.h"
 #include "egt/painter.h"
@@ -141,9 +142,6 @@ protected:
 
     static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data);
 
-    GstElement* m_appsink{nullptr};
-    GstSample* m_videosample{nullptr};
-    static GstFlowReturn on_new_buffer(GstElement* elt, gpointer data);
     static gboolean post_position(gpointer data);
 
     std::string m_caps_name;
@@ -161,6 +159,12 @@ protected:
     std::unique_ptr<GstSrc> m_src;
     bool m_video_enabled{true};
     bool m_audio_enabled{true};
+
+    std::unique_ptr<GstSink> m_sink;
+
+    friend class GstSink;
+    friend class GstAppSink;
+
 };
 
 std::tuple<std::string, std::string, std::string, std::vector<std::tuple<int, int>>>

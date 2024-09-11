@@ -287,6 +287,10 @@ detail/multimedia/gsturidecodebin.cpp \
 detail/multimedia/gsturidecodebin.h \
 detail/multimedia/gstv4l2src.cpp \
 detail/multimedia/gstv4l2src.h \
+detail/multimedia/gstsink.cpp \
+detail/multimedia/gstsink.h \
+detail/multimedia/gstappsink.cpp \
+detail/multimedia/gstappsink.h \
 camera.cpp \
 capture.cpp \
 detail/multimedia/gstcaptureimpl.cpp \

@@ -314,6 +314,8 @@ if(GSTREAMER_PLUGINS_BASE_DEV_FOUND)
         detail/multimedia/gstsrc.cpp
         detail/multimedia/gsturidecodebin.cpp
         detail/multimedia/gstv4l2src.cpp
+        detail/multimedia/gstsink.cpp
+        detail/multimedia/gstappsink.cpp
         camera.cpp
         capture.cpp
         detail/multimedia/gstcaptureimpl.cpp
