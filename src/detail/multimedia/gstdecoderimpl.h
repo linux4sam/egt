@@ -134,7 +134,6 @@ protected:
     int64_t m_position{0};
     GstElement* m_volume{nullptr};
     gboolean m_seek_enabled{false};
-    gboolean m_seekdone{false};
     std::string m_uri;
     std::string m_devnode{};
     GstBus* m_bus{nullptr};

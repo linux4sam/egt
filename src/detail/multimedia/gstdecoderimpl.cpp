@@ -146,23 +146,20 @@ bool GstDecoderImpl::mute(bool mute)
 
 bool GstDecoderImpl::seek(int64_t time)
 {
-    /* previous seek still in progress */
-    if (m_seek_enabled && !m_seekdone)
+    bool ret = false;
+
+    if (m_seek_enabled)
     {
-        m_seekdone = true;
-        if (gst_element_seek(m_pipeline, 1.0, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH,
-                             // NOLINTNEXTLINE(google-readability-casting)
-                             GST_SEEK_TYPE_SET, (gint64) time,
-                             GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE))
+        if (gst_element_seek_simple(m_pipeline, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH,
+                                    // NOLINTNEXTLINE(google-readability-casting)
+                                    (gint64) time))
         {
-            m_seekdone = false;
-            gst_element_get_state(m_pipeline, nullptr, nullptr, GST_CLOCK_TIME_NONE);
             gst_element_query_position(m_pipeline, GST_FORMAT_TIME, &m_position);
-            return true;
+            ret = true;
         }
-        m_seekdone = false;
     }
-    return false;
+
+    return ret;
 }
 
 int64_t GstDecoderImpl::duration() const
