@@ -228,6 +228,7 @@ GstDecoderImpl::~GstDecoderImpl()
         GstBus* bus = gst_device_monitor_get_bus(m_device_monitor);
         gst_bus_remove_watch(bus);
         gst_device_monitor_stop(m_device_monitor);
+        gst_object_unref(m_device_monitor);
     }
 
     if (m_gmain_loop)
