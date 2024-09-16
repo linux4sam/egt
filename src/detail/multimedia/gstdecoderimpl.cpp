@@ -81,6 +81,7 @@ bool GstDecoderImpl::play()
 
     if (!playing())
     {
+        EGTLOG_TRACE("GstDecoderImpl::play: set pipeline state to PLAYING");
         auto ret = gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
         if (ret == GST_STATE_CHANGE_FAILURE)
         {
@@ -96,6 +97,7 @@ bool GstDecoderImpl::pause()
 {
     if (m_pipeline)
     {
+        EGTLOG_TRACE("GstDecoderImpl::pause: set pipeline state to PAUSED");
         auto ret = gst_element_set_state(m_pipeline, GST_STATE_PAUSED);
         if (ret == GST_STATE_CHANGE_FAILURE)
         {
@@ -128,8 +130,10 @@ bool GstDecoderImpl::volume(int volume)
     else if (volume > 100)
         volume = 100;
 
+    const auto gstreamer_volume = volume / 10.0;
+    EGTLOG_TRACE("GstDecoderImpl::volume: set volume to {}", gstreamer_volume);
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
-    g_object_set(m_volume, "volume", volume / 10.0, nullptr);
+    g_object_set(m_volume, "volume", gstreamer_volume, nullptr);
     return true;
 }
 
@@ -140,6 +144,7 @@ bool GstDecoderImpl::mute(bool mute)
         return false;
 
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
+    EGTLOG_DEBUG("GstDecoderImpl::mute: set mute to {}", mute);
     g_object_set(m_volume, "mute", mute, nullptr);
     return true;
 }
@@ -150,6 +155,7 @@ bool GstDecoderImpl::seek(int64_t time)
 
     if (m_seek_enabled)
     {
+        EGTLOG_TRACE("GstDecoderImpl::seek: seek to {}", time);
         if (gst_element_seek_simple(m_pipeline, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH,
                                     // NOLINTNEXTLINE(google-readability-casting)
                                     (gint64) time))
@@ -189,6 +195,7 @@ void GstDecoderImpl::destroyPipeline()
 {
     if (m_pipeline)
     {
+        EGTLOG_TRACE("GstDecoderImpl::desroyPipeline");
         GstStateChangeReturn ret = gst_element_set_state(m_pipeline, GST_STATE_NULL);
         if (GST_STATE_CHANGE_FAILURE == ret)
         {
@@ -244,7 +251,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
 
     auto impl = static_cast<GstDecoderImpl*>(data);
 
-    EGTLOG_TRACE("gst message: {}", GST_MESSAGE_TYPE_NAME(message));
+    EGTLOG_TRACE("GstDecoderImpl::bus_callback: gst message: {}", GST_MESSAGE_TYPE_NAME(message));
 
     switch (GST_MESSAGE_TYPE(message))
     {
@@ -255,7 +262,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
         gstreamer_message_parse(gst_message_parse_error, message, error, debug);
         if (error)
         {
-            EGTLOG_DEBUG("gst error: {} {}",
+            EGTLOG_DEBUG("GstDecoderImpl::bus_callback: gst error: {} {}",
                          error->message,
                          debug ? debug.get() : "");
 
@@ -276,7 +283,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
         gstreamer_message_parse(gst_message_parse_warning, message, error, debug);
         if (error)
         {
-            EGTLOG_DEBUG("gst warning: {} {}",
+            EGTLOG_DEBUG("GstDecoderImpl::bus_callback: gst warning: {} {}",
                          error->message,
                          debug ? debug.get() : "");
         }
@@ -289,7 +296,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
         gstreamer_message_parse(gst_message_parse_info, message, error, debug);
         if (error)
         {
-            EGTLOG_DEBUG("gst info: {} {}",
+            EGTLOG_DEBUG("GstDecoderImpl::bus_callback: gst info: {} {}",
                          error->message,
                          debug ? debug.get() : "");
         }
@@ -298,9 +305,10 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
     break;
     case GST_MESSAGE_EOS:
     {
-        EGTLOG_DEBUG("loopback: {}", (impl->loopback() ? "TRUE" : "FALSE"));
+        EGTLOG_DEBUG("GstDecoderImpl::bus_callback: eos message");
         if (impl->loopback())
         {
+            EGTLOG_DEBUG("GstDecoderImpl::bus_callback: loopback enabled");
             gst_element_seek(impl->m_pipeline, 1.0, GST_FORMAT_TIME,
                              GST_SEEK_FLAG_FLUSH,
                              GST_SEEK_TYPE_SET, 0,
@@ -328,7 +336,7 @@ gboolean GstDecoderImpl::bus_callback(GstBus* bus, GstMessage* message, gpointer
             GstState old_state, new_state, pending_state;
             gst_message_parse_state_changed(message, &old_state, &new_state, &pending_state);
 
-            EGTLOG_DEBUG("state changed from {} to {}",
+            EGTLOG_DEBUG("GstDecoderImpl::bus_callback: state changed from {} to {}",
                          gst_element_state_get_name(old_state),
                          gst_element_state_get_name(new_state));
 
@@ -390,6 +398,7 @@ std::string GstDecoderImpl::create_pipeline_desc()
     const auto audio = (m_src->has_audio())
                        ? "source. ! queue ! audioconvert ! volume name=volume ! autoaudiosink"
                        : "";
+
     if (!m_sink)
         return fmt::format("{} {}", m_src->description(), audio);
     else
@@ -447,6 +456,7 @@ bool GstDecoderImpl::media(const std::string& uri)
 {
     if (detail::change_if_diff(m_uri, uri))
     {
+        EGTLOG_DEBUG("GstDecoderImpl::media: uri={}", uri);
         m_src = GstSrc::create(*this, m_uri, m_video_enabled, m_audio_enabled && m_audiodevice);
         if (!m_src)
             return false;
@@ -457,11 +467,13 @@ bool GstDecoderImpl::media(const std::string& uri)
 
 void GstDecoderImpl::custom_pipeline(const std::string& pipeline_description)
 {
+    EGTLOG_DEBUG("GstDecoderImpl::custom_pipeline: {}", pipeline_description);
     m_custom_pipeline_desc = pipeline_description;
 }
 
 void GstDecoderImpl::scale(float scalex, float scaley)
 {
+    EGTLOG_DEBUG("GstDecoderImpl::scale: scalex={}, scaley={}", scalex, scaley);
     m_window->resize(Size(m_size.width() * scalex, m_size.height() * scaley));
 }
 
@@ -482,6 +494,8 @@ void GstDecoderImpl::resize(const Size& size)
 
 gboolean GstDecoderImpl::post_position(gpointer data)
 {
+    EGTLOG_TRACE("GstDecoderImpl::post_position");
+
     auto impl = static_cast<GstDecoderImpl*>(data);
 
     if (impl->playing())
@@ -507,7 +521,7 @@ bool GstDecoderImpl::start()
     stop();
 
     const auto buffer = create_pipeline_desc();
-    EGTLOG_DEBUG("pipeline description: {}", buffer);
+    detail::info("GStreamer pipeline: {}", buffer);
 
     if (!create_pipeline(buffer))
         return false;
@@ -531,6 +545,7 @@ bool GstDecoderImpl::start()
 
 void GstDecoderImpl::stop()
 {
+    EGTLOG_DEBUG("GstDecoderImpl::stop");
     destroyPipeline();
 }
 
@@ -540,12 +555,14 @@ gboolean GstDecoderImpl::device_monitor_bus_callback(GstBus* bus, GstMessage* me
 
     auto impl = static_cast<GstDecoderImpl*>(data);
 
-    EGTLOG_TRACE("gst message: {}", GST_MESSAGE_TYPE_NAME(message));
+    EGTLOG_TRACE("GstDecoderImpl::device_monitor_bus_callback: gst message: {}", GST_MESSAGE_TYPE_NAME(message));
 
     switch (GST_MESSAGE_TYPE(message))
     {
     case GST_MESSAGE_DEVICE_ADDED:
     {
+        EGTLOG_TRACE("GstDecoderImpl::device_monitor_bus_callback: device added");
+
         GstDevice* device;
         gst_message_parse_device_added(message, &device);
 
@@ -568,6 +585,8 @@ gboolean GstDecoderImpl::device_monitor_bus_callback(GstBus* bus, GstMessage* me
     }
     case GST_MESSAGE_DEVICE_REMOVED:
     {
+        EGTLOG_TRACE("GstDecoderImpl::device_monitor_bus_callback: device removed");
+
         GstDevice* device;
         gst_message_parse_device_removed(message, &device);
 
@@ -613,10 +632,10 @@ void GstDecoderImpl::get_camera_device_caps()
 
         // Probe all device properties and store them internally:
         GstStringHandle display_name{gst_device_get_display_name(device)};
-        EGTLOG_DEBUG("name : {}", display_name.get());
-
         GstStringHandle dev_string{gst_device_get_device_class(device)};
-        EGTLOG_DEBUG("class : {}", dev_string.get());
+
+        EGTLOG_DEBUG("GstDecoderImpl::get_camera_device_caps: name: {}, class: {}",
+                     display_name.get(), dev_string.get());
 
         if (gstreamer_get_device_path(device) != m_devnode)
             continue;
@@ -626,7 +645,7 @@ void GstDecoderImpl::get_camera_device_caps()
         {
             m_resolutions.clear();
             int size = gst_caps_get_size(caps);
-            EGTLOG_DEBUG("caps : ");
+            EGTLOG_DEBUG("GstDecoderImpl::get_camera_device_caps: caps: ");
             for (int j = 0; j < size; ++j)
             {
                 GstStructure* s = gst_caps_get_structure(caps, j);
@@ -641,8 +660,9 @@ void GstDecoderImpl::get_camera_device_caps()
                     const gchar* str = gst_structure_get_string(s, "format");
                     m_caps_format = str ? str : "";
                     m_resolutions.emplace_back(std::make_tuple(width, height));
-                    EGTLOG_DEBUG("{}, format=(string){}, width=(int){}, "
-                                 "height=(int){}", m_caps_name, m_caps_format, width, height);
+                    EGTLOG_DEBUG("GstDecoderImpl::get_camera_device_caps: "
+                                 "{}, format=(string){}, width=(int){}, height=(int){}",
+                                 m_caps_name, m_caps_format, width, height);
                 }
             }
 
@@ -694,16 +714,21 @@ EGT_NODISCARD bool GstDecoderImpl::loopback() const
 
 void GstDecoderImpl::enable_video(bool enable)
 {
+    EGTLOG_DEBUG("GstDecoderImpl::enable_video: {}", enable);
     m_video_enabled = enable;
 }
 
 void GstDecoderImpl::enable_audio(bool enable)
 {
+    EGTLOG_DEBUG("GstDecoderImpl::enable_audio: {}", enable);
     m_audio_enabled = enable;
 }
 
 void GstDecoderImpl::output(const std::string& file, const Size& size, PixelFormat format)
 {
+    EGTLOG_DEBUG("GstDecoderImpl::output: file:{}, size:{}, format:",
+                 file, size, detail::gstreamer_format(format));
+
     destroyPipeline();
     m_output = file;
     m_output_format = format;

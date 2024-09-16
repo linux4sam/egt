@@ -29,6 +29,9 @@ GstSrc::GstSrc(GstDecoderImpl& gst_decoder)
 std::unique_ptr<GstSrc> GstSrc::create(GstDecoderImpl& gst_decoder,
     const std::string& input, bool enable_video, bool enable_audio)
 {
+    EGTLOG_DEBUG("GstSrc::create: input={}, enable_video={}, enable_audio={}",
+                 input, enable_video, enable_audio);
+
     const auto pos = input.find("/dev/video");
     if (pos == std::string::npos)
     {
@@ -45,6 +48,7 @@ std::unique_ptr<GstSrc> GstSrc::create(GstDecoderImpl& gst_decoder,
             enable_audio &= has_audio_track;
         }
 #endif
+        EGTLOG_DEBUG("GstSrc::create: GstUridecodebin");
         return std::make_unique<GstUridecodebin>(gst_decoder, input, enable_video, enable_audio);
     }
     else
@@ -55,6 +59,7 @@ std::unique_ptr<GstSrc> GstSrc::create(GstDecoderImpl& gst_decoder,
          * an uri.
          */
         const auto device = std::string{input.begin() + pos, input.end()};
+        EGTLOG_DEBUG("GstSrc::create: GstV4l2src");
         return std::make_unique<GstV4l2src>(gst_decoder, device);
     }
 }
@@ -80,7 +85,7 @@ bool GstSrc::start_discoverer(GstDecoderImpl& gst_decoder, const std::string& in
             info{gst_discoverer_discover_uri(discoverer.get(), input.c_str(), &err2)};
 
     GstDiscovererResult result = gst_discoverer_info_get_result(info.get());
-    EGTLOG_DEBUG("result: {} ", result);
+    EGTLOG_DEBUG("GstSrc::start_discoverer: result: {}", result);
     switch (result)
     {
     case GST_DISCOVERER_URI_INVALID:
@@ -116,7 +121,7 @@ bool GstSrc::start_discoverer(GstDecoderImpl& gst_decoder, const std::string& in
         return false;
     }
     case GST_DISCOVERER_OK:
-        EGTLOG_DEBUG("success");
+        EGTLOG_DEBUG("GstSrc::start_discoverer: discovery successful");
         break;
     }
 

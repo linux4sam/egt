@@ -27,6 +27,7 @@ GstSink::GstSink(GstDecoderImpl& gst_decoder, const Size& size, PixelFormat form
 
 bool GstSink::post_initialize()
 {
+    EGTLOG_DEBUG("GstSink::post_initialize: retrieve vcaps element");
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
     m_vcapsfilter = gst_bin_get_by_name(GST_BIN(m_gst_decoder.m_pipeline), "vcaps");
     if (!m_vcapsfilter)
@@ -46,7 +47,7 @@ void GstSink::size(const Size& size)
     GstCaps* caps = gst_caps_from_string(vs.c_str());
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
     g_object_set(G_OBJECT(m_vcapsfilter), "caps", caps, NULL);
-    EGTLOG_DEBUG("change gst videoscale element to {}", size);
+    EGTLOG_DEBUG("GstSink::size: change vcaps size to {}", size);
     gst_caps_unref(caps);
 }
 

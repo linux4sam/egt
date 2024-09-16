@@ -50,7 +50,7 @@ std::string gstreamer_get_device_path(GstDevice* device)
          * property to look for is the api.v4l2.path one.
          */
         GstStringHandle s{gst_structure_to_string(props.get())};
-        EGTLOG_DEBUG("device properties: {}", s.get());
+        EGTLOG_DEBUG("gstreamer_get_device_path: device properties: {}", s.get());
         const gchar* str = gst_structure_get_string(props.get(), "device.path");
         if (!str)
             str = gst_structure_get_string(props.get(), "api.v4l2.path");

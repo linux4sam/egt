@@ -22,6 +22,8 @@ GstAppSink::GstAppSink(GstDecoderImpl& gst_decoder, const Size& size, Window& wi
     : GstSink(gst_decoder, size, window.format()),
       m_window(window)
 {
+    EGTLOG_DEBUG("GstAppSink::GstAppSink: size={}, format={}",
+                 size, detail::gstreamer_format(m_format));
 }
 
 std::string GstAppSink::description()
@@ -70,7 +72,6 @@ std::string GstAppSink::description()
         size = Size(32, 32) - Size(2. * moat, 2. * moat);
     }
 
-    EGTLOG_DEBUG("size = {}", size);
     const auto video_caps_filter =
         fmt::format("caps=video/x-raw,width={},height={},format={}",
                     size.width(), size.height(), detail::gstreamer_format(m_format));
@@ -220,6 +221,7 @@ bool GstAppSink::post_initialize()
     if (!GstSink::post_initialize())
         return false;
 
+    EGTLOG_DEBUG("GstAppSink::post_initialize: retrieve appsink element");
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
     auto appsink = gst_bin_get_by_name(GST_BIN(m_gst_decoder.m_pipeline), "appsink");
     if (!appsink)
