@@ -6,6 +6,7 @@
 
 #include "gstv4l2src.h"
 
+#include "detail/egtlog.h"
 #include "detail/fmt.h"
 #include "detail/multimedia/gstdecoderimpl.h"
 
@@ -20,6 +21,12 @@ GstV4l2src::GstV4l2src(GstDecoderImpl& gst_decoder, const std::string& device)
     : GstSrc(gst_decoder),
       m_device(device)
 {
+    EGTLOG_DEBUG("GstV4l2src::GstV4l2src: device={}", device);
+    /*
+     * This method is call to display device resolutions in the logs as it can
+     * be useful to set the size of the video sink.
+     */
+    gst_decoder.get_device_caps(device);
 }
 
 std::string GstV4l2src::description() const

@@ -111,6 +111,9 @@ public:
 
     std::vector<std::string> list_devices();
 
+    std::tuple<std::string, std::string, std::string, std::vector<std::tuple<int, int>>>
+    get_device_caps(const std::string& dev_name);
+
     void loopback(bool enable);
 
     EGT_NODISCARD bool loopback() const;
@@ -152,8 +155,9 @@ protected:
     std::vector<std::tuple<int, int>> m_resolutions;
     std::vector<std::string> m_devices;
     GstDeviceMonitor* m_device_monitor{nullptr};
-    std::vector<std::string> get_camera_device_list();
-    void get_camera_device_caps();
+    std::vector<std::string> get_video_device_list();
+    std::tuple<std::string, std::string, std::string, std::vector<std::tuple<int, int>>>
+    get_video_device_caps(const std::string& dev_name);
 
     static gboolean device_monitor_bus_callback(GstBus* bus, GstMessage* message, gpointer data);
 
@@ -172,9 +176,6 @@ protected:
     friend class GstAppSink;
 
 };
-
-std::tuple<std::string, std::string, std::string, std::vector<std::tuple<int, int>>>
-get_camera_device_caps(const std::string& dev_name);
 
 } // end of namespace detail
 
