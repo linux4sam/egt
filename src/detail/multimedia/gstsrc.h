@@ -31,7 +31,7 @@ class GstSrc
 public:
 
     static std::unique_ptr<GstSrc> create(GstDecoderImpl& gst_decoder,
-        const std::string& input, bool enable_video, bool enable_audio);
+                                          const std::string& input, bool enable_video, bool enable_audio);
 
     EGT_NODISCARD virtual std::string description() const = 0;
     EGT_NODISCARD virtual bool has_audio() const = 0;
@@ -42,7 +42,7 @@ protected:
 
 #ifdef HAVE_GSTREAMER_PBUTILS
     static bool start_discoverer(GstDecoderImpl& gst_decoder,
-        const std::string& input, bool& has_audio_track);
+                                 const std::string& input, bool& has_audio_track);
 #endif
 
     GstDecoderImpl& m_gst_decoder;

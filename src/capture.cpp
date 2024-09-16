@@ -20,7 +20,7 @@ CameraCapture::CameraCapture(const std::string& output,
       on_disconnect(&m_impl->on_disconnect)
 {
     m_impl->media(device);
-    m_impl->output(output, Size(320, 240) , format);
+    m_impl->output(output, Size(320, 240), format);
 }
 
 void CameraCapture::set_output(const std::string& output,

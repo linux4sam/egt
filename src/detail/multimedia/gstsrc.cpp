@@ -27,7 +27,7 @@ GstSrc::GstSrc(GstDecoderImpl& gst_decoder)
 }
 
 std::unique_ptr<GstSrc> GstSrc::create(GstDecoderImpl& gst_decoder,
-    const std::string& input, bool enable_video, bool enable_audio)
+                                       const std::string& input, bool enable_video, bool enable_audio)
 {
     EGTLOG_DEBUG("GstSrc::create: input={}, enable_video={}, enable_audio={}",
                  input, enable_video, enable_audio);

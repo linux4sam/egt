@@ -436,7 +436,8 @@ bool GstDecoderImpl::create_pipeline(const std::string& pipeline_desc)
         }
     }
 
-    if (m_sink) {
+    if (m_sink)
+    {
         if (!m_sink->post_initialize())
         {
             destroyPipeline();
@@ -627,7 +628,7 @@ GstDecoderImpl::get_video_device_caps(const std::string& dev_name)
 {
     auto caps_name = std::string{};
     auto caps_format = std::string{};
-    auto resolutions = std::vector<std::tuple<int, int>>{};
+    auto resolutions = std::vector<std::tuple<int, int>> {};
 
     const auto devlist = gst_device_monitor_get_devices(m_device_monitor);
     for (auto i = g_list_first(devlist); i; i = g_list_next(i))
