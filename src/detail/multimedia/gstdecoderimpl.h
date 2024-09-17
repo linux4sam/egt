@@ -111,6 +111,7 @@ public:
 
     std::vector<std::string> list_devices();
 
+    // device name, caps name, caps format, resolutions
     std::tuple<std::string, std::string, std::string, std::vector<std::tuple<int, int>>>
     get_device_caps(const std::string& dev_name);
 
@@ -128,49 +129,44 @@ public:
 
 protected:
     Window* m_window;
-    GstElement* m_pipeline{nullptr};
-    std::string m_custom_pipeline_desc{};
-    Size m_size;
-    gboolean m_audiodevice;
-    int64_t m_start{0};
-    int64_t m_duration{0};
-    int64_t m_position{0};
-    GstElement* m_volume{nullptr};
-    gboolean m_seek_enabled{false};
-    std::string m_uri;
-    std::string m_devnode{};
-    GstBus* m_bus{nullptr};
-    guint m_bus_watchid{0};
-    GMainLoop* m_gmain_loop{nullptr};
+
+    GMainLoop* m_gmain_loop;
     std::thread m_gmain_thread;
-    guint m_eventsource_id{0};
-    GstElement* m_vcapsfilter{nullptr};
 
-    static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data);
-
-    static gboolean post_position(gpointer data);
-
-    std::string m_caps_name;
-    std::string m_caps_format;
-    std::vector<std::tuple<int, int>> m_resolutions;
-    std::vector<std::string> m_devices;
-    GstDeviceMonitor* m_device_monitor{nullptr};
-    std::vector<std::string> get_video_device_list();
-    std::tuple<std::string, std::string, std::string, std::vector<std::tuple<int, int>>>
-    get_video_device_caps(const std::string& dev_name);
-
-    static gboolean device_monitor_bus_callback(GstBus* bus, GstMessage* message, gpointer data);
-
-    bool m_loopback{false};
-
-    std::unique_ptr<GstSrc> m_src;
+    std::unique_ptr<GstSrc> m_src{};
+    std::string m_uri;
     bool m_video_enabled{true};
     bool m_audio_enabled{true};
 
-    std::unique_ptr<GstSink> m_sink;
-
+    std::unique_ptr<GstSink> m_sink{};
     std::string m_output{};
     PixelFormat m_output_format{};
+    Size m_size;
+
+    gboolean m_audiodevice{};
+    GstElement* m_volume{nullptr};
+
+    GstElement* m_pipeline{nullptr};
+    std::string m_custom_pipeline_desc{};
+    GstBus* m_bus{nullptr};
+    guint m_bus_watchid{0};
+    guint m_eventsource_id{0};
+    static gboolean bus_callback(GstBus* bus, GstMessage* message, gpointer data);
+
+    int64_t m_start{0};
+    int64_t m_duration{0};
+    int64_t m_position{0};
+    gboolean m_seek_enabled{false};
+    bool m_loopback{false};
+    static gboolean post_position(gpointer data);
+
+    GstDeviceMonitor* m_device_monitor;
+    std::vector<std::string> m_devices;
+    std::string m_devnode{};
+    std::vector<std::string> get_video_device_list();
+    std::tuple<std::string, std::string, std::string, std::vector<std::tuple<int, int>>>
+    get_video_device_caps(const std::string& dev_name);
+    static gboolean device_monitor_bus_callback(GstBus* bus, GstMessage* message, gpointer data);
 
     friend class GstSink;
     friend class GstAppSink;
