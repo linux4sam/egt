@@ -123,7 +123,6 @@ void GstAppSink::draw(Painter& painter, const Rect& rect)
                     cairo_paint(cr);
                 }
 
-                m_gst_decoder.m_position = GST_BUFFER_TIMESTAMP(buffer);
                 gst_buffer_unmap(buffer, &map);
             }
         }
@@ -190,7 +189,6 @@ GstFlowReturn GstAppSink::on_new_buffer(GstElement* elt, gpointer data)
                     assert(screen);
                     memcpy(screen->raw(), map.data, map.size);
                     screen->schedule_flip();
-                    impl->m_gst_decoder.m_position = GST_BUFFER_TIMESTAMP(buffer);
                     gst_buffer_unmap(buffer, &map);
                 }
             }
