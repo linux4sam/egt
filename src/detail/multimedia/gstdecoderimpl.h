@@ -125,6 +125,8 @@ public:
 
     void output(const std::string& file, const Size& size, PixelFormat format);
 
+    GstElement* pipeline() const;
+
     virtual ~GstDecoderImpl();
 
 protected:
@@ -167,10 +169,6 @@ protected:
     std::tuple<std::string, std::string, std::string, std::vector<std::tuple<int, int>>>
     get_video_device_caps(const std::string& dev_name);
     static gboolean device_monitor_bus_callback(GstBus* bus, GstMessage* message, gpointer data);
-
-    friend class GstSink;
-    friend class GstAppSink;
-
 };
 
 } // end of namespace detail

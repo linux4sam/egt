@@ -751,6 +751,11 @@ void GstDecoderImpl::output(const std::string& file, const Size& size, PixelForm
     m_size = size;
 }
 
+GstElement* GstDecoderImpl::pipeline() const
+{
+    return m_pipeline;
+}
+
 } // end of namespace detail
 
 } // end of namespace v1

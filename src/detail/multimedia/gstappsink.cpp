@@ -101,7 +101,7 @@ void GstAppSink::draw(Painter& painter, const Rect& rect)
             GstMapInfo map;
             if (gst_buffer_map(buffer, &map, GST_MAP_READ))
             {
-                auto box = m_gst_decoder.m_window->box();
+                auto box = m_window.box();
                 auto surface = unique_cairo_surface_t(
                                    cairo_image_surface_create_for_data(map.data,
                                            CAIRO_FORMAT_RGB16_565,
@@ -221,7 +221,7 @@ bool GstAppSink::post_initialize()
 
     EGTLOG_DEBUG("GstAppSink::post_initialize: retrieve appsink element");
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
-    auto appsink = gst_bin_get_by_name(GST_BIN(m_gst_decoder.m_pipeline), "appsink");
+    auto appsink = gst_bin_get_by_name(GST_BIN(m_gst_decoder.pipeline()), "appsink");
     if (!appsink)
     {
         detail::error("failed to get app sink element");

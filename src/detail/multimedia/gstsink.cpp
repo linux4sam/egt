@@ -29,7 +29,7 @@ bool GstSink::post_initialize()
 {
     EGTLOG_DEBUG("GstSink::post_initialize: retrieve vcaps element");
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
-    m_vcapsfilter = gst_bin_get_by_name(GST_BIN(m_gst_decoder.m_pipeline), "vcaps");
+    m_vcapsfilter = gst_bin_get_by_name(GST_BIN(m_gst_decoder.pipeline()), "vcaps");
     if (!m_vcapsfilter)
     {
         detail::error("failed to get vcaps element");
