@@ -281,6 +281,11 @@ public:
         return static_cast<const BitField*>(this)->operator==(rhs);
     }
 
+    constexpr bool equals(const AlignFlag& rhs) const
+    {
+        return static_cast<const BitField*>(this)->operator==(rhs);
+    }
+
     static constexpr HorizontalBitField center_horizontal = HorizontalBitField(1);
     static constexpr HorizontalBitField left = HorizontalBitField(2);
     static constexpr HorizontalBitField right = HorizontalBitField(3);
