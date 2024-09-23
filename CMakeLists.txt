@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.23)
 
 project(
     libegt
-    VERSION 1.9
+    VERSION 1.9.1
     DESCRIPTION "A linux graphic library for Microchip MPUs"
     LANGUAGES C;CXX;ASM
 )
