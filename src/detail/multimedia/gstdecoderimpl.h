@@ -77,29 +77,29 @@ public:
 
     void scale(float scalex, float scaley);
 
-    virtual void resize(const Size& size);
+    void resize(const Size& size);
 
-    virtual bool play();
+    bool play();
 
-    virtual bool pause();
+    bool pause();
 
-    virtual bool playing() const;
+    bool playing() const;
 
-    virtual bool volume(int volume);
+    bool volume(int volume);
 
-    virtual int volume() const;
+    int volume() const;
 
-    virtual bool mute(bool mute);
+    bool mute(bool mute);
 
     int64_t duration() const;
 
     int64_t position() const;
 
-    virtual bool seek(int64_t time);
+    bool seek(int64_t time);
 
-    virtual bool has_audio() const;
+    bool has_audio() const;
 
-    virtual void destroyPipeline();
+    void destroyPipeline();
 
     bool start();
 
