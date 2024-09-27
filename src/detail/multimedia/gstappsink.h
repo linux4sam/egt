@@ -27,7 +27,7 @@ class GstAppSink : public GstSink
 {
 public:
 
-    GstAppSink(GstDecoderImpl& gst_decoder, const Size& size, Window& interface);
+    GstAppSink(GstDecoderImpl& gst_decoder, const Size& size, Window& window);
 
     EGT_NODISCARD std::string description() override;
 
@@ -41,7 +41,7 @@ private:
 
     GstSample* m_videosample{nullptr};
 
-    Window& m_interface;
+    Window& m_window;
 };
 
 } // end of namespace detail

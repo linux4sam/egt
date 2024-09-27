@@ -25,8 +25,8 @@ inline namespace v1
 namespace detail
 {
 
-GstDecoderImpl::GstDecoderImpl(Window* iface, const Size& size)
-    : m_interface(iface),
+GstDecoderImpl::GstDecoderImpl(Window* window, const Size& size)
+    : m_window(window),
       m_size(size),
       m_audiodevice(detail::audio_device())
 {
@@ -371,8 +371,8 @@ void GstDecoderImpl::draw(Painter& painter, const Rect& rect)
 
 std::string GstDecoderImpl::create_pipeline_desc()
 {
-    if (m_interface)
-        m_sink = std::make_unique<GstAppSink>(*this, m_size, *m_interface);
+    if (m_window)
+        m_sink = std::make_unique<GstAppSink>(*this, m_size, *m_window);
     else if (!m_output.empty())
         m_sink = std::make_unique<GstFileSink>(*this, m_size, m_output_format, m_output);
 
@@ -450,7 +450,7 @@ void GstDecoderImpl::custom_pipeline(const std::string& pipeline_description)
 
 void GstDecoderImpl::scale(float scalex, float scaley)
 {
-    m_interface->resize(Size(m_size.width() * scalex, m_size.height() * scaley));
+    m_window->resize(Size(m_size.width() * scalex, m_size.height() * scaley));
 }
 
 void GstDecoderImpl::resize(const Size& size)

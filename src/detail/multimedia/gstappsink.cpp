@@ -18,9 +18,9 @@ inline namespace v1
 namespace detail
 {
 
-GstAppSink::GstAppSink(GstDecoderImpl& gst_decoder, const Size& size, Window& interface)
-    : GstSink(gst_decoder, size, interface.format()),
-      m_interface(interface)
+GstAppSink::GstAppSink(GstDecoderImpl& gst_decoder, const Size& size, Window& window)
+    : GstSink(gst_decoder, size, window.format()),
+      m_window(window)
 {
 }
 
@@ -28,11 +28,11 @@ std::string GstAppSink::description()
 {
     auto size = m_size;
     /*
-     * When we check if the interface is a plane window, we assume that the
+     * When we check if the window is a plane window, we assume that the
      * plane is a heo overlay. Unfortunately there is no way to check the type
      * of the overlay, there is not such information at the kernel level.
      */
-    if (m_interface.plane_window())
+    if (m_window.plane_window())
     {
         /*
         * In the case of an heo plane, if scaling occurred, the window had been
@@ -43,15 +43,15 @@ std::string GstAppSink::description()
         * - The heo plane is still configured to scale the video so we'll do a
         * hardware scaling in addition to the software scaling.
         */
-        if (!m_interface.user_requested_box().empty())
+        if (!m_window.user_requested_box().empty())
         {
-            size = m_interface.user_requested_box().size();
-            const auto moat = m_interface.moat();
+            size = m_window.user_requested_box().size();
+            const auto moat = m_window.moat();
             size -= Size(2. * moat, 2. * moat);
         }
         else
         {
-            size = m_interface.content_area().size();
+            size = m_window.content_area().size();
         }
     }
 
@@ -64,9 +64,9 @@ std::string GstAppSink::description()
      */
     if (m_size.empty())
     {
-        m_interface.resize(Size(32, 32));
+        m_window.resize(Size(32, 32));
         m_size = Size(32, 32);
-        const auto moat = m_interface.moat();
+        const auto moat = m_window.moat();
         size = Size(32, 32) - Size(2. * moat, 2. * moat);
     }
 
@@ -100,7 +100,7 @@ void GstAppSink::draw(Painter& painter, const Rect& rect)
             GstMapInfo map;
             if (gst_buffer_map(buffer, &map, GST_MAP_READ))
             {
-                auto box = m_gst_decoder.m_interface->box();
+                auto box = m_gst_decoder.m_window->box();
                 auto surface = unique_cairo_surface_t(
                                    cairo_image_surface_create_for_data(map.data,
                                            CAIRO_FORMAT_RGB16_565,
@@ -138,7 +138,7 @@ GstFlowReturn GstAppSink::on_new_buffer(GstElement* elt, gpointer data)
     if (sample)
     {
 #ifdef HAVE_LIBPLANES
-        if (impl->m_interface.plane_window())
+        if (impl->m_window.plane_window())
         {
             GstCaps* caps = gst_sample_get_caps(sample);
             GstStructure* capsStruct = gst_caps_get_structure(caps, 0);
@@ -147,7 +147,7 @@ GstFlowReturn GstAppSink::on_new_buffer(GstElement* elt, gpointer data)
             gst_structure_get_int(capsStruct, "width", &width);
             gst_structure_get_int(capsStruct, "height", &height);
             auto vs = egt::Size(width, height);
-            auto b = impl->m_interface.content_area();
+            auto b = impl->m_window.content_area();
             /*
              * If scaling is requested, it's normal that the size of the
              * VideoWindow is different from the size of the video. Don't drop
@@ -156,8 +156,8 @@ GstFlowReturn GstAppSink::on_new_buffer(GstElement* elt, gpointer data)
              * the window and video size are different and it won't lead to a
              * crash.
              */
-            if (detail::float_equal(impl->m_interface.hscale(), 1.0f)
-                && detail::float_equal(impl->m_interface.vscale(), 1.0f))
+            if (detail::float_equal(impl->m_window.hscale(), 1.0f)
+                && detail::float_equal(impl->m_window.vscale(), 1.0f))
             {
                 if (b.size() != vs)
                 {
@@ -166,9 +166,9 @@ GstFlowReturn GstAppSink::on_new_buffer(GstElement* elt, gpointer data)
                         asio::post(Application::instance().event().io(), [impl, vs, b]()
                         {
                             if (vs.width() < b.width() || vs.height() < b.height())
-                                impl->m_interface.resize(vs);
+                                impl->m_window.resize(vs);
                             else
-                                impl->m_interface.resize(b.size());
+                                impl->m_window.resize(b.size());
                         });
                     }
 
@@ -185,7 +185,7 @@ GstFlowReturn GstAppSink::on_new_buffer(GstElement* elt, gpointer data)
                 if (gst_buffer_map(buffer, &map, GST_MAP_READ))
                 {
                     auto screen =
-                        reinterpret_cast<detail::KMSOverlay*>(impl->m_interface.screen());
+                        reinterpret_cast<detail::KMSOverlay*>(impl->m_window.screen());
                     assert(screen);
                     memcpy(screen->raw(), map.data, map.size);
                     screen->schedule_flip();
@@ -206,7 +206,7 @@ GstFlowReturn GstAppSink::on_new_buffer(GstElement* elt, gpointer data)
                         gst_sample_unref(impl->m_videosample);
 
                     impl->m_videosample = sample;
-                    impl->m_interface.damage();
+                    impl->m_window.damage();
                 });
             }
         }

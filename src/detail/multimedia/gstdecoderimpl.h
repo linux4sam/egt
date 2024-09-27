@@ -63,7 +63,7 @@ public:
     GstDecoderImpl(GstDecoderImpl&&) = delete;
     GstDecoderImpl& operator=(GstDecoderImpl&&) = delete;
 
-    explicit GstDecoderImpl(Window* iface, const Size& size);
+    explicit GstDecoderImpl(Window* window, const Size& size);
 
     bool media(const std::string& uri);
 
@@ -122,7 +122,7 @@ public:
     virtual ~GstDecoderImpl();
 
 protected:
-    Window* m_interface;
+    Window* m_window;
     GstElement* m_pipeline{nullptr};
     std::string m_custom_pipeline_desc{};
     Size m_size;
