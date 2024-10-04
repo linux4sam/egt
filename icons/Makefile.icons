@@ -4,12 +4,14 @@ $(top_srcdir)/icons/svg/folder_open.svg \
 $(top_srcdir)/icons/svg/text_justify.svg \
 $(top_srcdir)/icons/svg/clouda.svg \
 $(top_srcdir)/icons/svg/egt_logo_white.svg \
+$(top_srcdir)/icons/svg/mgs_logo_white.svg \
 $(top_srcdir)/icons/svg/folder_add.svg \
 $(top_srcdir)/icons/svg/wifi.svg \
 $(top_srcdir)/icons/svg/menu.svg \
 $(top_srcdir)/icons/svg/text_center.svg \
 $(top_srcdir)/icons/svg/alarm_off.svg \
 $(top_srcdir)/icons/svg/egt_logo_icon.svg \
+$(top_srcdir)/icons/svg/mgs_logo_icon.svg \
 $(top_srcdir)/icons/svg/rotate_flip.svg \
 $(top_srcdir)/icons/svg/zoom_in.svg \
 $(top_srcdir)/icons/svg/save.svg \
@@ -27,6 +29,7 @@ $(top_srcdir)/icons/svg/ok.svg \
 $(top_srcdir)/icons/svg/pencil.svg \
 $(top_srcdir)/icons/svg/battery_empty.svg \
 $(top_srcdir)/icons/svg/egt_logo_black.svg \
+$(top_srcdir)/icons/svg/mgs_logo_black.svg \
 $(top_srcdir)/icons/svg/zoom_out.svg \
 $(top_srcdir)/icons/svg/delete.svg \
 $(top_srcdir)/icons/svg/paint.svg \
@@ -130,10 +133,12 @@ $(top_srcdir)/icons/64px/bluetooth.png \
 $(top_srcdir)/icons/64px/info.png \
 $(top_srcdir)/icons/64px/cursor_hand.png \
 $(top_srcdir)/icons/64px/egt_logo_white.png \
+$(top_srcdir)/icons/64px/mgs_logo_white.png \
 $(top_srcdir)/icons/64px/play.png \
 $(top_srcdir)/icons/64px/screen_original.png \
 $(top_srcdir)/icons/64px/clouda.png \
 $(top_srcdir)/icons/64px/egt_logo_icon.png \
+$(top_srcdir)/icons/64px/mgs_logo_icon.png \
 $(top_srcdir)/icons/64px/record.png \
 $(top_srcdir)/icons/64px/wifi.png \
 $(top_srcdir)/icons/64px/camera.png \
@@ -142,6 +147,7 @@ $(top_srcdir)/icons/64px/rotate_right.png \
 $(top_srcdir)/icons/64px/warning.png \
 $(top_srcdir)/icons/64px/volume_mute.png \
 $(top_srcdir)/icons/64px/egt_logo_black.png \
+$(top_srcdir)/icons/64px/mgs_logo_black.png \
 $(top_srcdir)/icons/64px/fastforward.png \
 $(top_srcdir)/icons/64px/folder_add.png \
 $(top_srcdir)/icons/64px/webcam.png \
@@ -211,10 +217,12 @@ $(top_srcdir)/icons/32px/bluetooth.png \
 $(top_srcdir)/icons/32px/info.png \
 $(top_srcdir)/icons/32px/cursor_hand.png \
 $(top_srcdir)/icons/32px/egt_logo_white.png \
+$(top_srcdir)/icons/32px/mgs_logo_white.png \
 $(top_srcdir)/icons/32px/play.png \
 $(top_srcdir)/icons/32px/screen_original.png \
 $(top_srcdir)/icons/32px/clouda.png \
 $(top_srcdir)/icons/32px/egt_logo_icon.png \
+$(top_srcdir)/icons/32px/mgs_logo_icon.png \
 $(top_srcdir)/icons/32px/record.png \
 $(top_srcdir)/icons/32px/wifi.png \
 $(top_srcdir)/icons/32px/camera.png \
@@ -223,6 +231,7 @@ $(top_srcdir)/icons/32px/rotate_right.png \
 $(top_srcdir)/icons/32px/warning.png \
 $(top_srcdir)/icons/32px/volume_mute.png \
 $(top_srcdir)/icons/32px/egt_logo_black.png \
+$(top_srcdir)/icons/32px/mgs_logo_black.png \
 $(top_srcdir)/icons/32px/fastforward.png \
 $(top_srcdir)/icons/32px/folder_add.png \
 $(top_srcdir)/icons/32px/webcam.png \
@@ -292,10 +301,12 @@ $(top_srcdir)/icons/128px/bluetooth.png \
 $(top_srcdir)/icons/128px/info.png \
 $(top_srcdir)/icons/128px/cursor_hand.png \
 $(top_srcdir)/icons/128px/egt_logo_white.png \
+$(top_srcdir)/icons/128px/mgs_logo_white.png \
 $(top_srcdir)/icons/128px/play.png \
 $(top_srcdir)/icons/128px/screen_original.png \
 $(top_srcdir)/icons/128px/clouda.png \
 $(top_srcdir)/icons/128px/egt_logo_icon.png \
+$(top_srcdir)/icons/128px/mgs_logo_icon.png \
 $(top_srcdir)/icons/128px/record.png \
 $(top_srcdir)/icons/128px/wifi.png \
 $(top_srcdir)/icons/128px/camera.png \
@@ -304,6 +315,7 @@ $(top_srcdir)/icons/128px/rotate_right.png \
 $(top_srcdir)/icons/128px/warning.png \
 $(top_srcdir)/icons/128px/volume_mute.png \
 $(top_srcdir)/icons/128px/egt_logo_black.png \
+$(top_srcdir)/icons/128px/mgs_logo_black.png \
 $(top_srcdir)/icons/128px/fastforward.png \
 $(top_srcdir)/icons/128px/folder_add.png \
 $(top_srcdir)/icons/128px/webcam.png \
@@ -373,10 +385,12 @@ $(top_srcdir)/icons/16px/bluetooth.png \
 $(top_srcdir)/icons/16px/info.png \
 $(top_srcdir)/icons/16px/cursor_hand.png \
 $(top_srcdir)/icons/16px/egt_logo_white.png \
+$(top_srcdir)/icons/16px/mgs_logo_white.png \
 $(top_srcdir)/icons/16px/play.png \
 $(top_srcdir)/icons/16px/screen_original.png \
 $(top_srcdir)/icons/16px/clouda.png \
 $(top_srcdir)/icons/16px/egt_logo_icon.png \
+$(top_srcdir)/icons/16px/mgs_logo_icon.png \
 $(top_srcdir)/icons/16px/record.png \
 $(top_srcdir)/icons/16px/wifi.png \
 $(top_srcdir)/icons/16px/camera.png \
@@ -385,6 +399,7 @@ $(top_srcdir)/icons/16px/rotate_right.png \
 $(top_srcdir)/icons/16px/warning.png \
 $(top_srcdir)/icons/16px/volume_mute.png \
 $(top_srcdir)/icons/16px/egt_logo_black.png \
+$(top_srcdir)/icons/16px/mgs_logo_black.png \
 $(top_srcdir)/icons/16px/fastforward.png \
 $(top_srcdir)/icons/16px/folder_add.png \
 $(top_srcdir)/icons/16px/webcam.png \

@@ -190,7 +190,7 @@ int main(int argc, char** argv)
     egt::TopWindow window;
     window.color(egt::Palette::ColorId::bg, egt::Palette::black);
 
-    egt::ImageLabel logo(egt::Image("icon:egt_logo_white.png;128"));
+    egt::ImageLabel logo(egt::Image("icon:mgs_logo_white.png;128"));
     logo.margin(10);
     logo.align(egt::AlignFlag::center_horizontal | egt::AlignFlag::top);
     window.add(logo);

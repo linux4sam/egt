@@ -18,7 +18,7 @@ int main(int argc, char** argv)
     egt::TopWindow win;
     win.background(egt::Image("file:background.png"));
 
-    egt::ImageLabel logo(egt::Image("icon:egt_logo_white.png;128"));
+    egt::ImageLabel logo(egt::Image("icon:mgs_logo_white.png;128"));
     logo.align(egt::AlignFlag::left | egt::AlignFlag::top);
     logo.margin(10);
     win.add(logo);

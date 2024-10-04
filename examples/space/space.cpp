@@ -68,7 +68,7 @@ public:
     {
         background(egt::Image("file:background.png"));
 
-        auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_white.png;128"));
+        auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:mgs_logo_white.png;128"));
         logo->margin(10);
         add(top(left(logo)));
     }

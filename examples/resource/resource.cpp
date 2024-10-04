@@ -41,7 +41,7 @@ public:
         auto sizer = std::make_shared<egt::VerticalBoxSizer>();
         add(expand(sizer));
 
-        auto egt_logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_black.png;128"));
+        auto egt_logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:mgs_logo_black.png;128"));
         egt_logo->align(egt::AlignFlag::center_horizontal | egt::AlignFlag::top);
         egt_logo->margin(5);
         sizer->add(egt_logo);

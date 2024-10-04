@@ -90,7 +90,7 @@ int main(int argc, char** argv)
     win.padding(10);
     win.color(egt::Palette::ColorId::bg, egt::Color::css("#1b1d43"));
 
-    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_white.png;128"));
+    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:mgs_logo_white.png;128"));
     win.add(top(left(logo)));
 
     // the gauge

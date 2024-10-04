@@ -32,7 +32,7 @@ int main(int argc, char** argv)
     vsizer.align(egt::AlignFlag::center_horizontal);
     win.add(expand_vertical(vsizer));
 
-    egt::ImageLabel elogo(egt::Image("icon:egt_logo_white.png;128"));
+    egt::ImageLabel elogo(egt::Image("icon:mgs_logo_white.png;128"));
     elogo.margin(10);
     // The size needs to be set again since the margin has been modified.
     const auto m = elogo.moat();

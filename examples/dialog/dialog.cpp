@@ -21,7 +21,7 @@ int main(int argc, char** argv)
     auto layout = std::make_shared<egt::VerticalBoxSizer>();
     win.add(expand(layout));
 
-    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_black.png;128"));
+    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:mgs_logo_black.png;128"));
     layout->add(logo);
 
     auto vsizer = std::make_shared<egt::VerticalBoxSizer>();

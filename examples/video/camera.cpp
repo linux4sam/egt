@@ -177,7 +177,7 @@ int main(int argc, char** argv)
     hpos.align(egt::AlignFlag::center);
     ctrlwindow.add(hpos);
 
-    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_icon.png;32"));
+    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:mgs_logo_icon.png;32"));
     logo->margin(10);
     hpos.add(logo);
 

@@ -206,7 +206,7 @@ public:
             paint_to_file();
         });
 
-        auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_black.png;128"));
+        auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:mgs_logo_black.png;128"));
         logo->align(egt::AlignFlag::right | egt::AlignFlag::top);
         logo->margin(10);
         add(logo);

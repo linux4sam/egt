@@ -24,7 +24,7 @@ int main(int argc, char** argv)
     sizer0.fill_flags(egt::Theme::FillFlag::blend);
     sizer1.add(expand_horizontal(sizer0));
 
-    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_white.png;128"));
+    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:mgs_logo_white.png;128"));
     logo->margin(10);
     sizer0.add(logo);
 

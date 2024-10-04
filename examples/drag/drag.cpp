@@ -104,7 +104,7 @@ int main(int argc, char** argv)
     label1.color(egt::Palette::ColorId::bg, egt::Palette::transparent);
     window.add(label1);
 
-    egt::ImageLabel logo(egt::Image("icon:egt_logo_white.png;128"));
+    egt::ImageLabel logo(egt::Image("icon:mgs_logo_white.png;128"));
     logo.margin(10);
     window.add(center(top(logo)));
 

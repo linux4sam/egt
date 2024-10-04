@@ -503,7 +503,7 @@ int main(int argc, char** argv)
     frame->color(egt::Palette::ColorId::bg, egt::Palette::transparent);
     vsizer.add(egt::expand_horizontal(frame));
 
-    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_black.png;128"));
+    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:mgs_logo_black.png;128"));
     logo->align(egt::AlignFlag::left | egt::AlignFlag::center_vertical);
     logo->margin(5);
     frame->add(logo);
@@ -546,9 +546,9 @@ int main(int argc, char** argv)
                 egt::global_theme(i.second());
 
                 if ((s->text() == "Midnight") || (s->text() == "Lapis"))
-                    logo->image(egt::Image("icon:egt_logo_white.png;128"));
+                    logo->image(egt::Image("icon:mgs_logo_white.png;128"));
                 else
-                    logo->image(egt::Image("icon:egt_logo_black.png;128"));
+                    logo->image(egt::Image("icon:mgs_logo_black.png;128"));
 
                 break;
             }

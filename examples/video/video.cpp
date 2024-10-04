@@ -119,7 +119,7 @@ int main(int argc, char** argv)
     hpos.resize(ctrlwindow.size());
     ctrlwindow.add(hpos);
 
-    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_icon.png;32"));
+    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:mgs_logo_icon.png;32"));
     logo->margin(10);
     // The size needs to be set again since the margin has been modified.
     const auto m = logo->moat();

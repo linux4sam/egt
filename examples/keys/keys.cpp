@@ -19,7 +19,7 @@ int main(int argc, char** argv)
     egt::VerticalBoxSizer vsizer(window);
     expand(vsizer);
 
-    egt::ImageLabel logo(egt::Image("icon:egt_logo_black.png;128"));
+    egt::ImageLabel logo(egt::Image("icon:mgs_logo_black.png;128"));
     vsizer.add(logo);
 
     egt::Label title("Keyboard Events");

@@ -44,7 +44,7 @@ int main(int argc, char** argv)
     egt::TopWindow win;
     win.color(egt::Palette::ColorId::bg, egt::Palette::black);
 
-    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:egt_logo_white.png;128"));
+    auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:mgs_logo_white.png;128"));
     logo->margin(10);
     win.add(top(center(logo)));
 

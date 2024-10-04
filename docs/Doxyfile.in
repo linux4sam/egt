@@ -51,7 +51,7 @@ PROJECT_BRIEF          =
 # pixels and the maximum width should not exceed 200 pixels. Doxygen will copy
 # the logo to the output directory.
 
-PROJECT_LOGO           = @srcdir@/src/logo_small.png
+PROJECT_LOGO           = @srcdir@/src/mgs_logo_small.png
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) path
 # into which the generated documentation will be written. If a relative path is
@@ -1795,7 +1795,7 @@ LATEX_EXTRA_STYLESHEET =
 # markers available.
 # This tag requires that the tag GENERATE_LATEX is set to YES.
 
-LATEX_EXTRA_FILES      = @srcdir@/src/logo.pdf \
+LATEX_EXTRA_FILES      = @srcdir@/src/mgs_logo.pdf \
                          @srcdir@/src/microchip_logo.pdf
 
 # If the PDF_HYPERLINKS tag is set to YES, the LaTeX that is generated is

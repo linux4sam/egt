@@ -18,7 +18,7 @@ docs: Doxyfile
 DOCSET_INPUT = $(top_builddir)/docs/html
 DOCSET_TAG = $(top_builddir)/docs/egt.tag
 DOCSET_OUTPUT = $(top_builddir)/docs/EGT.docset
-DOCSET_ICON = $(top_srcdir)/docs/src/logo_icon.png
+DOCSET_ICON = $(top_srcdir)/docs/src/mgs_logo_icon.png
 DOCSET_INFO = $(top_builddir)/docs/Info.plist
 DOCSET_TARBALL = EGT.tgz
 

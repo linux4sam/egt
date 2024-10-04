@@ -680,7 +680,7 @@ int main(int argc, char** argv)
     header.resize(egt::Size(0, header_height));
     vsizer.add(egt::expand_horizontal(header));
 
-    egt::ImageLabel logo(egt::Image("icon:egt_logo_black.svg;svg"));
+    egt::ImageLabel logo(egt::Image("icon:mgs_logo_black.svg;svg"));
     if (landscape)
         logo.height(header_height * 0.8);
     else

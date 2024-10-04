@@ -142,7 +142,7 @@ int main(int argc, char** argv)
     window.add(bottom(label1));
     label1.zorder_down();
 
-    egt::ImageLabel logo(egt::Image("icon:egt_logo_white.png;128"));
+    egt::ImageLabel logo(egt::Image("icon:mgs_logo_white.png;128"));
     logo.x(egt::SideBoard::HANDLE_WIDTH);
     logo.margin(10);
     window.add(top(logo));

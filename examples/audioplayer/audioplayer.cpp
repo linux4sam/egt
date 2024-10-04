@@ -253,7 +253,7 @@ protected:
     egt::AudioPlayer m_player;
     egt::AnimationSequence m_animation{true};
     egt::experimental::ColorMap m_colormap;
-    egt::ImageLabel m_logo{(egt::Image("icon:egt_logo_white.png;128"))};
+    egt::ImageLabel m_logo{(egt::Image("icon:mgs_logo_white.png;128"))};
     egt::Dialog m_message_dialog;
     egt::ImageButton note{egt::Image("file:note.png")};
 };
