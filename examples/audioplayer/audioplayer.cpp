@@ -260,10 +260,17 @@ protected:
 
 int main(int argc, char** argv)
 {
+#ifdef EXAMPLEDATA
+    egt::add_search_path(EXAMPLEDATA);
+#endif
+
+    auto default_file = std::string{};
+    egt::detail::resolve_path("file:concerto.mp3", default_file);
+
     cxxopts::Options options(argv[0], "play audio file");
     options.add_options()
     ("h,help", "Show help")
-    ("i,input", "URI to audio file", cxxopts::value<std::string>()->default_value("file:concerto.mp3"));
+    ("i,input", "URI to audio file", cxxopts::value<std::string>()->default_value("file://" + default_file));
 
     auto args = options.parse(argc, argv);
 
@@ -275,6 +282,7 @@ int main(int argc, char** argv)
 
     egt::Application app(argc, argv);
 #ifdef EXAMPLEDATA
+    // Need to redo it as the Application ctor clears the search paths.
     egt::add_search_path(EXAMPLEDATA);
 #endif
 
