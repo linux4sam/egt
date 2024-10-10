@@ -15,6 +15,7 @@ and maximizes performance.
 @li @ref layout
 @li @ref animations
 @li @ref media_page
+@li @ref gstreamer
 @li @ref input
 @li @ref local
 @li @ref resources

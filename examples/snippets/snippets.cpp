@@ -448,7 +448,7 @@ static const std::pair<std::string, std::function<int(egt::Application& app)>> e
 
             egt::CameraWindow player("/dev/video0");
             window.add(player);
-            player.start();
+            player.play();
 
             window.show();
             /// @[camera0]
@@ -461,7 +461,7 @@ static const std::pair<std::string, std::function<int(egt::Application& app)>> e
         "capture0", [](egt::Application & app)
         {
             /// @[capture0]
-            egt::experimental::CameraCapture capture("output.avi");
+            egt::CameraCapture capture("output.avi");
             capture.start();
             /// @[capture0]
             return app.run();
