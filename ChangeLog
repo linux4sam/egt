@@ -3,6 +3,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+### Added
+- The GstDecoderImpl class now supports custom GStreamer pipeline descriptions.
+A new parameter has been introduced in the video example to allow for a custom
+pipeline. For further information, please refer to the newly added GStreamer
+page in the documentaion.
+### Changed
+- Multimedia support has been restructured. This change is internal and should
+not affect multimedia widgets. The update eliminates code duplication by
+consolidating all GStreamer-related code within the GstDecoderImpl class.
+
 ## [1.9] - 2024-05-03
 ### Added
 - CMake: add support for the CMake build system in addition to the autotools
