@@ -5,6 +5,12 @@
 Here, you can find the API changes from the version 1.0. In addition, some hints
 are provided to help you update your code.
 
+@section v1_10 1.10
+
+@subsection cameraWindow CameraWindow
+
+@li The start() method should be replaced with the play() method. To standardize across multimedia components, the start() method only creates the GStreamer pipeline. To transition its state to play, the play() method must be utilized. The play() method will automatically invoke the start() method if the pipeline has not been previously created.
+
 @section v1_9 1.9
 
 @subsection checkbutton CheckButton
