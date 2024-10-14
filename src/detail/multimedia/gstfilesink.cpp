@@ -32,7 +32,7 @@ std::string GstFileSink::description()
                        video_caps_filter, m_output);
 }
 
-void GstFileSink::draw(Painter& painter, const Rect& rect)
+void GstFileSink::draw([[maybe_unused]] Painter& painter, [[maybe_unused]] const Rect& rect)
 {
 }
 
