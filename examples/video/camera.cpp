@@ -132,7 +132,7 @@ int main(int argc, char** argv)
 
     player.user_drag(true);
     player.user_track_drag(true);
-    player.on_event([&player, &win, &size, wscale](egt::Event & event)
+    player.on_event([&player, &win, wscale](egt::Event & event)
     {
         static egt::Point drag_start_point;
         switch (event.id())
@@ -148,8 +148,8 @@ int main(int argc, char** argv)
             {
                 auto diff = event.pointer().drag_start - event.pointer().point;
                 auto p = drag_start_point - egt::Point(diff.x(), diff.y());
-                auto max_x = win.width() - size.width();
-                auto max_y = win.height() - size.height();
+                auto max_x = win.width() - player.width();
+                auto max_y = win.height() - player.height();
                 if (p.x() >= max_x)
                     p.x(max_x);
                 if (p.x() < 0)
