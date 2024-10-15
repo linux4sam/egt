@@ -112,6 +112,14 @@ void GstAppSink::draw(Painter& painter, const Rect& rect)
                 if (cairo_surface_status(surface.get()) == CAIRO_STATUS_SUCCESS)
                 {
                     auto cr = painter.context().get();
+                    /*
+                     * Cairo scaling should occur infrequently, but it is
+                     * necessary when a video resize takes place. When the caps
+                     * filter is updated with the new size, the pipeline does
+                     * not update immediately. Consequently, a few frames with
+                     * the previous size may be received while the window size
+                     * has already been adjusted.
+                     */
                     if (width != box.width() || height != box.height())
                     {
                         double scalex = static_cast<double>(box.width()) / width;

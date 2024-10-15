@@ -475,8 +475,21 @@ void GstDecoderImpl::custom_pipeline(const std::string& pipeline_description)
 
 void GstDecoderImpl::scale(float scalex, float scaley)
 {
-    EGTLOG_DEBUG("GstDecoderImpl::scale: scalex={}, scaley={}", scalex, scaley);
-    m_window->resize(Size(m_size.width() * scalex, m_size.height() * scaley));
+    const auto size = Size{static_cast<DefaultDim>(m_size.width() * scalex),
+                           static_cast<DefaultDim>(m_size.height() * scaley)};
+    EGTLOG_DEBUG("GstDecoderImpl::scale: scalex={}, scaley={}, new_size={}",
+                 scalex, scaley, size);
+    m_window->resize(size);
+    /*
+     * If the window is a plane window, the scaling is managed by the LCD
+     * controller, so no further action is required. However, if it is not a
+     * plane window, the sink must be informed of this request to update the
+     * size of the caps filter, ensuring that GStreamer manages the scaling
+     * appropriately.
+     */
+    if (m_window->plane_window())
+        return;
+    m_sink->size(size);
 }
 
 void GstDecoderImpl::resize(const Size& size)
