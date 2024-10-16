@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [Unreleased]
+## [1.10] - 2024-10-16
 ### Added
 - The GstDecoderImpl class now supports custom GStreamer pipeline descriptions.
 A new parameter has been introduced in the video example to allow for a custom
