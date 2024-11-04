@@ -834,7 +834,7 @@ INPUT                  = @top_srcdir@/docs/src/index.md \
                          @top_srcdir@/docs/src/input.md \
                          @top_srcdir@/docs/src/localization.md \
                          @top_srcdir@/docs/src/resources.md \
-                         @top_srcdir@/docs/src/topics.md \
+                         @top_srcdir@/docs/src/dev_topics.md \
                          @top_srcdir@/docs/src/environ.md \
                          @top_srcdir@/docs/src/debugging.md \
                          @top_srcdir@/docs/src/custom.md \

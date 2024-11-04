@@ -19,7 +19,7 @@ and maximizes performance.
 @li @ref input
 @li @ref local
 @li @ref resources
-@li @ref topics
+@li @ref devtopics
 @li @ref environ
 @li @ref debug
 @li @ref custom
