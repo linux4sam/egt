@@ -631,7 +631,8 @@ Screen* Widget::screen() const
 
 void Widget::align(const AlignFlags& a)
 {
-    m_align = a;
+    if (detail::change_if_diff<>(m_align, a))
+        parent_layout();
 }
 
 Point Widget::to_parent(const Point& r) const
