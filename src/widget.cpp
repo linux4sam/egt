@@ -1535,6 +1535,8 @@ void Widget::add_component(Widget& widget)
     if (first_component)
         m_components_begin = std::prev(m_subordinates.end());
     update_subordinates_ranges();
+
+    layout();
 }
 
 void Widget::component(bool value)
