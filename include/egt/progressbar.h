@@ -55,8 +55,8 @@ public:
      * @param[in] end Ending value in the range.
      * @param[in] value Current value in the range.
      */
-    explicit ProgressBarType<T>(const Rect& rect = {},
-                                T start = {}, T end = 100, T value = {}) noexcept
+    explicit ProgressBarType(const Rect& rect = {},
+                             T start = {}, T end = 100, T value = {}) noexcept
         : ValueRangeWidget<T>(rect, start, end, value)
     {
         this->name("ProgressBar" + std::to_string(this->m_widgetid));
