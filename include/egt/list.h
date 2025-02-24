@@ -18,6 +18,7 @@
 #include <egt/string.h>
 #include <egt/view.h>
 #include <egt/widget.h>
+#include <list>
 #include <string>
 
 namespace egt
@@ -289,6 +290,208 @@ public:
      * @return The selected index, or -1 if there is no selection.
      */
     EGT_NODISCARD ssize_t selected() const;
+};
+
+/**
+ * ListBoxMulti a listbox that manages a selectable list of items and allows
+ * multi selection.
+ *
+ * Several items may be selected at a time. The items are based on StringItem.
+ *
+ * Selected and deselected methods set the status of all items. For example,
+ * selected({1, 3, 5}) selects item at indexes 1, 3, 5, while deselecting
+ * all other items.
+ *
+ * Select, deselect and toggle methods update the status of for the specified
+ * indexes without affecting the status of other items.
+ *
+ * Events are triggered only when there is a change in the status of an item.
+ * For instance, selecting an item that is  already selected will not generate
+ * an event.
+ *
+ * @ingroup controls
+ *
+ * @note This interface only supports a vertical Orientation.
+ */
+class EGT_API ListBoxMulti : public ListBoxBase
+{
+public:
+
+    /**
+     * Event signal.
+     * @{
+     */
+    /**
+     * Invoked when items are selected with the list of the indexes of the
+     * items selected.
+     */
+    Signal<std::list<size_t>> on_selected;
+
+    /**
+     * Invoked when items are deselected with the list of the indexes of the
+     * items deselected.
+     */
+    Signal<std::list<size_t>> on_deselected;
+    /** @} */
+
+
+    /**
+     * @param[in] items Array of items to insert into the list.
+     */
+    explicit ListBoxMulti(const ItemArray& items = ItemArray()) noexcept;
+
+    /**
+     * @param[in] rect Initial rectangle of the widget.
+     */
+    explicit ListBoxMulti(const Rect& rect) noexcept;
+
+    /**
+     * @param[in] items Array of items to insert into the list.
+     * @param[in] rect Initial rectangle of the widget.
+     */
+    ListBoxMulti(const ItemArray& items, const Rect& rect) noexcept;
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] items Array of items to insert into the list.
+     * @param[in] rect Initial rectangle of the widget.
+     */
+    explicit ListBoxMulti(Frame& parent, const ItemArray& items = {}, const Rect& rect = {}) noexcept;
+
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit ListBoxMulti(Serializer::Properties& props) noexcept
+        : ListBoxMulti(props, false)
+    {
+    }
+
+protected:
+
+    explicit ListBoxMulti(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
+
+    void handle(Event& event) override;
+
+    /**
+     * Set the selected item, other items are deselected.
+     */
+    void selected(size_t index) override;
+
+    /**
+     * Set a list of selected items, other items are deselected.
+     */
+    void selected(const std::list<size_t>& indexes);
+
+    /**
+     * Set a range [start_index, end_index) of selected items, other items
+     * are deselected.
+     */
+    void selected(size_t start_index, size_t end_index);
+
+    /**
+     * Set the deselected item, other items are selected.
+     */
+    void deselected(size_t index);
+
+    /**
+     * Set a list of deselected items, other items are selected.
+     */
+    void deselected(const std::list<size_t>& indexes);
+
+    /**
+     * Set a range [start_index, end_index) of deselected items, other items
+     * are selected.
+     */
+    void deselected(size_t start_index, size_t end_index);
+
+    /**
+     * Select an item by index, others items are left unchanged.
+     */
+    void select(size_t index);
+
+    /**
+     * Select a list of items by indexes, others items are left unchanged.
+     */
+    void select(const std::list<size_t>& indexes);
+
+    /**
+     * Select a range [start_index, end_index) of items, others items are
+     * left unchanged.
+     */
+    void select(size_t start_index, size_t end_index);
+
+    /**
+     * Select all the items.
+     */
+    void select_all();
+
+    /**
+     * Deselect an item by index, others items are left unchanged.
+     */
+    void deselect(size_t index);
+
+    /**
+     * Deselect a list of items by indexes, others items are left unchanged.
+     */
+    void deselect(const std::list<size_t>& indexes);
+
+    /**
+     * Deselect a range [start_index, end_index) of items, others items are
+     * left unchanged.
+     */
+    void deselect(size_t start_index, size_t end_index);
+
+    /**
+     * Deselect all the items.
+     */
+    void deselect_all();
+
+    /**
+     * Toggle an item by index.
+     */
+    void toggle(size_t index);
+
+    /**
+     * Toggle a list of items by indexes.
+     */
+    void toggle(const std::list<size_t>& indexes);
+
+    /**
+     * Toggle a range [start_index, end_index) of items.
+     */
+    void toggle(size_t start_index, size_t end_index);
+
+    /**
+     * Toggle all the items.
+     */
+    void toggle_all();
+
+    /**
+     * Get the currently selected indexes.
+     *
+     * @return A list of selected index, an empty list if any.
+     */
+    EGT_NODISCARD std::list<size_t> selected() const;
+
+    /**
+     * Get the currently deselected indexes.
+     *
+     * @return A list of deselected index, an empty list if any.
+     */
+    EGT_NODISCARD std::list<size_t> deselected() const;
+
+protected:
+
+    bool selected(const std::list<size_t>& indexes,
+                  bool selected,
+                  std::list<size_t>& selected_update,
+                  std::list<size_t>& deselected_update);
+    bool select(const std::list<size_t>& indexes,
+                bool selected,
+                std::list<size_t>& selected_update,
+                std::list<size_t>& deselected_update);
 };
 
 }

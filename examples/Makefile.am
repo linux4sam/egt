@@ -45,6 +45,7 @@ grid/grid \
 imagebutton/imagebutton \
 imagestack/imagestack \
 keys/keys \
+listboxmulti/listboxmulti \
 press/press \
 sizers/sizers \
 space/space \
@@ -271,6 +272,12 @@ keys_keys_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
 keys_keys_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 keys_keysdir = $(prefix)/share/egt/examples/keys
 keys_keys_LDFLAGS = $(AM_LDFLAGS)
+
+listboxmulti_listboxmulti_SOURCES = listboxmulti/listboxmulti.cpp
+listboxmulti_listboxmulti_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)
+listboxmulti_listboxmulti_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
+listboxmulti_listboxmultidir = $(prefix)/share/egt/examples/listboxmulti
+listboxmulti_listboxmulti_LDFLAGS = $(AM_LDFLAGS)
 
 luarepl_luarepl_SOURCES = luarepl/luarepl.cpp
 luarepl_luarepl_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS)

@@ -212,6 +212,7 @@ static const std::pair<std::string, CreateFunction> allocators[] =
     {"egt::v1::LevelMeterF", create_widget<LevelMeterF>},
     {"egt::v1::LineWidget", create_widget<LineWidget>},
     {"egt::v1::ListBox", create_widget<ListBox>},
+    {"egt::v1::ListBoxMulti", create_widget<ListBoxMulti>},
     {"egt::v1::Notebook", create_widget<Notebook>},
     {"egt::v1::NotebookTab", create_widget<NotebookTab>},
     //{"egt::v1::PopupVirtualKeyboard", create_widget<PopupVirtualKeyboard>},

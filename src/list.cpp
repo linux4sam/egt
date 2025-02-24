@@ -9,6 +9,8 @@
 #include "egt/list.h"
 #include "egt/painter.h"
 #include "egt/string.h"
+#include <numeric>
+#include <string>
 
 namespace egt
 {
@@ -315,6 +317,332 @@ ssize_t ListBox::selected() const
     }
 
     return -1;
+}
+
+ListBoxMulti::ListBoxMulti(const ItemArray& items) noexcept
+    : ListBoxMulti(items, Rect())
+{}
+
+ListBoxMulti::ListBoxMulti(const Rect& rect) noexcept
+    : ListBoxMulti(ItemArray(), rect)
+{}
+
+ListBoxMulti::ListBoxMulti(const ItemArray& items, const Rect& rect) noexcept
+    : ListBoxBase(items, rect)
+{
+    name("ListBoxMulti" + std::to_string(m_widgetid));
+}
+
+ListBoxMulti::ListBoxMulti(Frame& parent, const ItemArray& items, const Rect& rect) noexcept
+    : ListBoxMulti(items, rect)
+{
+    parent.add(*this);
+}
+
+ListBoxMulti::ListBoxMulti(Serializer::Properties& props, bool is_derived) noexcept
+    : ListBoxBase(props)
+{
+    if (!is_derived)
+        deserialize_leaf(props);
+}
+
+void ListBoxMulti::handle(Event& event)
+{
+    switch (event.id())
+    {
+    case EventId::pointer_click:
+    {
+        for (size_t i = 0; i < m_sizer.count_children(); i++)
+        {
+            auto item = m_sizer.child_at(i);
+
+            if (item->hit(event.pointer().point))
+            {
+                toggle(i);
+                break;
+            }
+        }
+
+        event.stop();
+        break;
+    }
+    case EventId::raw_pointer_down:
+    case EventId::raw_pointer_up:
+        return;
+    default:
+        break;
+    }
+
+    Widget::handle(event);
+}
+
+bool ListBoxMulti::selected(const std::list<size_t>& indexes,
+                            bool selected,
+                            std::list<size_t>& selected_update,
+                            std::list<size_t>& deselected_update)
+{
+    for (size_t i = 0; i < item_count(); i++)
+    {
+        const auto in_selection = std::find(indexes.begin(), indexes.end(), i) != indexes.end();
+        const auto checked = item_at(i)->checked();
+
+        /*
+         * If the item is not in the selection and its status is the same as
+         * the selection one, invert it.
+         */
+        if (checked == selected && !in_selection)
+        {
+            item_at(i)->checked(!selected);
+            if (selected)
+                deselected_update.push_back(i);
+            else
+                selected_update.push_back(i);
+        }
+        /*
+         * If the item is the selection and its status is not the requested
+         * one, invert it.
+         */
+        else if (checked != selected && in_selection)
+        {
+            item_at(i)->checked(selected);
+            if (selected)
+                selected_update.push_back(i);
+            else
+                deselected_update.push_back(i);
+        }
+    }
+
+    return !selected_update.empty() || !deselected_update.empty();
+}
+
+void ListBoxMulti::selected(size_t index)
+{
+    selected(std::list<size_t> {index});
+}
+
+void ListBoxMulti::selected(const std::list<size_t>& indexes)
+{
+    std::list<size_t> selected_update{}, deselected_update{};
+
+    if (selected(indexes, true, selected_update, deselected_update))
+    {
+        damage();
+
+        if (!selected_update.empty())
+            on_selected.invoke(selected_update);
+
+        if (!deselected_update.empty())
+            on_deselected.invoke(deselected_update);
+
+        on_selected_changed.invoke();
+    }
+}
+
+void ListBoxMulti::selected(size_t start_index, size_t end_index)
+{
+    if (end_index <= start_index)
+        return;
+
+    std::list<size_t> selection(static_cast<int>(end_index - start_index));
+    std::iota(selection.begin(), selection.end(), start_index);
+
+    selected(selection);
+}
+
+void ListBoxMulti::deselected(size_t index)
+{
+    deselected(std::list<size_t> {index});
+}
+
+void ListBoxMulti::deselected(const std::list<size_t>& indexes)
+{
+    std::list<size_t> selected_update{}, deselected_update{};
+
+    if (selected(indexes, false, selected_update, deselected_update))
+    {
+        damage();
+
+        if (!selected_update.empty())
+            on_selected.invoke(selected_update);
+
+        if (!deselected_update.empty())
+            on_deselected.invoke(deselected_update);
+
+        on_selected_changed.invoke();
+    }
+}
+
+void ListBoxMulti::deselected(size_t start_index, size_t end_index)
+{
+    if (end_index <= start_index)
+        return;
+
+    std::list<size_t> selection(static_cast<int>(end_index - start_index));
+    std::iota(selection.begin(), selection.end(), start_index);
+
+    deselected(selection);
+}
+
+std::list<size_t> ListBoxMulti::selected() const
+{
+    auto selection = std::list<size_t> {};
+
+    for (size_t i = 0; i < item_count(); i++)
+        if (item_at(i)->checked())
+            selection.push_back(i);
+
+    return selection;
+}
+
+std::list<size_t> ListBoxMulti::deselected() const
+{
+    auto selection = std::list<size_t> {};
+
+    for (auto i = size_t{0}; i < item_count(); i++)
+        if (!item_at(i)->checked())
+            selection.push_back(i);
+
+    return selection;
+}
+
+bool ListBoxMulti::select(const std::list<size_t>& indexes,
+                          bool selected,
+                          std::list<size_t>& selected_update,
+                          std::list<size_t>& deselected_update)
+{
+    for (auto i : indexes)
+    {
+        const auto checked = item_at(i)->checked();
+
+        if (checked != selected)
+        {
+            item_at(i)->checked(selected);
+            if (selected)
+                selected_update.push_back(i);
+            else
+                deselected_update.push_back(i);
+        }
+    }
+
+    return !selected_update.empty() || !deselected_update.empty();
+}
+
+void ListBoxMulti::select(size_t index)
+{
+    select(std::list<size_t> {index});
+}
+
+void ListBoxMulti::select(const std::list<size_t>& indexes)
+{
+    std::list<size_t> selected_update{}, deselected_update{};
+
+    if (select(indexes, true, selected_update, deselected_update))
+    {
+        damage();
+
+        on_selected.invoke(selected_update);
+        on_selected_changed.invoke();
+    }
+}
+
+void ListBoxMulti::select(size_t start_index, size_t end_index)
+{
+    if (end_index <= start_index)
+        return;
+
+    auto selection = std::list<size_t>(static_cast<int>(end_index - start_index));
+    std::iota(selection.begin(), selection.end(), start_index);
+
+    select(selection);
+}
+
+void ListBoxMulti::select_all()
+{
+    select(0, item_count());
+}
+
+
+void ListBoxMulti::deselect(size_t index)
+{
+    deselect(std::list<size_t> {index});
+}
+
+void ListBoxMulti::deselect(const std::list<size_t>& indexes)
+{
+    std::list<size_t> selected_update{}, deselected_update{};
+
+    if (select(indexes, false, selected_update, deselected_update))
+    {
+        damage();
+
+        on_deselected.invoke(deselected_update);
+        on_selected_changed.invoke();
+    }
+}
+
+void ListBoxMulti::deselect(size_t start_index, size_t end_index)
+{
+    if (end_index <= start_index)
+        return;
+
+    auto selection = std::list<size_t>(static_cast<int>(end_index - start_index));
+    std::iota(selection.begin(), selection.end(), start_index);
+
+    deselect(selection);
+}
+
+void ListBoxMulti::deselect_all()
+{
+    deselect(0, item_count());
+}
+
+void ListBoxMulti::toggle(size_t index)
+{
+    toggle(std::list<size_t> {index});
+}
+
+void ListBoxMulti::toggle(const std::list<size_t>& indexes)
+{
+    std::list<size_t> selected_update;
+    std::list<size_t> deselected_update;
+
+    for (auto i : indexes)
+    {
+        const auto checked = item_at(i)->checked();
+
+        item_at(i)->checked(!checked);
+
+        if (checked)
+            deselected_update.push_back(i);
+        else
+            selected_update.push_back(i);
+    }
+
+    if (!selected_update.empty() || !deselected_update.empty())
+    {
+        damage();
+        if (!selected_update.empty())
+            on_selected.invoke(selected_update);
+        if (!deselected_update.empty())
+            on_deselected.invoke(deselected_update);
+        on_selected_changed.invoke();
+    }
+}
+
+void ListBoxMulti::toggle(size_t start_index, size_t end_index)
+{
+    if (end_index <= start_index)
+        return;
+
+    auto selection = std::list<size_t>(static_cast<int>(end_index - start_index));
+    std::iota(selection.begin(), selection.end(), start_index);
+
+    toggle(selection);
+}
+
+void ListBoxMulti::toggle_all()
+{
+    toggle(0, item_count());
 }
 
 }

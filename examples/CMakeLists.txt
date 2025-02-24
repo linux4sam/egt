@@ -178,6 +178,10 @@ add_executable(egt_keys keys/keys.cpp)
 target_link_libraries(egt_keys PRIVATE egt)
 install(TARGETS egt_keys RUNTIME)
 
+add_executable(egt_listboxmulti listboxmulti/listboxmulti.cpp)
+target_link_libraries(egt_listboxmulti PRIVATE egt)
+install(TARGETS egt_listboxmulti RUNTIME)
+
 if(LUA_FOUND AND ENABLE_LUA_BINDINGS)
     add_executable(egt_luarepl luarepl/luarepl.cpp)
     target_link_libraries(egt_luarepl PRIVATE egt)
