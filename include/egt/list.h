@@ -26,19 +26,10 @@ inline namespace v1
 {
 
 /**
- * ListBox that manages a selectable list of widgets.
- *
- * Only one item may be selected at a time. The items are based on Widget, so
- * any Widget can be used.
- *
- * @image html widget_listbox.png
- * @image latex widget_listbox.png "widget_listbox" width=5cm
- *
- * @ingroup controls
- *
- * @note This interface only supports a vertical Orientation.
+ * ListBoxBase is an abstract class that can be used as a base class to
+ * implement list boxes.
  */
-class EGT_API ListBox : public Widget
+class EGT_API ListBoxBase : public Widget
 {
 public:
 
@@ -52,11 +43,6 @@ public:
     Signal<> on_selected_changed;
 
     /**
-     * Invoked when an item is selected with the index of the item selected.
-     */
-    Signal<size_t> on_selected;
-
-    /**
      * Invoked when items are added or removed.
      */
     Signal<> on_items_changed;
@@ -65,44 +51,36 @@ public:
     /// Item array type
     using ItemArray = std::vector<std::shared_ptr<StringItem>>;
 
+protected:
+
     /**
      * @param[in] items Array of items to insert into the list.
      */
-    explicit ListBox(const ItemArray& items = ItemArray()) noexcept;
+    explicit ListBoxBase(const ItemArray& items = ItemArray()) noexcept;
 
     /**
      * @param[in] rect Initial rectangle of the widget.
      */
-    explicit ListBox(const Rect& rect) noexcept;
+    explicit ListBoxBase(const Rect& rect) noexcept;
 
     /**
      * @param[in] items Array of items to insert into the list.
      * @param[in] rect Initial rectangle of the widget.
      */
-    ListBox(const ItemArray& items, const Rect& rect) noexcept;
+    ListBoxBase(const ItemArray& items, const Rect& rect) noexcept;
 
     /**
      * @param[in] parent The parent Frame.
      * @param[in] items Array of items to insert into the list.
      * @param[in] rect Initial rectangle of the widget.
      */
-    explicit ListBox(Frame& parent, const ItemArray& items = {}, const Rect& rect = {}) noexcept;
+    explicit ListBoxBase(Frame& parent, const ItemArray& items = {}, const Rect& rect = {}) noexcept;
 
-    /**
-     * @param[in] props list of widget argument and its properties.
-     */
-    explicit ListBox(Serializer::Properties& props) noexcept
-        : ListBox(props, false)
-    {
-    }
-
-protected:
-
-    explicit ListBox(Serializer::Properties& props, bool is_derived) noexcept;
+    explicit ListBoxBase(Serializer::Properties& props) noexcept;
 
 public:
 
-    void handle(Event& event) override;
+    virtual ~ListBoxBase() = default;
 
     void resize(const Size& s) override
     {
@@ -121,14 +99,7 @@ public:
     /**
      * Select an item by index.
      */
-    void selected(size_t index);
-
-    /**
-     * Get the currently selected index.
-     *
-     * @return The selected index, or -1 if there is no selection.
-     */
-    EGT_NODISCARD ssize_t selected() const;
+    virtual void selected(size_t index) = 0;
 
     /**
      * Return the number of items in the list.
@@ -226,6 +197,98 @@ private:
     void add_item_private(const std::shared_ptr<StringItem>& item);
 
     void deserialize(Serializer::Properties& props);
+};
+
+/**
+ * ListBox that manages a selectable list of widgets.
+ *
+ * Only one item may be selected at a time. The items are based on Widget, so
+ * any Widget can be used.
+ *
+ * @image html widget_listbox.png
+ * @image latex widget_listbox.png "widget_listbox" width=5cm
+ *
+ * @ingroup controls
+ *
+ * @note This interface only supports a vertical Orientation.
+ */
+class EGT_API ListBox : public ListBoxBase
+{
+public:
+
+    /**
+     * Event signal.
+     * @{
+     */
+    /**
+     * Invoked when an item is selected with the index of the item selected.
+     */
+    Signal<size_t> on_selected;
+    /** @} */
+
+
+    /**
+     * @param[in] items Array of items to insert into the list.
+     */
+    explicit ListBox(const ItemArray& items = ItemArray()) noexcept
+        : ListBoxBase(items)
+    {
+    }
+
+    /**
+     * @param[in] rect Initial rectangle of the widget.
+     */
+    explicit ListBox(const Rect& rect) noexcept
+        : ListBoxBase(rect)
+    {
+    }
+
+    /**
+     * @param[in] items Array of items to insert into the list.
+     * @param[in] rect Initial rectangle of the widget.
+     */
+    ListBox(const ItemArray& items, const Rect& rect) noexcept
+        : ListBoxBase(items, rect)
+    {
+    }
+
+    /**
+     * @param[in] parent The parent Frame.
+     * @param[in] items Array of items to insert into the list.
+     * @param[in] rect Initial rectangle of the widget.
+     */
+    explicit ListBox(Frame& parent, const ItemArray& items = {}, const Rect& rect = {}) noexcept
+        : ListBoxBase(parent, items, rect)
+    {
+    }
+
+    /**
+     * @param[in] props list of widget argument and its properties.
+     */
+    explicit ListBox(Serializer::Properties& props) noexcept
+        : ListBox(props, false)
+    {
+    }
+
+protected:
+
+    explicit ListBox(Serializer::Properties& props, bool is_derived) noexcept;
+
+public:
+
+    void handle(Event& event) override;
+
+    /**
+     * Select an item by index.
+     */
+    void selected(size_t index) override;
+
+    /**
+     * Get the currently selected index.
+     *
+     * @return The selected index, or -1 if there is no selection.
+     */
+    EGT_NODISCARD ssize_t selected() const;
 };
 
 }
