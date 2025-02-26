@@ -44,16 +44,33 @@ Frame::Frame(Frame& parent, const Rect& rect, const Widget::Flags& flags) noexce
     parent.add(*this);
 }
 
+void Frame::add_private(const std::shared_ptr<Widget>& widget, ssize_t pos)
+{
+    widget->set_parent(this);
+
+    const auto it = (pos >= 0 && static_cast<size_t>(pos) < m_children.size()) ?
+                    std::next(m_children.begin(), pos) : m_children.end();
+
+    m_subordinates.emplace(it, widget);
+    update_subordinates_ranges();
+
+    layout();
+}
+
 void Frame::add(const std::shared_ptr<Widget>& widget)
 {
     if (!widget)
         return;
 
-    widget->set_parent(this);
-    m_subordinates.emplace(m_components_begin, widget);
-    update_subordinates_ranges();
+    add_private(widget);
+}
 
-    layout();
+void Frame::add_at(const std::shared_ptr<Widget>& widget, size_t pos)
+{
+    if (!widget)
+        return;
+
+    add_private(widget, pos);
 }
 
 bool Frame::is_child(Widget* widget) const
@@ -94,6 +111,19 @@ void Frame::remove(Widget* widget)
     {
         widget->m_parent = nullptr;
     }
+}
+
+void Frame::remove_at(size_t pos)
+{
+    if (pos >= count_children())
+        return;
+
+    const auto it = std::next(m_children.begin(), pos);
+    m_subordinates.erase(it);
+
+    update_subordinates_ranges();
+
+    layout();
 }
 
 void Frame::remove_all_basic()

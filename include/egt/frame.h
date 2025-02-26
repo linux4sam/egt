@@ -101,6 +101,25 @@ public:
     virtual void add(const std::shared_ptr<Widget>& widget);
 
     /**
+     * Add a child widget at the specified position.
+     *
+     * This will take a reference to the shared_ptr and manage the lifetime of
+     * the widget.
+     *
+     * The inverse of this call is Frame::remove_at().
+     *
+     * Choosing the position of a child allows to choose it's zordering.
+     * First item, so index 0, corresponds to zorder 0.
+     *
+     * If the position is incorrect, the child is added at the end of the
+     * child list.
+     *
+     * @param widget The widget.
+     * @param pos The index where to insert the widget.
+     */
+    virtual void add_at(const std::shared_ptr<Widget>& widget, size_t pos);
+
+    /**
      * Utility wrapper around add()
      *
      * @param widget The widget.
@@ -110,6 +129,19 @@ public:
     {
         auto p = std::dynamic_pointer_cast<Widget>(widget);
         add(p);
+    }
+
+    /**
+     * Utility wrapper around add_at()
+     *
+     * @param widget The widget.
+     * @param pos The index where to insert the widget.
+     */
+    template<class T>
+    void add_at(const std::shared_ptr<T>& widget, size_t pos)
+    {
+        auto p = std::dynamic_pointer_cast<Widget>(widget);
+        add_at(p, pos);
     }
 
     /**
@@ -135,6 +167,29 @@ public:
     }
 
     /**
+     * Add a child widget at the specified position.
+     *
+     * Adds a reference to a widget instance that the caller will manage.
+     *
+     * The inverse of this call is Frame::remove_at().
+     *
+     * @param widget The widget.
+     * @param pos The index where to insert the widget.
+     *
+     * @warning This does not manage the lifetime of Widget. It is up to the
+     * caller to make sure this Widget is available for as long as the instance
+     * of this class is around.
+     */
+    void add_at(Widget& widget, size_t pos)
+    {
+        // Nasty, but it gets the job done.  If a widget is passed in as a
+        // reference, we don't own it, so create a "pointless" shared_ptr that
+        // will not delete it.
+        auto w = std::shared_ptr<Widget>(&widget, [](Widget*) {});
+        add_at(w, pos);
+    }
+
+    /**
      * Returns true if the child exists.
      */
     bool is_child(Widget* widget) const;
@@ -157,6 +212,17 @@ public:
      * @param widget The widget.
      */
     virtual void remove(Widget* widget);
+
+    /**
+     * Remove the child widget at the specified position.
+     *
+     * If the position is incorrect, no child is removed.
+     *
+     * The inverse of this call is Frame::add_at().
+     *
+     * @param pos The index of the child to remove.
+     */
+    virtual void remove_at(size_t pos);
 
     /**
      * Remove all child widgets.
@@ -302,6 +368,8 @@ public:
 
 private:
 
+
+    void add_private(const std::shared_ptr<Widget>& widget, ssize_t pos = -1);
     void remove_all_basic();
 };
 
