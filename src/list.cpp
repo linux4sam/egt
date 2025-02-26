@@ -85,14 +85,25 @@ void ListBoxBase::add_item(const std::shared_ptr<StringItem>& item)
     add_item_private(item);
 }
 
-void ListBoxBase::add_item_private(const std::shared_ptr<StringItem>& item)
+void ListBoxBase::add_item_at(const std::shared_ptr<StringItem>& item, size_t pos)
+{
+    if (pos >= item_count())
+        add_item_private(item);
+    else
+        add_item_private(item, pos);
+}
+
+void ListBoxBase::add_item_private(const std::shared_ptr<StringItem>& item, ssize_t pos)
 {
     if (m_orient == Orientation::vertical)
         item->align(AlignFlag::expand_horizontal);
     else
         item->align(AlignFlag::expand_vertical);
 
-    m_sizer.add(item);
+    if (pos < 0)
+        m_sizer.add(item);
+    else
+        m_sizer.add_at(item, pos);
 
     // automatically select the first item
     if (m_sizer.count_children() == 1)
@@ -125,6 +136,15 @@ void ListBoxBase::remove_item(StringItem* item)
             if (m_sizer.count_children())
                 selected(m_sizer.count_children() - 1);
         }
+    }
+}
+
+void ListBoxBase::remove_item_at(size_t pos)
+{
+    if (pos < item_count())
+    {
+        m_sizer.remove_at(pos);
+        on_items_changed.invoke();
     }
 }
 

@@ -113,6 +113,11 @@ public:
     void add_item(const std::shared_ptr<StringItem>& item);
 
     /**
+     * Insert a new item to the list at the specified position.
+     */
+    void add_item_at(const std::shared_ptr<StringItem>& item, size_t pos);
+
+    /**
      * Add a new item to the end of the list.
      *
      * @param item The item.
@@ -131,6 +136,27 @@ public:
     }
 
     /**
+     * Insert a new item to the list at the specified position.
+     *
+     * If the position is incorrect, the item is added at the end.
+     *
+     * @param item The item.
+     * @param pos The index where to insert the item.
+     *
+     * @warning This does not manage the lifetime of StringItem. It is up to
+     * the caller to make sure this StringItem is available for as long as the
+     * instance of this class is around.
+     */
+    void add_item_at(StringItem& item, size_t pos)
+    {
+        // Nasty, but it gets the job done.  If a widget is passed in as a
+        // reference, we don't own it, so create a "pointless" shared_ptr that
+        // will not delete it.
+        auto i = std::shared_ptr<StringItem>(&item, [](StringItem*) {});
+        add_item_at(i, pos);
+    }
+
+    /**
      * Get the currently selected index item from list.
      */
     EGT_NODISCARD std::shared_ptr<StringItem> item_at(size_t index) const;
@@ -139,6 +165,19 @@ public:
      * Remove an item from the list.
      */
     void remove_item(StringItem* item);
+
+    /**
+     * Remove the item at the specified position.
+     *
+     * If the position is incorrect, no item is removed.
+     *
+     * If the item to remove is selected, selection is left unchanged, i.e. no
+     * other item is automatically selected even if the item was the only one
+     * selected.
+     *
+     * @param pos The index of the item.
+     */
+    void remove_item_at(size_t pos);
 
     /**
      * Remove all items from the list.
@@ -195,7 +234,7 @@ protected:
 
 private:
 
-    void add_item_private(const std::shared_ptr<StringItem>& item);
+    void add_item_private(const std::shared_ptr<StringItem>& item, ssize_t pos = -1);
 
     void deserialize(Serializer::Properties& props);
 };

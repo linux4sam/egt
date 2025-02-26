@@ -24,6 +24,9 @@ int main(int argc, char** argv)
     list->width(150);
     for (auto x = 0; x < 15; x++)
         list->add_item(std::make_shared<egt::StringItem>("item " + std::to_string(x), egt::Image("icon:file.png")));
+    list->add_item_at(std::make_shared<egt::StringItem>("item ?", egt::Image("icon:file.png")), 10);
+    list->add_item_at(std::make_shared<egt::StringItem>("item X", egt::Image("icon:file.png")), 10);
+    list->remove_item_at(10);
     list->on_selected([](std::list<size_t> indexes)
     {
         std::cout << "on_selected event: \n";
