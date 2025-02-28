@@ -229,6 +229,19 @@ void StaticGrid::add(const std::shared_ptr<Widget>& widget, size_t column, size_
     Frame::add(widget);
 }
 
+void StaticGrid::add_at(const std::shared_ptr<Widget>& widget, size_t pos)
+{
+    const auto ncol = n_col();
+    const auto nrow = n_row();
+
+    if (pos >= ncol * nrow)
+        return;
+
+    const auto col_index = m_column_priority ? (pos / nrow) : (pos % ncol);
+    const auto row_index = m_column_priority ? (pos % nrow) : (pos / ncol);
+    add(widget, col_index, row_index);
+}
+
 Widget* StaticGrid::get(const GridPoint& point)
 {
     if (point.x() < m_cells.size() &&
@@ -264,6 +277,20 @@ void StaticGrid::remove(Widget* widget)
     }
 
     Frame::remove(widget);
+}
+
+void StaticGrid::remove_at(size_t pos)
+{
+    const auto ncol = n_col();
+    const auto nrow = n_row();
+
+    if (pos >= ncol * nrow)
+        return;
+
+    const auto col_index = m_column_priority ? (pos / nrow) : (pos % ncol);
+    const auto row_index = m_column_priority ? (pos % nrow) : (pos / ncol);
+    auto widget = get({col_index, row_index});
+    remove(widget);
 }
 
 void StaticGrid::reposition()

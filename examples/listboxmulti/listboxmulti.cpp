@@ -61,7 +61,7 @@ int main(int argc, char** argv)
     {
         list->select_all();
     });
-    grid->add(buttonSelectAll, 0, 2);
+    grid->add_at(buttonSelectAll, 8);
 
     auto buttonDeselectAll = std::make_shared<egt::Button>("Deselect All");
     buttonDeselectAll->on_click([&list](egt::Event&)
@@ -69,6 +69,8 @@ int main(int argc, char** argv)
         list->deselect_all();
     });
     grid->add(buttonDeselectAll, 0, 3);
+    grid->remove_at(12);
+    grid->add_at(buttonDeselectAll, 12);
 
     auto buttonToggleAll = std::make_shared<egt::Button>("Toggle All");
     buttonToggleAll->on_click([&list](egt::Event&)

@@ -172,6 +172,21 @@ public:
     }
 
     /**
+     * Add a widget at a specific position.
+     *
+     * This will not automatically extend the grid to fit the widget as
+     * necessary. If the position is greater than the grid size, the widget
+     * won't be added.
+     *
+     * @param widget The widget to add.
+     * @param pos The position in the grid. Position 0 is the first cell,
+     * position 1 is the cell intersecting the second column and the first row.
+     * If column_priority is set, position 1 is the cell intersecting the first
+     * column and the second row.
+     */
+    void add_at(const std::shared_ptr<Widget>& widget, size_t pos) override;
+
+    /**
      * Get a widget at the specified row and column.
      *
      * @note Point here is used as a column and row.
@@ -181,6 +196,16 @@ public:
     Widget* get(const GridPoint& point);
 
     void remove(Widget* widget) override;
+
+    /**
+     * Remove the widget at the specific position.
+     *
+     * @param pos The position in the grid. Position 0 is the first cell,
+     * position 1 is the cell intersecting the second column and the first row.
+     * If column_priority is set, position 1 is the cell intersecting the first
+     * column and the second row.
+     */
+    void remove_at(size_t pos) override;
 
     void layout() override;
 
