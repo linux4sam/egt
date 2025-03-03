@@ -177,6 +177,13 @@ void ListBoxBase::scroll_end()
     m_view.offset(m_view.offset_max());
 }
 
+void ListBoxBase::scroll_offset(int offset)
+{
+    const auto offset_point = orient() == Orientation::vertical ?
+        Point{0, offset} : Point{offset, 0};
+    m_view.offset(m_view.offset() + offset_point);
+}
+
 void ListBoxBase::orient(Orientation orient)
 {
     // Discard invalid values.

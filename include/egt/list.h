@@ -207,6 +207,13 @@ public:
     void scroll_end();
 
     /**
+     * Scroll an offset value either horizontally or vertically. A negative
+     * value scrolls to the next items, while a positive value scrolls to the
+     * previous ones.
+     */
+    void scroll_offset(int offset);
+
+    /**
      * Set the orientation of the list: either vertical or horizontal.
      */
     void orient(Orientation orient);

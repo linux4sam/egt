@@ -56,15 +56,19 @@ int main(int argc, char** argv)
     });
     hsizer->add(egt::expand_vertical(list));
 
-    auto grid = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize{4, 5});
+    auto grid = std::make_shared<egt::StaticGrid>(egt::StaticGrid::GridSize{5, 5});
     hsizer->add(egt::expand(grid));
+
+    egt::Font font;
+    font.size(10);
+    grid->font(font);
 
     auto buttonSelectAll = std::make_shared<egt::Button>("Select All");
     buttonSelectAll->on_click([&list](egt::Event&)
     {
         list->select_all();
     });
-    grid->add_at(buttonSelectAll, 8);
+    grid->add_at(buttonSelectAll, 10);
 
     auto buttonDeselectAll = std::make_shared<egt::Button>("Deselect All");
     buttonDeselectAll->on_click([&list](egt::Event&)
@@ -72,8 +76,8 @@ int main(int argc, char** argv)
         list->deselect_all();
     });
     grid->add(buttonDeselectAll, 0, 3);
-    grid->remove_at(12);
-    grid->add_at(buttonDeselectAll, 12);
+    grid->remove_at(15);
+    grid->add_at(buttonDeselectAll, 15);
 
     auto buttonToggleAll = std::make_shared<egt::Button>("Toggle All");
     buttonToggleAll->on_click([&list](egt::Event&)
@@ -186,6 +190,34 @@ int main(int argc, char** argv)
         list->toggle(6);
     });
     grid->add(buttonToggle, 3, 4);
+
+    auto buttonScrollBegin = std::make_shared<egt::Button>("Scroll Begin");
+    buttonScrollBegin->on_click([&list](egt::Event&)
+    {
+        list->scroll_beginning();
+    });
+    grid->add(buttonScrollBegin, 4, 0);
+
+    auto buttonScrollEnd = std::make_shared<egt::Button>("Scroll End");
+    buttonScrollEnd->on_click([&list](egt::Event&)
+    {
+        list->scroll_end();
+    });
+    grid->add(buttonScrollEnd, 4, 1);
+
+    auto buttonScrollToNext = std::make_shared<egt::Button>("Scroll To Next");
+    buttonScrollToNext->on_click([&list](egt::Event&)
+    {
+        list->scroll_offset(-40);
+    });
+    grid->add(buttonScrollToNext, 4, 2);
+
+    auto buttonScrollToPrev = std::make_shared<egt::Button>("Scroll To Prev");
+    buttonScrollToPrev->on_click([&list](egt::Event&)
+    {
+        list->scroll_offset(20);
+    });
+    grid->add(buttonScrollToPrev, 4, 3);
 
     window.show();
 
