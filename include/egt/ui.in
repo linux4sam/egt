@@ -108,6 +108,11 @@
 #include <egt/sound.h>
 #endif
 
+@include_soundeffect@
+#ifdef EGT_HAS_SOUNDEFFECT
+#include <egt/sound_effect.h>
+#endif
+
 @include_chart@
 #ifdef EGT_HAS_CHART
 #include <egt/chart.h>

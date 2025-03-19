@@ -387,6 +387,16 @@ nobase_libegtinclude_HEADERS += \
 ../include/egt/sound.h
 endif
 
+if HAVE_SOUNDEFFECT
+libegt_la_SOURCES += \
+sound_effect.cpp \
+detail/multimedia/sound_effect_impl.h \
+detail/multimedia/sound_effect_impl.cpp
+
+nobase_libegtinclude_HEADERS += \
+../include/egt/sound_effect.h
+endif
+
 if HAVE_PLPLOT
 libegt_la_SOURCES += \
 chart.cpp \

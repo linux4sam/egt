@@ -365,14 +365,14 @@ static const std::pair<std::string, std::function<int(egt::Application& app)>> e
             return app.run();
         }
     },
-#ifdef EGT_HAS_SOUND
+#ifdef EGT_HAS_SOUNDEFFECT
     {
         "sound0", [](egt::Application & app)
         {
             egt::TopWindow window;
 
             /// @[sound0]
-            egt::experimental::Sound sound("file:assets/tom.wav");
+            egt::SoundEffect sound("file:assets/tom.wav");
             sound.play();
             /// @[sound0]
 
@@ -386,7 +386,7 @@ static const std::pair<std::string, std::function<int(egt::Application& app)>> e
             /// @[sound1]
             egt::TopWindow window;
 
-            egt::experimental::Sound sound("file:assets/tom.wav");
+            egt::SoundEffect sound("file:assets/tom.wav");
 
             egt::Button button(window, "Play Sound");
             center(button);

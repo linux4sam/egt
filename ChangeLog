@@ -19,6 +19,9 @@ enable/disable it dynamically.
 - The EGT_GPU_DISABLED environment variable is now tested when some EGT
 application starts to disable the GPU if requested (by default, the GPU, if any,
 is enabled).
+- Introduce the SoundEffect class to asynchronously play sound in a fast and
+lightweight way compare to the AudioPlayer. For more details, check the audio
+page of the EGT documentation and the API documentation.
 ### Changed
 - Image::surface() now returns a const reference rather than a copy.
 - Widget::paint_to_file() is no longer virtual, hence no longer overridden.

@@ -830,6 +830,7 @@ INPUT                  = @top_srcdir@/docs/src/index.md \
                          @top_srcdir@/docs/src/layout.md \
                          @top_srcdir@/docs/src/animation.md \
                          @top_srcdir@/docs/src/media.md \
+                         @top_srcdir@/docs/src/audio.md \
                          @top_srcdir@/docs/src/gstreamer.md \
                          @top_srcdir@/docs/src/input.md \
                          @top_srcdir@/docs/src/localization.md \

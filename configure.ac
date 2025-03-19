@@ -697,6 +697,24 @@ if test "x$with_sndfile" = xyes && test "x${have_sndfile}" != xyes; then
 fi
 AM_CONDITIONAL([HAVE_SNDFILE], [test "x${have_sndfile}" = xyes])
 
+AC_ARG_WITH([soundeffect],
+    AS_HELP_STRING([--without-soundeffect], [Ignore presence of alsa and sndfile, and disable soundeffect]),
+    [with_soundeffect=$withval],
+    [with_soundeffect=auto])
+AS_IF([test "x$with_soundeffect" != "xno"],[
+   if test "x${have_alsa}" = xyes && test "x${have_sndfile}"; then
+      have_soundeffect=yes;
+      AC_SUBST(include_soundeffect, ["#define EGT_HAS_SOUNDEFFECT 1"])
+   fi
+])
+if test "x$with_soundeffect" = xyes && test "x${have_alsa}" != xyes; then
+   AC_MSG_FAILURE([--with-soundeffect was given, but alsa not found or disabled])
+fi
+if test "x$with_soundeffect" = xyes && test "x${have_sndfile}" != xyes; then
+   AC_MSG_FAILURE([--with-soundeffect was given, but alsa not found or disabled])
+fi
+AM_CONDITIONAL([HAVE_SOUNDEFFECT], [test "x${have_soundeffect}" = xyes])
+
 LIBEGT_EXTRA_LDFLAGS="${LIBEGT_PRIVATE_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
 
 # Subst LIBEGT_EXTRA_CFLAGS & CXXFLAGS & LDFLAGS
@@ -833,6 +851,7 @@ echo "  gstreamer              ${have_gstreamer:-no}"
 echo "  SVG                    ${have_librsvg:-no}"
 echo "  JPEG                   ${have_libjpeg:-no}"
 echo "  PNG                    ${have_png:-no}"
+echo "  soundeffect            ${have_soundeffect:-no}"
 echo
 
 echo "Features:"

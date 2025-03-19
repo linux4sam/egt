@@ -142,17 +142,3 @@ To capture and display a live V4L2 camera video feed, the egt::v1::CameraWindow
 widget can be used.
 
 @snippet "../examples/snippets/snippets.cpp" camera0
-
-@section media_audio Audio Playback
-
-Playing audio in EGT is usually done with the egt::AudioPlayer class.  This
-class supports all of the expected features for playing various audio formats
-such as random seeking and pausing.
-
-@snippet "../examples/snippets/snippets.cpp" audio1
-
-If a sound needs to be quickly played asynchronously, for example in response to
-a button press, the egt::v1::experimental::Sound class is usually more
-appropriate.
-
-@snippet "../examples/snippets/snippets.cpp" sound1

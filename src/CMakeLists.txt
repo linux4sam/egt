@@ -504,6 +504,16 @@ if(SNDFILE_FOUND)
     target_link_options(egt PRIVATE ${SNDFILE_LDFLAGS_OTHER})
 endif()
 
+if(ALSA_FOUND AND SNDFILE_FOUND)
+    set(include_soundeffect "#define EGT_HAS_SOUNDEFFECT 1")
+
+    target_sources(egt PRIVATE
+        sound_effect.cpp
+        detail/multimedia/sound_effect_impl.h
+        detail/multimedia/sound_effect_impl.cpp)
+    target_sources(egt PUBLIC FILE_SET HEADERS FILES ${CMAKE_SOURCE_DIR}/include/egt/sound_effect.h)
+endif()
+
 if(VIRTUALKEYBOARD)
     set(ENABLE_VIRTUALKEYBOARD 1)
     set(include_virtualkeyboard "#define EGT_HAS_VIRTUALKEYBOARD 1")
