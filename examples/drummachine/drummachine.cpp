@@ -6,6 +6,7 @@
 #include <egt/ui>
 
 #include <iostream>
+#include <memory>
 #include <string>
 
 int main(int argc, char** argv)
@@ -15,65 +16,155 @@ int main(int argc, char** argv)
     egt::add_search_path(EXAMPLEDATA);
 #endif
 
+    egt::Palette custom_palette;
+    custom_palette.set(egt::Palette::ColorId::bg, egt::Color::css("#101010"));
+    custom_palette.set(egt::Palette::ColorId::text, egt::Color::css("#828282"));
+    custom_palette.set(egt::Palette::ColorId::border, egt::Color::css("#226e30"));
+    custom_palette.set(egt::Palette::ColorId::button_bg, egt::Color::css("#1d1d1d"));
+    custom_palette.set(egt::Palette::ColorId::button_bg, egt::Color::css("#1d1d1d"), egt::Palette::GroupId::active);
+    custom_palette.set(egt::Palette::ColorId::button_bg, egt::Color::css("#1d1d1d"), egt::Palette::GroupId::disabled);
+    custom_palette.set(egt::Palette::ColorId::button_text, egt::Color::css("#828282"));
+    custom_palette.set(egt::Palette::ColorId::button_text, egt::Color::css("#828282"), egt::Palette::GroupId::disabled);
+    custom_palette.set(egt::Palette::ColorId::label_text, egt::Color::css("#828282"));
+    custom_palette.set(egt::Palette::ColorId::label_text, egt::Color::css("#ffffff"), egt::Palette::GroupId::checked);
+    custom_palette.set(egt::Palette::ColorId::label_bg, egt::Color::css("#101010"));
+    custom_palette.set(egt::Palette::ColorId::label_bg, egt::Color::css("#101010"), egt::Palette::GroupId::checked);
+
     egt::TopWindow win;
-    win.color(egt::Palette::ColorId::bg, egt::Palette::black);
+    win.palette(custom_palette);
 
-    egt::VerticalBoxSizer sizer;
-    win.add(expand(sizer));
-
-    egt::ImageLabel logo(egt::Image("icon:mgs_logo_white.png;128"));
-    logo.margin(10);
-    sizer.add(top(center(logo)));
+    egt::VerticalBoxSizer main_sizer;
+    win.add(expand(main_sizer));
 
     egt::StaticGrid grid(egt::StaticGrid::GridSize(3, 3));
-    sizer.add(expand(grid));
+    grid.vertical_space(5);
+    grid.horizontal_space(5);
+    main_sizer.add(expand(grid));
 
-    const std::pair<const char*, const char*> drums[] =
+    const std::tuple<const std::string, const std::string, const std::string> drums[] =
     {
-        {"file:Closed-Hi-Hat-1.wav", "Hi-Hat"},
-        {"file:Crash-Cymbal-1.wav", "Symbol"},
-        {"file:Ensoniq-ESQ-1-Hi-Synth-Tom.wav", "Tom"},
-        {"file:Alesis-Sanctuary-QCard-Loose-Bell-C5.wav", "Bell"},
-        {"file:Ensoniq-ESQ-1-Snare.wav", "Snare"},
-        {"file:Bass-Drum-1.wav", "Bass"},
+        { "     Bass Drum", "file:Bass-Drum-1.wav", "file:bass_drum.png" },
+        { "     Beat", "file:Casio-MT-45-16-Beat.wav", "file:beat.png" },
+        { "     Crash Cymbal", "file:Ensoniq-SQ-1-Crash-Cymbal.wav", "file:cymbal.png" },
+        { "     Hi Hat", "file:Ensoniq-SQ-1-Closed-Hi-Hat.wav", "file:hihat.png" },
+        { "     Hi Hat", "file:Ensoniq-SQ-1-Open-Hi-Hat.wav", "file:hihat.png" },
+        { "     Hi Tom", "file:Ensoniq-ESQ-1-Hi-Synth-Tom.wav", "file:tom.png" },
+        { "     Low Tom", "file:Ensoniq-ESQ-1-Low-Synth-Tom.wav", "file:tom.png" },
+        { "     Ride Cymbal", "file:Ensoniq-SQ-1-Ride-Cymbal.wav", "file:cymbal.png" },
+        { "     Snare", "file:Ensoniq-ESQ-1-Snare.wav", "file:tom.png" },
     };
+
+    std::vector<std::shared_ptr<egt::SoundEffect>> sounds;
 
     for (auto& drum : drums)
     {
-        auto button = std::make_shared<egt::Button>(drum.second);
-        button->color(egt::Palette::ColorId::button_bg, egt::Palette::purple);
-        button->color(egt::Palette::ColorId::button_bg, egt::Palette::purple, egt::Palette::GroupId::active);
-        button->border(2);
-        button->color(egt::Palette::ColorId::border, egt::Palette::black);
-        button->color(egt::Palette::ColorId::border, egt::Palette::red, egt::Palette::GroupId::active);
-        button->resize(egt::Size(100, 100));
-
-        std::shared_ptr<egt::experimental::Sound> sound;
+        std::shared_ptr<egt::SoundEffect> sound;
+        bool sound_loaded = true;
         try
         {
-            sound = std::make_shared<egt::experimental::Sound>(drum.first);
+            sound = std::make_shared<egt::SoundEffect>(std::get<1>(drum));
+            sounds.push_back(sound);
+        }
+        catch (const std::system_error& e)
+        {
+            std::cerr << e.what() << std::endl;
+            return -1;
+        }
+        catch (const std::runtime_error& e)
+        {
+            std::cerr << "Can't load the sound file (" << std::get<1>(drum) << "): " << e.what() << std::endl;
+            sound_loaded = false;
         }
         catch (...)
         {
-            std::cout << "Can't open alsa 'default' device" << std::endl;
-            // 'default' alsa device is not set, try to fallback to classD device
-            for (auto& device : egt::experimental::Sound::enumerate_pcm_devices())
+            std::cerr << "Can't create the SoundEffect for " << std::get<1>(drum) << std::endl;
+            sound_loaded = false;
+        }
+
+        auto drum_hsizer = std::make_shared<egt::HorizontalBoxSizer>();
+        drum_hsizer->color(egt::Palette::ColorId::bg, egt::Color::css("#1d1d1d"));
+        drum_hsizer->fill_flags(egt::Theme::FillFlag::solid);
+        grid.add(expand(drum_hsizer));
+
+        auto drum_button = std::make_shared<egt::ImageButton>(egt::Image(std::get<2>(drum)), std::get<0>(drum));
+        auto drum_repeat = std::make_shared<egt::CheckBox>(" ");
+        drum_repeat->switch_image(egt::Image("file:repeat_on.png"), true);
+        drum_repeat->switch_image(egt::Image("file:repeat_off.png"), false);
+
+        if (sound_loaded)
+        {
+            drum_button->on_click([sound](egt::Event&)
             {
-                if (device.find("CLASSD") != std::string::npos)
-                {
-                    std::cout << "Try to fallback to alsa '" << device << "' device" << std::endl;
-                    sound = std::make_shared<egt::experimental::Sound>(drum.first, device);
-                    break;
-                }
+                sound->play();
+            });
+
+            drum_repeat->on_checked_changed([sound, drum_repeat]()
+            {
+                sound->repeat(drum_repeat->checked());
+            });
+        }
+        else
+        {
+            drum_button->disable();
+            drum_repeat->disable();
+        }
+
+        drum_hsizer->add(expand(drum_button));
+        drum_hsizer->add(drum_repeat);
+    }
+
+    egt::Frame spacer;
+    spacer.height(5);
+    main_sizer.add(egt::expand_horizontal(spacer));
+
+    egt::Popup popup(egt::Size(app.screen()->box().width() * 0.4, app.screen()->box().height() * 0.5));
+    popup.palette(custom_palette);
+    popup.move_to_center(win.center());
+
+    auto devices = std::make_shared<egt::ListBox>();
+    popup.add(expand(devices));
+
+    const auto sound_devices = egt::SoundEffect::sound_device_list();
+    if (sound_devices.empty())
+    {
+        std::cerr << "No sound device found" << std::endl;
+        return -1;
+    }
+
+    egt::ImageButton speaker(egt::Image("file:speaker.png"), sound_devices[0].card_name());
+    main_sizer.add(egt::expand_horizontal(speaker));
+
+    for (const auto& device : sound_devices)
+        devices->add_item(std::make_shared<egt::StringItem>(device.card_name()));
+
+    egt::Timer timer(std::chrono::milliseconds(1000));
+    devices->on_selected([&sound_devices, &sounds, &popup, &speaker, &timer](size_t index)
+    {
+        const auto card = sound_devices[index].card_index();
+        const auto dev = sound_devices[index].device_index();
+
+        for (auto& sound : sounds)
+        {
+            if (!sound->device({card, dev}))
+            {
+                std::cerr << "Can't set the device for " << sound->media() << std::endl;
+                popup.hide();
+                return;
             }
         }
-        button->on_event([sound](egt::Event&)
-        {
-            sound->play();
-        }, {egt::EventId::raw_pointer_down});
 
-        grid.add(egt::center(button));
-    }
+        speaker.text(sound_devices[index].card_name());
+        timer.on_timeout([&popup]()
+        {
+            popup.hide();
+        });
+        timer.start();
+    });
+
+    speaker.on_click([&popup](egt::Event&)
+    {
+        popup.show_modal();
+    });
 
     win.show();
 

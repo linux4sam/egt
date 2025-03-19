@@ -75,11 +75,9 @@ gauge/gauge \
 sevensegment/sevensegment
 endif
 
-if HAVE_ALSA
-if HAVE_SNDFILE
+if HAVE_SOUNDEFFECT
 bin_PROGRAMS += \
 drummachine/drummachine
-endif
 endif
 
 if HAVE_PLPLOT
@@ -200,7 +198,9 @@ drummachine_drummachine_CXXFLAGS = $(CUSTOM_CXXFLAGS) $(AM_CXXFLAGS) \
 	-DEXAMPLEDATA=\"$(datadir)/egt/examples/drummachine\"
 drummachine_drummachine_LDADD = $(top_builddir)/src/libegt.la $(CUSTOM_LDADD)
 drummachine_drummachinedir = $(prefix)/share/egt/examples/drummachine
-drummachine_drummachine_DATA = $(wildcard $(top_srcdir)/examples/drummachine/*.wav)
+drummachine_drummachine_DATA = $(wildcard $(top_srcdir)/examples/drummachine/*.wav) \
+	$(wildcard $(top_srcdir)/examples/drummachine/*.png) \
+	$(top_srcdir)/examples/drummachine/drummachine.xml
 drummachine_drummachine_LDFLAGS = $(AM_LDFLAGS)
 
 easing_easing_SOURCES = easing/easing.cpp

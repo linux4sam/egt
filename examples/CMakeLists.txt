@@ -105,7 +105,9 @@ if(ALSA_FOUND AND SNDFILE_FOUND)
     install(DIRECTORY drummachine
             DESTINATION ${CMAKE_INSTALL_DATADIR}/egt/examples
             FILES_MATCHING
-            PATTERN *.wav)
+            PATTERN *.wav
+            PATTERN *.png
+            PATTERN drummachine.xml)
 endif()
 
 if(PLPLOT_FOUND)
