@@ -3,9 +3,6 @@
 /* Enable virtualkeyboard support */
 #cmakedefine ENABLE_VIRTUALKEYBOARD @ENABLE_VIRTUALKEYBOARD@
 
-/* Have alsa support */
-#cmakedefine HAVE_ALSA @HAVE_ALSA@
-
 /* Have __cxa_demangle */
 #cmakedefine HAVE_CXA_DEMANGLE @HAVE_CXA_DEMANGLE@
 
@@ -74,9 +71,6 @@
 
 /* Have simd support */
 #cmakedefine HAVE_SIMD @HAVE_SIMD@
-
-/* Have sndfile support */
-#cmakedefine HAVE_SNDFILE @HAVE_SNDFILE@
 
 /* Have tslib support */
 #cmakedefine HAVE_TSLIB @HAVE_TSLIB@

@@ -662,48 +662,17 @@ if test "x${MSGFMT}" != x"yes"; then
 fi
 AM_CONDITIONAL([HAVE_MSGFMT], [test "x${MSGFMT}" = xyes])
 
-AC_ARG_WITH([alsa],
-    AS_HELP_STRING([--without-alsa], [Ignore presence of alsa and disable it]),
-    [with_alsa=$withval],
-    [with_alsa=auto])
-AS_IF([test "x$with_alsa" != "xno"],[
-   AX_PKG_CHECK_MODULES2(alsa, [], [alsa], [have_alsa=yes], [have_alsa=no])
-   if test "x${have_alsa}" = xyes; then
-      AC_DEFINE(HAVE_ALSA, 1, [Have alsa support])
-      LIBEGT_EXTRA_CXXFLAGS="${alsa_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-      LIBEGT_EXTRA_LDFLAGS="${alsa_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
-      AC_SUBST(include_sound, ["#define EGT_HAS_SOUND 1"])
-   fi
-])
-if test "x$with_alsa" = xyes && test "x${have_alsa}" != xyes; then
-   AC_MSG_FAILURE([--with-alsa was given, but alsa not found])
-fi
-AM_CONDITIONAL([HAVE_ALSA], [test "x${have_alsa}" = xyes])
-
-AC_ARG_WITH([sndfile],
-    AS_HELP_STRING([--without-sndfile], [Ignore presence of sndfile and disable it]),
-    [with_sndfile=$withval],
-    [with_sndfile=auto])
-AS_IF([test "x$with_sndfile" != "xno"],[
-   AX_PKG_CHECK_MODULES2(sndfile, [], [sndfile], [have_sndfile=yes], [have_sndfile=no])
-   if test "x${have_sndfile}" = xyes; then
-      AC_DEFINE(HAVE_SNDFILE, 1, [Have sndfile support])
-      LIBEGT_EXTRA_CXXFLAGS="${sndfile_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
-      LIBEGT_EXTRA_LDFLAGS="${sndfile_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
-   fi
-])
-if test "x$with_sndfile" = xyes && test "x${have_sndfile}" != xyes; then
-   AC_MSG_FAILURE([--with-sndfile was given, but sndfile not found])
-fi
-AM_CONDITIONAL([HAVE_SNDFILE], [test "x${have_sndfile}" = xyes])
-
 AC_ARG_WITH([soundeffect],
     AS_HELP_STRING([--without-soundeffect], [Ignore presence of alsa and sndfile, and disable soundeffect]),
     [with_soundeffect=$withval],
     [with_soundeffect=auto])
 AS_IF([test "x$with_soundeffect" != "xno"],[
+   AX_PKG_CHECK_MODULES2(alsa, [], [alsa], [have_alsa=yes], [have_alsa=no])
+   AX_PKG_CHECK_MODULES2(sndfile, [], [sndfile], [have_sndfile=yes], [have_sndfile=no])
    if test "x${have_alsa}" = xyes && test "x${have_sndfile}"; then
       have_soundeffect=yes;
+      LIBEGT_EXTRA_CXXFLAGS="${alsa_CFLAGS} ${sndfile_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+      LIBEGT_EXTRA_LDFLAGS="${alsa_LIBS} ${sndfile_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
       AC_SUBST(include_soundeffect, ["#define EGT_HAS_SOUNDEFFECT 1"])
    fi
 ])
@@ -859,8 +828,6 @@ echo "  Networking             ${have_libcurl:-no}"
 echo "  libmagic               ${have_libmagic:-no}"
 echo "  LUA Interpreter        ${have_lua:-no}"
 echo "  LUA Bindings           ${have_lua_bindings:-no}"
-echo "  ALSA Sound             ${have_alsa:-no}"
-echo "  sndfile                ${have_sndfile:-no}"
 echo "  plplot                 ${have_plplot:-no}"
 echo "  Fontconfig             ${have_fontconfig:-no}"
 echo "  libintl                ${have_libintl:-no}"

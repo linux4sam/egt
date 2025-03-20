@@ -59,6 +59,8 @@ and also because the Image class provides a copy constructor and a copy
 assignment operator, hence Image instances can still be copied anyway.
 - The Image::pattern() method has been removed as it is no longer used since
 the Painter implementation changed when setting an Image instance as source.
+- Remove the experimental::Sound class that is replaced with the SoundEffect
+class.
 ### Fixed
 - The project configuration with either autotools or cmake has been fixed so the
 compilation works again when SIMD is enabled.

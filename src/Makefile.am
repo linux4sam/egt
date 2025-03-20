@@ -379,14 +379,6 @@ nobase_libegtinclude_HEADERS += \
 ../include/egt/luaapp.h
 endif
 
-if HAVE_ALSA
-libegt_la_SOURCES += \
-sound.cpp
-
-nobase_libegtinclude_HEADERS += \
-../include/egt/sound.h
-endif
-
 if HAVE_SOUNDEFFECT
 libegt_la_SOURCES += \
 sound_effect.cpp \

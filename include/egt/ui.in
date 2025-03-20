@@ -103,11 +103,6 @@
 #include <egt/svgdeserial.h>
 #endif
 
-@include_sound@
-#ifdef EGT_HAS_SOUND
-#include <egt/sound.h>
-#endif
-
 @include_soundeffect@
 #ifdef EGT_HAS_SOUNDEFFECT
 #include <egt/sound_effect.h>

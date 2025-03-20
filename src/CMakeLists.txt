@@ -481,32 +481,14 @@ if(LIBMAGIC_FOUND)
     target_link_options(egt PRIVATE ${LIBMAGIC_LDFLAGS_OTHER})
 endif()
 
-if(ALSA_FOUND)
-    set(HAVE_ALSA 1)
-    set(include_sound "#define EGT_HAS_SOUND 1")
-
-    target_include_directories(egt PRIVATE ${ALSA_INCLUDE_DIRS})
-    target_compile_options(egt PRIVATE ${ALSA_CFLAGS_OTHER})
-    target_link_directories(egt PRIVATE ${ALSA_LIBRARY_DIRS})
-    target_link_libraries(egt PRIVATE ${ALSA_LIBRARIES})
-    target_link_options(egt PRIVATE ${ALSA_LDFLAGS_OTHER})
-    target_sources(egt PRIVATE sound.cpp)
-    target_sources(egt PUBLIC FILE_SET HEADERS FILES ${CMAKE_SOURCE_DIR}/include/egt/sound.h)
-endif()
-
-if(SNDFILE_FOUND)
-    set(HAVE_SNDFILE 1)
-
-    target_include_directories(egt PRIVATE ${SNDFILE_INCLUDE_DIRS})
-    target_compile_options(egt PRIVATE ${SNDFILE_CFLAGS_OTHER})
-    target_link_directories(egt PRIVATE ${SNDFILE_LIBRARY_DIRS})
-    target_link_libraries(egt PRIVATE ${SNDFILE_LIBRARIES})
-    target_link_options(egt PRIVATE ${SNDFILE_LDFLAGS_OTHER})
-endif()
-
 if(ALSA_FOUND AND SNDFILE_FOUND)
     set(include_soundeffect "#define EGT_HAS_SOUNDEFFECT 1")
 
+    target_include_directories(egt PRIVATE ${ALSA_INCLUDE_DIRS} ${SNDFILE_INCLUDE_DIRS})
+    target_compile_options(egt PRIVATE ${ALSA_CFLAGS_OTHER} ${SNDFILE_CFLAGS_OTHER})
+    target_link_directories(egt PRIVATE ${ALSA_LIBRARY_DIRS} ${SNDFILE_LIBRARY_DIRS})
+    target_link_libraries(egt PRIVATE ${ALSA_LIBRARIES} ${SNDFILE_LIBRARIES})
+    target_link_options(egt PRIVATE ${ALSA_LDFLAGS_OTHER} ${SNDFILE_LDFLAGS_OTHER})
     target_sources(egt PRIVATE
         sound_effect.cpp
         detail/multimedia/sound_effect_impl.h
