@@ -150,6 +150,10 @@ DefaultDim Surface::stride(PixelFormat format, DefaultDim width)
         bits_per_pixel = 16;
         break;
 
+    case PixelFormat::a8:
+        bits_per_pixel = 8;
+        break;
+
     default:
         bits_per_pixel = 0;
         break;
@@ -213,6 +217,11 @@ static inline void set16(void* data, size_t stride, const Point& point, const Co
     *reinterpret_cast<uint16_t*>(reinterpret_cast<unsigned char*>(data) + point.y() * stride + 2 * point.x()) = color.pixel16();
 }
 
+static inline void set8(void* data, size_t stride, const Point& point, const Color& color) noexcept
+{
+    *(reinterpret_cast<unsigned char*>(data) + point.y() * stride + point.x()) = color.alpha();
+}
+
 void Surface::color_at(const Point& point, const Color& color)
 {
     if (!Rect(Point(), size()).intersect(point))
@@ -232,6 +241,10 @@ void Surface::color_at(const Point& point, const Color& color)
 
     case PixelFormat::rgb565:
         set16(data(), stride(), point, color);
+        break;
+
+    case PixelFormat::a8:
+        set8(data(), stride(), point, color);
         break;
 
     default:
@@ -256,6 +269,11 @@ static inline Color get16(const void* data, size_t stride, const Point& point)
     return Color::pixel16(*reinterpret_cast<const uint16_t*>(reinterpret_cast<const unsigned char*>(data) + point.y() * stride + 2 * point.x()));
 }
 
+static inline Color get8(const void* data, size_t stride, const Point& point)
+{
+    return Color(0, 0, 0, *(reinterpret_cast<const unsigned char*>(data) + point.y() * stride + point.x()));
+}
+
 Color Surface::color_at(const Point& point) const
 {
     if (!Rect(Point(), size()).intersect(point))
@@ -273,6 +291,9 @@ Color Surface::color_at(const Point& point) const
 
     case PixelFormat::rgb565:
         return get16(data(), stride(), point);
+
+    case PixelFormat::a8:
+        return get8(data(), stride(), point);
 
     default:
         break;

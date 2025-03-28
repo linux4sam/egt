@@ -71,6 +71,7 @@ static const std::pair<PixelFormat, cairo_format_t> cairo_formats[] =
     {PixelFormat::rgb565, CAIRO_FORMAT_RGB16_565},
     {PixelFormat::argb8888, CAIRO_FORMAT_ARGB32},
     {PixelFormat::xrgb8888, CAIRO_FORMAT_RGB24},
+    {PixelFormat::a8, CAIRO_FORMAT_A8},
 };
 
 cairo_format_t cairo_format(PixelFormat format)

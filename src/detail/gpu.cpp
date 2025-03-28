@@ -23,6 +23,7 @@ static const std::pair<PixelFormat, enum m2d_pixel_format> m2d_formats[] =
 {
     {PixelFormat::argb8888, M2D_PF_ARGB8888},
     {PixelFormat::rgb565, M2D_PF_RGB565},
+    {PixelFormat::a8, M2D_PF_A8},
 };
 
 static enum m2d_pixel_format m2d_format(PixelFormat format)

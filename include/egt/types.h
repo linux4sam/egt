@@ -41,11 +41,12 @@ enum class PixelFormat
     nv61,
     yuy2,     ///< Packed YUY 4:2:2
     uyvy,     ///< Reverse byte order of YUY2
+    a8,
 };
 
 /// Enum string conversion map
 template<>
-EGT_API const std::pair<PixelFormat, char const*> detail::EnumStrings<PixelFormat>::data[11];
+EGT_API const std::pair<PixelFormat, char const*> detail::EnumStrings<PixelFormat>::data[12];
 
 /// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const PixelFormat& format);

@@ -42,6 +42,7 @@ const std::pair<PixelFormat, char const*> detail::EnumStrings<PixelFormat>::data
     {PixelFormat::nv61, "nv61"},
     {PixelFormat::yuy2, "yuy2"},
     {PixelFormat::uyvy, "uyvy"},
+    {PixelFormat::a8, "a8"},
 };
 
 std::ostream& operator<<(std::ostream& os, const PixelFormat& format)
