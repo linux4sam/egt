@@ -404,6 +404,12 @@ Painter& Painter::rotate(float angle)
     return *this;
 }
 
+Painter& Painter::show_text(const char* utf8)
+{
+    cairo_show_text(m_cr.get(), utf8);
+    return *this;
+}
+
 static inline Color get32(const unsigned char* data, size_t stride, const Point& point)
 {
     return Color::pixel32(*reinterpret_cast<const uint32_t*>(data + point.y() * stride + 4 * point.x()));

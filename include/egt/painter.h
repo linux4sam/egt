@@ -469,6 +469,10 @@ public:
 
     Painter& rotate(float angle);
 
+    Painter& show_text(const char* utf8);
+
+    Painter& show_text(const std::string& str) { return show_text(str.c_str()); }
+
     /**
      * Get the font extents based on the current context, hence taking into
      * account transformations such as rotation or symmetry.
