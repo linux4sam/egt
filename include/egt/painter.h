@@ -356,6 +356,20 @@ public:
 
     Painter& rotate(float angle);
 
+    /**
+     * Get the font extents based on the current context, hence taking into
+     * account transformations such as rotation or symmetry.
+     */
+    EGT_NODISCARD Font::FontExtents extents() const;
+
+    /**
+     * Get the text extents based on the current context, hence taking into
+     * account transformations such as rotation or symmetry.
+     *
+     * @param[in] text The UTF8 encoded text.
+     */
+    EGT_NODISCARD Font::TextExtents extents(const std::string& text) const;
+
     Size text_size(const std::string& text);
 
     void color_at(const Point& point, const Color& color) noexcept;

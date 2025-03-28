@@ -41,6 +41,33 @@ class EGT_API Font
 {
 public:
 
+    using Extent = float;
+
+    /**
+     * Font extent.
+     */
+    struct FontExtents
+    {
+        Extent ascent;
+        Extent descent;
+        Extent height;
+        Extent max_x_advance;
+        Extent max_y_advance;
+    };
+
+    /**
+     * Text extent.
+     */
+    struct TextExtents
+    {
+        Extent x_bearing;
+        Extent y_bearing;
+        Extent width;
+        Extent height;
+        Extent x_advance;
+        Extent y_advance;
+    };
+
     /// Scalar used for font size
     using Size = float;
 
@@ -175,6 +202,31 @@ public:
      * Set the slant of the font.
      */
     void slant(Font::Slant s) { m_slant = s; }
+
+    /**
+     * Get the font extents based on a default context.
+     *
+     * Internally, calls 'Painter::extents()' on a default Painter instance,
+     * which has no transformation like rotation or symmetry.
+     *
+     * If you want to transform the font, then you should call
+     * 'Painter::extents()' instead, on the relevant Painter instance.
+     */
+    EGT_NODISCARD Font::FontExtents extents() const;
+
+    /**
+     * Get the text extents based on a default context.
+     *
+     * Internally, calls 'Painter::extents(const std::string&)' on a default
+     * Painter instance, which has no transformation like rotation or symmetry.
+     *
+     * If you want to transform the font, then you should call
+     * 'Painter::extents(const std::string&)' instead, on the relevant Painter
+     * instance.
+     *
+     * @param[in] text The UTF8 encoded text.
+     */
+    EGT_NODISCARD Font::TextExtents extents(const std::string& text) const;
 
     /**
      * Get the size of a rectangle containing the text, based on a default

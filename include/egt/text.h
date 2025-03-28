@@ -11,7 +11,6 @@
  * @brief Working with text input.
  */
 
-#include <egt/canvas.h>
 #include <egt/detail/meta.h>
 #include <egt/flags.h>
 #include <egt/font.h>
@@ -54,7 +53,7 @@ public:
     TextRect(uint32_t behave,
              const Rect& rect,
              std::string text,
-             const cairo_text_extents_t& te,
+             const Font::TextExtents& te,
              const TextRectFlags& flags = {}) noexcept
         : m_text(std::move(text)),
           m_rect(rect),
@@ -69,7 +68,7 @@ public:
     void point(const Point& p) { m_rect.point(p); }
     const TextRectFlags& flags(void) const { return m_text_rect_flags; }
     uint32_t behave(void) const { return m_behave; }
-    const cairo_text_extents_t& text_extents(void) const { return m_te; }
+    const Font::TextExtents& text_extents(void) const { return m_te; }
     void select(void) { m_text_rect_flags.set(TextRectFlag::selected); }
     void deselect(void) { m_text_rect_flags.clear(TextRectFlag::selected); }
     bool is_selected(void) const { return m_text_rect_flags.is_set(TextRectFlag::selected); }
@@ -87,8 +86,8 @@ public:
     }
 
     size_t length(void) const noexcept;
-    TextRect& consolidate(const TextRect& r, cairo_t* cr) noexcept;
-    TextRect split(size_t pos, cairo_t* cr) noexcept;
+    TextRect& consolidate(const TextRect& r, const Painter& painter) noexcept;
+    TextRect split(size_t pos, const Painter& painter) noexcept;
 
 private:
 
@@ -104,8 +103,8 @@ private:
     /// Behavior flags of the object.
     uint32_t m_behave{0};
 
-    /// Cairo text extents
-    cairo_text_extents_t m_te;
+    /// Text extents
+    Font::TextExtents m_te;
 };
 
 using TextRects = std::list<TextRect>;
@@ -536,9 +535,6 @@ protected:
     /// Compute damage rectangles for selection updates
     void selection_damage();
 
-    /// Get the cairo context to compute text extents, hence the text layout.
-    cairo_t* context() const { return m_cr; }
-
     /// Split the text into atomic tokens that fill the TextRects parameter.
     void tokenize(TextRects& rects);
 
@@ -709,19 +705,11 @@ protected:
     /// Callbacks invoked to validate the input.
     ValidatorCallbackArray m_validator_callbacks;
 
-    /// The canvas that provides a cairo context to compute the text layout.
-    Canvas m_canvas;
-
     /// The cache for text_rect().
     mutable Rect m_text_rect;
     mutable bool m_text_rect_valid{false};
 
-    /**
-     * Cairo context.
-     */
-    cairo_t* m_cr{nullptr};
-
-    cairo_font_extents_t m_fe;
+    Font::FontExtents m_fe;
     TextRects m_rects;
     Rect m_cursor_rect;
 

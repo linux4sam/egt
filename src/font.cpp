@@ -276,6 +276,16 @@ Font::Font(Font::Slant slant)
       m_slant(slant)
 {}
 
+Font::FontExtents Font::extents() const
+{
+    return detail::dummy_painter().set(*this).extents();
+}
+
+Font::TextExtents Font::extents(const std::string& text) const
+{
+    return detail::dummy_painter().set(*this).extents(text);
+}
+
 Size Font::text_size(const std::string& text) const
 {
     return detail::dummy_painter().set(*this).text_size(text);

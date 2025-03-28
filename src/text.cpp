@@ -7,7 +7,7 @@
 #include "config.h"
 #endif
 
-#include "detail/cairoabstraction.h"
+#include "detail/painter.h"
 #include "detail/utf8text.h"
 #include "egt/detail/alignment.h"
 #include "egt/detail/enum.h"
@@ -34,15 +34,15 @@ size_t TextRect::length(void) const noexcept
     return detail::utf8len(m_text);
 }
 
-TextRect& TextRect::consolidate(const TextRect& r, cairo_t* cr) noexcept
+TextRect& TextRect::consolidate(const TextRect& r, const Painter& painter) noexcept
 {
     m_text += r.m_text;
     m_rect.width(m_rect.width() + r.m_rect.width());
-    cairo_text_extents(cr, m_text.c_str(), &m_te);
+    m_te = painter.extents(m_text);
     return *this;
 }
 
-TextRect TextRect::split(size_t pos, cairo_t* cr) noexcept
+TextRect TextRect::split(size_t pos, const Painter& painter) noexcept
 {
     auto it = m_text.begin();
     utf8::advance(it, pos, m_text.end());
@@ -50,19 +50,16 @@ TextRect TextRect::split(size_t pos, cairo_t* cr) noexcept
     std::string head_text(m_text.begin(), it);
     std::string tail_text(it, m_text.end());
 
-    cairo_text_extents_t head_te;
-    cairo_text_extents(cr, head_text.c_str(), &head_te);
-
-    cairo_text_extents_t tail_te;
-    cairo_text_extents(cr, tail_text.c_str(), &tail_te);
+    auto head_te = painter.extents(head_text);
+    auto tail_te = painter.extents(tail_text);
 
     /*
      * Fix a former rounding issue when computing:
      * tail_rect.width() - head_te.x_advance
      * to update tail_rect.width().
      *
-     * Now converting, here and once for all, the double 'head_te.x_advance'
-     * (see its definition in cairo.h) into the DefaultDim (int) 'head_width'.
+     * Now converting, here and once for all, the float 'head_te.x_advance'
+     * (see its definition in font.h) into the DefaultDim (int) 'head_width'.
      */
     DefaultDim head_width = head_te.x_advance;
     Rect tail_rect(m_rect);
@@ -81,7 +78,7 @@ TextRect TextRect::split(size_t pos, cairo_t* cr) noexcept
 
 void TextBox::tokenize(TextRects& rects)
 {
-    cairo_t* cr = context();
+    auto& painter = detail::dummy_painter();
     const auto& fe = m_fe;
 
     // tokenize based on words or code points
@@ -119,7 +116,7 @@ void TextBox::tokenize(TextRects& rects)
     bool empty_line = true;
     for (const auto& t : tokens)
     {
-        cairo_text_extents_t te;
+        Font::TextExtents te;
 
         if (t == "\n")
         {
@@ -137,7 +134,7 @@ void TextBox::tokenize(TextRects& rects)
         }
         else
         {
-            cairo_text_extents(cr, t.c_str(), &te);
+            te = painter.extents(t);
             rects.emplace_back(behave, Rect(0, 0, te.x_advance, fe.height), t, te);
             behave = default_behave;
             empty_line = false;
@@ -221,7 +218,7 @@ void TextBox::compute_layout(TextRects& rects)
 
 void TextBox::consolidate(TextRects& rects)
 {
-    cairo_t* cr = context();
+    auto& painter = detail::dummy_painter();
 
     for (auto it = rects.begin(); it != rects.end();)
     {
@@ -231,7 +228,7 @@ void TextBox::consolidate(TextRects& rects)
 
         if (it->can_consolidate(*nx))
         {
-            it->consolidate(*nx, cr);
+            it->consolidate(*nx, painter);
             rects.erase(nx);
         }
         else
@@ -252,7 +249,7 @@ void TextBox::set_selection(TextRects& rects)
     if (!m_select_len)
         return;
 
-    cairo_t* cr = context();
+    auto& painter = detail::dummy_painter();
     size_t pos = 0;
     size_t select_start = m_select_start;
     size_t select_len = m_select_len;
@@ -273,7 +270,7 @@ void TextBox::set_selection(TextRects& rects)
             else if (select_end < end)
             {
                 // Split it and select the head
-                TextRect tail(it->split(select_end - start, cr));
+                TextRect tail(it->split(select_end - start, painter));
                 it->select();
                 it = rects.insert(std::next(it), std::move(tail));
             }
@@ -291,8 +288,8 @@ void TextBox::set_selection(TextRects& rects)
                 size_t head_len = select_start - start;
                 size_t mid_len = select_len;
 
-                TextRect mid(it->split(head_len, cr));
-                TextRect tail(mid.split(mid_len, cr));
+                TextRect mid(it->split(head_len, painter));
+                TextRect tail(mid.split(mid_len, painter));
                 mid.select();
                 it = rects.insert(std::next(it), std::move(mid));
                 it = rects.insert(std::next(it), std::move(tail));
@@ -300,7 +297,7 @@ void TextBox::set_selection(TextRects& rects)
             else
             {
                 // Split it and select the tail
-                TextRect tail(it->split(select_start - start, cr));
+                TextRect tail(it->split(select_start - start, painter));
                 tail.select();
                 it = rects.insert(std::next(it), std::move(tail));
             }
@@ -450,7 +447,7 @@ void TextBox::tag_left_aligned_line(TextRects& prev,
 
     if (len && len < next_it->length())
     {
-        TextRect tail(next_it->split(len, context()));
+        TextRect tail(next_it->split(len, detail::dummy_painter()));
         prefix_rect.width(prefix_rect.width() + next_it->rect().width());
         next.insert(std::next(next_it), std::move(tail));
     }
@@ -505,7 +502,7 @@ void TextBox::tag_right_aligned_line(TextRects& prev,
 
     if (len && len < next_it->length())
     {
-        TextRect tail(next_it->split(len, context()));
+        TextRect tail(next_it->split(len, detail::dummy_painter()));
         prefix_rect.width(prefix_rect.width() + next_it->rect().width());
         next.insert(std::next(next_it), std::move(tail));
     }
@@ -662,7 +659,7 @@ void TextBox::draw_text(Painter& painter, const Rect& rect)
             if (!r.rect().intersect(rect))
                 continue;
 
-            const cairo_text_extents_t& te = r.text_extents();
+            const auto& te = r.text_extents();
 
             auto p = PointF(fl(r.rect().x()) + fl(te.x_bearing),
                             fl(r.rect().y()) + fl(te.y_bearing) - fl(fe.descent) + fl(fe.height));
@@ -691,9 +688,7 @@ void TextBox::draw_text(Painter& painter, const Rect& rect)
 
 void TextBox::prepare_text(TextRects& rects)
 {
-    auto* cr = context();
-    cairo_set_scaled_font(cr, font().scaled_font());
-    cairo_font_extents(cr, &m_fe);
+    m_fe = detail::dummy_painter().set(font()).extents();
 
     rects.clear();
 
@@ -708,9 +703,8 @@ constexpr static auto CURSOR_RECT_WIDTH = CURSOR_WIDTH + 2 * CURSOR_X_MARGIN;
 
 void TextBox::get_cursor_rect()
 {
-    cairo_t* cr = context();
     const Rect boundaries = text_boundaries();
-    cairo_set_scaled_font(cr, font().scaled_font());
+    auto& painter = detail::dummy_painter().set(font());
     const auto& fe = m_fe;
 
     Point p(boundaries.point() + Point(-CURSOR_X_MARGIN, 0));
@@ -757,8 +751,7 @@ void TextBox::get_cursor_rect()
         utf8::advance(it, m_cursor_pos - pos, r.text().end());
         std::string str(r.text().begin(), it);
 
-        cairo_text_extents_t te;
-        cairo_text_extents(cr, str.c_str(), &te);
+        const auto te = painter.extents(str);
 
         p = r.rect().point();
         p.x(p.x() + te.x_advance - CURSOR_X_MARGIN);
@@ -1065,8 +1058,6 @@ TextBox::TextBox(const std::string& text,
                  const TextFlags& flags) noexcept
     : TextWidget( {}, rect, text_align),
 m_timer(std::chrono::seconds(1)),
-m_canvas(Size(1, 1)),
-m_cr(m_canvas.context().get()),
 m_text_flags(flags)
 {
     name("TextBox" + std::to_string(m_widgetid));
@@ -1096,9 +1087,7 @@ TextBox::TextBox(Frame& parent,
 
 TextBox::TextBox(Serializer::Properties& props, bool is_derived) noexcept
     : TextWidget(props, true),
-      m_timer(std::chrono::seconds(1)),
-      m_canvas(Size(1, 1)),
-      m_cr(m_canvas.context().get())
+      m_timer(std::chrono::seconds(1))
 {
     initialize(false);
 
@@ -1470,7 +1459,7 @@ size_t TextBox::width_to_len(const std::string& str) const
 {
     const auto b = text_area();
 
-    cairo_set_scaled_font(context(), font().scaled_font());
+    auto& painter = detail::dummy_painter().set(font());
 
     size_t len = 0;
     float total = 0;
@@ -1478,8 +1467,7 @@ size_t TextBox::width_to_len(const std::string& str) const
          ch != detail::utf8_const_iterator(str.end(), str.begin(), str.end()); ++ch)
     {
         const auto txt = detail::utf8_char_to_string(ch.base(), str.cend());
-        cairo_text_extents_t te;
-        cairo_text_extents(context(), txt.c_str(), &te);
+        const auto te = painter.extents(txt);
         if (total + static_cast<float>(te.x_advance) > b.width())
             return len;
         total += static_cast<float>(te.x_advance);
@@ -1620,7 +1608,7 @@ void TextBox::selection_all()
 
 void TextBox::selection_damage()
 {
-    cairo_set_scaled_font(context(), font().scaled_font());
+    detail::dummy_painter().set(font());
 
     consolidate(m_rects);
     TextRects rects(m_rects);
@@ -1853,16 +1841,14 @@ size_t TextBox::point2pos(const Point& p) const
 
         auto delta_x = p.x() - rect.x();
 
-        auto* cr = context();
-        cairo_set_scaled_font(cr, font().scaled_font());
+        auto& painter = detail::dummy_painter().set(font());
         for (size_t len = r.length(); len > 0; --len)
         {
             auto first = r.text().begin();
             auto last = first;
             utf8::advance(last, len, r.text().end());
             auto text = std::string(first, last);
-            cairo_text_extents_t te;
-            cairo_text_extents(cr, text.c_str(), &te);
+            auto te = painter.extents(text);
             if (te.x_advance <= delta_x)
             {
                 pos += len;

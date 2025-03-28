@@ -61,15 +61,13 @@ size_t TextWidget::len() const
 Font TextWidget::scale_font(const Size& target, const std::string& text, const Font& font)
 {
     auto& painter = detail::dummy_painter();
-    auto cr = painter.context().get();
 
     auto nfont = font;
     while (true)
     {
         painter.set(nfont);
 
-        cairo_text_extents_t textext;
-        cairo_text_extents(cr, text.c_str(), &textext);
+        const auto textext = painter.extents(text);
 
         if (textext.width - textext.x_bearing < target.width() &&
             textext.height - textext.y_bearing < target.height())

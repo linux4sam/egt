@@ -186,6 +186,35 @@ Painter& Painter::draw(const std::string& str, const TextDrawFlags& flags)
     return *this;
 }
 
+Font::FontExtents Painter::extents() const
+{
+    cairo_font_extents_t fe;
+    cairo_font_extents(m_cr.get(), &fe);
+
+    Font::FontExtents font_extents;
+    font_extents.ascent = fe.ascent;
+    font_extents.descent = fe.descent;
+    font_extents.height = fe.height;
+    font_extents.max_x_advance = fe.max_x_advance;
+    font_extents.max_y_advance = fe.max_y_advance;
+    return font_extents;
+}
+
+Font::TextExtents Painter::extents(const std::string& text) const
+{
+    cairo_text_extents_t te;
+    cairo_text_extents(m_cr.get(), text.c_str(), &te);
+
+    Font::TextExtents text_extents;
+    text_extents.x_bearing = te.x_bearing;
+    text_extents.y_bearing = te.y_bearing;
+    text_extents.width = te.width;
+    text_extents.height = te.height;
+    text_extents.x_advance = te.x_advance;
+    text_extents.y_advance = te.y_advance;
+    return text_extents;
+}
+
 Size Painter::text_size(const std::string& text)
 {
     /*
