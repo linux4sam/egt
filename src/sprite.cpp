@@ -40,8 +40,6 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-    virtual shared_cairo_surface_t surface() const override;
-
 protected:
     ImageLabel m_label;
     Sprite& m_interface;
@@ -61,34 +59,9 @@ public:
 
     void draw(Painter& painter, const Rect& rect) override;
 
-    EGT_NODISCARD shared_cairo_surface_t surface() const override;
-
 protected:
     Sprite& m_interface;
 };
-
-/**
- * This pulls out a frame into its own surface.
- */
-static shared_cairo_surface_t frame_surface(const Rect& rect, const Image& image)
-{
-    // cairo_surface_create_for_rectangle() would work here with one
-    // exception - the resulting image has no width and height
-
-    shared_cairo_surface_t copy =
-        shared_cairo_surface_t(cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
-                               rect.width(),
-                               rect.height()),
-                               cairo_surface_destroy);
-
-    shared_cairo_t cr = shared_cairo_t(cairo_create(copy.get()), cairo_destroy);
-    cairo_set_source_surface(cr.get(), image.surface().get(), -rect.x(), -rect.y());
-    cairo_rectangle(cr.get(), 0, 0, rect.width(), rect.height());
-    cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
-    cairo_fill(cr.get());
-
-    return copy;
-}
 
 #ifdef HAVE_LIBPLANES
 HardwareSprite::HardwareSprite(Sprite& iface, const Image& image, const Size& frame_size,
@@ -142,12 +115,6 @@ void HardwareSprite::show_frame(int index)
     }
 }
 
-shared_cairo_surface_t HardwareSprite::surface() const
-{
-    Point origin = get_frame_origin(m_index);
-    return frame_surface(Rect(origin, Size(m_frame.width(), m_frame.height())), m_image);
-}
-
 #endif
 
 SoftwareSprite::SoftwareSprite(Sprite& iface, const Image& image, const Size& frame_size,
@@ -174,12 +141,6 @@ void SoftwareSprite::show_frame(int index)
         m_index = index;
         m_interface.damage();
     }
-}
-
-shared_cairo_surface_t SoftwareSprite::surface() const
-{
-    Point origin = get_frame_origin(m_index);
-    return frame_surface(Rect(origin, Size(m_frame.width(), m_frame.height())), m_image);
 }
 
 }
@@ -229,13 +190,6 @@ void Sprite::show_frame(int index)
     if (!m_simpl)
         throw std::runtime_error("no sprite implementation initialized");
     m_simpl->show_frame(index);
-}
-
-shared_cairo_surface_t Sprite::surface() const
-{
-    if (!m_simpl)
-        throw std::runtime_error("no sprite implementation initialized");
-    return m_simpl->surface();
 }
 
 void Sprite::advance()

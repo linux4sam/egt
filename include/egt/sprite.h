@@ -121,14 +121,6 @@ public:
     void show_frame(int index);
 
     /**
-     * Get a surface for the current frame.
-     *
-     * @warning This does not return the whole image surface.  Just the current
-     * frame.
-     */
-    EGT_NODISCARD shared_cairo_surface_t surface() const;
-
-    /**
      * Advance to the next frame in the strip.
      */
     void advance();

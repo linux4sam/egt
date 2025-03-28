@@ -48,8 +48,6 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) = 0;
 
-    virtual shared_cairo_surface_t surface() const = 0;
-
     /**
      * Advance to the next frame in the strip.
      */
