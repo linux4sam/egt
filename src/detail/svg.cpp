@@ -16,7 +16,7 @@ inline namespace v1
 namespace detail
 {
 
-static shared_cairo_surface_t load_svg(std::shared_ptr<RsvgHandle>& rsvg,
+static shared_cairo_surface_t load_svg(RsvgHandle* rsvg,
                                        const SizeF& size,
                                        const std::string& id)
 {
@@ -34,7 +34,7 @@ static shared_cairo_surface_t load_svg(std::shared_ptr<RsvgHandle>& rsvg,
          * default to 100%), whereas `rsvg_handle_get_dimensions()` is.
          */
         RsvgDimensionData dim;
-        rsvg_handle_get_dimensions(rsvg.get(), &dim);
+        rsvg_handle_get_dimensions(rsvg, &dim);
         viewport.width = dim.width;
         viewport.height = dim.height;
     }
@@ -52,24 +52,28 @@ static shared_cairo_surface_t load_svg(std::shared_ptr<RsvgHandle>& rsvg,
     auto cr = canvas.context();
 
     if (id.empty())
-        rsvg_handle_render_document(rsvg.get(), cr.get(), &viewport, nullptr);
+        rsvg_handle_render_document(rsvg, cr.get(), &viewport, nullptr);
     else
-        rsvg_handle_render_layer(rsvg.get(), cr.get(), id.c_str(), &viewport, nullptr);
+        rsvg_handle_render_layer(rsvg, cr.get(), id.c_str(), &viewport, nullptr);
 
     return canvas.surface();
 }
+
+struct RsvgHandle_deleter
+{
+    void operator()(RsvgHandle* rsvg) { g_object_unref(rsvg); }
+};
 
 shared_cairo_surface_t load_svg(const std::string& filename,
                                 const SizeF& size,
                                 const std::string& id)
 {
-    std::shared_ptr<RsvgHandle> rsvg(rsvg_handle_new_from_file(resolve_file_path(filename).c_str(), nullptr),
-    [](RsvgHandle * r) { g_object_unref(r); });
+    std::unique_ptr<RsvgHandle, RsvgHandle_deleter> rsvg(rsvg_handle_new_from_file(resolve_file_path(filename).c_str(), nullptr));
 
     if (!rsvg)
         throw std::runtime_error("unable to load svg file: " + filename);
 
-    return load_svg(rsvg, size, id);
+    return load_svg(rsvg.get(), size, id);
 }
 
 shared_cairo_surface_t load_svg(const unsigned char* data,
@@ -77,13 +81,12 @@ shared_cairo_surface_t load_svg(const unsigned char* data,
                                 const SizeF& size,
                                 const std::string& id)
 {
-    std::shared_ptr<RsvgHandle> rsvg(rsvg_handle_new_from_data(data, len, nullptr),
-    [](RsvgHandle * r) { g_object_unref(r); });
+    std::unique_ptr<RsvgHandle, RsvgHandle_deleter> rsvg(rsvg_handle_new_from_data(data, len, nullptr));
 
     if (!rsvg)
         throw std::runtime_error("unable to load svg file from memory");
 
-    return load_svg(rsvg, size, id);
+    return load_svg(rsvg.get(), size, id);
 }
 }
 }
