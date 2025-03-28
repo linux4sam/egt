@@ -69,23 +69,10 @@ static void draw_image(Painter& painter,
                        float angle)
 {
     Painter::AutoSaveRestore sr(painter);
-    auto cr = painter.context().get();
 
     painter.translate(point);
     painter.rotate(angle);
-
-    /*
-     * Some really odd artifact happens on the needle image edges *only* on
-     * the ARM target. So, slightly clip those horizontal edges.  This is
-     * probably an expensive operation, considering the rotate.
-     */
-    //cairo_rectangle(cr, -needle_center.x(), -needle_center.y() + 1,
-    //                image.size().width(), image.size().height() - 2);
-    //cairo_clip(cr);
-
-    cairo_set_source_surface(cr, image.surface().get(),
-                             -needle_center.x(), -needle_center.y());
-
+    painter.source(image, -needle_center);
     painter.paint();
 }
 

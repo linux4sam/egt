@@ -317,6 +317,31 @@ public:
     Painter& draw(const Image& image);
 
     /**
+     * Set the source pattern from a Pattern.
+     */
+    Painter& source(const Pattern& pattern);
+
+    /**
+     * Set the source pattern from a Color.
+     */
+    Painter& source(const Color& color);
+
+    /**
+     * Set the source pattern from a cairo_surface_t.
+     */
+    Painter& source(cairo_surface_t* surface, const PointF& point = {});
+
+    /**
+     * Set the source pattern from a shared_cairo_surface_t.
+     */
+    Painter& source(const shared_cairo_surface_t& surface, const PointF& point = {});
+
+    /**
+     * Set the source pattern from an Image.
+     */
+    Painter& source(const Image& image, const PointF& point = {});
+
+    /**
      * Draw an image as a mask.
      */
     Painter& mask(const Image& image, const Point& point = {});

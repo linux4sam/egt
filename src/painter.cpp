@@ -120,6 +120,37 @@ Painter& Painter::draw(const Image& image)
     return *this;
 }
 
+Painter& Painter::source(const Pattern& pattern)
+{
+    return set(pattern);
+}
+
+Painter& Painter::source(const Color& color)
+{
+    cairo_set_source_rgba(m_cr.get(),
+                          color.redf(),
+                          color.greenf(),
+                          color.bluef(),
+                          color.alphaf());
+    return *this;
+}
+
+Painter& Painter::source(cairo_surface_t* surface, const PointF& point)
+{
+    cairo_set_source_surface(m_cr.get(), surface, point.x(), point.y());
+    return *this;
+}
+
+Painter& Painter::source(const shared_cairo_surface_t& surface, const PointF& point)
+{
+    return source(surface.get(), point);
+}
+
+Painter& Painter::source(const Image& image, const PointF& point)
+{
+    return source(image.surface(), point);
+}
+
 Painter& Painter::mask(const Image& image, const Point& point)
 {
     cairo_mask_surface(m_cr.get(), image.surface().get(), point.x(), point.y());
