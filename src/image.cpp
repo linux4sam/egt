@@ -51,7 +51,6 @@ void Image::handle_surface_changed()
 {
     assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
 
-    m_surface_local.reset();
     m_orig_size = Size(std::ceil(cairo_image_surface_get_width(m_surface.get()) / m_hscale),
                        std::ceil(cairo_image_surface_get_height(m_surface.get()) / m_vscale));
 }
@@ -73,7 +72,6 @@ void Image::load(const std::string& uri, float hscale, float vscale, bool approx
         else
         {
             m_surface.reset();
-            m_surface_local.reset();
             m_orig_size = Size();
         }
         m_pattern.reset();
@@ -141,15 +139,6 @@ Rect Image::align(const Rect& bounding, const AlignFlags& align)
     }
 
     return target;
-}
-
-void Image::copy()
-{
-    if (!m_surface_local.get())
-    {
-        auto canvas = Canvas(surface());
-        m_surface_local = canvas.surface();
-    }
 }
 
 Image Image::crop(const RectF& rect)

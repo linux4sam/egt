@@ -30,8 +30,7 @@ class SvgImage;
  * Raster image resource used for drawing or displaying.
  *
  * This class by default shares the internal surface pointer with anything
- * else using the surface.  To force this class to keep its own copy, call
- * the copy() function.
+ * else using the surface.
  *
  * @ingroup media
  */
@@ -187,8 +186,6 @@ public:
      */
     EGT_NODISCARD const shared_cairo_surface_t& surface() const
     {
-        if (m_surface_local.get())
-            return m_surface_local;
         return m_surface;
     }
 
@@ -233,16 +230,6 @@ public:
         return m_keep_image_ratio;
     }
 
-    /**
-     * This function must be called any time the surface is going to be
-     * modified.  It's safe to call this function when not necessary, and in
-     * any event it will ensure this Image contains a unique copy of the
-     * surface.
-     *
-     * @todo Tricky API.
-     */
-    void copy();
-
     EGT_NODISCARD std::string uri() const
     {
         return m_uri;
@@ -284,9 +271,6 @@ protected:
 
     /// Shared surface pointer.
     shared_cairo_surface_t m_surface;
-
-    /// Local surface pointer.
-    shared_cairo_surface_t m_surface_local;
 
     /// Original image size.
     Size m_orig_size;
