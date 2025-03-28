@@ -15,6 +15,7 @@
 #include "egt/painter.h"
 #include "egt/screen.h"
 #include "egt/serialize.h"
+#include "egt/surface.h"
 #include "egt/types.h"
 #include "egt/widget.h"
 #include <cassert>
@@ -681,25 +682,14 @@ void Widget::paint(Painter& painter)
 
 void Widget::paint_to_file(const std::string& filename)
 {
-#if CAIRO_HAS_PNG_FUNCTIONS == 1
     std::string name = filename;
     if (name.empty())
         name = fmt::format("{}.png", this->name());
 
-    auto surface = shared_cairo_surface_t(
-                       cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
-                               width(), height()),
-                       cairo_surface_destroy);
-
-    auto cr = shared_cairo_t(cairo_create(surface.get()), cairo_destroy);
-
-    Painter painter(cr);
+    Surface surface(size());
+    Painter painter(surface);
     paint(painter);
-    cairo_surface_write_to_png(surface.get(), name.c_str());
-#else
-    detail::ignoreparam(filename);
-    detail::error("png support not available");
-#endif
+    surface.write_to_png(name);
 }
 
 void Widget::walk(const WalkCallback& callback, int level)
