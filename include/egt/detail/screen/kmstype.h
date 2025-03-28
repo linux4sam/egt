@@ -24,7 +24,7 @@ struct plane_t_deleter
 };
 
 /**
- * Unique pointer for a cairo context.
+ * Unique pointer for a libplanes plane_data structure.
  */
 using unique_plane_t =
     std::unique_ptr<plane_data, detail::plane_t_deleter>;
