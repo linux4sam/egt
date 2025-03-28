@@ -9,7 +9,6 @@ add_library(egt SHARED
     combo.cpp
     detail/alignment.cpp
     detail/base64.cpp
-    detail/collision.cpp
     detail/egtlog.cpp
     detail/eraw.cpp
     detail/filesystem.cpp
@@ -100,7 +99,6 @@ target_sources(egt PUBLIC FILE_SET HEADERS
     ${CMAKE_SOURCE_DIR}/include/egt/color.h
     ${CMAKE_SOURCE_DIR}/include/egt/combo.h
     ${CMAKE_SOURCE_DIR}/include/egt/detail/alignment.h
-    ${CMAKE_SOURCE_DIR}/include/egt/detail/collision.h
     ${CMAKE_SOURCE_DIR}/include/egt/detail/cow.h
     ${CMAKE_SOURCE_DIR}/include/egt/detail/enum.h
     ${CMAKE_SOURCE_DIR}/include/egt/detail/filesystem.h

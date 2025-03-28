@@ -51,7 +51,6 @@ detail/asioallocator.h \
 detail/alignment.cpp \
 detail/base64.cpp \
 detail/base64.h \
-detail/collision.cpp \
 detail/dump.h \
 detail/egtlog.cpp \
 detail/egtlog.h \
@@ -172,7 +171,6 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/color.h \
 ../include/egt/combo.h \
 ../include/egt/detail/alignment.h \
-../include/egt/detail/collision.h \
 ../include/egt/detail/cow.h \
 ../include/egt/detail/enum.h \
 ../include/egt/detail/filesystem.h \
