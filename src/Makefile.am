@@ -43,7 +43,6 @@ animation.cpp \
 app.cpp \
 button.cpp \
 buttongroup.cpp \
-canvas.cpp \
 checkbox.cpp \
 color.cpp \
 combo.cpp \
@@ -170,7 +169,6 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/bitfields.h \
 ../include/egt/button.h \
 ../include/egt/buttongroup.h \
-../include/egt/canvas.h \
 ../include/egt/checkbox.h \
 ../include/egt/color.h \
 ../include/egt/combo.h \

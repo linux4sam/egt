@@ -3,7 +3,6 @@ add_library(egt SHARED
     app.cpp
     button.cpp
     buttongroup.cpp
-    canvas.cpp
     checkbox.cpp
     color.cpp
     combo.cpp
@@ -96,7 +95,6 @@ target_sources(egt PUBLIC FILE_SET HEADERS
     ${CMAKE_SOURCE_DIR}/include/egt/bitfields.h
     ${CMAKE_SOURCE_DIR}/include/egt/button.h
     ${CMAKE_SOURCE_DIR}/include/egt/buttongroup.h
-    ${CMAKE_SOURCE_DIR}/include/egt/canvas.h
     ${CMAKE_SOURCE_DIR}/include/egt/checkbox.h
     ${CMAKE_SOURCE_DIR}/include/egt/color.h
     ${CMAKE_SOURCE_DIR}/include/egt/combo.h
