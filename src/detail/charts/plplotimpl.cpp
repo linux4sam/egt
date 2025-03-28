@@ -391,13 +391,8 @@ void PlPlotImpl::plplot_label(const shared_cairo_t& cr, const Rect& b, const Fon
 {
     if (axis() >= 0)
     {
-        // set font face, slant and weight
-        auto slant = static_cast<cairo_font_slant_t>(font.slant());
-        auto weight = static_cast<cairo_font_weight_t>(font.weight());
-        cairo_select_font_face(cr.get(), font.face().c_str(), slant, weight);
-
-        // set font size
-        cairo_set_font_size(cr.get(), font.size());
+        // set font
+        cairo_set_scaled_font(cr.get(), font.scaled_font());
 
         // set text color
         cairo_set_source_rgb(cr.get(), color.redf(), color.greenf(), color.bluef());
