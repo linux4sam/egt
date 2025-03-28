@@ -239,13 +239,6 @@ public:
 
     void reset_uri() { uri({}); }
 
-    Image crop(const RectF& rect);
-
-    Image crop(const Rect& rect)
-    {
-        return crop(RectF(rect.x(), rect.y(), rect.width(), rect.height()));
-    }
-
     /**
     * Serialize to the specified serializer.
     */

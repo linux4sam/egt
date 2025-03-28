@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "egt/canvas.h"
 #include "egt/detail/alignment.h"
 #include "egt/detail/image.h"
 #include "egt/detail/imagecache.h"
@@ -139,13 +138,6 @@ Rect Image::align(const Rect& bounding, const AlignFlags& align)
     }
 
     return target;
-}
-
-Image Image::crop(const RectF& rect)
-{
-    Canvas canvas(rect.size());
-    canvas.copy(m_surface, rect);
-    return canvas.surface();
 }
 
 void Image::serialize(const std::string& name, Serializer& serializer) const
