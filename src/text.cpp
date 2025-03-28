@@ -1623,6 +1623,8 @@ void TextBox::selection_all()
 
 void TextBox::selection_damage()
 {
+    cairo_set_scaled_font(context(), font().scaled_font());
+
     consolidate(m_rects);
     TextRects rects(m_rects);
     clear_selection(rects);
