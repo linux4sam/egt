@@ -242,6 +242,25 @@ public:
      */
     EGT_NODISCARD DefaultDim label_offset() const { return m_label_offset; }
 
+    /**
+     * Set the margin for the handle image.
+     *
+     * @note This margin is the gap between the handle in min/max positions and
+     *       the border of the content area. It may be negative to allow the
+     *       handle crossing edges of the slider content area.
+     * @param[in] margin
+     */
+    void handle_margin(DefaultDim margin)
+    {
+        if (detail::change_if_diff<>(m_handle_margin, margin))
+            this->damage();
+    }
+
+    /**
+     * Get the margin for the handle image.
+     */
+    EGT_NODISCARD DefaultDim handle_margin() const { return m_handle_margin; }
+
     using ValueRangeWidget<T>::value;
 
     T value(T value) override
@@ -325,26 +344,28 @@ protected:
     EGT_NODISCARD int to_offset(T value) const
     {
         if (detail::float_equal(static_cast<float>(this->m_start), static_cast<float>(this->m_end)))
-            return 0;
+            return m_handle_margin;
 
+        const auto m = m_handle_margin;
         const auto b = this->content_area();
         if (m_orient == Orientation::horizontal)
             return egt::detail::normalize<float>(value, this->m_start, this->m_end,
-                                                 0, b.width() - handle_width());
+                                                 m, b.width() - m - handle_width());
         else
             return egt::detail::normalize<float>(value, this->m_start, this->m_end,
-                                                 0, b.height() - handle_height());
+                                                 m, b.height() - m - handle_height());
     }
 
     /// Convert an offset to value.
     EGT_NODISCARD T to_value(int offset) const
     {
+        const auto m = m_handle_margin;
         const auto b = this->content_area();
         if (m_orient == Orientation::horizontal)
-            return egt::detail::normalize<float>(offset, 0, b.width() - handle_width(),
+            return egt::detail::normalize<float>(offset, m, b.width() - m - handle_width(),
                                                  this->m_start, this->m_end);
         else
-            return egt::detail::normalize<float>(offset, 0, b.height() - handle_height(),
+            return egt::detail::normalize<float>(offset, m, b.height() - m - handle_height(),
                                                  this->m_start, this->m_end);
     }
 
@@ -478,6 +499,7 @@ private:
 
     /// Optional handle images.
     ImageGroup m_handles{"handle"};
+    DefaultDim m_handle_margin{0};
 
     DefaultDim m_label_offset{0};
 
@@ -795,19 +817,19 @@ void SliderType<T>::draw_line(Painter& painter, const Rect& handle_rect)
 
     if (m_orient == Orientation::horizontal)
     {
-        a1 = Point(b.x(), yp);
+        a1 = Point(b.x() + m_handle_margin, yp);
         a2 = Point(handle_rect.x(), yp);
         b1 = Point(handle_rect.x(), yp);
-        b2 = Point(b.x() + b.width(), yp);
+        b2 = Point(b.x() + b.width() - m_handle_margin, yp);
 
         painter.line_width(handle_rect.height() / 5.0);
     }
     else
     {
-        a1 = Point(xp, b.y() + b.height());
+        a1 = Point(xp, b.y() + b.height() - m_handle_margin);
         a2 = Point(xp, handle_rect.y());
         b1 = Point(xp, handle_rect.y());
-        b2 = Point(xp, b.y());
+        b2 = Point(xp, b.y() + m_handle_margin);
 
         painter.line_width(handle_rect.width() / 5.0);
     }
@@ -850,6 +872,7 @@ void SliderType<T>::serialize(Serializer& serializer) const
     serializer.add_property("sliderflags", m_slider_flags.to_string());
     serializer.add_property("orient", detail::enum_to_string(orient()));
     serializer.add_property("label_offset", label_offset());
+    serializer.add_property("handle_margin", handle_margin());
     m_handles.serialize(serializer);
 }
 
@@ -871,6 +894,11 @@ void SliderType<T>::deserialize(Serializer::Properties& props)
         else if (std::get<0>(p) == "label_offset")
         {
             label_offset(std::stoi(std::get<1>(p)));
+            return true;
+        }
+        else if (std::get<0>(p) == "handle_margin")
+        {
+            handle_margin(std::stoi(std::get<1>(p)));
             return true;
         }
         else if (m_handles.deserialize(std::get<0>(p), std::get<1>(p)))
