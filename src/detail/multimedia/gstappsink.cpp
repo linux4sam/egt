@@ -20,6 +20,7 @@ namespace detail
 
 GstAppSink::GstAppSink(GstDecoderImpl& gst_decoder, const Size& size, Window& window)
     : GstSink(gst_decoder, size, window.format()),
+      m_videosample(nullptr, gst_sample_unref),
       m_window(window)
 {
     EGTLOG_DEBUG("GstAppSink::GstAppSink: size={}, format={}",
@@ -87,15 +88,14 @@ void GstAppSink::draw(Painter& painter, const Rect& rect)
      */
     if (m_videosample)
     {
-        GstCaps* caps = gst_sample_get_caps(m_videosample);
+        GstCaps* caps = gst_sample_get_caps(m_videosample.get());
         GstStructure* capsStruct = gst_caps_get_structure(caps, 0);
         int width = 0;
         int height = 0;
         gst_structure_get_int(capsStruct, "width", &width);
         gst_structure_get_int(capsStruct, "height", &height);
 
-        gst_sample_ref(m_videosample);
-        GstBuffer* buffer = gst_sample_get_buffer(m_videosample);
+        GstBuffer* buffer = gst_sample_get_buffer(m_videosample.get());
         if (buffer)
         {
             GstMapInfo map;
@@ -135,7 +135,6 @@ void GstAppSink::draw(Painter& painter, const Rect& rect)
                 gst_buffer_unmap(buffer, &map);
             }
         }
-        gst_sample_unref(m_videosample);
     }
 }
 
@@ -201,22 +200,20 @@ GstFlowReturn GstAppSink::on_new_buffer(GstElement* elt, gpointer data)
                     gst_buffer_unmap(buffer, &map);
                 }
             }
-            gst_sample_unref(sample);
+        }
+#endif
+        if (Application::check_instance())
+        {
+            asio::post(Application::instance().event().io(), [impl, sample]()
+            {
+                impl->m_videosample.reset(sample);
+                if (!impl->m_window.plane_window())
+                    impl->m_window.damage();
+            });
         }
         else
-#endif
         {
-            if (Application::check_instance())
-            {
-                asio::post(Application::instance().event().io(), [impl, sample]()
-                {
-                    if (impl->m_videosample)
-                        gst_sample_unref(impl->m_videosample);
-
-                    impl->m_videosample = sample;
-                    impl->m_window.damage();
-                });
-            }
+            gst_sample_unref(sample);
         }
         return GST_FLOW_OK;
     }

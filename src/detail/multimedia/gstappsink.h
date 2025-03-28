@@ -39,7 +39,7 @@ private:
 
     static GstFlowReturn on_new_buffer(GstElement* elt, gpointer data);
 
-    GstSample* m_videosample{nullptr};
+    std::unique_ptr<GstSample, decltype(gst_sample_unref)*> m_videosample;
 
     Window& m_window;
 };
