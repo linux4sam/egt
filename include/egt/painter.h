@@ -455,6 +455,8 @@ public:
 
     Painter& fill();
 
+    Painter& fill_preserve();
+
     Painter& paint();
 
     Painter& paint(float alpha);

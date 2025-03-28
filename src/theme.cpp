@@ -282,7 +282,7 @@ void Theme::draw_box(Painter& painter,
             painter.set(bg);
         }
 
-        cairo_fill_preserve(cr);
+        painter.fill_preserve();
     }
 
     if (!border_flags.is_set(BorderFlag::drop_shadow))
@@ -395,7 +395,7 @@ void Theme::draw_circle(Painter& painter,
             painter.set(bg);
         }
 
-        cairo_fill_preserve(cr);
+        painter.fill_preserve();
     }
 
     if (border_width)

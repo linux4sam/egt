@@ -352,6 +352,13 @@ Painter& Painter::fill()
     return *this;
 }
 
+Painter& Painter::fill_preserve()
+{
+    cairo_fill_preserve(m_cr.get());
+
+    return *this;
+}
+
 Painter& Painter::paint()
 {
     cairo_paint(m_cr.get());
