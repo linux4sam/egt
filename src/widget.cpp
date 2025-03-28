@@ -669,10 +669,14 @@ void Widget::paint(Painter& painter)
 {
     Painter::AutoSaveRestore sr(painter);
 
+    auto save = painter.set_subordinate_filter(nullptr);
+
     // move origin
     painter.translate(-point());
 
     draw(painter, box());
+
+    painter.restore_subordinate_filter(std::move(save));
 }
 
 void Widget::paint_to_file(const std::string& filename)
@@ -1394,9 +1398,7 @@ void Widget::draw(Painter& painter, const Rect& rect)
         if (!subordinate->visible())
             continue;
 
-        // don't draw plane widget as child - this is
-        // specifically handled by event loop
-        if (subordinate->plane_window())
+        if (painter.filter_subordinate(*subordinate))
             continue;
 
         draw_subordinate(painter, crect, subordinate.get());

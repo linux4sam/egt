@@ -190,11 +190,18 @@ void Window::do_draw()
 
         Painter::AutoSaveRestore sr(painter);
 
+        auto save = painter.set_subordinate_filter([](const Widget & subordinate)
+        {
+            return subordinate.plane_window();
+        });
+
         // move origin
         painter.translate(-point());
 
         for (auto& damage : m_damage)
             draw(painter, damage + point());
+
+        painter.restore_subordinate_filter(std::move(save));
 
         screen()->flip(m_damage);
         m_damage.clear();

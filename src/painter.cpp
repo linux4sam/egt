@@ -30,6 +30,26 @@ void Painter::restore()
     cairo_restore(m_cr.get());
 }
 
+bool Painter::filter_subordinate(const Widget& subordinate) const
+{
+    if (m_subordinate_filter)
+        return m_subordinate_filter(subordinate);
+
+    return false;
+}
+
+Painter::SubordinateFilter Painter::set_subordinate_filter(const SubordinateFilter& subordinate_filter)
+{
+    auto previous = m_subordinate_filter;
+    m_subordinate_filter = subordinate_filter;
+    return previous;
+}
+
+void Painter::restore_subordinate_filter(SubordinateFilter&& subordinate_filter)
+{
+    m_subordinate_filter = std::move(subordinate_filter);
+}
+
 void Painter::push_group()
 {
     cairo_push_group(m_cr.get());

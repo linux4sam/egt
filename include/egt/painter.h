@@ -19,6 +19,7 @@
 #include <egt/geometry.h>
 #include <egt/pattern.h>
 #include <egt/types.h>
+#include <functional>
 #include <string>
 
 namespace egt
@@ -27,6 +28,7 @@ inline namespace v1
 {
 
 class Image;
+class Widget;
 
 /**
  * @defgroup drawing Drawing Classes
@@ -44,6 +46,12 @@ class Image;
 class EGT_API Painter
 {
 public:
+
+    /**
+     * Return true if the subordinate widget is filtered out, hence should
+     * not be drawn by the painter.
+     */
+    using SubordinateFilter = std::function<bool(const Widget&)>;
 
     /**
      * Scoped save() and restore() for a Painter.
@@ -141,6 +149,32 @@ public:
      * @see AutoSaveRestore
      */
     void restore();
+
+    /**
+     * Apply the current subordinate filter.
+     *
+     * @param[in] subordinate The widget to be tested.
+     *
+     * @return true if the subordinate widget is filtered out, hence should
+     * not be drawn by the painter.
+     */
+    EGT_NODISCARD bool filter_subordinate(const Widget& subordinate) const;
+
+    /**
+     * Set the subordinate filter (nullptr to remove the current filter).
+     *
+     * @param[in] subordinate_filter The new subordinate filter.
+     *
+     * @return a copy of the previous subordinate filter.
+     */
+    SubordinateFilter set_subordinate_filter(const SubordinateFilter& subordinate_filter);
+
+    /**
+     * Restore the subordinate filter from a previous value.
+     *
+     * @param[in] subordinate_filter The saved subordinate filter to restore.
+     */
+    void restore_subordinate_filter(SubordinateFilter&& subordinate_filter);
 
     /**
      * Push a group onto the stack.
@@ -361,6 +395,11 @@ public:
     }
 
 protected:
+
+    /**
+     * Internal state.
+     */
+    SubordinateFilter m_subordinate_filter;
 
     /**
      * Cairo context.
