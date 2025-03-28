@@ -171,12 +171,9 @@ void Theme::draw_box(Painter& painter, const Widget& widget,
 
     Palette::GroupId group = widget.group();
 
-    auto box = widget.box();
-    if (widget.has_screen())
-        box -= widget.point();
     draw_box(painter,
              type,
-             box,
+             widget.box(),
              widget.color(border, group),
              widget.color(bg, group),
              widget.border(),

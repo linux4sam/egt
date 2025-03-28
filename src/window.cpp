@@ -188,8 +188,13 @@ void Window::do_draw()
     {
         Painter painter(screen()->context());
 
+        Painter::AutoSaveRestore sr(painter);
+
+        // move origin
+        painter.translate(-point());
+
         for (auto& damage : m_damage)
-            draw(painter, damage);
+            draw(painter, damage + point());
 
         screen()->flip(m_damage);
         m_damage.clear();

@@ -1380,21 +1380,11 @@ void Widget::draw(Painter& painter, const Rect& rect)
     if (m_subordinates.empty())
         return;
 
+    const auto& origin = point();
+    painter.translate(origin);
+
     // child rect
-    auto crect = rect;
-
-    // if this widget does not have a screen, it means the damage rect is in
-    // coordinates of some parent widget, so we have to adjust the physical origin
-    // and take it into account when looking at children, who's coordinates are
-    // respective of this widget
-    if (!has_screen())
-    {
-        const auto& origin = point();
-        painter.translate(origin);
-
-        // adjust our child rect for comparison's below
-        crect -= origin;
-    }
+    auto crect = rect - origin;
 
     // keep the crect inside our content area
     crect = Rect::intersection(crect, to_subordinate(content_area()));

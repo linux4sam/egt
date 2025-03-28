@@ -116,7 +116,16 @@ HardwareSprite::HardwareSprite(Sprite& iface, const Image& image, const Size& fr
 
 void HardwareSprite::draw(Painter& painter, const Rect& rect)
 {
-    m_label.draw(painter, rect);
+    /**
+     * 'm_label' can be seen as a component of the 'm_interface' Sprite widget.
+     * Therefore, insert a translation of 'm_interface.point()', as
+     * Widget::draw() would have done before drawing the subordinate/component.
+     */
+    Painter::AutoSaveRestore sr(painter);
+
+    const auto& origin = m_interface.point();
+    painter.translate(origin);
+    m_label.draw(painter, rect - origin);
 }
 
 void HardwareSprite::show_frame(int index)
