@@ -425,6 +425,8 @@ public:
     /**
      * Draw an image as a mask.
      */
+    Painter& mask(const Surface& surface, const PointF& point = {});
+
     Painter& mask(const Image& image, const Point& point = {});
 
     /**

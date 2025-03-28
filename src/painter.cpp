@@ -205,6 +205,12 @@ Painter& Painter::source(const Image& image, const PointF& point)
     return source(image.surface(), point);
 }
 
+Painter& Painter::mask(const Surface& surface, const PointF& point)
+{
+    cairo_mask_surface(m_cr.get(), surface.impl(), point.x(), point.y());
+    return *this;
+}
+
 Painter& Painter::mask(const Image& image, const Point& point)
 {
     cairo_mask_surface(m_cr.get(), image.surface().get(), point.x(), point.y());
