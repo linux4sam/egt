@@ -415,7 +415,7 @@ void Application::paint_to_file(const std::string& filename)
             continue;
 
         // draw top level frames and plane frames
-        if (w->top_level() || w->plane_window())
+        if (w->top_level())
             w->paint(painter);
     }
 

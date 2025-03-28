@@ -40,8 +40,6 @@ public:
 
     virtual void draw(Painter& painter, const Rect& rect) override;
 
-    virtual void paint(Painter& painter) override;
-
     virtual shared_cairo_surface_t surface() const override;
 
 protected:
@@ -62,8 +60,6 @@ public:
     void show_frame(int index) override;
 
     void draw(Painter& painter, const Rect& rect) override;
-
-    void paint(Painter& painter) override;
 
     EGT_NODISCARD shared_cairo_surface_t surface() const override;
 
@@ -152,12 +148,6 @@ shared_cairo_surface_t HardwareSprite::surface() const
     return frame_surface(Rect(origin, Size(m_frame.width(), m_frame.height())), m_image);
 }
 
-void HardwareSprite::paint(Painter& painter)
-{
-    painter.draw(m_interface.point());
-    painter.draw(Image(surface()));
-}
-
 #endif
 
 SoftwareSprite::SoftwareSprite(Sprite& iface, const Image& image, const Size& frame_size,
@@ -190,13 +180,6 @@ shared_cairo_surface_t SoftwareSprite::surface() const
 {
     Point origin = get_frame_origin(m_index);
     return frame_surface(Rect(origin, Size(m_frame.width(), m_frame.height())), m_image);
-}
-
-void SoftwareSprite::paint(Painter& painter)
-{
-    auto cr = painter.context();
-    cairo_move_to(cr.get(), m_interface.point().x(), m_interface.point().y());
-    painter.draw(Image(surface()));
 }
 
 }
@@ -246,13 +229,6 @@ void Sprite::show_frame(int index)
     if (!m_simpl)
         throw std::runtime_error("no sprite implementation initialized");
     m_simpl->show_frame(index);
-}
-
-void Sprite::paint(Painter& painter)
-{
-    if (!m_simpl)
-        return;
-    m_simpl->paint(painter);
 }
 
 shared_cairo_surface_t Sprite::surface() const

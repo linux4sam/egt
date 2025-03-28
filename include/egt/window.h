@@ -162,8 +162,6 @@ public:
         return m_vscale;
     }
 
-    void paint(Painter& painter) override;
-
     /*
      * Damage rectangles propagate up the widget tree and stop at a top level
      * widget, which can only be a window. As it propagates up, the damage
@@ -293,12 +291,6 @@ protected:
     virtual void default_hide()
     {
         Frame::hide();
-    }
-
-    /// @private
-    virtual void default_paint(Painter& painter)
-    {
-        Frame::paint(painter);
     }
 
     /// @private

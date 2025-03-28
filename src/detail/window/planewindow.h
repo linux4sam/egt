@@ -52,8 +52,6 @@ public:
 
     void hide() override;
 
-    void paint(Painter& painter) override;
-
     void allocate_screen() override;
 
     ~PlaneWindow() noexcept override;

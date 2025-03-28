@@ -1144,7 +1144,7 @@ public:
      * function to get the widget to draw its contents to another
      * surface provided with a Painter.
      */
-    virtual void paint(Painter& painter);
+    void paint(Painter& painter);
 
     /**
      * Draw the widget to a file.

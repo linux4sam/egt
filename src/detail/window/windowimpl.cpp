@@ -62,11 +62,6 @@ void WindowImpl::hide()
     m_interface->default_hide();
 }
 
-void WindowImpl::paint(Painter& painter)
-{
-    m_interface->default_paint(painter);
-}
-
 }
 }
 }

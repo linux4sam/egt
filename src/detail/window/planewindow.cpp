@@ -139,42 +139,6 @@ void PlaneWindow::begin_draw()
     }
 }
 
-static shared_cairo_surface_t copy_surface(cairo_surface_t* surface)
-{
-    assert(cairo_surface_status(surface) == CAIRO_STATUS_SUCCESS);
-
-    // cairo_surface_create_for_rectangle() would work here with one
-    // exception - the resulting image has no width and height
-
-    shared_cairo_surface_t copy =
-        shared_cairo_surface_t(cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
-                               cairo_image_surface_get_width(surface),
-                               cairo_image_surface_get_height(surface)),
-                               cairo_surface_destroy);
-
-    shared_cairo_t cr = shared_cairo_t(cairo_create(copy.get()), cairo_destroy);
-    cairo_set_source_surface(cr.get(), surface, 0, 0);
-    cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
-    cairo_paint(cr.get());
-
-    return copy;
-}
-
-void PlaneWindow::paint(Painter& painter)
-{
-    if (m_screen)
-    {
-        // There is something odd going on. The surface doesn't work unless it's
-        // copied to a new surface first.
-
-        auto copy = copy_surface(cairo_get_target(screen()->context().get()));
-        auto image = Image(copy);
-        auto p = m_interface->local_to_display(Point());
-        painter.draw(Point(p.x(), p.y()));
-        painter.draw(image);
-    }
-}
-
 void PlaneWindow::show()
 {
     m_dirty = true;

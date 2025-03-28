@@ -140,12 +140,6 @@ void Window::hide()
         m_impl->hide();
 }
 
-void Window::paint(Painter& painter)
-{
-    if (m_impl)
-        m_impl->paint(painter);
-}
-
 void Window::begin_draw()
 {
     EGTLOG_TRACE("{} top draw", name());

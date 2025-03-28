@@ -48,7 +48,6 @@ public:
     virtual void begin_draw();
     virtual void show();
     virtual void hide();
-    virtual void paint(Painter& painter);
     virtual void allocate_screen() {}
     inline bool has_screen() const
     {

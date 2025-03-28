@@ -103,8 +103,6 @@ public:
 
     void draw(Painter& painter, const Rect& rect) override;
 
-    void paint(Painter& painter) override;
-
     /**
      * Initialize the sprite with new configuration.
      *
