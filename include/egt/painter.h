@@ -11,7 +11,6 @@
  * @brief Painter interface.
  */
 
-#include <cairo.h>
 #include <egt/color.h>
 #include <egt/detail/meta.h>
 #include <egt/flags.h>
@@ -21,12 +20,18 @@
 #include <egt/types.h>
 #include <functional>
 #include <iosfwd>
+#include <memory>
 #include <string>
 
 namespace egt
 {
 inline namespace v1
 {
+
+namespace detail
+{
+class InternalContext;
+}
 
 class Image;
 class Surface;
@@ -153,6 +158,7 @@ public:
     Painter() = delete;
 
     explicit Painter(Surface& surface) noexcept;
+    ~Painter();
 
     /**
      * Save the state of the current context.
@@ -465,10 +471,7 @@ public:
     /**
      * Get the current underlying context the painter is using.
      */
-    EGT_NODISCARD inline shared_cairo_t context() const
-    {
-        return m_cr;
-    }
+    EGT_NODISCARD const detail::InternalContext& context() const { return *m_cr; }
 
     /**
      * Get the target surface the painter is using.
@@ -485,9 +488,9 @@ protected:
     SubordinateFilter m_subordinate_filter;
 
     /**
-     * Cairo context.
+     * Internal context.
      */
-    shared_cairo_t m_cr;
+    std::unique_ptr<detail::InternalContext> m_cr;
 
     Surface& m_surface;
 };

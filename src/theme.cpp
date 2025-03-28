@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/cairoabstraction.h"
 #include "egt/checkbox.h"
 #include "egt/detail/enum.h"
 #include "egt/detail/math.h"

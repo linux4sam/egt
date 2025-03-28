@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #define _USE_MATH_DEFINES
+#include "detail/cairoabstraction.h"
 #include "detail/egtlog.h"
 #include "detail/charts/plplotimpl.h"
 #include "egt/app.h"
@@ -506,7 +507,7 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
         m_plstream->init();
         m_initalize = true;
     }
-    auto cr = painter.context();
+    const auto& cr = painter.context();
 
     painter.translate(b.point());
 
@@ -566,7 +567,7 @@ void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
         m_initalize = true;
     }
 
-    auto cr = painter.context();
+    const auto& cr = painter.context();
 
     painter.translate(b.point());
 
@@ -638,7 +639,7 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
         m_initalize = true;
     }
 
-    auto cr = painter.context();
+    const auto& cr = painter.context();
 
     painter.translate(b.point());
 
@@ -742,7 +743,7 @@ void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
         m_initalize = true;
     }
 
-    auto cr = painter.context();
+    const auto& cr = painter.context();
 
     painter.translate(b.point());
 
@@ -822,7 +823,7 @@ void PlPlotPieChart::draw(Painter& painter, const Rect& rect)
         m_initalize = true;
     }
 
-    auto cr = painter.context();
+    const auto& cr = painter.context();
 
     painter.translate(b.point());
 

@@ -34,17 +34,21 @@ Painter& dummy_painter()
 Painter::Painter(Surface& surface) noexcept
     : m_surface(surface)
 {
-    m_cr = shared_cairo_t(cairo_create(surface.impl()), cairo_destroy);
+    m_cr = std::make_unique<detail::InternalContext>(cairo_create(surface.impl()));
+}
+
+Painter::~Painter()
+{
 }
 
 void Painter::save()
 {
-    cairo_save(m_cr.get());
+    cairo_save(*m_cr);
 }
 
 void Painter::restore()
 {
-    cairo_restore(m_cr.get());
+    cairo_restore(*m_cr);
 }
 
 void Painter::low_fidelity()
@@ -53,11 +57,11 @@ void Painter::low_fidelity()
     cairo_font_options_t* cfo = cairo_font_options_create();
     cairo_font_options_set_antialias(cfo, CAIRO_ANTIALIAS_FAST);
     cairo_font_options_set_hint_style(cfo, CAIRO_HINT_STYLE_NONE);
-    cairo_set_font_options(m_cr.get(), cfo);
+    cairo_set_font_options(*m_cr, cfo);
     cairo_font_options_destroy(cfo);
 
     // shapes
-    cairo_set_antialias(m_cr.get(), CAIRO_ANTIALIAS_FAST);
+    cairo_set_antialias(*m_cr, CAIRO_ANTIALIAS_FAST);
 }
 
 void Painter::high_fidelity()
@@ -66,11 +70,11 @@ void Painter::high_fidelity()
     cairo_font_options_t* cfo = cairo_font_options_create();
     cairo_font_options_set_antialias(cfo, CAIRO_ANTIALIAS_GOOD);
     cairo_font_options_set_hint_style(cfo, CAIRO_HINT_STYLE_MEDIUM);
-    cairo_set_font_options(m_cr.get(), cfo);
+    cairo_set_font_options(*m_cr, cfo);
     cairo_font_options_destroy(cfo);
 
     // shapes
-    cairo_set_antialias(m_cr.get(), CAIRO_ANTIALIAS_GOOD);
+    cairo_set_antialias(*m_cr, CAIRO_ANTIALIAS_GOOD);
 }
 
 bool Painter::filter_subordinate(const Widget& subordinate) const
@@ -95,74 +99,74 @@ void Painter::restore_subordinate_filter(SubordinateFilter&& subordinate_filter)
 
 void Painter::push_group()
 {
-    cairo_push_group(m_cr.get());
+    cairo_push_group(*m_cr);
 }
 
 void Painter::pop_group()
 {
-    cairo_pop_group_to_source(m_cr.get());
+    cairo_pop_group_to_source(*m_cr);
 }
 
 Painter& Painter::set(const Pattern& pattern)
 {
-    cairo_set_source(m_cr.get(), pattern.pattern());
+    cairo_set_source(*m_cr, pattern.pattern());
     return *this;
 }
 
 Painter& Painter::set(const Font& font)
 {
-    cairo_set_scaled_font(m_cr.get(), font.scaled_font());
+    cairo_set_scaled_font(*m_cr, font.scaled_font());
     return *this;
 }
 
 Painter& Painter::line_width(float width)
 {
-    cairo_set_line_width(m_cr.get(), width);
+    cairo_set_line_width(*m_cr, width);
 
     return *this;
 }
 
 Painter& Painter::line_cap(Painter::LineCap value)
 {
-    cairo_set_line_cap(m_cr.get(), detail::cairo_line_cap(value));
+    cairo_set_line_cap(*m_cr, detail::cairo_line_cap(value));
     return *this;
 }
 
 Painter::LineCap Painter::line_cap() const
 {
-    return detail::egt_line_cap(cairo_get_line_cap(m_cr.get()));
+    return detail::egt_line_cap(cairo_get_line_cap(*m_cr));
 }
 
 Painter& Painter::set_dash(const double* dashes, size_t num_dashes, double offset)
 {
-    cairo_set_dash(m_cr.get(), dashes, num_dashes, offset);
+    cairo_set_dash(*m_cr, dashes, num_dashes, offset);
     return *this;
 }
 
 Painter& Painter::antialias(Painter::AntiAlias value)
 {
-    cairo_set_antialias(m_cr.get(), detail::cairo_antialias(value));
+    cairo_set_antialias(*m_cr, detail::cairo_antialias(value));
     return *this;
 }
 
 Painter::AntiAlias Painter::antialias() const
 {
-    return detail::egt_antialias(cairo_get_antialias(m_cr.get()));
+    return detail::egt_antialias(cairo_get_antialias(*m_cr));
 }
 
 Painter& Painter::alpha_blending(bool enabled)
 {
     if (enabled)
-        cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_OVER);
+        cairo_set_operator(*m_cr, CAIRO_OPERATOR_OVER);
     else
-        cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_SOURCE);
+        cairo_set_operator(*m_cr, CAIRO_OPERATOR_SOURCE);
 
     return *this;
 }
 
 bool Painter::alpha_blending() const
 {
-    return cairo_get_operator(m_cr.get()) != CAIRO_OPERATOR_SOURCE;
+    return cairo_get_operator(*m_cr) != CAIRO_OPERATOR_SOURCE;
 }
 
 Painter& Painter::draw(const Image& image)
@@ -173,14 +177,14 @@ Painter& Painter::draw(const Image& image)
 
     AutoSaveRestore sr(*this);
 
-    if (!cairo_has_current_point(m_cr.get()))
+    if (!cairo_has_current_point(*m_cr))
         return *this;
 
     double x;
     double y;
-    cairo_get_current_point(m_cr.get(), &x, &y);
+    cairo_get_current_point(*m_cr, &x, &y);
 
-    cairo_translate(m_cr.get(), x, y);
+    cairo_translate(*m_cr, x, y);
     source(image);
 
     /// @todo no paint here
@@ -196,7 +200,7 @@ Painter& Painter::source(const Pattern& pattern)
 
 Painter& Painter::source(const Color& color)
 {
-    cairo_set_source_rgba(m_cr.get(),
+    cairo_set_source_rgba(*m_cr,
                           color.redf(),
                           color.greenf(),
                           color.bluef(),
@@ -206,7 +210,7 @@ Painter& Painter::source(const Color& color)
 
 Painter& Painter::source(const Surface& surface, const PointF& point)
 {
-    cairo_set_source_surface(m_cr.get(), surface.impl(), point.x(), point.y());
+    cairo_set_source_surface(*m_cr, surface.impl(), point.x(), point.y());
     return *this;
 }
 
@@ -217,7 +221,7 @@ Painter& Painter::source(const Image& image, const PointF& point)
 
 Painter& Painter::mask(const Surface& surface, const PointF& point)
 {
-    cairo_mask_surface(m_cr.get(), surface.impl(), point.x(), point.y());
+    cairo_mask_surface(*m_cr, surface.impl(), point.x(), point.y());
     return *this;
 }
 
@@ -254,33 +258,33 @@ Painter& Painter::draw(const std::string& str, const TextDrawFlags& flags)
     if (str.empty())
         return *this;
 
-    if (!cairo_has_current_point(m_cr.get()))
+    if (!cairo_has_current_point(*m_cr))
         return *this;
 
     double x;
     double y;
     cairo_text_extents_t textext;
-    cairo_text_extents(m_cr.get(), str.c_str(), &textext);
+    cairo_text_extents(*m_cr, str.c_str(), &textext);
 
-    cairo_get_current_point(m_cr.get(), &x, &y);
+    cairo_get_current_point(*m_cr, &x, &y);
 
     if (flags.is_set(TextDrawFlag::shadow))
     {
         AutoSaveRestore sr(*this);
 
-        cairo_move_to(m_cr.get(), x - textext.x_bearing + 5.,
+        cairo_move_to(*m_cr, x - textext.x_bearing + 5.,
                       y - textext.y_bearing + 5.);
-        cairo_set_source_rgba(m_cr.get(), 0, 0, 0, 0.2);
-        cairo_show_text(m_cr.get(), str.c_str());
-        cairo_stroke(m_cr.get());
+        cairo_set_source_rgba(*m_cr, 0, 0, 0, 0.2);
+        cairo_show_text(*m_cr, str.c_str());
+        cairo_stroke(*m_cr);
     }
 
     AutoSaveRestore sr(*this);
 
-    cairo_move_to(m_cr.get(), x - textext.x_bearing,
+    cairo_move_to(*m_cr, x - textext.x_bearing,
                   y - textext.y_bearing);
-    cairo_show_text(m_cr.get(), str.c_str());
-    cairo_stroke(m_cr.get());
+    cairo_show_text(*m_cr, str.c_str());
+    cairo_stroke(*m_cr);
 
     return *this;
 }
@@ -288,7 +292,7 @@ Painter& Painter::draw(const std::string& str, const TextDrawFlags& flags)
 Font::FontExtents Painter::extents() const
 {
     cairo_font_extents_t fe;
-    cairo_font_extents(m_cr.get(), &fe);
+    cairo_font_extents(*m_cr, &fe);
 
     Font::FontExtents font_extents;
     font_extents.ascent = fe.ascent;
@@ -302,7 +306,7 @@ Font::FontExtents Painter::extents() const
 Font::TextExtents Painter::extents(const std::string& text) const
 {
     cairo_text_extents_t te;
-    cairo_text_extents(m_cr.get(), text.c_str(), &te);
+    cairo_text_extents(*m_cr, text.c_str(), &te);
 
     Font::TextExtents text_extents;
     text_extents.x_bearing = te.x_bearing;
@@ -324,7 +328,7 @@ Size Painter::text_size(const std::string& text)
      * sequence whose glyph is bigger than letters.
      */
     cairo_font_extents_t fontext;
-    cairo_font_extents(m_cr.get(), &fontext);
+    cairo_font_extents(*m_cr, &fontext);
     const double line_recommended_height = fontext.height;
 
     unsigned int n = 0;
@@ -344,7 +348,7 @@ Size Painter::text_size(const std::string& text)
         }
 
         cairo_text_extents_t textext;
-        cairo_text_extents(m_cr.get(), line, &textext);
+        cairo_text_extents(*m_cr, line, &textext);
         line_max_width = std::max(line_max_width, textext.width);
         ++n;
 
@@ -358,69 +362,69 @@ Size Painter::text_size(const std::string& text)
 
 Painter& Painter::clip()
 {
-    cairo_clip(m_cr.get());
+    cairo_clip(*m_cr);
 
     return *this;
 }
 
 Painter& Painter::fill()
 {
-    cairo_fill(m_cr.get());
+    cairo_fill(*m_cr);
 
     return *this;
 }
 
 Painter& Painter::fill_preserve()
 {
-    cairo_fill_preserve(m_cr.get());
+    cairo_fill_preserve(*m_cr);
 
     return *this;
 }
 
 Painter& Painter::paint()
 {
-    cairo_paint(m_cr.get());
+    cairo_paint(*m_cr);
 
     return *this;
 }
 
 Painter& Painter::paint(float alpha)
 {
-    cairo_paint_with_alpha(m_cr.get(), alpha);
+    cairo_paint_with_alpha(*m_cr, alpha);
 
     return *this;
 }
 
 Painter& Painter::stroke()
 {
-    cairo_stroke(m_cr.get());
+    cairo_stroke(*m_cr);
 
     return *this;
 }
 
 Painter& Painter::move_to(const PointF& point)
 {
-    cairo_move_to(m_cr.get(), point.x(), point.y());
+    cairo_move_to(*m_cr, point.x(), point.y());
     return *this;
 }
 
 Painter& Painter::line_to(const PointF& point)
 {
-    cairo_line_to(m_cr.get(), point.x(), point.y());
+    cairo_line_to(*m_cr, point.x(), point.y());
     return *this;
 }
 
 Painter& Painter::rectangle(const RectF& rect)
 {
     if (!rect.empty())
-        cairo_rectangle(m_cr.get(), rect.x(), rect.y(), rect.width(), rect.height());
+        cairo_rectangle(*m_cr, rect.x(), rect.y(), rect.width(), rect.height());
     return *this;
 }
 
 Painter& Painter::arc(const ArcF& arc)
 {
     if (!arc.empty())
-        cairo_arc(m_cr.get(), arc.center().x(), arc.center().y(),
+        cairo_arc(*m_cr, arc.center().x(), arc.center().y(),
                   arc.radius(), arc.angle1(), arc.angle2());
     return *this;
 }
@@ -429,7 +433,7 @@ Painter& Painter::translate(const PointF& point)
 {
     if (!detail::float_equal(point.x(), 0) ||
         !detail::float_equal(point.y(), 0))
-        cairo_translate(m_cr.get(), point.x(), point.y());
+        cairo_translate(*m_cr, point.x(), point.y());
 
     return *this;
 }
@@ -437,28 +441,28 @@ Painter& Painter::translate(const PointF& point)
 Painter& Painter::translate(const Point& point)
 {
     if (point.x() || point.y())
-        cairo_translate(m_cr.get(), point.x(), point.y());
+        cairo_translate(*m_cr, point.x(), point.y());
 
     return *this;
 }
 
 Painter& Painter::scale(float sx, float sy)
 {
-    cairo_scale(m_cr.get(), sx, sy);
+    cairo_scale(*m_cr, sx, sy);
     return *this;
 }
 
 Painter& Painter::rotate(float angle)
 {
     if (!detail::float_equal(angle, 0))
-        cairo_rotate(m_cr.get(), angle);
+        cairo_rotate(*m_cr, angle);
 
     return *this;
 }
 
 Painter& Painter::show_text(const char* utf8)
 {
-    cairo_show_text(m_cr.get(), utf8);
+    cairo_show_text(*m_cr, utf8);
     return *this;
 }
 

@@ -65,6 +65,13 @@ public:
     using CairoSurfaceAbstraction::CairoSurfaceAbstraction;
 };
 
+using CairoAbstraction = CairoPointerAbstraction<cairo_t, cairo_destroy>;
+
+class InternalContext : public CairoAbstraction
+{
+    using CairoAbstraction::CairoAbstraction;
+};
+
 /**
  * Convert a Painter::LineCap to a cairo_line_cap_t.
  */
