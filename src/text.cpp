@@ -7,6 +7,7 @@
 #include "config.h"
 #endif
 
+#include "detail/cairoabstraction.h"
 #include "detail/utf8text.h"
 #include "egt/detail/alignment.h"
 #include "egt/detail/enum.h"

@@ -24,6 +24,11 @@ namespace egt
 inline namespace v1
 {
 
+namespace detail
+{
+class InternalFont;
+}
+
 /**
  * Manages a font and properties of a font.
  *
@@ -192,7 +197,7 @@ public:
      * Internally, this may use a font cache to limit regeneration of the same
      * font more than once.
      */
-    EGT_NODISCARD cairo_scaled_font_t* scaled_font() const;
+    EGT_NODISCARD const detail::InternalFont& scaled_font() const;
 
     /**
      * Serialize to the specified serializer.
@@ -249,7 +254,7 @@ protected:
     Font::Slant m_slant{DEFAULT_SLANT};
 
     /// Only used when an in-memory font is created.
-    mutable shared_cairo_scaled_font_t m_scaled_font;
+    mutable std::shared_ptr<detail::InternalFont> m_scaled_font;
     const unsigned char* m_data{nullptr};
     size_t m_len{0};
 

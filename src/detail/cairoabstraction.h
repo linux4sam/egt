@@ -40,6 +40,14 @@ private:
     std::unique_ptr<T, decltype(D)> m_ptr;
 };
 
+using CairoScaledFontAbstraction = CairoPointerAbstraction<cairo_scaled_font_t, cairo_scaled_font_destroy>;
+
+class InternalFont : public CairoScaledFontAbstraction
+{
+public:
+    using CairoScaledFontAbstraction::CairoScaledFontAbstraction;
+};
+
 using CairoPatternAbstraction = CairoPointerAbstraction<cairo_pattern_t, cairo_pattern_destroy>;
 
 class InternalPattern : public CairoPatternAbstraction
