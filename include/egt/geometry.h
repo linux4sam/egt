@@ -1145,6 +1145,15 @@ public:
     {
     }
 
+    template<class Dim2>
+    constexpr ArcType(const ArcType<Dim2>& a)
+        : m_center(a.center()),
+          m_radius(a.radius()),
+          m_angle1(a.angle1()),
+          m_angle2(a.angle2())
+    {
+    }
+
     /**
      * Returns true if the arc has no radius.
      */
@@ -1193,6 +1202,13 @@ using Arc = ArcType<DefaultDim>;
 static_assert(detail::rule_of_5<Arc>(), "must fulfill rule of 5");
 
 /**
+ * Helper type alias.
+ * @copybrief ArcType
+ * @ingroup geometry
+ */
+using ArcF = ArcType<float>;
+
+/**
  * A basic circle with a center point and radius.
  *
  * Typically @ref Circle, @ref CircleF are used as aliases.
@@ -1217,6 +1233,12 @@ public:
      */
     constexpr explicit CircleType(const PointType<Dim>& center = {}, Dim radius = {}) noexcept
         : ArcType<Dim>(center, radius, 0, 2.f * detail::pi<float>())
+    {
+    }
+
+    template<class Dim2>
+    constexpr CircleType(const CircleType<Dim2>& c)
+        : CircleType(c.center(), c.radius())
     {
     }
 
@@ -1294,6 +1316,12 @@ public:
     {
     }
 
+    template<class Dim2>
+    constexpr EllipseType(const EllipseType<Dim2>& e)
+        : EllipseType(e.center(), e.radiusa(), e.radiusb())
+    {
+    }
+
     /**
      * Get the total perimeter of the ellipse.
      *
@@ -1353,6 +1381,13 @@ protected:
 using Ellipse = EllipseType<DefaultDim>;
 
 static_assert(detail::rule_of_5<Ellipse>(), "must fulfill rule of 5");
+
+/**
+ * Helper type alias.
+ * @copybrief EllipseType
+ * @ingroup geometry
+ */
+using EllipseF = EllipseType<float>;
 
 /// Overloaded std::ostream insertion operator
 template<class Dim>
