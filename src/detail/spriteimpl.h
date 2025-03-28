@@ -31,7 +31,6 @@ public:
           m_frame(frame_size),
           m_index(0)
     {
-        m_image.copy();
         m_strip = add_strip(framecount, frame_point);
     }
 
