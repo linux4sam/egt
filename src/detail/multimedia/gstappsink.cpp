@@ -102,12 +102,13 @@ void GstAppSink::draw(Painter& painter, const Rect& rect)
             if (gst_buffer_map(buffer, &map, GST_MAP_READ))
             {
                 auto box = m_window.box();
+                const auto format = detail::cairo_format(m_format);
                 auto surface = unique_cairo_surface_t(
                                    cairo_image_surface_create_for_data(map.data,
-                                           CAIRO_FORMAT_RGB16_565,
+                                           format,
                                            width,
                                            height,
-                                           cairo_format_stride_for_width(CAIRO_FORMAT_RGB16_565, width)));
+                                           cairo_format_stride_for_width(format, width)));
 
                 if (cairo_surface_status(surface.get()) == CAIRO_STATUS_SUCCESS)
                 {
