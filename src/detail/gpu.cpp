@@ -64,6 +64,22 @@ GPUSurface::GPUSurface(Surface* surface, int prime_fd)
         throw std::runtime_error("libm2d: cannot import object from PRIME file descriptor.");
 }
 
+GPUSurface::GPUSurface(Surface* surface, void** data)
+    : m_id(next_id++),
+      m_surface(surface)
+{
+    EGTLOG_TRACE("allocating GPU object {}: size={},format={}.",
+                 m_id, m_surface->size(), m_surface->format());
+    m_buf.reset(m2d_alloc(m_surface->width(),
+                          m_surface->height(),
+                          m2d_format(m_surface->format()),
+                          m_surface->stride()));
+    if (!m_buf)
+        throw std::runtime_error("libm2d: cannot allocate memory.");
+
+    *data = m2d_get_data(m_buf.get());
+}
+
 m2d_buffer* GPUSurface::tmp_buffer()
 {
     if (!m_tmp)

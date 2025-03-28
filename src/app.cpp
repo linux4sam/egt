@@ -11,6 +11,7 @@
 #include "detail/gpu.h"
 #include "egt/app.h"
 #include "egt/detail/filesystem.h"
+#include "egt/detail/imagecache.h"
 #include "egt/detail/screen/composerscreen.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/detail/screen/memoryscreen.h"
@@ -465,6 +466,17 @@ const std::vector<std::pair<std::string, std::string>>& Application::get_input_d
 Application::~Application() noexcept
 {
     Input::global_input().remove_handler(m_handle);
+
+    /*
+     * Clear the image cache to release all its shared Surfaces, hence giving a
+     * chance to release the GPUSurface instances behind, before calling
+     * detail::gpu_cleanup().
+     *
+     * Indeed all widgets containing images with shared Surfaces from the image
+     * cache should already have been destroyed, before destroying this
+     * Application instance.
+     */
+    detail::image_cache().clear();
 
     /*
      * Screen buffers must be released, hence releasing their Surface instances

@@ -27,8 +27,7 @@ static cairo_surface_t* cairo_surface(Surface& surface)
 }
 
 Surface::Surface(const Size& size, PixelFormat format)
-    : m_release(free),
-      m_size(size),
+    : m_size(size),
       m_format(format),
       m_stride(stride(format, size.width()))
 {
@@ -38,8 +37,21 @@ Surface::Surface(const Size& size, PixelFormat format)
         return;
     }
 
-    m_data = malloc(height() * stride());
-    m_impl = std::make_unique<detail::InternalSurface>(cairo_surface(*this));
+    // 'm_data' MUST be set before calling cairo_surface(*this).
+#ifdef HAVE_LIBM2D
+    try
+    {
+        detail::GPUSurface gpu_surface(this, &m_data);
+        m_impl = std::make_unique<detail::InternalSurface>(cairo_surface(*this),
+                 std::move(gpu_surface));
+    }
+    catch (...)
+#endif
+    {
+        m_data = malloc(height() * stride());
+        m_release = free;
+        m_impl = std::make_unique<detail::InternalSurface>(cairo_surface(*this));
+    }
 }
 
 Surface::Surface(void* data, const ReleaseFunction& release,
