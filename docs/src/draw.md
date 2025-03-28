@@ -50,60 +50,64 @@ redraw their damaged regions.
 @section draw_paint Painting
 
 Typically, drawing should only be done inside the egt::v1::Widget::draw()
-method.
+method and its overrides in widget classes, which all descend from the
+egt::v1::Widget class.
 
-Typically, EGT default widgets have another level of indirection to implement
-the draw() function by using the Drawer class.  This allows draw
+Sometimes, EGT default widgets have another level of indirection to implement
+the draw() function by using the egt::v1::Drawer template.  This allows draw
 functions to be overwritten by the theme.  However, this is not a technical
 requirement if there is no need to theme the draw() method of a widget.
 See @ref colors_themes "Widget Theme" for more information.
 
-When a widget is asked to draw, it usually uses the Painter class to perform
-all drawing.  However, underneath the Painter class is a cairo context and
-surface.  This means the draw function for a widget can be implemented
-completely with Painter by using a combination of Painter and cairo directly,
-or just using the cairo API directly.
+When a widget is asked to draw, it uses the reference to a egt::v1::Painter
+instance passed as the first parameter to its draw() method to perform all
+drawing. Also, the drawing should be limited to the egt::v1::Rect rectangle
+passed as the second parameter to the draw() method. Indeed, this rectangle
+represents one damaged region that should be redrawn during the
+egt::v1::EventLoop.
 
-The Painter API provides basic 2D primitive drawing functions that work well
-with EGT primitives like colors and geometry classes. Painter can be used to
-draw lines, rectangles, fills, and fonts.  It even supports more complicated
-drawing features like gradients and arcs.
+@section draw_painter_model The egt::v1::Painter class's Drawing Model
 
-When using Painter to draw, there are also several other common
-properties and resources used.  For example, the palette of the widget is
-usually referenced, along with its font when applicable, and also the use of
-color comes into play.
+Each egt::v1::Painter class instance is constructed from a egt::v1::Surface
+class instance, which represents the **destination** or target where the
+egt::v1::Painter instance draws anything.
+If needed, this surface can be retrieved with the egt::v1::Painter::target()
+method.
 
-@section draw_cairo Painting Directly with Cairo
+Then the **source** should be seen as the texture to be printed over the
+**destination**. The **source** is generally set with the
+egt::v1::Painter::source() method from either a:
+- egt::v1::Color or egt::v1::Pattern : to apply a flat color or a gradient of colors.
+- egt::v1::Surface or egt::v1::Image : to apply an image.
 
-The back-end used by Painter is the excellent
-[cairo graphics](https://www.cairographics.org/) library, which in turn uses
-[pixman](http://www.pixman.org/) for optimized pixel manipulation.  Both cairo
-and pixman take advantage of hardware acceleration when possible.
-
-To use cairo directly in an egt::v1::Widget::draw() method, get the cairo context by
-calling egt::v1::Painter::context(), and then call cairo API functions like normal.
-
-@code{.cpp}
-auto cr = painter.context().get();
-cairo_set_line_width(cr, 1.0);
-cairo_stroke(cr);
-@endcode
-
-Understanding the cairo drawing model, considering it is a vector drawing API,
-is important to understand how to use cairo, and in some cases how to use the
-Painter class in EGT.
+Finally the **mask** is a grayscale image that controls where the
+egt::v1::Painter instance applies the **source** to the **destination**.
+Indeed, any pixel in the **source** is blended into the **destination**
+proportionally to the opacity of the corresponding pixel in the **mask**.
+Hence, if the pixel is black in the **mask**, then the corresponding pixel in
+the **source** is copied into the **destination**, whereas if the pixel is
+white in the **mask**, then the **destination** is left unchanged.
 
 @imageSize{architecture.png,width:500px;}
 @image html cairo_drawing.png "Cairo Drawing Model [CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)]"
 @image latex cairo_drawing.png "Cairo Drawing Model [CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)]" width=8cm
 
-The
-[Cairo Manual](https://www.cairographics.org/manual/index.html) provides
-excellent documentation of the cairo API and is a useful reference.  If you are
-not familiar with cairo, the
-[Cairo Tutorial](https://www.cairographics.org/tutorial/) information is very
-helpful to understand the basics.
+The **mask** may be set from a egt::v1::Surface or a egt::v1::Image with the
+egt::v1::Painter::mask() method. However, most of the time, the **mask** is
+implicitly built from a **path**. The **path** can be as basic as a simple
+rectangle. Actually, the egt::v1::Painter class API and its implementation are
+focused on drawing rectangles efficiently.
+
+Nonetheless, the egt::v1::Painter API also provides other basic 2D primitive
+functions to build a custom **path** made of lines, arcs or curves.
+Moreover, when alpha blending is enabled with the
+egt::v1::Painter::alpha_blending() method, the **mask** is also built from the
+alpha channel of the **source**, if any.
+
+When using the egt::v1::Painter class to draw, there are also several other
+common properties and resources used. For example, the egt::v1::Palette of the
+widget is usually referenced, along with its egt::v1::Font when applicable, and
+also the use of egt::v1::Pattern and egt::v1::Color comes into play.
 
 @section draw_function Implementing a Draw Function
 
@@ -123,39 +127,6 @@ disable automatic clipping.
 When the parent frame calls the draw() function of a widget, it will first setup
 an egt::v1::Painter::AutoSaveRestore instance.  Therefore, there is no need to handle saving or
 restoring the state in any egt::v1::Widget::draw() function as this is done automatically.
-
-@section draw_transforms Affine Matrix Transformations
-
-Cairo supports matrix transformations of the coordinate system.  This is an
-advanced topic.  For more information on how this works, see
-[Cairo Matrix Transformation](https://cairographics.org/cookbook/matrix_transform/).
-
-An example of doing a transformation in a class derived from an ImageLabel might
-look like this:
-
-@code{.cpp}
-virtual void draw(Painter& painter, const Rect& rect) override
-{
-    auto cr = painter.context().get();
-
-    float yrotate;
-    if (m_scale > 0.5)
-        yrotate = .35 * (m_scale - .5);
-    else
-        yrotate = -1 * .35 * (.5 - m_scale);
-
-    cairo_matrix_t matrix_perspective;
-    cairo_matrix_init(&matrix_perspective,
-                      1.0, yrotate,
-                      0.0, 1.0,
-                      parent()->w() / 2, 0.0);
-
-    cairo_transform(cr, &matrix_perspective);
-    cairo_translate(cr, -parent()->w() / 2, 0);
-
-    Drawer<ImageLabel>::draw(*this, painter, rect);
-}
-@endcode
 
 @section draw_zorder Z-order
 
