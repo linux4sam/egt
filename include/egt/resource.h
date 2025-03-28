@@ -11,7 +11,6 @@
  * @brief Working with resources.
  */
 
-#include <cairo.h>
 #include <cstdint>
 #include <egt/detail/meta.h>
 #include <map>
@@ -120,15 +119,6 @@ private:
 
     ResourceMap m_resources;
 };
-
-namespace detail
-{
-/**
- * Helper function specifically for cairo's cairo_image_surface_create_from_png_stream().
- */
-cairo_status_t EGT_API read_resource_stream(void* closure, unsigned char* data,
-        unsigned int length);
-}
 
 }
 }
