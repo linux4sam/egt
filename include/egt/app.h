@@ -200,6 +200,8 @@ protected:
     void setup_inputs();
     /// @private
     void setup_events();
+    /// @private
+    void setup_gpu();
 
     /**
      * The event loop instance.

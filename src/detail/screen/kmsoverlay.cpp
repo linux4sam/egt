@@ -3,7 +3,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "detail/screen/flipthread.h"
+#include "detail/screen/framebuffer.h"
 #include "egt/detail/screen/kmsoverlay.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include <planes/fb.h>
@@ -42,7 +47,13 @@ KMSOverlay::KMSOverlay(const Size& size, PixelFormat format, WindowHint hint)
     if (!m_plane)
         throw std::runtime_error("failed to allocate plane");
 
-    init(m_plane->bufs, KMSScreen::max_buffers(),
+    const auto num_infos = KMSScreen::max_buffers();
+    std::vector<detail::FrameBufferInfo> info;
+    info.reserve(num_infos);
+    for (uint32_t fd = 0; fd < num_infos; ++fd)
+        info.emplace_back(m_plane->bufs[fd], m_plane->prime_fds[fd]);
+
+    init(info.data(), info.size(),
          Size(plane_width(m_plane.get()), plane_height(m_plane.get())),
          detail::egt_format(plane_format(m_plane.get())));
 
@@ -57,8 +68,17 @@ void KMSOverlay::resize(const Size& size)
     if (!ret)
     {
         plane_fb_map(m_plane.get());
+#ifdef HAVE_LIBM2D
+        plane_fb_export(m_plane.get());
+#endif
 
-        init(m_plane->bufs, KMSScreen::max_buffers(),
+        const auto num_infos = KMSScreen::max_buffers();
+        std::vector<detail::FrameBufferInfo> info;
+        info.reserve(num_infos);
+        for (uint32_t fd = 0; fd < num_infos; ++fd)
+            info.emplace_back(m_plane->bufs[fd], m_plane->prime_fds[fd]);
+
+        init(info.data(), info.size(),
              Size(plane_width(m_plane.get()), plane_height(m_plane.get())),
              detail::egt_format(plane_format(m_plane.get())));
     }

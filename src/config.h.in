@@ -45,6 +45,9 @@
 /* Have libjpeg support */
 #cmakedefine HAVE_LIBJPEG @HAVE_LIBJPEG@
 
+/* Have libm2d support */
+#cmakedefine HAVE_LIBM2D @HAVE_LIBM2D@
+
 /* Have libmagic support */
 #cmakedefine HAVE_LIBMAGIC @HAVE_LIBMAGIC@
 

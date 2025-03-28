@@ -156,14 +156,19 @@ if(WITH_READLINE)
     endif()
 endif()
 
-pkg_check_modules(LIBPLANES libplanes>=1.0.0)
+pkg_check_modules(LIBPLANES libplanes>=1.1.0)
 if(LIBPLANES_FOUND)
-    set(AX_PACKAGE_REQUIRES_PRIVATE "${AX_PACKAGE_REQUIRES_PRIVATE} libplanes >= 1.0.0")
+    set(AX_PACKAGE_REQUIRES_PRIVATE "${AX_PACKAGE_REQUIRES_PRIVATE} libplanes >= 1.1.0")
 
     pkg_check_modules(LIBDRM REQUIRED libdrm>=2.4.0)
     if(LIBDRM_FOUND)
         set(AX_PACKAGE_REQUIRES_PRIVATE "${AX_PACKAGE_REQUIRES_PRIVATE} libdrm >= 2.4.0")
     endif()
+endif()
+
+pkg_check_modules(LIBM2D libm2d>=1.0.0)
+if(LIBM2D_FOUND)
+    set(AX_PACKAGE_REQUIRES_PRIVATE "${AX_PACKAGE_REQUIRES_PRIVATE} libm2d >= 1.0.0")
 endif()
 
 option(WITH_PLPLOT "enable/disable plplot" ON)

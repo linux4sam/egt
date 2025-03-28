@@ -24,6 +24,10 @@ namespace egt
 {
 inline namespace v1
 {
+namespace detail
+{
+class FrameBufferInfo;
+}
 
 /**
  * Manages one of more buffers that make up a Screen.
@@ -164,12 +168,12 @@ public:
 protected:
 
     /**
-     * @param ptr Array of framebuffer pointers.
-     * @param count Size of ptr array.  Zero is allowed.
+     * @param info Array of detail::FrameBufferInfos.
+     * @param count Size of info array.  Zero is allowed.
      * @param size Size of the framebuffers.  They must all be the same.
      * @param format Format of the framebuffers.
      */
-    void init(void** ptr, uint32_t count, const Size& size,
+    void init(const detail::FrameBufferInfo* info, uint32_t count, const Size& size,
               PixelFormat format = PixelFormat::argb8888);
 
     /// @see init()

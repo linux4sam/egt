@@ -8,6 +8,7 @@
 #endif
 
 #include "detail/egtlog.h"
+#include "detail/gpu.h"
 #include "egt/app.h"
 #include "egt/detail/filesystem.h"
 #include "egt/detail/screen/composerscreen.h"
@@ -105,6 +106,8 @@ Application::Application(int argc, char** argv,
         the_app = this;
     }
 
+    setup_gpu();
+
     setup_search_paths();
 
     setup_locale(name);
@@ -114,6 +117,11 @@ Application::Application(int argc, char** argv,
     setup_inputs();
 
     setup_events();
+}
+
+void Application::setup_gpu()
+{
+    detail::gpu_init();
 }
 
 void Application::setup_events()
@@ -457,6 +465,14 @@ const std::vector<std::pair<std::string, std::string>>& Application::get_input_d
 Application::~Application() noexcept
 {
     Input::global_input().remove_handler(m_handle);
+
+    /*
+     * Screen buffers must be released, hence releasing their Surface instances
+     * thus the GPUSurface instances behind, before calling detail::gpu_cleanup().
+     */
+    m_screen.reset(nullptr);
+
+    detail::gpu_cleanup();
 
     if (the_app == this)
         the_app = nullptr;

@@ -60,6 +60,7 @@ detail/eraw.h \
 detail/erawimage.h \
 detail/filesystem.cpp \
 detail/fmt.h \
+detail/gpu.h \
 detail/image.cpp \
 detail/imagecache.cpp \
 detail/input/inputkeyboard.cpp \
@@ -70,6 +71,7 @@ detail/painter.h \
 detail/priorityqueue.h \
 detail/screen/composerscreen.cpp \
 detail/screen/flipthread.h \
+detail/screen/framebuffer.h \
 detail/screen/memoryscreen.cpp \
 detail/spriteimpl.h \
 detail/string.cpp \
@@ -305,6 +307,11 @@ nobase_libegtinclude_HEADERS += \
 ../include/egt/camera.h \
 ../include/egt/capture.h
 
+endif
+
+if HAVE_LIBM2D
+libegt_la_SOURCES += \
+detail/gpu.cpp
 endif
 
 if HAVE_LIBPLANES

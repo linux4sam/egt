@@ -390,6 +390,19 @@ if(LIBDRM_FOUND)
     target_link_options(egt PRIVATE ${LIBDRM_LDFLAGS_OTHER})
 endif()
 
+if(LIBM2D_FOUND)
+    set(HAVE_LIBM2D 1)
+
+    target_include_directories(egt PRIVATE ${LIBM2D_INCLUDE_DIRS})
+    target_compile_options(egt PRIVATE ${LIBM2D_CFLAGS_OTHER})
+    target_link_directories(egt PRIVATE ${LIBM2D_LIBRARY_DIRS})
+    target_link_libraries(egt PRIVATE ${LIBM2D_LIBRARIES})
+    target_link_options(egt PRIVATE ${LIBM2D_LDFLAGS_OTHER})
+    target_sources(egt PRIVATE
+        detail/gpu.cpp
+    )
+endif()
+
 if(PLPLOT_FOUND)
     check_symbol_exists(PLD_extcairo "plplot/plDevs.h" HAVE_EXTCAIRO)
 

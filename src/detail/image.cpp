@@ -87,6 +87,7 @@ static Surface copy_cairo_surface(cairo_surface_t* surface)
     auto format = detail::egt_format(cairo_image_surface_get_format(surface));
 
     Surface image(size, format);
+    image.sync_for_cpu();
     memcpy(image.data(), cairo_image_surface_get_data(surface),
            size.height() * cairo_image_surface_get_stride(surface));
 

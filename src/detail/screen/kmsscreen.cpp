@@ -9,6 +9,7 @@
 
 #include "detail/egtlog.h"
 #include "detail/screen/flipthread.h"
+#include "detail/screen/framebuffer.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/eventloop.h"
 #include "egt/input.h"
@@ -93,12 +94,21 @@ KMSScreen::KMSScreen(bool allocate_primary_plane,
             throw std::runtime_error("unable to create primary plane");
 
         plane_fb_map(m_plane.get());
+#ifdef HAVE_LIBM2D
+        plane_fb_export(m_plane.get());
+#endif
         plane_apply(m_plane.get());
 
         EGTLOG_DEBUG("primary plane dumb buffer {},{} {}", plane_width(m_plane.get()),
                      plane_height(m_plane.get()), format);
 
-        init(m_plane->bufs, KMSScreen::max_buffers(),
+        const auto num_infos = KMSScreen::max_buffers();
+        std::vector<detail::FrameBufferInfo> info;
+        info.reserve(num_infos);
+        for (uint32_t fd = 0; fd < num_infos; ++fd)
+            info.emplace_back(m_plane->bufs[fd], m_plane->prime_fds[fd]);
+
+        init(info.data(), info.size(),
              Size(plane_width(m_plane.get()), plane_height(m_plane.get())),
              format);
 
@@ -257,6 +267,9 @@ unique_plane_t KMSScreen::allocate_overlay(const Size& size,
     if (plane)
     {
         plane_fb_map(plane.get());
+#ifdef HAVE_LIBM2D
+        plane_fb_export(plane.get());
+#endif
         plane_set_pos(plane.get(), 0, 0);
 
         EGTLOG_DEBUG("allocated overlay index {} {},{} {} {}", plane->index,

@@ -26,6 +26,7 @@ inline namespace v1
 
 namespace detail
 {
+class FrameBuffer;
 class InternalSurface;
 }
 
@@ -38,6 +39,8 @@ public:
 
     Surface(void* data, const ReleaseFunction& release,
             const Size& size, PixelFormat format, DefaultDim stride);
+
+    Surface(const detail::FrameBuffer& fb);
 
     ~Surface();
 
@@ -64,7 +67,7 @@ public:
 
     void write_to_png(const std::string& name) const;
 
-    void flush() const;
+    void flush(bool claimed_by_cpu = false) const;
     void mark_dirty();
 
     void zero();
@@ -75,6 +78,13 @@ public:
     void flood(const Point& point, const Color& color);
 
     EGT_NODISCARD const detail::InternalSurface& impl() const { return *m_impl; }
+
+    /**
+     * Claim the surface for being used by the CPU.
+     *
+     * Wait for all GPU operations, if any, to complete.
+     */
+    void sync_for_cpu() const;
 
 protected:
     void* m_data{nullptr};

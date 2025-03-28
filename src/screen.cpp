@@ -8,6 +8,7 @@
 #endif
 
 #include "detail/dump.h"
+#include "detail/screen/framebuffer.h"
 #include "egt/color.h"
 #include "egt/palette.h"
 #include "egt/screen.h"
@@ -87,7 +88,8 @@ static void simd_copy(Surface& src_surface,
                       Surface& dst_surface,
                       const Screen::DamageArray& damage)
 {
-    src_surface.flush();
+    src_surface.flush(true);
+    dst_surface.sync_for_cpu();
 
     auto src = src_surface.data();
     auto dst = dst_surface.data();
@@ -415,7 +417,7 @@ static inline bool no_composition_buffer()
     return value == 1;
 }
 
-void Screen::init(void** ptr, uint32_t count, const Size& size, PixelFormat format)
+void Screen::init(const detail::FrameBufferInfo* info, uint32_t count, const Size& size, PixelFormat format)
 {
     m_size = size;
 
@@ -423,15 +425,17 @@ void Screen::init(void** ptr, uint32_t count, const Size& size, PixelFormat form
 
     if (count == 1 && no_composition_buffer())
     {
-        m_surface = Surface(ptr[0], nullptr, size, format,
-                            Surface::stride(format, size.width()));
+        detail::FrameBuffer fb(info[0].data(), info[0].prime_fd(), size, format,
+                               Surface::stride(format, size.width()));
+        m_surface = Surface(fb);
     }
     else
     {
         for (uint32_t x = 0; x < count; x++)
         {
-            m_buffers.emplace_back(Surface(ptr[x], nullptr, size, format,
-                                           Surface::stride(format, size.width())));
+            detail::FrameBuffer fb(info[x].data(), info[x].prime_fd(), size, format,
+                                   Surface::stride(format, size.width()));
+            m_buffers.emplace_back(Surface(fb));
             m_buffers.back().damage.emplace_back(Point(), size);
         }
 

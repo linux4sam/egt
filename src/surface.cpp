@@ -5,6 +5,8 @@
  */
 #include "detail/cairoabstraction.h"
 #include "detail/egtlog.h"
+#include "detail/gpu.h"
+#include "detail/screen/framebuffer.h"
 #include "egt/surface.h"
 #include "egt/types.h"
 #include <deque>
@@ -51,6 +53,27 @@ Surface::Surface(void* data, const ReleaseFunction& release,
     m_impl = std::make_unique<detail::InternalSurface>(cairo_surface(*this));
 }
 
+Surface::Surface(const detail::FrameBuffer& fb)
+    : m_data(fb.data()),
+      m_size(fb.size()),
+      m_format(fb.format()),
+      m_stride(fb.stride())
+{
+    auto* surface = cairo_surface(*this);
+
+#ifdef HAVE_LIBM2D
+    try
+    {
+        m_impl = std::make_unique<detail::InternalSurface>(surface,
+                 detail::GPUSurface(this, fb.prime_fd()));
+    }
+    catch (...)
+#endif
+    {
+        m_impl = std::make_unique<detail::InternalSurface>(surface);
+    }
+}
+
 Surface::Surface(Surface&& rhs)
     : m_data(rhs.m_data),
       m_release(std::move(rhs.m_release)),
@@ -59,6 +82,11 @@ Surface::Surface(Surface&& rhs)
       m_stride(rhs.m_stride),
       m_impl(std::move(rhs.m_impl))
 {
+#ifdef HAVE_LIBM2D
+    if (impl().is_gpu_capable())
+        impl().gpu_surface().owner(this);
+#endif
+
     rhs.m_data = nullptr;
     rhs.m_release = nullptr;
 }
@@ -76,6 +104,11 @@ Surface& Surface::operator=(Surface&& rhs)
         m_format = rhs.m_format;
         m_stride = rhs.m_stride;
         m_impl = std::move(rhs.m_impl);
+
+#ifdef HAVE_LIBM2D
+        if (impl().is_gpu_capable())
+            impl().gpu_surface().owner(this);
+#endif
 
         rhs.m_data = nullptr;
         rhs.m_release = nullptr;
@@ -127,8 +160,17 @@ void Surface::write_to_png(const std::string& name) const
 #endif
 }
 
-void Surface::flush() const
+void Surface::flush(bool claimed_by_cpu) const
 {
+#ifdef HAVE_LIBM2D
+    if (impl().is_gpu_capable())
+    {
+        impl().gpu_surface().flush(claimed_by_cpu);
+        return;
+    }
+#else
+    detail::ignoreparam(claimed_by_cpu);
+#endif
     cairo_surface_flush(impl());
 }
 
@@ -139,7 +181,7 @@ void Surface::mark_dirty()
 
 void Surface::zero()
 {
-    flush();
+    flush(true);
     memset(m_data, 0, height() * stride());
     mark_dirty();
 }
@@ -164,7 +206,7 @@ void Surface::color_at(const Point& point, const Color& color)
     if (!Rect(Point(), size()).intersect(point))
         return;
 
-    flush();
+    flush(true);
 
     switch (format())
     {
@@ -207,7 +249,7 @@ Color Surface::color_at(const Point& point) const
     if (!Rect(Point(), size()).intersect(point))
         return {};
 
-    flush();
+    flush(true);
 
     switch (format())
     {
@@ -278,6 +320,14 @@ void Surface::flood(const Point& point, const Color& color)
     }
 
     mark_dirty();
+}
+
+void Surface::sync_for_cpu() const
+{
+#ifdef HAVE_LIBM2D
+    if (impl().is_gpu_capable())
+        impl().gpu_surface().sync_for_cpu();
+#endif
 }
 
 }

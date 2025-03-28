@@ -11,6 +11,7 @@
  * @brief Cairo abstraction layer.
  */
 
+#include <detail/gpu.h>
 #include <egt/painter.h>
 #include <egt/types.h>
 #include <cairo.h>
@@ -64,6 +65,21 @@ class InternalSurface : public CairoSurfaceAbstraction
 {
 public:
     using CairoSurfaceAbstraction::CairoSurfaceAbstraction;
+
+#ifdef HAVE_LIBM2D
+    InternalSurface(cairo_surface_t* surface, GPUSurface&& gpu_surface)
+        : CairoSurfaceAbstraction(surface)
+    {
+        m_gpu_surface = std::make_unique<detail::GPUSurface>(std::move(gpu_surface));
+    }
+
+    bool is_gpu_capable() const { return static_cast<bool>(m_gpu_surface); }
+
+    detail::GPUSurface& gpu_surface() const { return *m_gpu_surface; }
+
+protected:
+    std::unique_ptr<detail::GPUSurface> m_gpu_surface;
+#endif
 };
 
 using CairoAbstraction = CairoPointerAbstraction<cairo_t, cairo_destroy>;

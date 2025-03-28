@@ -418,7 +418,7 @@ if test "x$with_readline" = xyes && test "x${have_readline}" != xyes; then
    AC_MSG_FAILURE([--with-readline was given, but readline not found])
 fi
 
-AX_PKG_CHECK_MODULES2(libplanes, [], [libplanes >= 1.0.0], [have_libplanes=yes], [have_libplanes=no])
+AX_PKG_CHECK_MODULES2(libplanes, [], [libplanes >= 1.1.0], [have_libplanes=yes], [have_libplanes=no])
 AM_CONDITIONAL([HAVE_LIBPLANES], [test "x${have_libplanes}" = xyes])
 if test "x${have_libplanes}" = xyes; then
    AX_PKG_CHECK_MODULES2(libdrm, [], [libdrm >= 2.4.0], [], [AC_MSG_ERROR([
@@ -427,6 +427,14 @@ if test "x${have_libplanes}" = xyes; then
    AC_DEFINE(HAVE_LIBPLANES, 1, [Have libplanes support])
    LIBEGT_EXTRA_CXXFLAGS="${libplanes_CFLAGS} ${libdrm_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
    LIBEGT_EXTRA_LDFLAGS="${libplanes_LIBS} ${libdrm_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
+fi
+
+AX_PKG_CHECK_MODULES2(libm2d, [], [libm2d >= 1.0.0], [have_libm2d=yes], [have_libm2d=no])
+AM_CONDITIONAL([HAVE_LIBM2D], [test "x${have_libm2d}" = xyes])
+if test "x${have_libm2d}" = xyes; then
+    AC_DEFINE(HAVE_LIBM2D, 1, [Have libm2d support])
+    LIBEGT_EXTRA_CXXFLAGS="${libm2d_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
+    LIBEGT_EXTRA_LDFLAGS="${libm2d_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
 AX_PKG_CHECK_MODULES2(cairo, [], [cairo >= 1.14.6], [have_cairo=yes], [AC_MSG_ERROR([
@@ -807,6 +815,7 @@ echo
 
 echo "Display:"
 echo "  DRM/KMS                ${have_libplanes:-no}"
+echo "  M2D                    ${have_libm2d:-no}"
 echo "  X11                    ${have_x11:-no}"
 echo "  SDL2                   ${have_sdl2:-no}"
 echo
