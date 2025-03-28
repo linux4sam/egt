@@ -231,8 +231,7 @@ void Theme::draw_box(Painter& painter,
     {
         fill_bg = false;
         background->resize(box.size());
-        painter.draw(box.point());
-        painter.draw(*background);
+        painter.draw(*background, box.point());
     }
 
     /*

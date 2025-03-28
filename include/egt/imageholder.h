@@ -384,8 +384,7 @@ public:
         else if (!widget.image().empty())
         {
             auto target = widget.image().align(widget.content_area(), widget.image_align());
-            painter.draw(target.point());
-            painter.draw(widget.image());
+            painter.draw(widget.image(), target.point());
         }
     }
 

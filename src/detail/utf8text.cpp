@@ -279,11 +279,10 @@ void draw_text(Painter& painter,
     {
         if (r.str.empty())
         {
-            auto p = PointF(fl(b.x()) + fl(r.rect.x()),
-                            fl(b.y()) + fl(r.rect.y()));
+            auto p = Point(b.x() + r.rect.x(),
+                           b.y() + r.rect.y());
 
-            painter.draw(p);
-            painter.draw(image);
+            painter.draw(image, p);
             continue;
         }
 

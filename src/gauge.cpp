@@ -33,8 +33,7 @@ void GaugeLayer::draw(Painter& painter, const Rect&)
 {
     if (m_mask_color == Color(0x00000000))
     {
-        painter.draw(point());
-        painter.draw(m_image);
+        painter.draw(m_image, point());
     }
     else
     {
