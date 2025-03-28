@@ -243,6 +243,25 @@ public:
     EGT_NODISCARD DefaultDim label_offset() const { return m_label_offset; }
 
     /**
+     * Set the offset for the handle.
+     *
+     * @note This offset is added to the y() coordinate for horizontal sliders
+     *       or to the x() coordinate for vertical sliders of the default
+     *       position of the handle. It may be negative.
+     * @param[in] offset
+     */
+    void handle_offset(DefaultDim offset)
+    {
+        if (detail::change_if_diff<>(m_handle_offset, offset))
+            this->damage();
+    }
+
+    /**
+     * Get the offset for the handle.
+     */
+    EGT_NODISCARD DefaultDim handle_offset() const { return m_handle_offset; }
+
+    /**
      * Set the margin for the handle image.
      *
      * @note This margin is the gap between the handle in min/max positions and
@@ -499,6 +518,7 @@ private:
 
     /// Optional handle images.
     ImageGroup m_handles{"handle"};
+    DefaultDim m_handle_offset{0};
     DefaultDim m_handle_margin{0};
 
     DefaultDim m_label_offset{0};
@@ -716,51 +736,40 @@ Rect SliderType<T>::handle_box(T value) const
     const auto b = this->content_area();
     const auto dimw = handle_width();
     const auto dimh = handle_height();
+    const auto offset = to_offset(value);
+    Rect hndl;
+
+    hndl.width(dimw);
+    hndl.height(dimh);
 
     if (m_orient == Orientation::horizontal)
     {
-        auto xv = b.x() + to_offset(value);
         if (slider_flags().is_set(SliderFlag::inverted))
-            xv = b.x() + b.width() - to_offset(value) - dimw;
+            hndl.x(b.x() + b.width() - offset - dimw);
+        else
+            hndl.x(b.x() + offset);
 
         if (slider_flags().is_set(SliderFlag::show_labels) ||
             slider_flags().is_set(SliderFlag::show_label))
-        {
-            return {xv,
-                    b.y() + b.height() / 4 - dimh / 2 + b.height() / 2,
-                    dimw,
-                    dimh};
-        }
+            hndl.y(b.y() + b.height() * 3 / 4 - dimh / 2 + m_handle_offset);
         else
-        {
-            return {xv,
-                    b.y() + b.height() / 2 - dimh / 2,
-                    dimw,
-                    dimh};
-        }
+            hndl.y(b.y() + b.height() / 2 - dimh / 2 + m_handle_offset);
     }
     else
     {
-        auto yv = b.y() + b.height() - to_offset(value) - dimh;
         if (slider_flags().is_set(SliderFlag::inverted))
-            yv = b.y() + to_offset(value);
+            hndl.y(b.y() + offset);
+        else
+            hndl.y(b.y() + b.height() - offset - dimh);
 
         if (slider_flags().is_set(SliderFlag::show_labels) ||
             slider_flags().is_set(SliderFlag::show_label))
-        {
-            return {b.x() + b.width() / 4 - dimw / 2 + b.width() / 2,
-                    yv,
-                    dimw,
-                    dimh};
-        }
+            hndl.x(b.x() + b.width() * 3 / 4 - dimw / 2 + m_handle_offset);
         else
-        {
-            return {b.x() + b.width() / 2 - dimw / 2,
-                    yv,
-                    dimw,
-                    dimh};
-        }
+            hndl.x(b.x() + b.width() / 2 - dimw / 2 + m_handle_offset);
     }
+
+    return  hndl;
 }
 
 template <class T>
@@ -872,6 +881,7 @@ void SliderType<T>::serialize(Serializer& serializer) const
     serializer.add_property("sliderflags", m_slider_flags.to_string());
     serializer.add_property("orient", detail::enum_to_string(orient()));
     serializer.add_property("label_offset", label_offset());
+    serializer.add_property("handle_offset", handle_offset());
     serializer.add_property("handle_margin", handle_margin());
     m_handles.serialize(serializer);
 }
@@ -894,6 +904,11 @@ void SliderType<T>::deserialize(Serializer::Properties& props)
         else if (std::get<0>(p) == "label_offset")
         {
             label_offset(std::stoi(std::get<1>(p)));
+            return true;
+        }
+        else if (std::get<0>(p) == "handle_offset")
+        {
+            handle_offset(std::stoi(std::get<1>(p)));
             return true;
         }
         else if (std::get<0>(p) == "handle_margin")
