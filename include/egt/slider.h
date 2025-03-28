@@ -564,8 +564,16 @@ SliderType<T>::SliderType(Serializer::Properties& props, bool is_derived) noexce
 
 
 template <class T>
-void SliderType<T>::draw(Painter& painter, const Rect& /*rect*/)
+void SliderType<T>::draw(Painter& painter, const Rect& rect)
 {
+    Painter::AutoSaveRestore sr(painter);
+
+    if (this->clip())
+    {
+        painter.draw(rect);
+        painter.clip();
+    }
+
     auto b = this->content_area();
     auto yp = b.y() + b.height() / 2.;
     auto xp = b.x() + b.width() / 2.;
