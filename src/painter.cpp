@@ -10,7 +10,6 @@
 #include "egt/painter.h"
 #include "egt/surface.h"
 #include <cairo.h>
-#include <deque>
 #include <sstream>
 #include <string.h>
 
@@ -467,215 +466,20 @@ Painter& Painter::show_text(const char* utf8)
     return *this;
 }
 
-static inline Color get32(const unsigned char* data, size_t stride, const Point& point)
-{
-    return Color::pixel32(*reinterpret_cast<const uint32_t*>(data + point.y() * stride + 4 * point.x()));
-}
-
-static inline Color get24(const unsigned char* data, size_t stride, const Point& point)
-{
-    return Color::pixel24(*reinterpret_cast<const uint32_t*>(data + point.y() * stride + 4 * point.x()));
-}
-
-static inline Color get16(const unsigned char* data, size_t stride, const Point& point)
-{
-    return Color::pixel16(*reinterpret_cast<const uint16_t*>(data + point.y() * stride + 2 * point.x()));
-}
-
-static inline Color getc(cairo_surface_t* image, const Point& point) noexcept
-{
-    const auto data = cairo_image_surface_get_data(image);
-    const auto format = cairo_image_surface_get_format(image);
-    const auto stride = cairo_image_surface_get_stride(image);
-    switch (format)
-    {
-    case CAIRO_FORMAT_ARGB32:
-        return get32(data, stride, point);
-    case CAIRO_FORMAT_RGB24:
-        return get24(data, stride, point);
-    case CAIRO_FORMAT_RGB16_565:
-        return get16(data, stride, point);
-    case CAIRO_FORMAT_RGB30:
-    case CAIRO_FORMAT_A8:
-    case CAIRO_FORMAT_A1:
-    case CAIRO_FORMAT_INVALID:
-    default:
-        break;
-    }
-
-    return {};
-}
-
-static inline void set32(unsigned char* data, size_t stride, const Point& point, const Color& color) noexcept
-{
-    *reinterpret_cast<uint32_t*>(data + point.y() * stride + 4 * point.x()) = color.pixel32();
-}
-
-static inline void set24(unsigned char* data, size_t stride, const Point& point, const Color& color) noexcept
-{
-    *reinterpret_cast<uint32_t*>(data + point.y() * stride + 4 * point.x()) = color.pixel24();
-}
-
-static inline void set16(unsigned char* data, size_t stride, const Point& point, const Color& color) noexcept
-{
-    *reinterpret_cast<uint16_t*>(data + point.y() * stride + 2 * point.x()) = color.pixel16();
-}
-
-static inline void setc(cairo_surface_t* image, const Point& point, const Color& color) noexcept
-{
-    auto data = cairo_image_surface_get_data(image);
-    const auto stride = cairo_image_surface_get_stride(image);
-    const auto format = cairo_image_surface_get_format(image);
-    switch (format)
-    {
-    case CAIRO_FORMAT_ARGB32:
-        set32(data, stride, point, color);
-        break;
-    case CAIRO_FORMAT_RGB24:
-        set24(data, stride, point, color);
-        break;
-    case CAIRO_FORMAT_RGB16_565:
-        set16(data, stride, point, color);
-        break;
-    case CAIRO_FORMAT_RGB30:
-    case CAIRO_FORMAT_A8:
-    case CAIRO_FORMAT_A1:
-    case CAIRO_FORMAT_INVALID:
-    default:
-        break;
-    }
-}
-
-void Painter::color_at(cairo_surface_t* image, const Point& point, const Color& color) noexcept
-{
-    const auto size = surface_to_size(image);
-    if (!Rect(Point(), size).intersect(point))
-        return;
-
-    cairo_surface_flush(image);
-
-    setc(image, point, color);
-
-    cairo_surface_mark_dirty(image);
-}
-
 void Painter::color_at(const Point& point, const Color& color) noexcept
 {
-    color_at(cairo_get_target(m_cr.get()), point, color);
+    m_surface.color_at(point, color);
 }
 
 Color Painter::color_at(const Point& point) noexcept
 {
-    return color_at(cairo_get_target(m_cr.get()), point);
-}
-
-Color Painter::color_at(cairo_surface_t* image, const Point& point) noexcept
-{
-    const auto size = surface_to_size(image);
-    if (!Rect(Point(), size).intersect(point))
-        return {};
-
-    cairo_surface_flush(image);
-
-    return getc(image, point);
-}
-
-static inline bool check(const Size& size, cairo_format_t format,
-                         const unsigned char* data,
-                         size_t stride, const Point& point,
-                         const Color& target_color, const Color& color) noexcept
-{
-    if (!Rect(Point(), size).intersect(point))
-        return false;
-
-    switch (format)
-    {
-    case CAIRO_FORMAT_ARGB32:
-    {
-        const auto c = get32(data, stride, point);
-        return c != color && c == target_color;
-    }
-    case CAIRO_FORMAT_RGB24:
-    {
-        const auto c = get24(data, stride, point);
-        return c != color && c == target_color;
-    }
-    case CAIRO_FORMAT_RGB16_565:
-    {
-        const auto c = get16(data, stride, point);
-        return c != color && c == target_color;
-    }
-    case CAIRO_FORMAT_RGB30:
-    case CAIRO_FORMAT_A8:
-    case CAIRO_FORMAT_A1:
-    case CAIRO_FORMAT_INVALID:
-    default:
-        break;
-    }
-
-    return false;
+    return m_surface.color_at(point);
 }
 
 Painter& Painter::flood(const Point& point, const Color& color)
 {
-    flood(cairo_get_target(m_cr.get()), point, color);
+    m_surface.flood(point, color);
     return *this;
-}
-
-void Painter::flood(cairo_surface_t* image,
-                    const Point& point, const Color& color)
-{
-    auto size = surface_to_size(image);
-    if (!Rect(Point(), size).intersect(point))
-        return;
-
-    cairo_surface_flush(image);
-
-    auto data = cairo_image_surface_get_data(image);
-    const auto stride = cairo_image_surface_get_stride(image);
-    const auto format = cairo_image_surface_get_format(image);
-    const Color target_color = color_at(image, point);
-
-    // non-recursive breadth first search
-
-    std::deque<Point> q;
-    q.emplace_back(point);
-
-    while (!q.empty())
-    {
-        auto p = q.back();
-        q.pop_back();
-
-        switch (format)
-        {
-        case CAIRO_FORMAT_ARGB32:
-            set32(data, stride, p, color);
-            break;
-        case CAIRO_FORMAT_RGB24:
-            set24(data, stride, p, color);
-            break;
-        case CAIRO_FORMAT_RGB16_565:
-            set16(data, stride, p, color);
-            break;
-        case CAIRO_FORMAT_RGB30:
-        case CAIRO_FORMAT_A8:
-        case CAIRO_FORMAT_A1:
-        case CAIRO_FORMAT_INVALID:
-        default:
-            break;
-        }
-
-        if (check(size, format, data, stride, p + Point(1, 0), target_color, color))
-            q.emplace_back(p + Point(1, 0));
-        if (check(size, format, data, stride, p - Point(1, 0), target_color, color))
-            q.emplace_back(p - Point(1, 0));
-        if (check(size, format, data, stride, p + Point(0, 1), target_color, color))
-            q.emplace_back(p + Point(0, 1));
-        if (check(size, format, data, stride, p - Point(0, 1), target_color, color))
-            q.emplace_back(p - Point(0, 1));
-    }
-
-    cairo_surface_mark_dirty(image);
 }
 
 template<>

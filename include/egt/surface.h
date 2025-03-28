@@ -11,6 +11,7 @@
  * @brief Surface interface.
  */
 
+#include <egt/color.h>
 #include <egt/detail/meta.h>
 #include <egt/geometry.h>
 #include <egt/types.h>
@@ -67,6 +68,11 @@ public:
     void mark_dirty();
 
     void zero();
+
+    void color_at(const Point& point, const Color& color);
+    EGT_NODISCARD Color color_at(const Point& point) const;
+
+    void flood(const Point& point, const Color& color);
 
     EGT_NODISCARD const detail::InternalSurface& impl() const { return *m_impl; }
 

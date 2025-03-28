@@ -7,6 +7,7 @@
 #include "detail/egtlog.h"
 #include "egt/surface.h"
 #include "egt/types.h"
+#include <deque>
 
 namespace egt
 {
@@ -140,6 +141,142 @@ void Surface::zero()
 {
     flush();
     memset(m_data, 0, height() * stride());
+    mark_dirty();
+}
+
+static inline void set32(void* data, size_t stride, const Point& point, const Color& color) noexcept
+{
+    *reinterpret_cast<uint32_t*>(reinterpret_cast<unsigned char*>(data) + point.y() * stride + 4 * point.x()) = color.pixel32();
+}
+
+static inline void set24(void* data, size_t stride, const Point& point, const Color& color) noexcept
+{
+    *reinterpret_cast<uint32_t*>(reinterpret_cast<unsigned char*>(data) + point.y() * stride + 4 * point.x()) = color.pixel24();
+}
+
+static inline void set16(void* data, size_t stride, const Point& point, const Color& color) noexcept
+{
+    *reinterpret_cast<uint16_t*>(reinterpret_cast<unsigned char*>(data) + point.y() * stride + 2 * point.x()) = color.pixel16();
+}
+
+void Surface::color_at(const Point& point, const Color& color)
+{
+    if (!Rect(Point(), size()).intersect(point))
+        return;
+
+    flush();
+
+    switch (format())
+    {
+    case PixelFormat::argb8888:
+        set32(data(), stride(), point, color);
+        break;
+
+    case PixelFormat::xrgb8888:
+        set24(data(), stride(), point, color);
+        break;
+
+    case PixelFormat::rgb565:
+        set16(data(), stride(), point, color);
+        break;
+
+    default:
+        break;
+    }
+
+    mark_dirty();
+}
+
+static inline Color get32(const void* data, size_t stride, const Point& point)
+{
+    return Color::pixel32(*reinterpret_cast<const uint32_t*>(reinterpret_cast<const unsigned char*>(data) + point.y() * stride + 4 * point.x()));
+}
+
+static inline Color get24(const void* data, size_t stride, const Point& point)
+{
+    return Color::pixel24(*reinterpret_cast<const uint32_t*>(reinterpret_cast<const unsigned char*>(data) + point.y() * stride + 4 * point.x()));
+}
+
+static inline Color get16(const void* data, size_t stride, const Point& point)
+{
+    return Color::pixel16(*reinterpret_cast<const uint16_t*>(reinterpret_cast<const unsigned char*>(data) + point.y() * stride + 2 * point.x()));
+}
+
+Color Surface::color_at(const Point& point) const
+{
+    if (!Rect(Point(), size()).intersect(point))
+        return {};
+
+    flush();
+
+    switch (format())
+    {
+    case PixelFormat::argb8888:
+        return get32(data(), stride(), point);
+
+    case PixelFormat::xrgb8888:
+        return get24(data(), stride(), point);
+
+    case PixelFormat::rgb565:
+        return get16(data(), stride(), point);
+
+    default:
+        break;
+    }
+
+    return {};
+}
+
+void Surface::flood(const Point& point, const Color& color)
+{
+    switch (format())
+    {
+    case PixelFormat::argb8888:
+    case PixelFormat::xrgb8888:
+    case PixelFormat::rgb565:
+        break;
+    default:
+        // unsupported format
+        return;
+    }
+
+    if (!Rect(Point(), size()).intersect(point))
+        return;
+
+    // flush() is called by Surface::color_at(const Point&)
+    const auto target_color = color_at(point);
+
+    // non-recursive breadth first search
+
+    auto check = [&](const Point & p)
+    {
+        if (!Rect(Point(), size()).intersect(p))
+            return false;
+
+        const auto c = color_at(p);
+        return c != color && c == target_color;
+    };
+
+    std::deque<Point> q;
+    q.emplace_back(point);
+
+    while (!q.empty())
+    {
+        auto p = q.back();
+        q.pop_back();
+
+        color_at(p, color);
+
+        if (check(p + Point(1, 0)))
+            q.emplace_back(p + Point(1, 0));
+        if (check(p - Point(1, 0)))
+            q.emplace_back(p - Point(1, 0));
+        if (check(p + Point(0, 1)))
+            q.emplace_back(p + Point(0, 1));
+        if (check(p - Point(0, 1)))
+            q.emplace_back(p - Point(0, 1));
+    }
+
     mark_dirty();
 }
 

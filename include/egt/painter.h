@@ -516,14 +516,9 @@ public:
     Size text_size(const std::string& text);
 
     void color_at(const Point& point, const Color& color) noexcept;
-    static void color_at(cairo_surface_t* image, const Point& point, const Color& color) noexcept;
     Color color_at(const Point& point) noexcept;
-    static Color color_at(cairo_surface_t* image, const Point& point) noexcept;
 
     Painter& flood(const Point& point, const Color& color);
-
-    static void flood(cairo_surface_t* image,
-                      const Point& point, const Color& color);
 
     /**
      * Get the current underlying context the painter is using.
@@ -531,24 +526,6 @@ public:
     EGT_NODISCARD inline shared_cairo_t context() const
     {
         return m_cr;
-    }
-
-    /**
-     * Get a Size from a surface.
-     */
-    static inline Size surface_to_size(const shared_cairo_surface_t& surface)
-    {
-        return {cairo_image_surface_get_width(surface.get()),
-                cairo_image_surface_get_height(surface.get())};
-    }
-
-    /**
-     * Get a Size from a surface.
-     */
-    static inline Size surface_to_size(cairo_surface_t* surface)
-    {
-        return {cairo_image_surface_get_width(surface),
-                cairo_image_surface_get_height(surface)};
     }
 
     /**
