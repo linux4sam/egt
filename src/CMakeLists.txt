@@ -513,12 +513,18 @@ if(ENABLE_SIMD)
     include(ExternalProject)
 
     ExternalProject_Add(simd
+        PREFIX simd-prefix
         URL ${CMAKE_SOURCE_DIR}/external/Simd
         SOURCE_SUBDIR prj/cmake
         CMAKE_ARGS -Wno-dev -DTOOLCHAIN=${CMAKE_CXX_COMPILER} -DTARGET=${CMAKE_SYSTEM_PROCESSOR} -DCMAKE_BUILD_TYPE=Release -DLIBRARY=STATIC -DSIMD_TEST=off -DCHECK_VERSION=0
+        INSTALL_COMMAND :
     )
 
     add_dependencies(egt simd)
+
+    target_include_directories(egt SYSTEM PRIVATE ${CMAKE_SOURCE_DIR}/external/Simd/src)
+    target_link_directories(egt PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/simd-prefix/src/simd-build)
+    target_link_libraries(egt PRIVATE Simd)
 endif()
 
 set(prefix ${CMAKE_INSTALL_PREFIX})

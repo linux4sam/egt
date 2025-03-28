@@ -744,6 +744,7 @@ then
 
   AC_MSG_NOTICE([configuring simd])
   (
+    SIMD_CXX=`echo "$CXX" | cut -d ' ' -f 1`
     SIMD_CXXFLAGS=`echo "$CXXFLAGS" | sed -e 's/-W[-0-9a-z=]*//g'`
     # if -Wno-psabi was there, add it back
     SIMD_CXXFLAGS+=`echo "$CXXFLAGS" | grep -o '\-Wno-psabi'`
@@ -752,7 +753,7 @@ then
 
     mkdir -p external/Simd/prj/cmake/ &&
     cd external/Simd/prj/cmake/ &&
-    cmake ../../../../${srcdir}/external/Simd/prj/cmake/ -Wno-dev -DTOOLCHAIN="$CXX" -DTARGET="$host_cpu" \
+    cmake ../../../../${srcdir}/external/Simd/prj/cmake/ -Wno-dev -DTOOLCHAIN="$SIMD_CXX" -DTARGET="$host_cpu" \
 	  -DCMAKE_BUILD_TYPE="Release" -DLIBRARY="STATIC" \
 	  -DSIMD_TEST=off -DCMAKE_CXX_FLAGS="${SIMD_CXXFLAGS} -DCHECK_VERSION=0"
   )
