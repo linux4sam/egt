@@ -232,6 +232,24 @@ Painter& Painter::draw(const shared_cairo_surface_t& surface, const PointF& poin
     return draw(surface.get(), point, rect);
 }
 
+Painter& Painter::draw(const Surface& surface, const PointF& point, const RectF& rect)
+{
+    if (surface.empty())
+        return *this;
+
+    source(surface, point);
+    if (rect.empty())
+    {
+        paint();
+    }
+    else
+    {
+        draw(rect);
+        fill();
+    }
+    return *this;
+}
+
 Painter& Painter::draw(const Image& image, const PointF& point, const RectF& rect)
 {
     return draw(image.surface(), point, rect);

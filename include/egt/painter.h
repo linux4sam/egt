@@ -442,6 +442,13 @@ public:
     Painter& draw(const shared_cairo_surface_t& surface, const PointF& point, const RectF& rect = {});
 
     /**
+     * @param[in] surface The surface source to draw.
+     * @param[in] point The position of the surface origin.
+     * @param[in] rect The rectangle to draw, if any, the whole surface otherwise.
+     */
+    Painter& draw(const Surface& surface, const PointF& point, const RectF& rect = {});
+
+    /**
      * @param[in] image The image source to draw.
      * @param[in] point The position of the surface origin.
      * @param[in] rect The rectangle to draw, if any, the whole image otherwise.
