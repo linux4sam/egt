@@ -390,6 +390,12 @@ Painter& Painter::translate(const Point& point)
     return *this;
 }
 
+Painter& Painter::scale(float sx, float sy)
+{
+    cairo_scale(m_cr.get(), sx, sy);
+    return *this;
+}
+
 Painter& Painter::rotate(float angle)
 {
     if (!detail::float_equal(angle, 0))

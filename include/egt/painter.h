@@ -465,6 +465,8 @@ public:
 
     Painter& translate(const Point& point);
 
+    Painter& scale(float sx, float sy);
+
     Painter& rotate(float angle);
 
     /**
