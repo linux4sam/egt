@@ -7,14 +7,12 @@
 #include "config.h"
 #endif
 
-#include "detail/cairoabstraction.h"
 #include "detail/dump.h"
 #include "egt/color.h"
 #include "egt/palette.h"
 #include "egt/screen.h"
 #include "egt/types.h"
 #include "egt/utils.h"
-#include <cairo.h>
 #include <cassert>
 #include <cstring>
 #include <numeric>
@@ -69,14 +67,14 @@ void Screen::flip(const DamageArray& damage)
 
 using View = Simd::View<Simd::Allocator>;
 
-static constexpr std::pair<cairo_format_t, View::Format> simd_formats[] =
+static constexpr std::pair<PixelFormat, View::Format> simd_formats[] =
 {
-    {CAIRO_FORMAT_RGB16_565, View::Int16},
-    {CAIRO_FORMAT_ARGB32, View::Int32},
-    {CAIRO_FORMAT_RGB24, View::Int32},
+    {PixelFormat::rgb565, View::Int16},
+    {PixelFormat::argb8888, View::Int32},
+    {PixelFormat::xrgb8888, View::Int32},
 };
 
-static constexpr View::Format simd_format(cairo_format_t format)
+static constexpr View::Format simd_format(PixelFormat format)
 {
     for (const auto& i : simd_formats)
         if (format == i.first)
@@ -85,44 +83,44 @@ static constexpr View::Format simd_format(cairo_format_t format)
     return View::None;
 }
 
-static void simd_copy(cairo_surface_t* src_surface,
-                      cairo_surface_t* dst_surface,
+static void simd_copy(Surface& src_surface,
+                      Surface& dst_surface,
                       const Screen::DamageArray& damage)
 {
-    cairo_surface_flush(src_surface);
+    src_surface.flush();
 
-    auto src = cairo_image_surface_get_data(src_surface);
-    auto dst = cairo_image_surface_get_data(dst_surface);
+    auto src = src_surface.data();
+    auto dst = dst_surface.data();
 
     assert(src);
     assert(dst);
 
-    auto src_format = cairo_image_surface_get_format(src_surface);
-    auto dst_format = cairo_image_surface_get_format(dst_surface);
+    auto src_format = src_surface.format();
+    auto dst_format = dst_surface.format();
 
     assert(src_format == dst_format);
 
-    auto src_width = cairo_image_surface_get_width(src_surface);
-    auto src_height = cairo_image_surface_get_height(src_surface);
+    auto src_width = src_surface.width();
+    auto src_height = src_surface.height();
 
-    auto dst_width = cairo_image_surface_get_width(dst_surface);
-    auto dst_height = cairo_image_surface_get_height(dst_surface);
+    auto dst_width = dst_surface.width();
+    auto dst_height = dst_surface.height();
 
     assert(src_width == dst_width);
     assert(src_height == dst_height);
 
     View srcview(src_width, src_height,
-                 cairo_format_stride_for_width(src_format, src_width),
+                 src_surface.stride(),
                  simd_format(src_format), src);
     View dstview(dst_width, dst_height,
-                 cairo_format_stride_for_width(dst_format, dst_width),
+                 src_surface.stride(),
                  simd_format(dst_format), dst);
 
     if (damage.size() == 1 &&
         damage[0] == Rect(Point(), Size(src_width, src_height)))
     {
         memcpy(dst, src,
-               src_width * dst_height * (src_format == CAIRO_FORMAT_RGB16_565 ? 2 : 4));
+               src_width * src_height * (src_format == PixelFormat::rgb565 ? 2 : 4));
     }
     else
     {
@@ -133,12 +131,12 @@ static void simd_copy(cairo_surface_t* src_surface,
         }
     }
 
-    cairo_surface_mark_dirty(dst_surface);
+    dst_surface.mark_dirty();
 }
 
 void Screen::copy_to_buffer(ScreenBuffer& buffer)
 {
-    simd_copy(m_surface.impl(), buffer.surface.impl(), buffer.damage);
+    simd_copy(m_surface, buffer.surface, buffer.damage);
 }
 #else
 void Screen::copy_to_buffer(ScreenBuffer& buffer)
@@ -297,16 +295,16 @@ static size_t pixel_bytes(PixelFormat format)
 void Screen::copy_to_buffer_software(ScreenBuffer& buffer)
 {
     // create a new context for each frame
-    unique_cairo_t cr(cairo_create(buffer.surface.impl()));
+    Painter painter(buffer.surface);
 
-    cairo_set_source_surface(cr.get(), m_surface.impl(), 0, 0);
-    cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
+    painter.source(m_surface);
+    painter.alpha_blending(false);
 
     if (!wireframe_enable())
     {
         for (const auto& rect : buffer.damage)
         {
-            cairo_rectangle(cr.get(), rect.x(), rect.y(), rect.width(), rect.height());
+            painter.draw(rect);
             if (screen_bandwidth_enable())
             {
                 bandwidth.end_frame(rect.width() * rect.height() * pixel_bytes(m_format));
@@ -315,21 +313,21 @@ void Screen::copy_to_buffer_software(ScreenBuffer& buffer)
             }
         }
 
-        cairo_fill(cr.get());
+        painter.fill();
     }
     else
     {
         const auto start = std::chrono::steady_clock::now();
 
         // paint whole source surface!
-        cairo_paint(cr.get());
+        painter.paint();
 
-        cairo_set_line_width(cr.get(), 1);
+        painter.line_width(1);
 
         auto decay = wireframe_decay();
         if (decay)
         {
-            cairo_set_source_rgba(cr.get(), .36, .67, .93, 1.0);
+            painter.source(Color::rgbaf(.36, .67, .93, 1.0));
 
             for (auto i = history.begin(); i != history.end();)
             {
@@ -350,21 +348,20 @@ void Screen::copy_to_buffer_software(ScreenBuffer& buffer)
                 }
                 else
                 {
-                    cairo_rectangle(cr.get(), i->second.x(), i->second.y(),
-                                    i->second.width(), i->second.height());
+                    painter.draw(i->second);
                     ++i;
                 }
             }
-            cairo_stroke(cr.get());
+            painter.stroke();
         }
 
-        cairo_set_source_rgba(cr.get(), .36, .99, .04, 1);
+        painter.source(Color::rgbaf(.36, .99, .04, 1));
 
         for (const auto& rect : buffer.damage)
         {
             if (decay)
                 history.emplace_back(std::make_pair(start, rect));
-            cairo_rectangle(cr.get(), rect.x(), rect.y(), rect.width(), rect.height());
+            painter.draw(rect);
             if (screen_bandwidth_enable())
             {
                 bandwidth.end_frame(rect.width() * rect.height() * pixel_bytes(m_format));
@@ -372,10 +369,10 @@ void Screen::copy_to_buffer_software(ScreenBuffer& buffer)
                     fmt::print("screen bandwidth: {}\n", bandwidth.value());
             }
         }
-        cairo_stroke(cr.get());
+        painter.stroke();
     }
 
-    cairo_surface_flush(buffer.surface.impl());
+    buffer.surface.flush();
 }
 
 void Screen::damage_algorithm(Screen::DamageArray& damage, Rect rect)
