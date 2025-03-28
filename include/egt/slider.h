@@ -424,10 +424,10 @@ protected:
     }
 
     /// Draw the handle.
-    void draw_handle(Painter& painter);
+    void draw_handle(Painter& painter, const Rect& handle_rect);
 
     /// Draw the line.
-    void draw_line(Painter& painter, float xp, float yp);
+    void draw_line(Painter& painter, const Rect& handle_rect);
 
     /// Format the label text.
     static std::string format_label(T value)
@@ -577,35 +577,24 @@ void SliderType<T>::draw(Painter& painter, const Rect& rect)
         painter.clip();
     }
 
-    auto b = this->content_area();
-    auto yp = b.y() + b.height() / 2.;
-    auto xp = b.x() + b.width() / 2.;
-
-    if (slider_flags().is_set(SliderFlag::show_labels) ||
-        slider_flags().is_set(SliderFlag::show_label))
+    if (slider_flags().is_set(SliderFlag::show_label))
     {
-        if (m_orient == Orientation::horizontal)
-            yp += b.height() / 4.;
-        else
-            xp += b.width() / 4.;
-
-        if (slider_flags().is_set(SliderFlag::show_label))
-        {
-            draw_label(painter, this->value());
-        }
-        else
-        {
-            draw_label(painter, this->starting());
-            draw_label(painter, this->starting() + ((this->ending() - this->starting()) / 2));
-            draw_label(painter, this->ending());
-        }
+        draw_label(painter, this->value());
+    }
+    else if (slider_flags().is_set(SliderFlag::show_labels))
+    {
+        draw_label(painter, this->starting());
+        draw_label(painter, this->starting() + ((this->ending() - this->starting()) / 2));
+        draw_label(painter, this->ending());
     }
 
+    auto handle = handle_box();
+
     // line
-    draw_line(painter, xp, yp);
+    draw_line(painter, handle);
 
     // handle
-    draw_handle(painter);
+    draw_handle(painter, handle);
 }
 
 template <class T>
@@ -728,10 +717,8 @@ Rect SliderType<T>::handle_box(T value) const
 }
 
 template <class T>
-void SliderType<T>::draw_handle(Painter& painter)
+void SliderType<T>::draw_handle(Painter& painter, const Rect& handle_rect)
 {
-    const auto handle_rect = handle_box();
-
     auto* image = handle_image(this->group(), true);
     if (image)
     {
@@ -766,13 +753,15 @@ void SliderType<T>::draw_handle(Painter& painter)
 }
 
 template <class T>
-void SliderType<T>::draw_line(Painter& painter, float xp, float yp)
+void SliderType<T>::draw_line(Painter& painter, const Rect& handle_rect)
 {
     if (slider_flags().is_set(SliderFlag::hide_line))
         return;
 
     const auto b = this->content_area();
-    const auto handle_rect = handle_box();
+    const auto center = handle_rect.center();
+    const auto xp = center.x();
+    const auto yp = center.y();
 
     Point a1;
     Point a2;
