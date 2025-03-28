@@ -398,6 +398,33 @@ Painter& Painter::stroke()
     return *this;
 }
 
+Painter& Painter::move_to(const PointF& point)
+{
+    cairo_move_to(m_cr.get(), point.x(), point.y());
+    return *this;
+}
+
+Painter& Painter::line_to(const PointF& point)
+{
+    cairo_line_to(m_cr.get(), point.x(), point.y());
+    return *this;
+}
+
+Painter& Painter::rectangle(const RectF& rect)
+{
+    if (!rect.empty())
+        cairo_rectangle(m_cr.get(), rect.x(), rect.y(), rect.width(), rect.height());
+    return *this;
+}
+
+Painter& Painter::arc(const ArcF& arc)
+{
+    if (!arc.empty())
+        cairo_arc(m_cr.get(), arc.center().x(), arc.center().y(),
+                  arc.radius(), arc.angle1(), arc.angle2());
+    return *this;
+}
+
 Painter& Painter::translate(const PointF& point)
 {
     if (!detail::float_equal(point.x(), 0) ||

@@ -297,17 +297,13 @@ public:
     template<class T>
     Painter& draw(const PointType<T, detail::Compatible::normal>& point)
     {
-        cairo_move_to(m_cr.get(), point.x(), point.y());
-
-        return *this;
+        return move_to(point);
     }
 
     template<class T>
     Painter& line(const PointType<T, detail::Compatible::normal>& point)
     {
-        cairo_line_to(m_cr.get(), point.x(), point.y());
-
-        return *this;
+        return line_to(point);
     }
 
     /**
@@ -319,10 +315,7 @@ public:
     template<class T>
     Painter& draw(const T& start, const T& end)
     {
-        cairo_move_to(m_cr.get(), start.x(), start.y());
-        cairo_line_to(m_cr.get(), end.x(), end.y());
-
-        return *this;
+        return move_to(start).line_to(end);
     }
 
     /**
@@ -333,10 +326,7 @@ public:
     template<class T>
     Painter& draw(const LineType<T>& line)
     {
-        cairo_move_to(m_cr.get(), line.start().x(), line.start().y());
-        cairo_line_to(m_cr.get(), line.end().x(), line.end().y());
-
-        return *this;
+        return move_to(line.start()).line_to(line.end());
     }
 
     /**
@@ -347,16 +337,7 @@ public:
     template<class T>
     Painter& draw(const RectType<T>& rect)
     {
-        if (rect.empty())
-            return *this;
-
-        cairo_rectangle(m_cr.get(),
-                        rect.x(),
-                        rect.y(),
-                        rect.width(),
-                        rect.height());
-
-        return *this;
+        return rectangle(rect);
     }
 
     /**
@@ -367,30 +348,7 @@ public:
     template<class T>
     Painter& draw(const ArcType<T>& arc)
     {
-        if (arc.empty())
-            return *this;
-
-        cairo_arc(m_cr.get(), arc.center().x(), arc.center().y(),
-                  arc.radius(), arc.angle1(), arc.angle2());
-
-        return *this;
-    }
-
-    /**
-     * Create a circle.
-     *
-     * @param[in] arc The circle.
-     */
-    template<class T>
-    Painter& draw(const CircleType<T>& arc)
-    {
-        if (arc.empty())
-            return *this;
-
-        cairo_arc(m_cr.get(), arc.center().x(), arc.center().y(),
-                  arc.radius(), arc.angle1(), arc.angle2());
-
-        return *this;
+        return this->arc(arc);
     }
 
     /**
@@ -462,6 +420,14 @@ public:
     Painter& paint(float alpha);
 
     Painter& stroke();
+
+    Painter& move_to(const PointF& point);
+
+    Painter& line_to(const PointF& point);
+
+    Painter& rectangle(const RectF& rect);
+
+    Painter& arc(const ArcF& arc);
 
     Painter& translate(const PointF& point);
 
