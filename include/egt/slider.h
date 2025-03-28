@@ -253,7 +253,10 @@ public:
     void handle_offset(DefaultDim offset)
     {
         if (detail::change_if_diff<>(m_handle_offset, offset))
+        {
             this->damage();
+            this->layout();
+        }
     }
 
     /**
@@ -328,7 +331,10 @@ public:
     void orient(Orientation orient)
     {
         if (detail::change_if_diff<>(m_orient, orient))
+        {
             this->damage();
+            this->layout();
+        }
     }
 
     /// Get the current slider flags.
@@ -349,7 +355,22 @@ public:
         if (!this->m_min_size.empty())
             return this->m_min_size;
 
-        return default_size() + Widget::min_size_hint();
+        auto* image = this->background(Palette::GroupId::normal);
+        Rect rect(image ? image->size() : default_size());
+
+        image = handle_image(Palette::GroupId::normal);
+        if (image)
+        {
+            Rect r(image->size());
+            r.move_to_center(rect.center());
+            if (m_orient == Orientation::horizontal)
+                r.y(r.y() + m_handle_offset);
+            else
+                r.x(r.x() + m_handle_offset);
+            rect = Rect::merge(rect, r);
+        }
+
+        return rect.size() + Widget::min_size_hint();
     }
 
     void serialize(Serializer& serializer) const override;
@@ -437,10 +458,17 @@ protected:
         const auto b = this->content_area();
         auto handle_rect = handle_box(value);
 
+        auto* image = handle_image(Palette::GroupId::normal);
         if (m_orient == Orientation::horizontal)
-            handle_rect += Point(0, m_label_offset - b.height() / 2.);
+        {
+            auto shift = image ? 0 : (b.height() / 2);
+            handle_rect += Point(0, m_label_offset - shift);
+        }
         else
-            handle_rect += Point(m_label_offset - b.width() / 2., 0);
+        {
+            auto shift = image ? 0 : (b.width() / 2);
+            handle_rect += Point(m_label_offset - shift, 0);
+        }
 
         text = format_label(value);
 
@@ -471,6 +499,8 @@ protected:
 
         return target;
     }
+
+    void compute_boxes(T value, Rect* background, Rect* handle) const;
 
     /// Draw the value label.
     void draw_label(Painter& painter, T value)
@@ -640,7 +670,14 @@ void SliderType<T>::draw(Painter& painter, const Rect& rect)
         painter.clip();
     }
 
-    auto handle = handle_box();
+    painter.alpha_blending(true);
+
+    Rect background, handle;
+    compute_boxes(this->value(), &background, &handle);
+
+    auto* bg = this->background(true);
+    if (bg)
+        painter.draw(*bg, background.point(), background);
 
     // line
     draw_line(painter, handle);
@@ -667,6 +704,10 @@ void SliderType<T>::draw(Painter& painter, const Rect& rect)
 template <class T>
 int SliderType<T>::handle_width() const
 {
+    auto* image = handle_image(Palette::GroupId::normal);
+    if (image)
+        return image->width();
+
     const auto b = this->content_area();
     auto width = b.width();
     auto height = b.height();
@@ -700,6 +741,10 @@ int SliderType<T>::handle_width() const
 template <class T>
 int SliderType<T>::handle_height() const
 {
+    auto* image = handle_image(Palette::GroupId::normal);
+    if (image)
+        return image->height();
+
     const auto b = this->content_area();
     auto width = b.width();
     auto height = b.height();
@@ -731,45 +776,77 @@ int SliderType<T>::handle_height() const
 }
 
 template <class T>
-Rect SliderType<T>::handle_box(T value) const
+void SliderType<T>::compute_boxes(T value,
+                                  Rect* background,
+                                  Rect* handle) const
 {
     const auto b = this->content_area();
     const auto dimw = handle_width();
     const auto dimh = handle_height();
     const auto offset = to_offset(value);
-    Rect hndl;
+    Rect bg, hndl;
 
+    auto* image_bg = this->background(Palette::GroupId::normal);
+    bg.size(image_bg ? image_bg->size() : b.size());
+
+    auto* image_hndl = handle_image(Palette::GroupId::normal);
     hndl.width(dimw);
     hndl.height(dimh);
 
     if (m_orient == Orientation::horizontal)
     {
+        auto deltah = (bg.height() - dimh) / 2 + m_handle_offset;
+
+        bg.x(b.x() + (b.width() - bg.width()) / 2);
+        bg.y(b.y() - std::min(0, deltah));
+
         if (slider_flags().is_set(SliderFlag::inverted))
             hndl.x(b.x() + b.width() - offset - dimw);
         else
             hndl.x(b.x() + offset);
 
-        if (slider_flags().is_set(SliderFlag::show_labels) ||
-            slider_flags().is_set(SliderFlag::show_label))
+        if (image_hndl)
+            hndl.y(b.y() + std::max(0, deltah));
+        else if (slider_flags().is_set(SliderFlag::show_labels) ||
+                 slider_flags().is_set(SliderFlag::show_label))
             hndl.y(b.y() + b.height() * 3 / 4 - dimh / 2 + m_handle_offset);
         else
             hndl.y(b.y() + b.height() / 2 - dimh / 2 + m_handle_offset);
     }
     else
     {
+        auto deltaw = (bg.width() - dimw) / 2 + m_handle_offset;
+
+        bg.y(b.y() + (b.height() - bg.height()) / 2);
+        bg.x(b.x() - std::min(0, deltaw));
+
         if (slider_flags().is_set(SliderFlag::inverted))
             hndl.y(b.y() + offset);
         else
             hndl.y(b.y() + b.height() - offset - dimh);
 
-        if (slider_flags().is_set(SliderFlag::show_labels) ||
-            slider_flags().is_set(SliderFlag::show_label))
+        if (image_hndl)
+            hndl.x(b.x() + std::max(0, deltaw));
+        else if (slider_flags().is_set(SliderFlag::show_labels) ||
+                 slider_flags().is_set(SliderFlag::show_label))
             hndl.x(b.x() + b.width() * 3 / 4 - dimw / 2 + m_handle_offset);
         else
             hndl.x(b.x() + b.width() / 2 - dimw / 2 + m_handle_offset);
     }
 
-    return  hndl;
+    if (background)
+        *background = bg;
+
+    if (handle)
+        *handle = hndl;
+}
+
+template <class T>
+Rect SliderType<T>::handle_box(T value) const
+{
+    Rect handle;
+    compute_boxes(value, nullptr, &handle);
+    return handle;
 }
 
 template <class T>
@@ -778,13 +855,7 @@ void SliderType<T>::draw_handle(Painter& painter, const Rect& handle_rect)
     auto* image = handle_image(this->group(), true);
     if (image)
     {
-        this->theme().draw_box(painter,
-                               Theme::FillFlag::blend,
-                               handle_rect,
-                               Palette::transparent,
-                               Palette::transparent,
-                               0, 0, 0, {},
-                               image);
+        painter.draw(*image, handle_rect.point(), handle_rect);
     }
     else if (slider_flags().is_set(SliderFlag::round_handle))
     {
@@ -940,16 +1011,18 @@ template <class T>
 void SliderType<T>::handle_image(const Image& image, Palette::GroupId group)
 {
     m_handles.set(group, image);
-    if (group == this->group())
-        this->damage(handle_box());
+    this->damage();
+    this->layout();
 }
 
 template <class T>
 void SliderType<T>::reset_handle_image(Palette::GroupId group)
 {
-    auto changed = m_handles.reset(group);
-    if (changed && group == this->group())
-        this->damage(handle_box());
+    if (m_handles.reset(group))
+    {
+        this->damage();
+        this->layout();
+    }
 }
 
 /// Enum string conversion map
