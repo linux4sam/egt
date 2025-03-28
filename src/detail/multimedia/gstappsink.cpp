@@ -9,7 +9,7 @@
 #include "detail/egtlog.h"
 #include "detail/multimedia/gstdecoderimpl.h"
 #include "egt/detail/screen/kmsoverlay.h"
-#include <egt/types.h>
+#include <egt/surface.h>
 
 namespace egt
 {
@@ -101,18 +101,14 @@ void GstAppSink::draw(Painter& painter, const Rect& rect)
             GstMapInfo map;
             if (gst_buffer_map(buffer, &map, GST_MAP_READ))
             {
-                auto box = m_window.box();
-                const auto format = detail::cairo_format(m_format);
-                auto surface = unique_cairo_surface_t(
-                                   cairo_image_surface_create_for_data(map.data,
-                                           format,
-                                           width,
-                                           height,
-                                           cairo_format_stride_for_width(format, width)));
+                Painter::AutoSaveRestore sr(painter);
 
-                if (cairo_surface_status(surface.get()) == CAIRO_STATUS_SUCCESS)
+                auto box = m_window.box();
+                const Surface source(map.data, nullptr, Size(width, height),
+                                     m_format, Surface::stride(m_format, width));
+
+                if (width != box.width() || height != box.height())
                 {
-                    auto cr = painter.context().get();
                     /*
                      * Cairo scaling should occur infrequently, but it is
                      * necessary when a video resize takes place. When the caps
@@ -121,16 +117,13 @@ void GstAppSink::draw(Painter& painter, const Rect& rect)
                      * the previous size may be received while the window size
                      * has already been adjusted.
                      */
-                    if (width != box.width() || height != box.height())
-                    {
-                        double scalex = static_cast<double>(box.width()) / width;
-                        double scaley = static_cast<double>(box.height()) / height;
-                        cairo_scale(cr, scalex, scaley);
-                    }
-                    cairo_set_source_surface(cr, surface.get(), box.x(), box.y());
-                    cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-                    cairo_paint(cr);
+                    auto scalex = static_cast<float>(box.width()) / width;
+                    auto scaley = static_cast<float>(box.height()) / height;
+                    painter.scale(scalex, scaley);
                 }
+                painter.source(source, box.point());
+                painter.alpha_blending(false);
+                painter.paint();
 
                 gst_buffer_unmap(buffer, &map);
             }
