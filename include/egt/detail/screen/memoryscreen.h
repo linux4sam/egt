@@ -11,7 +11,6 @@
  * @brief Working with an in-memory screen.
  */
 
-#include <egt/canvas.h>
 #include <egt/screen.h>
 #include <string>
 
@@ -34,9 +33,6 @@ public:
     void schedule_flip() override {}
 
     virtual void save_to_file(const std::string& filename) const;
-
-protected:
-    Canvas m_canvas;
 };
 
 }
