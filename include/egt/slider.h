@@ -223,6 +223,25 @@ public:
      */
     void reset_handle_image(Palette::GroupId group = Palette::GroupId::normal);
 
+    /**
+     * Set the offset the label.
+     *
+     * @note This offset is added to the y() coordinate for horizontal sliders
+     *       or to the x() coordinate for vertical sliders of the default
+     *       position of labels, if any. It may be negative.
+     * @param[in] offset
+     */
+    void label_offset(DefaultDim offset)
+    {
+        if (detail::change_if_diff<>(m_label_offset, offset))
+            this->damage();
+    }
+
+    /**
+     * Get the offset for the label.
+     */
+    EGT_NODISCARD DefaultDim label_offset() const { return m_label_offset; }
+
     using ValueRangeWidget<T>::value;
 
     T value(T value) override
@@ -379,9 +398,9 @@ protected:
         auto handle_rect = handle_box(value);
 
         if (m_orient == Orientation::horizontal)
-            handle_rect -= Point(0, b.height() / 2.);
+            handle_rect += Point(0, m_label_offset - b.height() / 2.);
         else
-            handle_rect -= Point(b.width() / 2., 0);
+            handle_rect += Point(m_label_offset - b.width() / 2., 0);
 
         text = format_label(value);
 
@@ -459,6 +478,8 @@ private:
 
     /// Optional handle images.
     ImageGroup m_handles{"handle"};
+
+    DefaultDim m_label_offset{0};
 
     void deserialize(Serializer::Properties& props);
 };
@@ -577,6 +598,18 @@ void SliderType<T>::draw(Painter& painter, const Rect& rect)
         painter.clip();
     }
 
+    auto handle = handle_box();
+
+    // line
+    draw_line(painter, handle);
+
+    // handle
+    draw_handle(painter, handle);
+
+    /**
+     * draw labels after since they may overlap both the line and handle
+     * depending on the value of 'm_label_offset'.
+     */
     if (slider_flags().is_set(SliderFlag::show_label))
     {
         draw_label(painter, this->value());
@@ -587,14 +620,6 @@ void SliderType<T>::draw(Painter& painter, const Rect& rect)
         draw_label(painter, this->starting() + ((this->ending() - this->starting()) / 2));
         draw_label(painter, this->ending());
     }
-
-    auto handle = handle_box();
-
-    // line
-    draw_line(painter, handle);
-
-    // handle
-    draw_handle(painter, handle);
 }
 
 template <class T>
@@ -824,6 +849,7 @@ void SliderType<T>::serialize(Serializer& serializer) const
 
     serializer.add_property("sliderflags", m_slider_flags.to_string());
     serializer.add_property("orient", detail::enum_to_string(orient()));
+    serializer.add_property("label_offset", label_offset());
     m_handles.serialize(serializer);
 }
 
@@ -840,6 +866,11 @@ void SliderType<T>::deserialize(Serializer::Properties& props)
         else if (std::get<0>(p) == "orient")
         {
             orient(detail::enum_from_string<Orientation>(std::get<1>(p)));
+            return true;
+        }
+        else if (std::get<0>(p) == "label_offset")
+        {
+            label_offset(std::stoi(std::get<1>(p)));
             return true;
         }
         else if (m_handles.deserialize(std::get<0>(p), std::get<1>(p)))
