@@ -176,7 +176,7 @@ protected:
     /**
      * Render and return a new surface.
      */
-    EGT_NODISCARD shared_cairo_surface_t do_render(const std::string& id = {}, const RectF& rect = {}) const;
+    EGT_NODISCARD Surface do_render(const std::string& id = {}, const RectF& rect = {}) const;
 
     struct SvgImpl;
 

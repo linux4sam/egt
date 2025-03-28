@@ -8,6 +8,7 @@
 
 #include <egt/detail/meta.h>
 #include <egt/painter.h>
+#include <egt/surface.h>
 #include <map>
 #include <memory>
 #include <string>
@@ -36,26 +37,24 @@ public:
     /**
      * Get an image surface.
      */
-    shared_cairo_surface_t get(const std::string& uri,
-                               float hscale = 1.0, float vscale = 1.0,
-                               bool approximate = true);
+    std::shared_ptr<Surface> get(const std::string& uri,
+                                 float hscale = 1.0, float vscale = 1.0,
+                                 bool approximate = true);
 
     /**
      * Clear the image cache.
      */
     void clear();
 
-    static shared_cairo_surface_t scale_surface(const shared_cairo_surface_t& old_surface,
-            float old_width, float old_height,
-            float new_width, float new_height);
-
 protected:
+
+    static Surface resize(const Surface& surface, const Size& size);
 
     static float round(float v, float fraction);
 
     static std::string id(const std::string& name, float hscale, float vscale);
 
-    std::map<std::string, shared_cairo_surface_t> m_cache;
+    std::map<std::string, std::shared_ptr<Surface>> m_cache;
 };
 
 /**

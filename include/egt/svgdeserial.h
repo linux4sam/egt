@@ -36,7 +36,7 @@ public:
      * @param[in] len The length of graphics data in eraw.bin.
      * @param[out] rect The box bundle of this graphics widget.
      */
-    shared_cairo_surface_t DeSerialize(const unsigned char* buf, size_t len, std::shared_ptr<egt::Rect>& rect);
+    Surface DeSerialize(const unsigned char* buf, size_t len, std::shared_ptr<egt::Rect>& rect);
 
     /**
      * @param[in] buf The buffer address of graphics data in eraw.bin.

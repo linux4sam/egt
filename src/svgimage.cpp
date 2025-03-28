@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/cairoabstraction.h"
 #include "detail/dump.h"
-#include "egt/canvas.h"
 #include "egt/detail/filesystem.h"
 #include "egt/detail/meta.h"
 #include "egt/resource.h"
@@ -179,7 +179,7 @@ void SvgImage::load()
     rsvg_handle_get_dimensions(m_impl->rsvg.get(), &m_impl->dim);
 }
 
-shared_cairo_surface_t SvgImage::do_render(const std::string& id, const RectF& rect) const
+Surface SvgImage::do_render(const std::string& id, const RectF& rect) const
 {
     auto s = size();
 
@@ -195,8 +195,10 @@ shared_cairo_surface_t SvgImage::do_render(const std::string& id, const RectF& r
     s.width(std::ceil(s.width()));
     s.height(std::ceil(s.height()));
 
-    Canvas canvas(s);
-    auto cr = canvas.context().get();
+    Surface surface(s);
+    surface.zero(); /* librsvg assumes a zeroed memory. */
+    unique_cairo_t context(cairo_create(surface.impl()));
+    auto cr = context.get();
 
     detail::code_timer(false, "render " + id + ": ", [&]()
     {
@@ -222,7 +224,7 @@ shared_cairo_surface_t SvgImage::do_render(const std::string& id, const RectF& r
 
     });
 
-    return canvas.surface();
+    return surface;
 }
 
 SvgImage::SvgImage(SvgImage&&) noexcept = default;

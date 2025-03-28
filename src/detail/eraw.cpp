@@ -13,12 +13,12 @@ inline namespace v1
 namespace detail
 {
 
-shared_cairo_surface_t load_eraw(const std::string& filename)
+Surface load_eraw(const std::string& filename)
 {
     return ErawImage::load(filename);
 }
 
-shared_cairo_surface_t load_eraw(const unsigned char* buf, size_t len)
+Surface load_eraw(const unsigned char* buf, size_t len)
 {
     return ErawImage::load(buf, len);
 }

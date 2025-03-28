@@ -16,6 +16,7 @@
 #include <egt/geometry.h>
 #include <egt/painter.h>
 #include <egt/serialize.h>
+#include <egt/surface.h>
 #include <map>
 #include <string>
 
@@ -89,17 +90,9 @@ public:
      */
     // cppcheck-suppress noExplicitConstructor
     // NOLINTNEXTLINE(hicpp-explicit-conversions, google-explicit-constructor)
-    Image(shared_cairo_surface_t surface);
+    Image(std::shared_ptr<Surface> surface);
 
-    /**
-     * @param surface A pre-existing surface.
-     *
-     * This will not own the passed in pointer or surface, and instead will make
-     * a copy of the surface.
-     */
-    // cppcheck-suppress noExplicitConstructor
-    // NOLINTNEXTLINE(hicpp-explicit-conversions, google-explicit-constructor)
-    Image(cairo_surface_t* surface);
+    Image(Surface&& surface);
 
     /**
      * Scale the image.
@@ -255,6 +248,9 @@ protected:
     /// Shared surface pointer.
     shared_cairo_surface_t m_surface;
 
+    /// Shared EGT surface.
+    std::shared_ptr<Surface> m_surf;
+
     /// Original image size.
     Size m_orig_size;
 
@@ -269,8 +265,8 @@ private:
      * @param surface The surface created by the SvgImage instance.
      * @param uri The original URI copied from the SvgImage instance.
      */
-    Image(shared_cairo_surface_t surface, const std::string& uri)
-        : Image(surface)
+    Image(Surface&& surface, const std::string& uri)
+        : Image(std::move(surface))
     {
         m_uri = uri;
     }

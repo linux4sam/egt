@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/cairoabstraction.h"
 #include "egt/detail/alignment.h"
 #include "egt/detail/image.h"
 #include "egt/detail/imagecache.h"
@@ -25,29 +26,28 @@ Image::Image(const std::string& uri,
     load(uri, hscale, vscale);
 }
 
-Image::Image(shared_cairo_surface_t surface)
-    : m_surface(std::move(surface))
+Image::Image(std::shared_ptr<Surface> surface)
+    : m_surf(std::move(surface))
 {
     handle_surface_changed();
 }
 
-Image::Image(cairo_surface_t* surface)
-    : m_surface(cairo_image_surface_create(cairo_image_surface_get_format(surface),
-                                           cairo_image_surface_get_width(surface),
-                                           cairo_image_surface_get_height(surface)),
-                cairo_surface_destroy)
+Image::Image(Surface&& surface)
+    : m_surf(std::make_shared<Surface>(std::move(surface)))
 {
     handle_surface_changed();
 }
 
 Image::Image(const unsigned char* data, size_t len)
-    : m_surface(detail::load_image_from_memory(data, len))
+    : m_surf(std::make_shared<Surface>(detail::load_image_from_memory(data, len)))
 {
     handle_surface_changed();
 }
 
 void Image::handle_surface_changed()
 {
+    m_surface = shared_cairo_surface_t(m_surf->impl().get(), [](cairo_surface_t *) {});
+
     assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
 
     m_orig_size = Size(std::ceil(cairo_image_surface_get_width(m_surface.get()) / m_hscale),
@@ -65,11 +65,12 @@ void Image::load(const std::string& uri, float hscale, float vscale, bool approx
     {
         if (!uri.empty())
         {
-            m_surface = detail::image_cache().get(uri, hscale, vscale, approximate);
+            m_surf = detail::image_cache().get(uri, hscale, vscale, approximate);
             handle_surface_changed();
         }
         else
         {
+            m_surf.reset();
             m_surface.reset();
             m_orig_size = Size();
         }

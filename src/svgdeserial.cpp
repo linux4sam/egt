@@ -21,7 +21,7 @@ SVGDeserial::SVGDeserial(TopWindow& parent) noexcept
     parent.add(*this);
 }
 
-shared_cairo_surface_t SVGDeserial::DeSerialize(const unsigned char* buf, size_t len, std::shared_ptr<egt::Rect>& rect)
+Surface SVGDeserial::DeSerialize(const unsigned char* buf, size_t len, std::shared_ptr<egt::Rect>& rect)
 {
     return detail::ErawImage::load(buf, len, rect);
 }

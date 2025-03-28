@@ -12,7 +12,7 @@
  */
 
 #include <egt/detail/meta.h>
-#include <egt/types.h>
+#include <egt/surface.h>
 #include <string>
 
 namespace egt
@@ -25,25 +25,25 @@ namespace detail
 /**
  * Load an image from memory.
  */
-EGT_API shared_cairo_surface_t load_image_from_memory(const unsigned char* data,
-        size_t len,
-        const std::string& name = {});
+EGT_API Surface load_image_from_memory(const unsigned char* data,
+                                       size_t len,
+                                       const std::string& name = {});
 
 /**
  * Load an image from ResourceManager.
  * @see ResourceManager
  */
-EGT_API shared_cairo_surface_t load_image_from_resource(const std::string& name);
+EGT_API Surface load_image_from_resource(const std::string& name);
 
 /**
  * Load an image from the filesystem.
  */
-EGT_API shared_cairo_surface_t load_image_from_filesystem(const std::string& path);
+EGT_API Surface load_image_from_filesystem(const std::string& path);
 
 /**
  * Load an image from the network.
  */
-EGT_API shared_cairo_surface_t load_image_from_network(const std::string& url);
+EGT_API Surface load_image_from_network(const std::string& url);
 
 /**
   * Return the mime type string for a file.

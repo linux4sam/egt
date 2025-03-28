@@ -7,6 +7,7 @@
 #include "config.h"
 #endif
 
+#include "detail/cairoabstraction.h"
 #include "detail/dump.h"
 #include "detail/egtlog.h"
 #include "egt/detail/image.h"
@@ -25,8 +26,8 @@ inline namespace v1
 namespace detail
 {
 
-shared_cairo_surface_t ImageCache::get(const std::string& uri,
-                                       float hscale, float vscale, bool approximate)
+std::shared_ptr<Surface> ImageCache::get(const std::string& uri,
+        float hscale, float vscale, bool approximate)
 {
     if (approximate)
     {
@@ -42,7 +43,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& uri,
 
     EGTLOG_DEBUG("image cache miss {} hscale:{} vscale:{}", uri, hscale, vscale);
 
-    shared_cairo_surface_t image;
+    std::shared_ptr<Surface> image;
 
     if (detail::float_equal(hscale, 1.0f) &&
         detail::float_equal(vscale, 1.0f))
@@ -54,17 +55,17 @@ shared_cairo_surface_t ImageCache::get(const std::string& uri,
         {
         case detail::SchemeType::resource:
         {
-            image = detail::load_image_from_resource(path);
+            image = std::make_shared<Surface>(detail::load_image_from_resource(path));
             break;
         }
         case detail::SchemeType::filesystem:
         {
-            image = detail::load_image_from_filesystem(path);
+            image = std::make_shared<Surface>(detail::load_image_from_filesystem(path));
             break;
         }
         case detail::SchemeType::network:
         {
-            image = detail::load_image_from_network(path);
+            image = std::make_shared<Surface>(detail::load_image_from_network(path));
             break;
         }
         default:
@@ -75,17 +76,14 @@ shared_cairo_surface_t ImageCache::get(const std::string& uri,
     }
     else
     {
-        shared_cairo_surface_t back = get(uri, 1.0);
+        auto back = get(uri, 1.0);
 
-        auto width = cairo_image_surface_get_width(back.get());
-        auto height = cairo_image_surface_get_height(back.get());
+        DefaultDim width = std::round(hscale * back->width());
+        DefaultDim height = std::round(vscale * back->height());
 
         detail::code_timer(false, "scale: ", [&]()
         {
-            image = scale_surface(back,
-                                  width, height,
-                                  width * hscale,
-                                  height * vscale);
+            image = std::make_shared<Surface>(resize(*back, Size(width, height)));
         });
     }
 
@@ -94,13 +92,7 @@ shared_cairo_surface_t ImageCache::get(const std::string& uri,
         throw std::runtime_error(fmt::format("unable to load image: {}", uri));
     }
 
-    if (cairo_surface_status(image.get()) != CAIRO_STATUS_SUCCESS)
-    {
-        throw std::runtime_error(fmt::format(
-                                     "cairo: {}: {}", cairo_status_to_string(cairo_surface_status(image.get())), uri));
-    }
-
-    m_cache.insert(std::make_pair(nameid, image));
+    m_cache.emplace(nameid, image);
 
     return image;
 }
@@ -121,54 +113,36 @@ std::string ImageCache::id(const std::string& name, float hscale, float vscale)
 }
 
 #ifdef HAVE_SIMD
-shared_cairo_surface_t
-ImageCache::scale_surface(const shared_cairo_surface_t& old_surface,
-                          float old_width, float old_height,
-                          float new_width, float new_height)
+Surface ImageCache::resize(const Surface& surface, const Size& size)
 {
-    cairo_surface_flush(old_surface.get());
+    Surface new_surface(size, surface.format());
 
-    auto new_surface = shared_cairo_surface_t(
-                           cairo_surface_create_similar(old_surface.get(),
-                                   CAIRO_CONTENT_COLOR_ALPHA,
-                                   new_width,
-                                   new_height),
-                           cairo_surface_destroy);
-
-    auto src = cairo_image_surface_get_data(old_surface.get());
-    auto dst = cairo_image_surface_get_data(new_surface.get());
-
-    SimdResizeBilinear(src,
-                       old_width, old_height,
-                       cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, old_width),
-                       dst, new_width, new_height,
-                       cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, new_width),
+    SimdResizeBilinear(static_cast<const uint8_t*>(surface.data()),
+                       surface.width(),
+                       surface.height(),
+                       surface.stride(),
+                       static_cast<uint8_t*>(new_surface.data()),
+                       new_surface.width(),
+                       new_surface.height(),
+                       new_surface.stride(),
                        4);
 
-    cairo_surface_mark_dirty(new_surface.get());
+    new_surface.mark_dirty();
 
     return new_surface;
 }
 #else
-shared_cairo_surface_t
-ImageCache::scale_surface(const shared_cairo_surface_t& old_surface,
-                          float old_width, float old_height,
-                          float new_width, float new_height)
+Surface ImageCache::resize(const Surface& surface, const Size& size)
 {
-    auto new_surface = shared_cairo_surface_t(
-                           cairo_surface_create_similar(old_surface.get(),
-                                   CAIRO_CONTENT_COLOR_ALPHA,
-                                   new_width,
-                                   new_height),
-                           cairo_surface_destroy);
-    auto cr = shared_cairo_t(cairo_create(new_surface.get()),
-                             cairo_destroy);
+    Surface new_surface(size, surface.format());
+    unique_cairo_t cr(cairo_create(new_surface.impl()));
 
     /* Scale *before* setting the source surface (1) */
     cairo_scale(cr.get(),
-                new_width / old_width,
-                new_height / old_height);
-    cairo_set_source_surface(cr.get(), old_surface.get(), 0, 0);
+                static_cast<double>(size.width()) / surface.width(),
+                static_cast<double>(size.height()) / surface.height());
+
+    cairo_set_source_surface(cr.get(), surface.impl(), 0, 0);
 
     /* To avoid getting the edge pixels blended with 0 alpha, which would
      * occur with the default EXTEND_NONE. Use EXTEND_PAD for 1.2 or newer (2)

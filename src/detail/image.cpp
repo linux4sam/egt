@@ -79,14 +79,27 @@ static constexpr auto MIME_ZIP = "application/zip";
 static constexpr auto MIME_GZIP = "application/gzip";
 static constexpr auto MIME_ERAW = "image/eraw";
 
-EGT_API shared_cairo_surface_t load_image_from_memory(const unsigned char* data,
-        size_t len,
-        const std::string& name)
+static Surface copy_cairo_surface(cairo_surface_t* surface)
+{
+    Size size(cairo_image_surface_get_width(surface),
+              cairo_image_surface_get_height(surface));
+    auto format = detail::egt_format(cairo_image_surface_get_format(surface));
+
+    Surface image(size, format);
+    memcpy(image.data(), cairo_image_surface_get_data(surface),
+           size.height() * cairo_image_surface_get_stride(surface));
+
+    return image;
+}
+
+EGT_API Surface load_image_from_memory(const unsigned char* data,
+                                       size_t len,
+                                       const std::string& name)
 {
     if (!data || !len)
         return {};
 
-    shared_cairo_surface_t image;
+    Surface image;
 
     const auto mimetype = get_mime_type(data, len);
     if (mimetype.empty())
@@ -97,10 +110,9 @@ EGT_API shared_cairo_surface_t load_image_from_memory(const unsigned char* data,
     if (mimetype == MIME_BMP)
     {
         StreamObject stream = {data, len, 0};
-        image = shared_cairo_surface_t(
-                    cairo_image_surface_create_from_bmp_stream(
-                        read_stream, &stream),
-                    cairo_surface_destroy);
+        unique_cairo_surface_t surface(
+            cairo_image_surface_create_from_bmp_stream(read_stream, &stream));
+        image = copy_cairo_surface(surface.get());
     }
     else if (mimetype == MIME_ERAW)
     {
@@ -110,26 +122,25 @@ EGT_API shared_cairo_surface_t load_image_from_memory(const unsigned char* data,
     else if (mimetype == MIME_JPEG)
     {
         StreamObject stream = {data, len, 0};
-        image = shared_cairo_surface_t(
-                    cairo_image_surface_create_from_jpeg_stream(
-                        read_stream, &stream),
-                    cairo_surface_destroy);
+        unique_cairo_surface_t surface(
+            cairo_image_surface_create_from_jpeg_stream(read_stream, &stream));
+        image = copy_cairo_surface(surface.get());
     }
 #endif
 #if CAIRO_HAS_PNG_FUNCTIONS == 1
     else if (mimetype == MIME_PNG)
     {
         StreamObject stream = {data, len, 0};
-        image = shared_cairo_surface_t(
-                    cairo_image_surface_create_from_png_stream(
-                        read_stream, &stream),
-                    cairo_surface_destroy);
+        unique_cairo_surface_t surface(
+            cairo_image_surface_create_from_png_stream(read_stream, &stream));
+        image = copy_cairo_surface(surface.get());
     }
 #endif
 #ifdef HAVE_LIBRSVG
     else if (mimetype == MIME_SVGXML || mimetype == MIME_SVG)
     {
-        image = load_svg(data, len);
+        auto surface = load_svg(data, len);
+        image = copy_cairo_surface(surface.get());
     }
 #endif
     else
@@ -140,7 +151,7 @@ EGT_API shared_cairo_surface_t load_image_from_memory(const unsigned char* data,
     return image;
 }
 
-shared_cairo_surface_t load_image_from_resource(const std::string& name)
+Surface load_image_from_resource(const std::string& name)
 {
     if (!ResourceManager::instance().exists(name.c_str()))
         throw std::runtime_error("resource not found: " + name);
@@ -152,7 +163,7 @@ shared_cairo_surface_t load_image_from_resource(const std::string& name)
                                   name);
 }
 
-shared_cairo_surface_t load_image_from_filesystem(const std::string& path)
+Surface load_image_from_filesystem(const std::string& path)
 {
     if (!detail::exists(path))
         throw std::runtime_error("file not found: " + path);
@@ -162,13 +173,13 @@ shared_cairo_surface_t load_image_from_filesystem(const std::string& path)
         throw std::runtime_error("unable to determine mimetype for: " + path);
     EGTLOG_DEBUG("mimetype of {} is {}", path, mimetype);
 
-    shared_cairo_surface_t image;
+    Surface image;
 
     if (mimetype == MIME_BMP)
     {
-        image = shared_cairo_surface_t(
-                    cairo_image_surface_create_from_bmp(path.c_str()),
-                    cairo_surface_destroy);
+        unique_cairo_surface_t surface(
+            cairo_image_surface_create_from_bmp(path.c_str()));
+        image = copy_cairo_surface(surface.get());
     }
     else if (mimetype == MIME_ERAW)
     {
@@ -177,23 +188,24 @@ shared_cairo_surface_t load_image_from_filesystem(const std::string& path)
 #ifdef HAVE_LIBJPEG
     else if (mimetype == MIME_JPEG)
     {
-        image = shared_cairo_surface_t(
-                    cairo_image_surface_create_from_jpeg(path.c_str()),
-                    cairo_surface_destroy);
+        unique_cairo_surface_t surface(
+            cairo_image_surface_create_from_jpeg(path.c_str()));
+        image = copy_cairo_surface(surface.get());
     }
 #endif
 #if CAIRO_HAS_PNG_FUNCTIONS == 1
     else if (mimetype == MIME_PNG)
     {
-        image = shared_cairo_surface_t(
-                    cairo_image_surface_create_from_png(path.c_str()),
-                    cairo_surface_destroy);
+        unique_cairo_surface_t surface(
+            cairo_image_surface_create_from_png(path.c_str()));
+        image = copy_cairo_surface(surface.get());
     }
 #endif
 #ifdef HAVE_LIBRSVG
     else if (mimetype == MIME_SVGXML || mimetype == MIME_SVG)
     {
-        image = load_svg(path);
+        auto surface = load_svg(path);
+        image = copy_cairo_surface(surface.get());
     }
 #endif
     else
@@ -204,9 +216,9 @@ shared_cairo_surface_t load_image_from_filesystem(const std::string& path)
     return image;
 }
 
-EGT_API shared_cairo_surface_t load_image_from_network(const std::string& url)
+EGT_API Surface load_image_from_network(const std::string& url)
 {
-    shared_cairo_surface_t image;
+    Surface image;
 
 #ifdef HAVE_LIBCURL
     auto buffer = experimental::load_file_from_network<std::vector<unsigned char>>(url);

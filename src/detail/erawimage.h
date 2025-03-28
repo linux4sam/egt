@@ -6,10 +6,9 @@
 #ifndef EGT_SRC_DETAIL_ERAWIMAGE_H
 #define EGT_SRC_DETAIL_ERAWIMAGE_H
 
-#include <cairo.h>
 #include <cstring>
 #include <egt/geometry.h>
-#include <egt/types.h>
+#include <egt/surface.h>
 #include <fstream>
 #include <string>
 
@@ -89,51 +88,47 @@ public:
         return 0x50502AA2;
     }
 
-    static shared_cairo_surface_t load(const std::string& filename)
+    static Surface load(const std::string& filename)
     {
         std::ifstream i(filename, std::ios_base::binary);
         if (!i)
-            return nullptr;
+            return Surface();
         alignas(4) uint32_t magic = 0;
         alignas(4) uint32_t width = 0;
         alignas(4) uint32_t height = 0;
         alignas(4) uint32_t reserved = 0;
         i.read(reinterpret_cast<char*>(&magic), sizeof(magic));
         if (magic != egt_magic())
-            return nullptr;
+            return Surface();
         if (!i.read(reinterpret_cast<char*>(&width), sizeof(width)) ||
             !i.read(reinterpret_cast<char*>(&height), sizeof(height)) ||
             !i.read(reinterpret_cast<char*>(&reserved), sizeof(reserved)) ||
             !i.read(reinterpret_cast<char*>(&reserved), sizeof(reserved)) ||
             !i.read(reinterpret_cast<char*>(&reserved), sizeof(reserved)) ||
             !i.read(reinterpret_cast<char*>(&reserved), sizeof(reserved)))
-            return nullptr;
+            return Surface();
 
-        auto surface =
-            shared_cairo_surface_t(cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
-                                   width, height),
-                                   cairo_surface_destroy);
-        auto data =
-            reinterpret_cast<uint32_t*>(cairo_image_surface_get_data(surface.get()));
+        Surface surface(Size(width, height));
+        auto data = reinterpret_cast<uint32_t*>(surface.data());
         auto end = data + (width * height);
 
         while (data < end)
         {
             alignas(4) uint16_t block = 0;
             if (!i.read(reinterpret_cast<char*>(&block), sizeof(block)))
-                return nullptr;
+                return Surface();
             if (block & 0x8000)
             {
                 block &= 0x7fff;
                 alignas(4) uint32_t value = 0;
                 if (!i.read(reinterpret_cast<char*>(&value), sizeof(value)))
-                    return nullptr;
+                    return Surface();
                 memset32(data, value, block);
             }
             else if (block)
             {
                 if (!i.read(reinterpret_cast<char*>(data), block * sizeof(uint32_t)))
-                    return nullptr;
+                    return Surface();
             }
             data += block;
         }
@@ -141,19 +136,16 @@ public:
         i.close();
 
         // must mark surface dirty once we manually fill it in
-        cairo_surface_mark_dirty(surface.get());
+        surface.mark_dirty();
 
         return surface;
     }
 
-    static shared_cairo_surface_t read_surface_data(const unsigned char* buf, const unsigned char* buf_end, uint32_t width, uint32_t height)
+    static Surface read_surface_data(const unsigned char* buf, const unsigned char* buf_end, uint32_t width, uint32_t height)
     {
-        auto surface =
-            shared_cairo_surface_t(cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
-                                   width, height),
-                                   cairo_surface_destroy);
-        auto data =
-            reinterpret_cast<uint32_t*>(cairo_image_surface_get_data(surface.get()));
+        Surface surface(Size(width, height));
+
+        auto data = reinterpret_cast<uint32_t*>(surface.data());
         auto end = data + (width * height);
 
         while (data < end)
@@ -161,20 +153,20 @@ public:
             alignas(4) uint16_t block = 0;
             buf = readw(buf, block, buf_end);
             if (!buf)
-                return nullptr;
+                return surface;
             if (block & 0x8000)
             {
                 block &= 0x7fff;
                 alignas(4) uint32_t value = 0;
                 buf = readw(buf, value, buf_end);
                 if (!buf)
-                    return nullptr;
+                    return surface;
                 memset32(data, value, block);
             }
             else if (block)
             {
                 if (buf + block * sizeof(uint32_t) > buf_end)
-                    return nullptr;
+                    return surface;
 
                 memcpy(data, buf, block * sizeof(uint32_t));
                 buf += (block * sizeof(uint32_t));
@@ -183,12 +175,12 @@ public:
         }
 
         // must mark surface dirty once we manually fill it in
-        cairo_surface_mark_dirty(surface.get());
+        surface.mark_dirty();
 
         return surface;
     }
 
-    static shared_cairo_surface_t load(const unsigned char* buf, size_t len)
+    static Surface load(const unsigned char* buf, size_t len)
     {
         const auto buf_end = buf + len;
         alignas(4) uint32_t magic = 0;
@@ -197,21 +189,21 @@ public:
 
         buf = readw(buf, magic, buf_end);
         if (!buf)
-            return nullptr;
+            return Surface();
         if (magic != egt_magic())
-            return nullptr;
+            return Surface();
         buf = readw(buf, width, buf_end);
         if (!buf)
-            return nullptr;
+            return Surface();
         buf = readw(buf, height, buf_end);
         if (!buf)
-            return nullptr;
+            return Surface();
         buf += (sizeof(uint32_t) * 4);
 
         return read_surface_data(buf, buf_end, width, height);
     }
 
-    static shared_cairo_surface_t load(const unsigned char* buf, size_t len, std::shared_ptr<Rect>& rect)
+    static Surface load(const unsigned char* buf, size_t len, std::shared_ptr<Rect>& rect)
     {
         const auto buf_end = buf + len;
         alignas(4) uint32_t magic = 0;
@@ -222,21 +214,21 @@ public:
 
         buf = readw(buf, magic, buf_end);
         if (!buf)
-            return nullptr;
+            return Surface();
         if (magic != egt_magic())
-            return nullptr;
+            return Surface();
         buf = readw(buf, width, buf_end);
         if (!buf)
-            return nullptr;
+            return Surface();
         buf = readw(buf, height, buf_end);
         if (!buf)
-            return nullptr;
+            return Surface();
         buf = readw(buf, x, buf_end);
         if (!buf)
-            return nullptr;
+            return Surface();
         buf = readw(buf, y, buf_end);
         if (!buf)
-            return nullptr;
+            return Surface();
         buf += (sizeof(uint32_t) * 2);
 
         rect->x(x);
