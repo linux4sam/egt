@@ -60,6 +60,7 @@ add_library(egt SHARED
     sizer.cpp
     slider.cpp
     sprite.cpp
+    surface.cpp
     text.cpp
     textwidget.cpp
     theme.cpp
@@ -157,6 +158,7 @@ target_sources(egt PUBLIC FILE_SET HEADERS
     ${CMAKE_SOURCE_DIR}/include/egt/sizer.h
     ${CMAKE_SOURCE_DIR}/include/egt/slider.h
     ${CMAKE_SOURCE_DIR}/include/egt/sprite.h
+    ${CMAKE_SOURCE_DIR}/include/egt/surface.h
     ${CMAKE_SOURCE_DIR}/include/egt/string.h
     ${CMAKE_SOURCE_DIR}/include/egt/text.h
     ${CMAKE_SOURCE_DIR}/include/egt/textwidget.h

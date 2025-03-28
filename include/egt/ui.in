@@ -51,6 +51,7 @@
 #include <egt/sizer.h>
 #include <egt/slider.h>
 #include <egt/sprite.h>
+#include <egt/surface.h>
 #include <egt/text.h>
 #include <egt/timer.h>
 #include <egt/tools.h>

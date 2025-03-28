@@ -56,6 +56,14 @@ public:
     using CairoPatternAbstraction::CairoPatternAbstraction;
 };
 
+using CairoSurfaceAbstraction = CairoPointerAbstraction<cairo_surface_t, cairo_surface_destroy>;
+
+class InternalSurface : public CairoSurfaceAbstraction
+{
+public:
+    using CairoSurfaceAbstraction::CairoSurfaceAbstraction;
+};
+
 }
 }
 }
