@@ -17,9 +17,14 @@ namespace egt
 inline namespace v1
 {
 
+struct RsvgHandle_deleter
+{
+    void operator()(RsvgHandle* handle) { g_object_unref(handle); }
+};
+
 struct SvgImage::SvgImpl
 {
-    std::shared_ptr<RsvgHandle> rsvg;
+    std::unique_ptr<RsvgHandle, RsvgHandle_deleter> rsvg;
     RsvgDimensionData dim{};
 };
 
@@ -165,8 +170,7 @@ void SvgImage::load()
     }
     }
 
-    m_impl->rsvg = std::shared_ptr<RsvgHandle>(handle,
-    [](RsvgHandle * r) { g_object_unref(r); });
+    m_impl->rsvg.reset(handle);
 
     // this is a somewhat expensive operation, so do it once
     rsvg_handle_get_dimensions(m_impl->rsvg.get(), &m_impl->dim);
