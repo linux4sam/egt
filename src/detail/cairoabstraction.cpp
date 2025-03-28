@@ -37,6 +37,35 @@ Painter::LineCap egt_line_cap(cairo_line_cap_t line_cap)
     return Painter::LineCap::butt;
 }
 
+static const std::pair<Painter::AntiAlias, cairo_antialias_t> cairo_antialiases[] =
+{
+    {Painter::AntiAlias::system, CAIRO_ANTIALIAS_DEFAULT},
+    {Painter::AntiAlias::none, CAIRO_ANTIALIAS_NONE},
+    {Painter::AntiAlias::gray, CAIRO_ANTIALIAS_GRAY},
+    {Painter::AntiAlias::subpixel, CAIRO_ANTIALIAS_SUBPIXEL},
+    {Painter::AntiAlias::fast, CAIRO_ANTIALIAS_FAST},
+    {Painter::AntiAlias::good, CAIRO_ANTIALIAS_GOOD},
+    {Painter::AntiAlias::best, CAIRO_ANTIALIAS_BEST},
+};
+
+cairo_antialias_t cairo_antialias(Painter::AntiAlias antialias)
+{
+    for (const auto& i : cairo_antialiases)
+        if (i.first == antialias)
+            return i.second;
+
+    return CAIRO_ANTIALIAS_DEFAULT;
+}
+
+Painter::AntiAlias egt_antialias(cairo_antialias_t antialias)
+{
+    for (const auto& i : cairo_antialiases)
+        if (i.second == antialias)
+            return i.first;
+
+    return Painter::AntiAlias::system;
+}
+
 }
 }
 }

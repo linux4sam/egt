@@ -50,6 +50,20 @@ class EGT_API Painter
 public:
 
     /**
+     * Supported types of anti-aliasing.
+     */
+    enum class AntiAlias
+    {
+        system, // default
+        none,
+        gray,
+        subpixel,
+        fast,
+        good,
+        best,
+    };
+
+    /**
      * Supported line caps.
      */
     enum class LineCap
@@ -232,6 +246,18 @@ public:
      * Get the current line cap.
      */
     EGT_NODISCARD Painter::LineCap line_cap() const;
+
+    /**
+     * Set the type of anti-aliasing.
+     *
+     * @param[in] value Anti-aliasing type.
+     */
+    Painter& antialias(Painter::AntiAlias value);
+
+    /**
+     * Get the current type of anti-aliasing.
+     */
+    EGT_NODISCARD Painter::AntiAlias antialias() const;
 
     /**
      * Set the alpha blending state either enabled or disabled.
@@ -508,6 +534,9 @@ protected:
 
 /// Overloaded std::ostream insertion operator
 EGT_API std::ostream& operator<<(std::ostream& os, const Painter::LineCap& cap);
+
+/// Overloaded std::ostream insertion operator
+EGT_API std::ostream& operator<<(std::ostream& os, const Painter::AntiAlias& antialias);
 
 }
 }

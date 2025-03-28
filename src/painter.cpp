@@ -112,6 +112,17 @@ Painter::LineCap Painter::line_cap() const
     return detail::egt_line_cap(cairo_get_line_cap(m_cr.get()));
 }
 
+Painter& Painter::antialias(Painter::AntiAlias value)
+{
+    cairo_set_antialias(m_cr.get(), detail::cairo_antialias(value));
+    return *this;
+}
+
+Painter::AntiAlias Painter::antialias() const
+{
+    return detail::egt_antialias(cairo_get_antialias(m_cr.get()));
+}
+
 Painter& Painter::alpha_blending(bool enabled)
 {
     if (enabled)
@@ -609,6 +620,23 @@ const std::pair<Painter::LineCap, char const*> detail::EnumStrings<Painter::Line
 std::ostream& operator<<(std::ostream& os, const Painter::LineCap& cap)
 {
     return os << detail::enum_to_string(cap);
+}
+
+template<>
+const std::pair<Painter::AntiAlias, char const*> detail::EnumStrings<Painter::AntiAlias>::data[] =
+{
+    {Painter::AntiAlias::system, "system"},
+    {Painter::AntiAlias::none, "none"},
+    {Painter::AntiAlias::gray, "gray"},
+    {Painter::AntiAlias::subpixel, "subpixel"},
+    {Painter::AntiAlias::fast, "fast"},
+    {Painter::AntiAlias::good, "good"},
+    {Painter::AntiAlias::best, "best"},
+};
+
+std::ostream& operator<<(std::ostream& os, const Painter::AntiAlias& antialias)
+{
+    return os << detail::enum_to_string(antialias);
 }
 
 }

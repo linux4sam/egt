@@ -232,7 +232,7 @@ public:
         {
             const auto mouse = display_to_local(event.pointer().point);
             egt::Painter painter(m_canvas.context());
-            cairo_set_antialias(painter.context().get(), CAIRO_ANTIALIAS_NONE);
+            painter.antialias(egt::Painter::AntiAlias::none);
             painter.flood(mouse, m_fillpicker.selected_color());
             damage();
             break;
@@ -251,7 +251,7 @@ public:
 
                 egt::Line line(m_last, mouse);
                 egt::Painter painter(m_canvas.context());
-                cairo_set_antialias(painter.context().get(), CAIRO_ANTIALIAS_NONE);
+                painter.antialias(egt::Painter::AntiAlias::none);
                 painter.line_width(width);
                 painter.line_cap(egt::Painter::LineCap::round);
                 painter.set(m_penpicker.selected_color());

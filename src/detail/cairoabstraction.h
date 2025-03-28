@@ -75,6 +75,16 @@ cairo_line_cap_t cairo_line_cap(Painter::LineCap line_cap);
  */
 Painter::LineCap egt_line_cap(cairo_line_cap_t line_cap);
 
+/**
+ * Convert a Painter::AntiAlias to a cairo_antialias_t.
+ */
+cairo_antialias_t cairo_antialias(Painter::AntiAlias antialias);
+
+/**
+ * Convert a cairo_antialias_t to a Painter::AntiAlias.
+ */
+Painter::AntiAlias egt_antialias(cairo_antialias_t antialias);
+
 }
 }
 }
