@@ -221,7 +221,7 @@ void Theme::draw_box(Painter& painter,
 
     if (type.is_set(FillFlag::solid))
     {
-        cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
+        painter.alpha_blending(false);
     }
 
     auto fill_bg = true;
@@ -373,7 +373,7 @@ void Theme::draw_circle(Painter& painter,
 
     if (type.is_set(FillFlag::solid))
     {
-        cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
+        painter.alpha_blending(false);
     }
 
     cairo_new_path(cr);

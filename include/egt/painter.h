@@ -234,6 +234,21 @@ public:
     EGT_NODISCARD Painter::LineCap line_cap() const;
 
     /**
+     * Set the alpha blending state either enabled or disabled.
+     *
+     * @param[in] enabled Whether the alpha blending is to be enabled.
+     *
+     * @note disabling the alpha blending is like forcing the destination alpha
+     * to zero.
+     */
+    Painter& alpha_blending(bool enabled);
+
+    /**
+     * Get the alpha blending state, either enabled or disabled.
+     */
+    EGT_NODISCARD bool alpha_blending() const;
+
+    /**
      * Move to a point.
      *
      * @param[in] point The point.

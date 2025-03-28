@@ -112,6 +112,21 @@ Painter::LineCap Painter::line_cap() const
     return detail::egt_line_cap(cairo_get_line_cap(m_cr.get()));
 }
 
+Painter& Painter::alpha_blending(bool enabled)
+{
+    if (enabled)
+        cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_OVER);
+    else
+        cairo_set_operator(m_cr.get(), CAIRO_OPERATOR_SOURCE);
+
+    return *this;
+}
+
+bool Painter::alpha_blending() const
+{
+    return cairo_get_operator(m_cr.get()) != CAIRO_OPERATOR_SOURCE;
+}
+
 Painter& Painter::draw(const Image& image)
 {
     assert(!image.empty());

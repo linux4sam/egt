@@ -40,7 +40,7 @@ public:
     void clear()
     {
         egt::Painter painter(m_canvas.context());
-        cairo_set_operator(painter.context().get(), CAIRO_OPERATOR_SOURCE);
+        painter.alpha_blending(false);
         painter.set(egt::Palette::transparent);
         painter.paint();
     }
