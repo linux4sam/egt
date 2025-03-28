@@ -33,6 +33,7 @@ Painter& dummy_painter()
 }
 
 Painter::Painter(Surface& surface) noexcept
+    : m_surface(surface)
 {
     m_cr = shared_cairo_t(cairo_create(surface.impl()), cairo_destroy);
 }

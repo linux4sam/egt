@@ -551,6 +551,13 @@ public:
                 cairo_image_surface_get_height(surface)};
     }
 
+    /**
+     * Get the target surface the painter is using.
+     */
+    EGT_NODISCARD const Surface& target() const { return m_surface; }
+
+    EGT_NODISCARD Surface& target() { return m_surface; }
+
 protected:
 
     /**
@@ -562,6 +569,8 @@ protected:
      * Cairo context.
      */
     shared_cairo_t m_cr;
+
+    Surface& m_surface;
 };
 
 /// Overloaded std::ostream insertion operator
