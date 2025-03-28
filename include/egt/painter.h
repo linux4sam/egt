@@ -179,6 +179,22 @@ public:
     void restore();
 
     /**
+     * Configure low fidelity options.
+     *
+     * This configures settings related to font hinting, font aliasing, and
+     * shape aliasing.
+     */
+    void low_fidelity();
+
+    /**
+     * Configure high fidelity options.
+     *
+     * This configures settings related to font hinting, font aliasing, and
+     * shape aliasing.
+     */
+    void high_fidelity();
+
+    /**
      * Apply the current subordinate filter.
      *
      * @param[in] subordinate The widget to be tested.

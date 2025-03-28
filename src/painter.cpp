@@ -52,6 +52,32 @@ void Painter::restore()
     cairo_restore(m_cr.get());
 }
 
+void Painter::low_fidelity()
+{
+    // font
+    cairo_font_options_t* cfo = cairo_font_options_create();
+    cairo_font_options_set_antialias(cfo, CAIRO_ANTIALIAS_FAST);
+    cairo_font_options_set_hint_style(cfo, CAIRO_HINT_STYLE_NONE);
+    cairo_set_font_options(m_cr.get(), cfo);
+    cairo_font_options_destroy(cfo);
+
+    // shapes
+    cairo_set_antialias(m_cr.get(), CAIRO_ANTIALIAS_FAST);
+}
+
+void Painter::high_fidelity()
+{
+    // font
+    cairo_font_options_t* cfo = cairo_font_options_create();
+    cairo_font_options_set_antialias(cfo, CAIRO_ANTIALIAS_GOOD);
+    cairo_font_options_set_hint_style(cfo, CAIRO_HINT_STYLE_MEDIUM);
+    cairo_set_font_options(m_cr.get(), cfo);
+    cairo_font_options_destroy(cfo);
+
+    // shapes
+    cairo_set_antialias(m_cr.get(), CAIRO_ANTIALIAS_GOOD);
+}
+
 bool Painter::filter_subordinate(const Widget& subordinate) const
 {
     if (m_subordinate_filter)
