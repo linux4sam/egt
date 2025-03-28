@@ -5,7 +5,6 @@
  */
 #include "detail/egtlog.h"
 #include "egt/detail/screen/memoryscreen.h"
-#include <cairo.h>
 
 namespace egt
 {
@@ -25,12 +24,7 @@ MemoryScreen::MemoryScreen(const Size& size)
 
 void MemoryScreen::save_to_file(const std::string& filename) const
 {
-#if CAIRO_HAS_PNG_FUNCTIONS == 1
-    cairo_surface_write_to_png(m_surface.get(), filename.c_str());
-#else
-    detail::ignoreparam(filename);
-    detail::error("png support not available");
-#endif
+    m_surface.write_to_png(filename);
 }
 
 }

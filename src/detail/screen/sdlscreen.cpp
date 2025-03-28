@@ -9,7 +9,6 @@
 #include "egt/eventloop.h"
 #include "egt/utils.h"
 #include <SDL2/SDL.h>
-#include <cairo.h>
 #include <string>
 
 namespace egt
@@ -59,7 +58,7 @@ SDLScreen::SDLScreen(Application& app, const Size& size, const std::string& name
 
     init(size);
 
-    m_buffers.emplace_back(nullptr);
+    m_buffers.emplace_back(Surface());
 
     m_thread = std::thread([size, name, this]()
     {
@@ -196,11 +195,7 @@ void SDLScreen::sdl_draw(const DamageArray& damage)
         throw std::runtime_error(std::string("failed to lock texture: ") + SDL_GetError());
 
     ScreenBuffer& buffer = m_buffers.front();
-    buffer.surface = unique_cairo_surface_t(
-                         cairo_image_surface_create_for_data(
-                             static_cast<unsigned char*>(pixels),
-                             CAIRO_FORMAT_ARGB32,
-                             size().width(), size().height(), pitch));
+    buffer.surface = Surface(pixels, nullptr, size(), PixelFormat::argb8888, pitch);
 
     Screen::flip(damage);
 

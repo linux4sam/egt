@@ -180,7 +180,7 @@ void Window::do_draw()
 
     detail::code_timer(time_child_draw_enabled(), name() + " draw: ", [this]()
     {
-        Painter painter(screen()->context());
+        auto& painter = screen()->painter();
 
         Painter::AutoSaveRestore sr(painter);
 

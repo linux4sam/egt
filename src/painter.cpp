@@ -32,11 +32,6 @@ Painter& dummy_painter()
 
 }
 
-Painter::Painter(shared_cairo_t cr) noexcept
-    : m_cr(std::move(cr))
-{
-}
-
 Painter::Painter(Surface& surface) noexcept
 {
     m_cr = shared_cairo_t(cairo_create(surface.impl()), cairo_destroy);

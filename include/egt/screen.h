@@ -11,9 +11,10 @@
  * @brief Working with screens.
  */
 
-#include <cairo.h>
 #include <egt/detail/meta.h>
 #include <egt/geometry.h>
+#include <egt/painter.h>
+#include <egt/surface.h>
 #include <egt/types.h>
 #include <iosfwd>
 #include <memory>
@@ -80,11 +81,9 @@ public:
     EGT_NODISCARD Rect box() const { return Rect(Point(), m_size); }
 
     /**
-     * Get the context for the screen.
-     *
-     * Get the target surface from this using cairo_get_target().
-     */
-    EGT_NODISCARD shared_cairo_t context() const { return m_cr; }
+     * Get the painter for the screen.
+     **/
+    EGT_NODISCARD Painter& painter() { return *m_painter; }
 
     /**
      * This function implements the algorithm for adding damage rectangles
@@ -182,13 +181,13 @@ protected:
     /// @private
     struct ScreenBuffer
     {
-        explicit ScreenBuffer(cairo_surface_t* s) noexcept
-            : surface(s)
+        explicit ScreenBuffer(Surface&& s) noexcept
+            : surface(std::move(s))
         {
             damage.reserve(10);
         }
 
-        unique_cairo_surface_t surface;
+        Surface surface;
 
         /**
          * Each rect that needs to be copied from the back buffer.
@@ -208,10 +207,10 @@ protected:
     void copy_to_buffer_software(ScreenBuffer& buffer);
 
     /// Composition surface.
-    shared_cairo_surface_t m_surface;
+    Surface m_surface;
 
-    /// Composition surface context.
-    shared_cairo_t m_cr;
+    /// Composition painter.
+    std::unique_ptr<Painter> m_painter;
 
     /// Type used for an array of ScreenBuffer objects.
     using BufferArray = std::vector<ScreenBuffer>;

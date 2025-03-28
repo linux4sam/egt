@@ -138,7 +138,7 @@ int main(int argc, char** argv)
     {
         egt::Rect rect(x_dist(e1), y_dist(e1), sets[index].w, sets[index].h);
 
-        egt::Painter painter(win.screen()->context());
+        auto& painter = win.screen()->painter();
         auto color = *random_item(sets[index].colors.begin(), sets[index].colors.end(), e1);
         painter.set(color);
         painter.draw(rect);

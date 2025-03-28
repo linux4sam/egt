@@ -7,6 +7,7 @@
 #include "config.h"
 #endif
 
+#include "detail/cairoabstraction.h"
 #include "detail/dump.h"
 #include "egt/color.h"
 #include "egt/palette.h"
@@ -137,7 +138,7 @@ static void simd_copy(cairo_surface_t* src_surface,
 
 void Screen::copy_to_buffer(ScreenBuffer& buffer)
 {
-    simd_copy(m_surface.get(), buffer.surface.get(), buffer.damage);
+    simd_copy(m_surface.impl(), buffer.surface.impl(), buffer.damage);
 }
 #else
 void Screen::copy_to_buffer(ScreenBuffer& buffer)
@@ -296,9 +297,9 @@ static size_t pixel_bytes(PixelFormat format)
 void Screen::copy_to_buffer_software(ScreenBuffer& buffer)
 {
     // create a new context for each frame
-    unique_cairo_t cr(cairo_create(buffer.surface.get()));
+    unique_cairo_t cr(cairo_create(buffer.surface.impl()));
 
-    cairo_set_source_surface(cr.get(), m_surface.get(), 0, 0);
+    cairo_set_source_surface(cr.get(), m_surface.impl(), 0, 0);
     cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
 
     if (!wireframe_enable())
@@ -374,7 +375,7 @@ void Screen::copy_to_buffer_software(ScreenBuffer& buffer)
         cairo_stroke(cr.get());
     }
 
-    cairo_surface_flush(buffer.surface.get());
+    cairo_surface_flush(buffer.surface.impl());
 }
 
 void Screen::damage_algorithm(Screen::DamageArray& damage, Rect rect)
@@ -423,70 +424,38 @@ void Screen::init(void** ptr, uint32_t count, const Size& size, PixelFormat form
 {
     m_size = size;
 
-    cairo_format_t f = detail::cairo_format(format);
-    if (f == CAIRO_FORMAT_INVALID)
-        f = CAIRO_FORMAT_ARGB32;
-
     m_buffers.clear();
 
     if (count == 1 && no_composition_buffer())
     {
-        m_surface = shared_cairo_surface_t(
-                        cairo_image_surface_create_for_data(static_cast<unsigned char*>(ptr[0]),
-                                f,
-                                size.width(), size.height(),
-                                cairo_format_stride_for_width(f, size.width())),
-                        cairo_surface_destroy);
+        m_surface = Surface(ptr[0], nullptr, size, format,
+                            Surface::stride(format, size.width()));
     }
     else
     {
         for (uint32_t x = 0; x < count; x++)
         {
-            m_buffers.emplace_back(
-                cairo_image_surface_create_for_data(static_cast<unsigned char*>(ptr[x]),
-                                                    f,
-                                                    size.width(), size.height(),
-                                                    cairo_format_stride_for_width(f, size.width())));
-
+            m_buffers.emplace_back(Surface(ptr[x], nullptr, size, format,
+                                           Surface::stride(format, size.width())));
             m_buffers.back().damage.emplace_back(Point(), size);
         }
 
-        m_surface = shared_cairo_surface_t(cairo_image_surface_create(f, size.width(), size.height()),
-                                           cairo_surface_destroy);
+        m_surface = Surface(size, format);
     }
 
-    assert(m_surface.get());
-
-    m_cr = shared_cairo_t(cairo_create(m_surface.get()), cairo_destroy);
-    assert(m_cr);
+    m_painter = std::make_unique<Painter>(m_surface);
 
     m_format = format;
 }
 
 void Screen::low_fidelity()
 {
-    // font
-    cairo_font_options_t* cfo = cairo_font_options_create();
-    cairo_font_options_set_antialias(cfo, CAIRO_ANTIALIAS_FAST);
-    cairo_font_options_set_hint_style(cfo, CAIRO_HINT_STYLE_NONE);
-    cairo_set_font_options(m_cr.get(), cfo);
-    cairo_font_options_destroy(cfo);
-
-    // shapes
-    cairo_set_antialias(m_cr.get(), CAIRO_ANTIALIAS_FAST);
+    m_painter->low_fidelity();
 }
 
 void Screen::high_fidelity()
 {
-    // font
-    cairo_font_options_t* cfo = cairo_font_options_create();
-    cairo_font_options_set_antialias(cfo, CAIRO_ANTIALIAS_GOOD);
-    cairo_font_options_set_hint_style(cfo, CAIRO_HINT_STYLE_MEDIUM);
-    cairo_set_font_options(m_cr.get(), cfo);
-    cairo_font_options_destroy(cfo);
-
-    // shapes
-    cairo_set_antialias(m_cr.get(), CAIRO_ANTIALIAS_GOOD);
+    m_painter->high_fidelity();
 }
 
 

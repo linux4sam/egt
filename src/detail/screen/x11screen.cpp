@@ -12,9 +12,8 @@
 #include "egt/eventloop.h"
 #include "egt/input.h"
 #include "egt/keycode.h"
-#include <cairo-xlib.h>
-#include <cairo.h>
 #include <cstdlib>
+#include <endian.h>
 #include <string>
 
 namespace egt
@@ -28,6 +27,7 @@ struct X11Data
 {
     Display* display{};
     Drawable window{};
+    XImage image;
     Atom wmDeleteMessage{};
 
     /// Keyboard instance
@@ -84,14 +84,52 @@ X11Screen::X11Screen(Application& app, const Size& size, const std::string& name
                  PointerMotionMask | Button1MotionMask | VisibilityChangeMask |
                  ColormapChangeMask);
 
-    init(size, PixelFormat::rgb565);
+    auto depth = DefaultDepth(m_priv->display, screen);
+    PixelFormat format;
+    int bits_per_pixel;
+    if (depth > 16)
+    {
+        format = PixelFormat::argb8888;
+        bits_per_pixel = 32;
+    }
+    else
+    {
+        format = PixelFormat::rgb565;
+        bits_per_pixel = 16;
+    }
+    init(size, format);
 
-    // instead of using init() to create the buffer, create our own using cairo_xlib_surface_create
-    m_buffers.emplace_back(
-        cairo_xlib_surface_create(m_priv->display, m_priv->window,
-                                  DefaultVisual(m_priv->display, screen), // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
-                                  size.width(), size.height()));
-    cairo_xlib_surface_set_size(m_buffers.back().surface.get(), size.width(), size.height());
+    // instead of using init() to create the buffer, create our own using Surface()
+    m_buffers.emplace_back(Surface(size, format));
+    auto& buffer = m_buffers.back();
+
+    auto& surface = buffer.surface;
+    auto& visual = *DefaultVisual(m_priv->display, screen);
+
+    auto& ximage = m_priv->image;
+    memset(&ximage, 0, sizeof(ximage));
+    ximage.width = size.width();
+    ximage.height = size.height();
+    ximage.format = ZPixmap;
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+    ximage.byte_order = LSBFirst;
+#else
+    ximage.byte_order = MSBFirst;
+#endif
+    ximage.bitmap_unit = 32;
+    ximage.bitmap_bit_order = ximage.byte_order;
+    ximage.bitmap_pad = 32;
+    ximage.depth = depth;
+    ximage.red_mask = visual.red_mask;
+    ximage.green_mask = visual.green_mask;
+    ximage.blue_mask = visual.blue_mask;
+    ximage.xoffset = 0;
+    ximage.bits_per_pixel = bits_per_pixel;
+    ximage.bytes_per_line = surface.stride();
+    ximage.data = static_cast<char*>(surface.data());
+
+    if (!XInitImage(&ximage))
+        throw std::runtime_error("unable to initialize X11 image");
 
     m_buffers.back().damage.emplace_back(0, 0, size.width(), size.height());
 
@@ -143,7 +181,11 @@ void X11Screen::flip(const DamageArray& damage)
 
 void X11Screen::copy_to_buffer(ScreenBuffer& buffer)
 {
-    copy_to_buffer_software(buffer);
+    Screen::copy_to_buffer(buffer);
+    XPutImage(m_priv->display, m_priv->window,
+              DefaultGC(m_priv->display, DefaultScreen(m_priv->display)),
+              &m_priv->image,
+              0, 0, 0, 0, size().width(), size().height());
 }
 
 void X11Screen::handle_read(const asio::error_code& error)

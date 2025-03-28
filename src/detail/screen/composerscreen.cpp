@@ -47,7 +47,7 @@ void ComposerScreen::resize(const Size& size)
 
 unsigned char* ComposerScreen::get_pixmap()
 {
-    return cairo_image_surface_get_data(m_surface.get());
+    return static_cast<unsigned char*>(m_surface.data());
 }
 
 

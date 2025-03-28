@@ -152,16 +152,6 @@ public:
 
     Painter() = delete;
 
-    /**
-     * Construct a Painter with an existing context.
-     *
-     * @todo Painter needs to come from the Screen. This constructor should
-     * be hidden and you should have to get a custom version of it from the
-     * Screen for drawing. A default software/GPU painter can be created,
-     * otherwise for something like X11 we should be using X11 to paint.
-     */
-    explicit Painter(shared_cairo_t cr) noexcept;
-
     explicit Painter(Surface& surface) noexcept;
 
     /**
