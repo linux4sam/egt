@@ -158,27 +158,29 @@ Painter& Painter::mask(const Image& image, const Point& point)
     return *this;
 }
 
-Painter& Painter::draw(const Rect& rect, const Image& image)
+Painter& Painter::draw(cairo_surface_t* surface, const PointF& point, const RectF& rect)
 {
-    double x;
-    double y;
-
-    assert(!image.empty());
-    if (image.empty())
-        return *this;
-
-    if (!cairo_has_current_point(m_cr.get()))
-        return *this;
-
-    cairo_get_current_point(m_cr.get(), &x, &y);
-    cairo_set_source_surface(m_cr.get(), image.surface().get(),
-                             x - rect.x(), y - rect.y());
-    cairo_rectangle(m_cr.get(), x, y, rect.width(), rect.height());
-
-    /// @todo no fill here
-    fill();
-
+    source(surface, point);
+    if (rect.empty())
+    {
+        paint();
+    }
+    else
+    {
+        draw(rect);
+        fill();
+    }
     return *this;
+}
+
+Painter& Painter::draw(const shared_cairo_surface_t& surface, const PointF& point, const RectF& rect)
+{
+    return draw(surface.get(), point, rect);
+}
+
+Painter& Painter::draw(const Image& image, const PointF& point, const RectF& rect)
+{
+    return draw(image.surface(), point, rect);
 }
 
 Painter& Painter::draw(const std::string& str, const TextDrawFlags& flags)

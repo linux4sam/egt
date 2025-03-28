@@ -281,8 +281,7 @@ public:
         painter.draw(rect);
         painter.fill();
 
-        painter.draw(rect.point());
-        painter.draw(rect, egt::Image(m_canvas.surface()));
+        painter.draw(m_canvas.surface(), {}, rect);
 
         egt::TopWindow::draw(painter, rect);
     }

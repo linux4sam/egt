@@ -347,11 +347,25 @@ public:
     Painter& mask(const Image& image, const Point& point = {});
 
     /**
-     * @param[in] rect The source rect to copy.
-     * @param[in] image The image surface to draw.
+     * @param[in] surface The surface source to draw.
+     * @param[in] point The position of the surface origin.
+     * @param[in] rect The rectangle to draw, if any, the whole surface otherwise.
      */
-    Painter& draw(const Rect& rect,
-                  const Image& image);
+    Painter& draw(cairo_surface_t* surface, const PointF& point, const RectF& rect = {});
+
+    /**
+     * @param[in] surface The surface source to draw.
+     * @param[in] point The position of the surface origin.
+     * @param[in] rect The rectangle to draw, if any, the whole surface otherwise.
+     */
+    Painter& draw(const shared_cairo_surface_t& surface, const PointF& point, const RectF& rect = {});
+
+    /**
+     * @param[in] image The image source to draw.
+     * @param[in] point The position of the surface origin.
+     * @param[in] rect The rectangle to draw, if any, the whole image otherwise.
+     */
+    Painter& draw(const Image& image, const PointF& point, const RectF& rect = {});
 
     enum class TextDrawFlag : uint32_t
     {

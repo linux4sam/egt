@@ -130,8 +130,8 @@ void SoftwareSprite::draw(Painter& painter, const Rect& rect)
     ignoreparam(rect);
 
     Point origin = get_frame_origin(m_index);
-    painter.draw(m_interface.box().point());
-    painter.draw(Rect(origin.x(), origin.y(), m_frame.width(), m_frame.height()), m_image);
+    const auto& point = m_interface.box().point();
+    painter.draw(m_image, point - origin, Rect(point, m_frame));
 }
 
 void SoftwareSprite::show_frame(int index)
