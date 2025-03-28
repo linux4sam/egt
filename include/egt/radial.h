@@ -272,11 +272,10 @@ public:
 
             painter.set(value.color);
             painter.line_width(value.width);
-            auto cr = painter.context().get();
             if (value.flags.is_set(RadialFlag::rounded_cap))
-                cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+                painter.line_cap(Painter::LineCap::round);
             else
-                cairo_set_line_cap(cr, CAIRO_LINE_CAP_BUTT);
+                painter.line_cap(Painter::LineCap::butt);
 
             painter.draw(Arc(c, radius, angle1, angle2));
             painter.stroke();

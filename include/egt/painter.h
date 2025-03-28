@@ -20,6 +20,7 @@
 #include <egt/pattern.h>
 #include <egt/types.h>
 #include <functional>
+#include <iosfwd>
 #include <string>
 
 namespace egt
@@ -47,6 +48,16 @@ class Widget;
 class EGT_API Painter
 {
 public:
+
+    /**
+     * Supported line caps.
+     */
+    enum class LineCap
+    {
+        butt,
+        round,
+        square,
+    };
 
     /**
      * Return true if the subordinate widget is filtered out, hence should
@@ -209,6 +220,18 @@ public:
      * @param[in] width Line width.
      */
     Painter& line_width(float width);
+
+    /**
+     * Set the current line cap.
+     *
+     * @param[in] value Line cap.
+     */
+    Painter& line_cap(Painter::LineCap value);
+
+    /**
+     * Get the current line cap.
+     */
+    EGT_NODISCARD Painter::LineCap line_cap() const;
 
     /**
      * Move to a point.
@@ -467,6 +490,9 @@ protected:
      */
     shared_cairo_t m_cr;
 };
+
+/// Overloaded std::ostream insertion operator
+EGT_API std::ostream& operator<<(std::ostream& os, const Painter::LineCap& cap);
 
 }
 }

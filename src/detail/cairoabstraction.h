@@ -11,6 +11,7 @@
  * @brief Cairo abstraction layer.
  */
 
+#include <egt/painter.h>
 #include <cairo.h>
 #include <memory>
 
@@ -63,6 +64,16 @@ class InternalSurface : public CairoSurfaceAbstraction
 public:
     using CairoSurfaceAbstraction::CairoSurfaceAbstraction;
 };
+
+/**
+ * Convert a Painter::LineCap to a cairo_line_cap_t.
+ */
+cairo_line_cap_t cairo_line_cap(Painter::LineCap line_cap);
+
+/**
+ * Convert a cairo_line_cap_t to a Painter::LineCap.
+ */
+Painter::LineCap egt_line_cap(cairo_line_cap_t line_cap);
 
 }
 }

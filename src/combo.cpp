@@ -373,8 +373,7 @@ void ComboBox::default_draw(ComboBox& widget, Painter& painter, const Rect& /*re
 
     // draw a down arrow
     painter.set(widget.color(Palette::ColorId::button_fg));
-    auto cr = painter.context().get();
-    cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+    painter.line_cap(Painter::LineCap::round);
     painter.draw(Point(handle.x(), handle.y() + handle.height() / 3.),
                  Point(handle.x() + handle.width() / 2., handle.y() + (handle.height() / 3. * 2.)));
     painter.draw(Point(handle.x() + handle.width() / 2., handle.y() + (handle.height() / 3. * 2.)),

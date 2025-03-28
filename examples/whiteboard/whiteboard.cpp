@@ -253,8 +253,7 @@ public:
                 egt::Painter painter(m_canvas.context());
                 cairo_set_antialias(painter.context().get(), CAIRO_ANTIALIAS_NONE);
                 painter.line_width(width);
-                auto cr = painter.context();
-                cairo_set_line_cap(cr.get(), CAIRO_LINE_CAP_ROUND);
+                painter.line_cap(egt::Painter::LineCap::round);
                 painter.set(m_penpicker.selected_color());
                 painter.draw(line.start(), line.end());
                 painter.stroke();

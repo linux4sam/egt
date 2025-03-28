@@ -9,6 +9,7 @@ add_library(egt SHARED
     combo.cpp
     detail/alignment.cpp
     detail/base64.cpp
+    detail/cairoabstraction.cpp
     detail/egtlog.cpp
     detail/eraw.cpp
     detail/filesystem.cpp

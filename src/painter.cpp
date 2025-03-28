@@ -5,6 +5,7 @@
  */
 #include "detail/cairoabstraction.h"
 #include "detail/painter.h"
+#include "egt/detail/enum.h"
 #include "egt/image.h"
 #include "egt/painter.h"
 #include "egt/surface.h"
@@ -98,6 +99,17 @@ Painter& Painter::line_width(float width)
     cairo_set_line_width(m_cr.get(), width);
 
     return *this;
+}
+
+Painter& Painter::line_cap(Painter::LineCap value)
+{
+    cairo_set_line_cap(m_cr.get(), detail::cairo_line_cap(value));
+    return *this;
+}
+
+Painter::LineCap Painter::line_cap() const
+{
+    return detail::egt_line_cap(cairo_get_line_cap(m_cr.get()));
 }
 
 Painter& Painter::draw(const Image& image)
@@ -569,6 +581,19 @@ void Painter::flood(cairo_surface_t* image,
     }
 
     cairo_surface_mark_dirty(image);
+}
+
+template<>
+const std::pair<Painter::LineCap, char const*> detail::EnumStrings<Painter::LineCap>::data[] =
+{
+    {Painter::LineCap::butt, "butt"},
+    {Painter::LineCap::round, "round"},
+    {Painter::LineCap::square, "square"},
+};
+
+std::ostream& operator<<(std::ostream& os, const Painter::LineCap& cap)
+{
+    return os << detail::enum_to_string(cap);
 }
 
 }

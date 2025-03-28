@@ -53,8 +53,7 @@ void CheckBox::draw_switch(Painter& painter, const Rect& handle) const
     if (checked())
     {
         // draw an "X"
-        auto cr = painter.context().get();
-        cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+        painter.line_cap(Painter::LineCap::round);
         painter.set(color(Palette::ColorId::button_fg));
         painter.draw(handle.top_left() + Point(border, border),
                      handle.bottom_right() - Point(border, border));
