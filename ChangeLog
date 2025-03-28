@@ -3,6 +3,63 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+### Added
+- The new Surface class has been introduced to abstract 'cairo_surface_t'.
+- The GPUSurface and GPUPainter classes have been created to abstract hardware
+GPUs, frame buffers (screen surfaces) and textures (image surfaces) so GPUs
+could handle some rendering operations.
+- The new Painter::sources() methods have been added to set the source pattern.
+- New Painter::draw() overloads have been added to draw images more efficiently.
+- The Painter::{low,height}_fidelity() methods have been added; The existing
+Screen::{low,height}_fidelity() methods now call the new Painter methods.
+- The Application::gpu_enabled() and Application::enable_gpu() methods have been
+added to test whether the GPU is enabled at the EGT application level or to
+enable/disable it dynamically.
+- The EGT_GPU_DISABLED environment variable is now tested when some EGT
+application starts to disable the GPU if requested (by default, the GPU, if any,
+is enabled).
+### Changed
+- Image::surface() now returns a const reference rather than a copy.
+- Widget::paint_to_file() is no longer virtual, hence no longer overridden.
+- When libm2d is available, first try to allocate surface memory for images
+with libm2d then fall back to malloc'ed memory; also make libm2d import
+libplanes screen frame buffers; indeed, unlike user space allocated memory,
+kernel DRM GEM objects created by both libplanes and libm2d can be passed down
+to the hardware GPU, if any, to fasten the rendering and to offload the CPU.
+- If libm2d and a GPU are both available, perform rendering operations with the
+hardware GPU rather than the CPU (with cairo) whenever possible.
+- Sliders have been reworked when images are provided to draw the widget
+background and its handle; these changes allow to reproduce the design of the
+SliderB class (from egt-sample-contribution) but drawing the slider components
+with images rather than relying on cairo to draw curves.
+### Removed
+- The deprecated support of the GFX2D GPU through a patched cairo has been
+removed since it has been superseded by a new implementation based on the new
+libm2d library and the new GPUPainter and GPUSurface classes.
+- Any reference to the cairo library has been removed from libegt public API:
+header files under include/egt/ and 'Requires' in libegt.pc: opaque classes are
+now used to hide the actual internal implementation; these classes wrap the
+different cairo types like 'cairo_t', 'cairo_surface_t', 'cairo_pattern_t',
+'cairo_scaled_font_t', 'cairo_font_extent' and 'cairo_text_extent'.
+- The Canvas class has been removed because it was nothing more than a helper
+class to bundle a 'cairo_t*' with a 'cairo_surface_t*', but now this can easily
+be replaced with just a Painter created from a Surface.
+- The detail::alpha_collision() function has been removed as it was not used at
+all.
+- The Sprite::surface() method has been removed as it was not used at all.
+- The detail::read_resource_stream() function has been removed as it was not
+used at all.
+- The Image::crop() method has been removed as it was not used at all.
+- The Image::copy() method has been removed as it is no longer used internally
+and also because the Image class provides a copy constructor and a copy
+assignment operator, hence Image instances can still be copied anyway.
+- The Image::pattern() method has been removed as it is no longer used since
+the Painter implementation changed when setting an Image instance as source.
+### Fixed
+- The project configuration with either autotools or cmake has been fixed so the
+compilation works again when SIMD is enabled.
+
 ## [1.10] - 2024-10-16
 ### Added
 - The GstDecoderImpl class now supports custom GStreamer pipeline descriptions.
