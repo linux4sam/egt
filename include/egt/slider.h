@@ -62,6 +62,9 @@ struct SliderBase
 
         /// Solid color line.
         consistent_line = detail::bit(6),
+
+        /// Hide line.
+        hide_line = detail::bit(7),
     };
 
     /// Slider flags.
@@ -765,6 +768,9 @@ void SliderType<T>::draw_handle(Painter& painter)
 template <class T>
 void SliderType<T>::draw_line(Painter& painter, float xp, float yp)
 {
+    if (slider_flags().is_set(SliderFlag::hide_line))
+        return;
+
     const auto b = this->content_area();
     const auto handle_rect = handle_box();
 
@@ -879,7 +885,7 @@ void SliderType<T>::reset_handle_image(Palette::GroupId group)
 
 /// Enum string conversion map
 template<>
-EGT_API const std::pair<SliderBase::SliderFlag, char const*> detail::EnumStrings<SliderBase::SliderFlag>::data[7];
+EGT_API const std::pair<SliderBase::SliderFlag, char const*> detail::EnumStrings<SliderBase::SliderFlag>::data[8];
 
 }
 }

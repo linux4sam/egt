@@ -34,6 +34,7 @@ const std::pair<SliderBase::SliderFlag, char const*> detail::EnumStrings<SliderB
     {SliderBase::SliderFlag::show_label, "show_label"},
     {SliderBase::SliderFlag::inverted, "inverted"},
     {SliderBase::SliderFlag::consistent_line, "consistent_line"},
+    {SliderBase::SliderFlag::hide_line, "hide_line"},
 };
 
 }
