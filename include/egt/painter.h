@@ -480,6 +480,20 @@ public:
 
     EGT_NODISCARD Surface& target() { return m_surface; }
 
+    /**
+     * Claim the painter for being used by the CPU.
+     *
+     * @param[in] skip_source The boolean telling whether the source surface
+     *                        should be ignored.
+     *
+     * Wait for all GPU operations, if any, to complete. Synchronize the target
+     * surface of the Painter instance. Also synchronize the source surface, if
+     * any, unless @skip_source is 'true'. Indeed, the source should be skipped
+     * if the rendering operations to come won't use it because a new source
+     * is about to be set.
+     */
+    void sync_for_cpu(bool skip_source = false) const;
+
 protected:
 
     /**

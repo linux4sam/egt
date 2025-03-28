@@ -64,7 +64,7 @@ void Screen::flip(const DamageArray& damage)
     }
 }
 
-#ifdef HAVE_SIMD
+#if defined(HAVE_SIMD) && !defined(HAVE_LIBM2D)
 
 using View = Simd::View<Simd::Allocator>;
 

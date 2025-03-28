@@ -184,6 +184,18 @@ public:
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     EGT_NODISCARD inline const char** argv() const { return const_cast<const char**>(m_argv); }
 
+    /**
+     * Get the global enabled/disabled state of the GPU, if any.
+     */
+    EGT_NODISCARD bool gpu_enabled() const { return m_gpu_enabled; }
+
+    /**
+     * Set the global enabled/disabled state of the GPU, if any.
+     *
+     * @param[in] enabled The new state for the GPU
+     */
+    void enable_gpu(bool enabled) { m_gpu_enabled = enabled; }
+
     virtual ~Application() noexcept;
 
 protected:
@@ -253,6 +265,9 @@ private:
 
     /// All allocated timers.
     std::vector<Timer*> m_timers;
+
+    /// The global state of the GPU.
+    bool m_gpu_enabled{true};
 
     friend class Window;
     friend class Timer;

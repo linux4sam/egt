@@ -86,7 +86,22 @@ using CairoAbstraction = CairoPointerAbstraction<cairo_t, cairo_destroy>;
 
 class InternalContext : public CairoAbstraction
 {
-    using CairoAbstraction::CairoAbstraction;
+public:
+    InternalContext([[maybe_unused]] Painter& painter, cairo_t* context)
+        : CairoAbstraction(context)
+#ifndef HAVE_LIBM2D
+    {
+    }
+#else
+        , m_gpu_painter(painter)
+    {
+    }
+
+    detail::GPUPainter& gpu_painter() { return m_gpu_painter; }
+
+protected:
+    detail::GPUPainter m_gpu_painter;
+#endif
 };
 
 /**

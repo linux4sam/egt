@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "detail/cairoabstraction.h"
+#include "egt/app.h"
 #include "egt/checkbox.h"
 #include "egt/detail/enum.h"
 #include "egt/detail/math.h"
@@ -234,6 +235,18 @@ void Theme::draw_box(Painter& painter,
         painter.draw(*background);
     }
 
+    /*
+     * If we are drawing a rounded box, it is not supported by the GPU, so
+     * prevent the painter from even trying by disabling the GPU.
+     */
+    auto gpu_was_enabled = Application::instance().gpu_enabled();
+    auto gpu_enabled = gpu_was_enabled && (detail::float_equal(border_radius, 0) || border_radius < 0);
+    Application::instance().enable_gpu(gpu_enabled);
+    auto reset = detail::on_scope_exit([gpu_was_enabled]()
+    {
+        Application::instance().enable_gpu(gpu_was_enabled);
+    });
+
     if (border_width && border_flags.is_set(BorderFlag::drop_shadow))
     {
         auto sbox = box;
@@ -379,6 +392,17 @@ void Theme::draw_circle(Painter& painter,
 
     cairo_new_path(cr);
     painter.draw(circle);
+
+    /*
+     * The GPU can only draw rectangles but not circles; therefore disable it to
+     * prevent the painter from even trying.
+     */
+    auto gpu_was_enabled = Application::instance().gpu_enabled();
+    Application::instance().enable_gpu(false);
+    auto reset = detail::on_scope_exit([gpu_was_enabled]()
+    {
+        Application::instance().enable_gpu(gpu_was_enabled);
+    });
 
     if (type.is_set(FillFlag::blend) || type.is_set(FillFlag::solid))
     {

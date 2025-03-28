@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "detail/cairoabstraction.h"
+#include "detail/gpu.h"
 #include "detail/painter.h"
+#include "egt/app.h"
 #include "egt/detail/enum.h"
 #include "egt/image.h"
 #include "egt/painter.h"
@@ -31,10 +33,19 @@ Painter& dummy_painter()
 
 }
 
+#ifdef HAVE_LIBM2D
+#define gpu_painter() m_cr->gpu_painter()
+
+static inline bool gpu_enabled()
+{
+    return Application::instance().gpu_enabled();
+}
+#endif
+
 Painter::Painter(Surface& surface) noexcept
     : m_surface(surface)
 {
-    m_cr = std::make_unique<detail::InternalContext>(cairo_create(surface.impl()));
+    m_cr = std::make_unique<detail::InternalContext>(*this, cairo_create(surface.impl()));
 }
 
 Painter::~Painter()
@@ -204,6 +215,9 @@ Painter& Painter::source(const Color& color)
 Painter& Painter::source(const Surface& surface, const PointF& point)
 {
     cairo_set_source_surface(*m_cr, surface.impl(), point.x(), point.y());
+#ifdef HAVE_LIBM2D
+    gpu_painter().source(surface, point);
+#endif
     return *this;
 }
 
@@ -214,6 +228,9 @@ Painter& Painter::source(const Image& image, const PointF& point)
 
 Painter& Painter::mask(const Surface& surface, const PointF& point)
 {
+#ifdef HAVE_LIBM2D
+    gpu_painter().sync_for_cpu();
+#endif
     cairo_mask_surface(*m_cr, surface.impl(), point.x(), point.y());
     return *this;
 }
@@ -253,6 +270,10 @@ Painter& Painter::draw(const std::string& str, const TextDrawFlags& flags)
 
     if (!cairo_has_current_point(*m_cr))
         return *this;
+
+#ifdef HAVE_LIBM2D
+    gpu_painter().sync_for_cpu();
+#endif
 
     double x;
     double y;
@@ -362,6 +383,15 @@ Painter& Painter::clip()
 
 Painter& Painter::fill()
 {
+#ifdef HAVE_LIBM2D
+    if (gpu_enabled() && gpu_painter().fill())
+    {
+        cairo_new_path(*m_cr);
+        return *this;
+    }
+
+    gpu_painter().sync_for_cpu();
+#endif
     cairo_fill(*m_cr);
 
     return *this;
@@ -369,6 +399,12 @@ Painter& Painter::fill()
 
 Painter& Painter::fill_preserve()
 {
+#ifdef HAVE_LIBM2D
+    if (gpu_enabled() && gpu_painter().fill())
+        return *this;
+
+    gpu_painter().sync_for_cpu();
+#endif
     cairo_fill_preserve(*m_cr);
 
     return *this;
@@ -376,6 +412,12 @@ Painter& Painter::fill_preserve()
 
 Painter& Painter::paint()
 {
+#ifdef HAVE_LIBM2D
+    if (gpu_enabled() && gpu_painter().paint())
+        return *this;
+
+    gpu_painter().sync_for_cpu();
+#endif
     cairo_paint(*m_cr);
 
     return *this;
@@ -383,6 +425,9 @@ Painter& Painter::paint()
 
 Painter& Painter::paint(float alpha)
 {
+#ifdef HAVE_LIBM2D
+    gpu_painter().sync_for_cpu();
+#endif
     cairo_paint_with_alpha(*m_cr, alpha);
 
     return *this;
@@ -390,6 +435,9 @@ Painter& Painter::paint(float alpha)
 
 Painter& Painter::stroke()
 {
+#ifdef HAVE_LIBM2D
+    gpu_painter().sync_for_cpu();
+#endif
     cairo_stroke(*m_cr);
 
     return *this;
@@ -473,6 +521,13 @@ Painter& Painter::flood(const Point& point, const Color& color)
 {
     m_surface.flood(point, color);
     return *this;
+}
+
+void Painter::sync_for_cpu([[maybe_unused]] bool skip_source) const
+{
+#ifdef HAVE_LIBM2D
+    gpu_painter().sync_for_cpu(skip_source);
+#endif
 }
 
 template<>

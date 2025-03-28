@@ -122,6 +122,9 @@ Application::Application(int argc, char** argv,
 
 void Application::setup_gpu()
 {
+    if (getenv("EGT_GPU_DISABLED"))
+        m_gpu_enabled = false;
+
     detail::gpu_init();
 }
 

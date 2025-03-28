@@ -499,6 +499,8 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
     m_interface.draw_box(painter, Palette::ColorId::bg,
                          Palette::ColorId::border);
 
+    painter.sync_for_cpu(true);
+
     auto b = m_interface.content_area();
 
     if (!m_initalize)
@@ -557,6 +559,8 @@ void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
 
     m_interface.draw_box(painter, Palette::ColorId::bg,
                          Palette::ColorId::border);
+
+    painter.sync_for_cpu(true);
 
     auto b = m_interface.content_area();
 
@@ -629,6 +633,8 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
 
     m_interface.draw_box(painter, Palette::ColorId::bg,
                          Palette::ColorId::border);
+
+    painter.sync_for_cpu(true);
 
     auto b = m_interface.content_area();
 
@@ -734,6 +740,8 @@ void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
     m_interface.draw_box(painter, Palette::ColorId::bg,
                          Palette::ColorId::border);
 
+    painter.sync_for_cpu(true);
+
     auto b = m_interface.content_area();
 
     if (!m_initalize)
@@ -813,6 +821,8 @@ void PlPlotPieChart::draw(Painter& painter, const Rect& rect)
 
     m_interface.draw_box(painter, Palette::ColorId::bg,
                          Palette::ColorId::border);
+
+    painter.sync_for_cpu(true);
 
     auto b = m_interface.content_area();
 
