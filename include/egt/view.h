@@ -11,7 +11,6 @@
  * @brief View definition.
  */
 
-#include <egt/canvas.h>
 #include <egt/detail/meta.h>
 #include <egt/frame.h>
 #include <egt/slider.h>

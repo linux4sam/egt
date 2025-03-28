@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "detail/egtlog.h"
-#include "egt/canvas.h"
 #include "egt/detail/alignment.h"
 #include "egt/detail/enum.h"
 #include "egt/detail/math.h"

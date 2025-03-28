@@ -7,7 +7,6 @@
 #include "detail/egtlog.h"
 #include "detail/charts/plplotimpl.h"
 #include "egt/app.h"
-#include "egt/canvas.h"
 #include "egt/screen.h"
 #include <cmath>
 #include <type_traits>

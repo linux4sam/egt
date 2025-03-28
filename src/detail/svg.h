@@ -6,7 +6,6 @@
 #ifndef EGT_SRC_DETAIL_SVG_H
 #define EGT_SRC_DETAIL_SVG_H
 
-#include <egt/canvas.h>
 #include <egt/geometry.h>
 #include <egt/types.h>
 #include <string>
