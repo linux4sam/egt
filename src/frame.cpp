@@ -180,22 +180,6 @@ void Frame::walk(const WalkCallback& callback, int level)
         child->walk(callback, level + 1);
 }
 
-void Frame::paint_to_file(const std::string& filename)
-{
-#if CAIRO_HAS_PNG_FUNCTIONS == 1
-    /// @todo should this be redirected to parent()?
-    std::string name = filename;
-    if (name.empty())
-        name = fmt::format("{}.png", this->name());
-
-    auto surface = cairo_get_target(screen()->context().get());
-    cairo_surface_write_to_png(surface, name.c_str());
-#else
-    detail::ignoreparam(filename);
-    detail::error("png support not available");
-#endif
-}
-
 void Frame::paint_children_to_file()
 {
     for (auto& child : children())

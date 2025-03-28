@@ -303,11 +303,6 @@ public:
     void walk(const WalkCallback& callback, int level = 0) override;
 
     /**
-     * Save the entire frame surface to a file.
-     */
-    void paint_to_file(const std::string& filename = {}) override;
-
-    /**
      * Paint individual children to file.
      */
     void paint_children_to_file();

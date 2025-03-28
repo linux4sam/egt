@@ -1151,7 +1151,7 @@ public:
      *
      * @param[in] filename Optional filename to save to.
      */
-    virtual void paint_to_file(const std::string& filename = {});
+    void paint_to_file(const std::string& filename = {});
 
     /**
      * Callback definition used by walk().
