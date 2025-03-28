@@ -126,6 +126,7 @@ SizeF SvgImage::size() const
 
 void SvgImage::load()
 {
+    RsvgHandle* handle = nullptr;
     std::string path;
     auto type = detail::resolve_path(m_uri, path);
 
@@ -137,18 +138,13 @@ void SvgImage::load()
         if (!data)
             throw std::runtime_error("resource not found: " + path);
 
-        auto handle = rsvg_handle_new_from_data(data,
-                                                ResourceManager::instance().size(path.c_str()),
-                                                nullptr);
+        handle = rsvg_handle_new_from_data(data,
+                                           ResourceManager::instance().size(path.c_str()),
+                                           nullptr);
 
         if (!handle)
             throw std::runtime_error("unable to load svg resource: " + m_uri);
 
-        m_impl->rsvg = std::shared_ptr<RsvgHandle>(handle,
-        [](RsvgHandle * r) { g_object_unref(r); });
-
-        // this is a somewhat expensive operation, so do it once
-        rsvg_handle_get_dimensions(m_impl->rsvg.get(), &m_impl->dim);
         break;
     }
     case detail::SchemeType::filesystem:
@@ -156,16 +152,11 @@ void SvgImage::load()
         if (!detail::exists(path))
             throw std::runtime_error("file not found: " + path);
 
-        auto handle = rsvg_handle_new_from_file(path.c_str(), nullptr);
+        handle = rsvg_handle_new_from_file(path.c_str(), nullptr);
 
         if (!handle)
             throw std::runtime_error("unable to load svg file: " + m_uri);
 
-        m_impl->rsvg = std::shared_ptr<RsvgHandle>(handle,
-        [](RsvgHandle * r) { g_object_unref(r); });
-
-        // this is a somewhat expensive operation, so do it once
-        rsvg_handle_get_dimensions(m_impl->rsvg.get(), &m_impl->dim);
         break;
     }
     default:
@@ -173,6 +164,12 @@ void SvgImage::load()
         throw std::runtime_error("unsupported uri: " + m_uri);
     }
     }
+
+    m_impl->rsvg = std::shared_ptr<RsvgHandle>(handle,
+    [](RsvgHandle * r) { g_object_unref(r); });
+
+    // this is a somewhat expensive operation, so do it once
+    rsvg_handle_get_dimensions(m_impl->rsvg.get(), &m_impl->dim);
 }
 
 shared_cairo_surface_t SvgImage::do_render(const std::string& id, const RectF& rect) const
