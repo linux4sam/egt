@@ -405,7 +405,7 @@ void Theme::draw_circle(Painter& painter,
     {
         painter.set(border);
         painter.line_width(border_width);
-        cairo_stroke(cr);
+        painter.stroke();
     }
 
     cairo_new_path(cr);
