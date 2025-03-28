@@ -3,10 +3,9 @@ CUSTOM_CXXFLAGS = \
 	-I$(top_builddir)/include \
 	-isystem $(top_srcdir)/external/rapidxml \
 	-isystem $(top_srcdir)/external/cxxopts/include \
-	$(cairo_CFLAGS) \
 	$(CODE_COVERAGE_CXXFLAGS)
 
-CUSTOM_LDADD = $(cairo_LIBS) $(CODE_COVERAGE_LDFLAGS)
+CUSTOM_LDADD = $(CODE_COVERAGE_LDFLAGS)
 
 AM_LDFLAGS = -pthread
 

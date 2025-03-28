@@ -209,11 +209,11 @@ target_include_directories(egt SYSTEM PRIVATE
     ${CMAKE_SOURCE_DIR}/external/fmt/include
 )
 
-target_include_directories(egt PUBLIC ${CAIRO_INCLUDE_DIRS})
-target_compile_options(egt PUBLIC ${CAIRO_CFLAGS_OTHER})
-target_link_directories(egt PUBLIC ${CAIRO_LIBRARY_DIRS})
-target_link_libraries(egt PUBLIC ${CAIRO_LIBRARIES})
-target_link_options(egt PUBLIC ${CAIRO_LDFLAGS_OTHER})
+target_include_directories(egt PRIVATE ${CAIRO_INCLUDE_DIRS})
+target_compile_options(egt PRIVATE ${CAIRO_CFLAGS_OTHER})
+target_link_directories(egt PRIVATE ${CAIRO_LIBRARY_DIRS})
+target_link_libraries(egt PRIVATE ${CAIRO_LIBRARIES})
+target_link_options(egt PRIVATE ${CAIRO_LDFLAGS_OTHER})
 
 if(X11_FOUND)
     set(HAVE_X11 1)

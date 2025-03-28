@@ -65,7 +65,7 @@ endif()
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(CAIRO REQUIRED cairo>=1.14.6)
-set(AX_PACKAGE_REQUIRES "cairo >= 1.14.6")
+set(AX_PACKAGE_REQUIRES_PRIVATE "cairo >= 1.14.6")
 
 check_symbol_exists(CAIRO_HAS_FT_FONT "cairo/cairo-features.h" HAVE_FREETYPE)
 if(HAVE_FREETYPE)

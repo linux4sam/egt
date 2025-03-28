@@ -2,10 +2,9 @@ CUSTOM_CXXFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_builddir)/include \
 	-isystem $(top_srcdir)/external/rapidxml \
-	$(cairo_CFLAGS) \
 	$(CODE_COVERAGE_CXXFLAGS)
 
-CUSTOM_LDADD = $(cairo_LIBS) $(CODE_COVERAGE_LDFLAGS)
+CUSTOM_LDADD = $(CODE_COVERAGE_LDFLAGS)
 
 bin_PROGRAMS = resource
 

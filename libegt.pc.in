@@ -9,5 +9,4 @@ Version: @PACKAGE_VERSION@
 Libs: -L${libdir} -legt
 Libs.private: @libs_private@
 Cflags: -I${includedir}
-Requires: @AX_PACKAGE_REQUIRES@
 Requires.private: @AX_PACKAGE_REQUIRES_PRIVATE@

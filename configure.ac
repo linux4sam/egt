@@ -429,7 +429,7 @@ if test "x${have_libplanes}" = xyes; then
    LIBEGT_EXTRA_LDFLAGS="${libplanes_LIBS} ${libdrm_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
-AX_PKG_CHECK_MODULES2(cairo, [cairo >= 1.14.6], [], [have_cairo=yes], [AC_MSG_ERROR([
+AX_PKG_CHECK_MODULES2(cairo, [], [cairo >= 1.14.6], [have_cairo=yes], [AC_MSG_ERROR([
      cairo is a hard dependency, but a sufficient version was not found.])])
 AM_CONDITIONAL([HAVE_CAIRO], [test "x${have_cairo}" = xyes])
 if test "x${have_cairo}" = xyes; then
