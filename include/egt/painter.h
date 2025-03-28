@@ -137,6 +137,8 @@ public:
      */
     explicit Painter(shared_cairo_t cr) noexcept;
 
+    explicit Painter(Surface& surface) noexcept;
+
     /**
      * Save the state of the current context.
      *

@@ -23,10 +23,8 @@ namespace detail
 Painter& dummy_painter()
 {
     static uint32_t data;
-    static const unique_cairo_surface_t target(cairo_image_surface_create_for_data(reinterpret_cast<unsigned char*>(&data),
-                                                                                   CAIRO_FORMAT_ARGB32,
-                                                                                   1, 1, sizeof(data)));
-    static Painter painter(shared_cairo_t(cairo_create(target.get()), cairo_destroy));
+    static Surface target(&data, nullptr, Size(1, 1), PixelFormat::argb8888, sizeof(data));
+    static Painter painter(target);
 
     return painter;
 }
@@ -36,6 +34,11 @@ Painter& dummy_painter()
 Painter::Painter(shared_cairo_t cr) noexcept
     : m_cr(std::move(cr))
 {
+}
+
+Painter::Painter(Surface& surface) noexcept
+{
+    m_cr = shared_cairo_t(cairo_create(surface.impl()), cairo_destroy);
 }
 
 void Painter::save()
