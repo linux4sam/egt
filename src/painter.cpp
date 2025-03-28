@@ -176,8 +176,6 @@ Painter& Painter::draw(const Image& image)
     if (image.empty())
         return *this;
 
-    AutoSaveRestore sr(*this);
-
     if (!cairo_has_current_point(*m_cr))
         return *this;
 
@@ -185,8 +183,7 @@ Painter& Painter::draw(const Image& image)
     double y;
     cairo_get_current_point(*m_cr, &x, &y);
 
-    cairo_translate(*m_cr, x, y);
-    source(image);
+    source(image, Point(x, y));
 
     /// @todo no paint here
     paint();
