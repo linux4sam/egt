@@ -189,16 +189,6 @@ public:
         return m_surface;
     }
 
-    /// Get internal pattern representation.
-    EGT_NODISCARD cairo_pattern_t* pattern() const
-    {
-        if (!m_pattern)
-            m_pattern.reset(cairo_pattern_create_for_surface(surface().get()),
-                            cairo_pattern_destroy);
-        assert(m_pattern.get());
-        return m_pattern.get();
-    }
-
     /**
      * Get the original size of the image before any Image::resize() or
      * Image::scale() calls.
@@ -270,9 +260,6 @@ protected:
 
     /// Keep the image ratio when the aligned with AlignFlag::expand.
     bool m_keep_image_ratio{true};
-
-    /// Internal pattern representation.
-    mutable shared_cairo_pattern_t m_pattern;
 
 private:
     /**

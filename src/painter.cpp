@@ -95,7 +95,7 @@ Painter& Painter::draw(const Image& image)
     cairo_get_current_point(m_cr.get(), &x, &y);
 
     cairo_translate(m_cr.get(), x, y);
-    cairo_set_source(m_cr.get(), image.pattern());
+    cairo_set_source_surface(m_cr.get(), image.surface().get(), 0, 0);
 
     /// @todo no paint here
     paint();

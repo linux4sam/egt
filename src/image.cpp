@@ -73,7 +73,6 @@ void Image::load(const std::string& uri, float hscale, float vscale, bool approx
             m_surface.reset();
             m_orig_size = Size();
         }
-        m_pattern.reset();
     }
 }
 
