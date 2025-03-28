@@ -387,7 +387,7 @@ void PlPlotImpl::plplot_box(bool xtick_label, bool ytick_label)
     m_plstream->box(xopt.c_str(), 0, 0, yopt.c_str(), 0, 0);
 }
 
-void PlPlotImpl::plplot_label(const shared_cairo_t& cr, Rect b, const Font& font, const Color& color)
+void PlPlotImpl::plplot_label(const shared_cairo_t& cr, const Rect& b, const Font& font, const Color& color)
 {
     if (axis() >= 0)
     {
