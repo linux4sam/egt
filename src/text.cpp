@@ -673,9 +673,7 @@ void TextBox::draw_text(Painter& painter, const Rect& rect)
                 auto r2 = RectF(p2, s);
                 if (!r2.empty())
                 {
-                    painter.set(color(Palette::ColorId::text_highlight));
-                    painter.draw(r2);
-                    painter.fill();
+                    painter.draw(color(Palette::ColorId::text_highlight), r2);
                 }
             }
 
@@ -1379,9 +1377,7 @@ void TextBox::draw(Painter& painter, const Rect& rect)
     }
     else
     {
-        painter.set(color(Palette::ColorId::bg));
-        painter.draw(rect);
-        painter.fill();
+        painter.draw(color(Palette::ColorId::bg), rect);
     }
 
     draw_text(painter, rect);

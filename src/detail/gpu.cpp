@@ -6,6 +6,7 @@
 #include "detail/cairoabstraction.h"
 #include "detail/gpu.h"
 #include "detail/egtlog.h"
+#include "egt/color.h"
 #include "egt/detail/meta.h"
 #include "egt/detail/math.h"
 #include "egt/surface.h"
@@ -936,6 +937,82 @@ bool GPUPainter::draw(const Surface& surface, const Point& point, const Rect& re
 
     m2d_set_target(target);
     m2d_draw_rectangles(rects.get(), m_rects.size());
+
+    return true;
+}
+
+bool GPUPainter::draw(const Color& color, const Rect& rect)
+{
+    if (rect.empty())
+        return true;
+
+    if (!m_painter.target().impl().is_gpu_capable())
+    {
+        EGTLOG_TRACE("target {} is not GPU capable.", (void*)&m_painter.target());
+        return false;
+    }
+    auto& target = m_painter.target().impl().gpu_surface();
+
+    m2d_buffer* tmp = nullptr;
+    const auto blend = (color.alpha() != 255u && m_painter.alpha_blending());
+    if (blend)
+    {
+        tmp = target.tmp_buffer();
+        if (!tmp)
+            return false;
+    }
+
+    Point offset;
+    if (!get_transformation(offset))
+        return false;
+
+    auto clip = get_clip_region();
+    if (!clip)
+        return false;
+
+    m_rects.clear();
+    if (!fill_rectangle(*clip, rect))
+        return false;
+
+    if (m_rects.empty())
+    {
+        EGTLOG_TRACE("no rectangle to draw.");
+        return true;
+    }
+
+    auto rects = prepare_m2d_rectangles(offset);
+    if (!rects)
+        return false;
+
+    target.sync_for_gpu();
+
+    EGTLOG_TRACE("{} GPU object {} destination with color {} ({}).",
+                 blend ? "blend" : "fill", target.id(), color, rect);
+
+    m2d_source_color(color.red(), color.green(), color.blue(), color.alpha());
+    m2d_source_enable(M2D_SRC, false);
+    m2d_source_enable(M2D_DST, false);
+    m2d_blend_enable(false);
+
+    if (blend)
+        m2d_set_target(tmp);
+    else
+        m2d_set_target(target);
+
+    m2d_draw_rectangles(rects.get(), m_rects.size());
+
+    if (blend)
+    {
+        m2d_blend_enable(true);
+        m2d_source_enable(M2D_SRC, true);
+        m2d_source_enable(M2D_DST, true);
+
+        m2d_set_source(M2D_SRC, tmp, 0, 0);
+        m2d_set_source(M2D_DST, target, 0, 0);
+        m2d_set_target(target);
+
+        m2d_draw_rectangles(rects.get(), m_rects.size());
+    }
 
     return true;
 }

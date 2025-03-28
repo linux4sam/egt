@@ -25,6 +25,7 @@ namespace egt
 inline namespace v1
 {
 
+class Color;
 class Painter;
 class Surface;
 
@@ -96,6 +97,7 @@ public:
     bool fill() { return draw(Operator::fill); }
     bool paint() { return draw(Operator::paint); }
     bool draw(const Surface& surface, const Point& point, const Rect& rect);
+    bool draw(const Color& color, const Rect& rect);
 
     void sync_for_cpu(bool skip_source = false);
 

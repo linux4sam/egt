@@ -240,6 +240,83 @@ Painter& Painter::mask(const Image& image, const Point& point)
     return mask(*image.surface(), point);
 }
 
+Painter& Painter::draw(const Color& color, const RectF& rect, bool preserve)
+{
+    cairo_t* cr = *m_cr;
+
+#ifdef HAVE_LIBM2D
+    if (gpu_enabled() && gpu_painter().draw(color, rect))
+    {
+        if (preserve && !rect.empty())
+        {
+            cairo_new_path(cr);
+            cairo_rectangle(cr, rect.x(), rect.y(), rect.width(), rect.height());
+        }
+        return *this;
+    }
+
+    gpu_painter().sync_for_cpu(true);
+#endif
+
+    cairo_set_source_rgba(cr,
+                          color.redf(),
+                          color.greenf(),
+                          color.bluef(),
+                          color.alphaf());
+
+    if (rect.empty())
+    {
+        cairo_paint(cr);
+    }
+    else
+    {
+        cairo_rectangle(cr, rect.x(), rect.y(), rect.width(), rect.height());
+        if (preserve)
+            cairo_fill_preserve(cr);
+        else
+            cairo_fill(cr);
+    }
+
+    return *this;
+}
+
+Painter& Painter::draw(const Pattern& pattern, const RectF& rect, bool preserve)
+{
+    cairo_t* cr = *m_cr;
+
+#ifdef HAVE_LIBM2D
+    if (pattern.type() == Pattern::Type::solid && gpu_enabled() &&
+        gpu_painter().draw(pattern.solid(), rect))
+    {
+        if (preserve && !rect.empty())
+        {
+            cairo_new_path(cr);
+            cairo_rectangle(cr, rect.x(), rect.y(), rect.width(), rect.height());
+        }
+        return *this;
+    }
+
+    gpu_painter().sync_for_cpu(true);
+#endif
+
+    cairo_set_source(cr, pattern.pattern());
+
+    if (rect.empty())
+    {
+        cairo_paint(cr);
+    }
+    else
+    {
+        cairo_rectangle(cr, rect.x(), rect.y(), rect.width(), rect.height());
+        if (preserve)
+            cairo_fill_preserve(cr);
+        else
+            cairo_fill(cr);
+    }
+
+    return *this;
+}
+
 Painter& Painter::draw(const Surface& surface, const PointF& point, const RectF& rect)
 {
     if (surface.empty())

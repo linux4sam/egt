@@ -158,9 +158,7 @@ void draw_text(Painter& painter,
                     auto rect = RectF(p2, s);
                     if (!rect.empty())
                     {
-                        painter.set(highlight_color);
-                        painter.draw(rect);
-                        painter.fill();
+                        painter.draw(highlight_color, rect);
                     }
                 }
 
@@ -320,9 +318,7 @@ void draw_text(Painter& painter,
                     auto rect = RectF(p2, s);
                     if (!rect.empty())
                     {
-                        painter.set(highlight_color);
-                        painter.draw(rect);
-                        painter.fill();
+                        painter.draw(highlight_color, rect);
                     }
                 }
 

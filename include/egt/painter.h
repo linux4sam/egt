@@ -390,6 +390,20 @@ public:
     Painter& mask(const Image& image, const Point& point = {});
 
     /**
+     * @param[in] color The source color to fill the @rect rectangle with.
+     * @param[in] rect The rectangle to draw, if any, the whole clip region otherwise.
+     * @param[in] preserve If true and @rect is not empty, reset the path to @rect.
+     */
+    Painter& draw(const Color& color, const RectF& rect = {}, bool preserve = false);
+
+    /**
+     * @param[i] pattern The source pattern to fill the @rect rectangle with.
+     * @param[in] rect The rectangle to draw, if any, the whole clip region otherwise.
+     * @param[in] preserve If true and @rect is not empty, reset the path to @rect.
+     */
+    Painter& draw(const Pattern& pattern, const RectF& rect = {}, bool preserve = false);
+
+    /**
      * @param[in] surface The surface source to draw.
      * @param[in] point The position of the surface origin.
      * @param[in] rect The rectangle to draw, if any, the whole surface otherwise.
