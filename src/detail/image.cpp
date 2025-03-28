@@ -7,6 +7,7 @@
 #include "config.h"
 #endif
 
+#include "detail/cairoabstraction.h"
 #include "detail/egtlog.h"
 #include "detail/eraw.h"
 #include "egt/app.h"

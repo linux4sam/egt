@@ -9,7 +9,6 @@
 
 #include "egt/detail/enum.h"
 #include "egt/types.h"
-#include <cairo.h>
 #include <ostream>
 
 #ifdef HAVE_LIBDRM
@@ -52,22 +51,6 @@ std::ostream& operator<<(std::ostream& os, const PixelFormat& format)
 
 namespace detail
 {
-static constexpr std::pair<PixelFormat, cairo_format_t> cairo_formats[] =
-{
-    {PixelFormat::rgb565, CAIRO_FORMAT_RGB16_565},
-    {PixelFormat::argb8888, CAIRO_FORMAT_ARGB32},
-    {PixelFormat::xrgb8888, CAIRO_FORMAT_RGB24},
-};
-
-cairo_format_t cairo_format(PixelFormat format)
-{
-    for (const auto& i : cairo_formats)
-        if (i.first == format)
-            return i.second;
-
-    return CAIRO_FORMAT_INVALID;
-}
-
 static constexpr std::pair<PixelFormat, uint32_t> drm_formats[] =
 {
 #ifdef HAVE_LIBDRM
@@ -107,16 +90,6 @@ uint32_t drm_format(PixelFormat format)
 PixelFormat egt_format(uint32_t format)
 {
     for (const auto& i : drm_formats)
-        // cppcheck-suppress useStlAlgorithm
-        if (i.second == format)
-            return i.first;
-
-    return PixelFormat::invalid;
-}
-
-PixelFormat egt_format(cairo_format_t format)
-{
-    for (const auto& i : cairo_formats)
         // cppcheck-suppress useStlAlgorithm
         if (i.second == format)
             return i.first;

@@ -66,6 +66,32 @@ Painter::AntiAlias egt_antialias(cairo_antialias_t antialias)
     return Painter::AntiAlias::system;
 }
 
+static const std::pair<PixelFormat, cairo_format_t> cairo_formats[] =
+{
+    {PixelFormat::rgb565, CAIRO_FORMAT_RGB16_565},
+    {PixelFormat::argb8888, CAIRO_FORMAT_ARGB32},
+    {PixelFormat::xrgb8888, CAIRO_FORMAT_RGB24},
+};
+
+cairo_format_t cairo_format(PixelFormat format)
+{
+    for (const auto& i : cairo_formats)
+        if (i.first == format)
+            return i.second;
+
+    return CAIRO_FORMAT_INVALID;
+}
+
+PixelFormat egt_format(cairo_format_t format)
+{
+    for (const auto& i : cairo_formats)
+        // cppcheck-suppress useStlAlgorithm
+        if (i.second == format)
+            return i.first;
+
+    return PixelFormat::invalid;
+}
+
 }
 }
 }
