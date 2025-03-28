@@ -112,6 +112,12 @@ Painter::LineCap Painter::line_cap() const
     return detail::egt_line_cap(cairo_get_line_cap(m_cr.get()));
 }
 
+Painter& Painter::set_dash(const double* dashes, size_t num_dashes, double offset)
+{
+    cairo_set_dash(m_cr.get(), dashes, num_dashes, offset);
+    return *this;
+}
+
 Painter& Painter::antialias(Painter::AntiAlias value)
 {
     cairo_set_antialias(m_cr.get(), detail::cairo_antialias(value));

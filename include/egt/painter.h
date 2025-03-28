@@ -248,6 +248,15 @@ public:
     EGT_NODISCARD Painter::LineCap line_cap() const;
 
     /**
+     * Set the dash pattern to be used by stroke().
+     *
+     * @param[in] dashes An array specifying alternate lengths of on and off stroke portions.
+     * @param[in] num_dashes The length of the dashes array.
+     * @param[in] offset An offset into the dash pattern at which the stroke should start.
+     */
+    Painter& set_dash(const double* dashes, size_t num_dashes, double offset);
+
+    /**
      * Set the type of anti-aliasing.
      *
      * @param[in] value Anti-aliasing type.
