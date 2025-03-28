@@ -371,8 +371,6 @@ void Screen::copy_to_buffer_software(ScreenBuffer& buffer)
         }
         painter.stroke();
     }
-
-    buffer.surface.flush();
 }
 
 void Screen::damage_algorithm(Screen::DamageArray& damage, Rect rect)

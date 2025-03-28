@@ -39,6 +39,7 @@ Painter::Painter(Surface& surface) noexcept
 
 Painter::~Painter()
 {
+    m_surface.flush();
 }
 
 void Painter::save()
