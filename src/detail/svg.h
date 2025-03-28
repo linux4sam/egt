@@ -7,7 +7,7 @@
 #define EGT_SRC_DETAIL_SVG_H
 
 #include <egt/geometry.h>
-#include <egt/types.h>
+#include <egt/surface.h>
 #include <string>
 
 namespace egt
@@ -24,9 +24,9 @@ namespace detail
  * @param[in] size Optional size of the surface to create and rasterize to.
  * @param[in] id Optional object id to load from within the SVG file.
  */
-shared_cairo_surface_t load_svg(const std::string& filename,
-                                const SizeF& size = {},
-                                const std::string& id = {});
+Surface load_svg(const std::string& filename,
+                 const SizeF& size = {},
+                 const std::string& id = {});
 
 /**
  * Load an SVG file into a surface.
@@ -36,10 +36,10 @@ shared_cairo_surface_t load_svg(const std::string& filename,
  * @param[in] size Optional size of the surface to create and rasterize to.
  * @param[in] id Optional object id to load from within the SVG file.
  */
-shared_cairo_surface_t load_svg(const unsigned char* data,
-                                size_t len,
-                                const SizeF& size = {},
-                                const std::string& id = {});
+Surface load_svg(const unsigned char* data,
+                 size_t len,
+                 const SizeF& size = {},
+                 const std::string& id = {});
 
 }
 }

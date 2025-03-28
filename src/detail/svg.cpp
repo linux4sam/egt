@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/cairoabstraction.h"
 #include "detail/svg.h"
-#include "egt/canvas.h"
 #include "egt/respath.h"
 #define RSVG_DISABLE_DEPRECATION_WARNINGS /* for rsvg_handle_get_dimensions() */
 #include <librsvg/rsvg.h>
@@ -16,9 +16,9 @@ inline namespace v1
 namespace detail
 {
 
-static shared_cairo_surface_t load_svg(RsvgHandle* rsvg,
-                                       const SizeF& size,
-                                       const std::string& id)
+static Surface load_svg(RsvgHandle* rsvg,
+                        const SizeF& size,
+                        const std::string& id)
 {
     RsvgRectangle viewport;
     viewport.x = 0;
@@ -48,15 +48,16 @@ static shared_cairo_surface_t load_svg(RsvgHandle* rsvg,
     if (s.empty())
         return {};
 
-    Canvas canvas(s);
-    auto cr = canvas.context();
+    Surface surface(s);
+    surface.zero(); /* librsvg assumes a zeroed memory. */
+    unique_cairo_t cr(cairo_create(surface.impl()));
 
     if (id.empty())
         rsvg_handle_render_document(rsvg, cr.get(), &viewport, nullptr);
     else
         rsvg_handle_render_layer(rsvg, cr.get(), id.c_str(), &viewport, nullptr);
 
-    return canvas.surface();
+    return surface;
 }
 
 struct RsvgHandle_deleter
@@ -64,9 +65,9 @@ struct RsvgHandle_deleter
     void operator()(RsvgHandle* rsvg) { g_object_unref(rsvg); }
 };
 
-shared_cairo_surface_t load_svg(const std::string& filename,
-                                const SizeF& size,
-                                const std::string& id)
+Surface load_svg(const std::string& filename,
+                 const SizeF& size,
+                 const std::string& id)
 {
     std::unique_ptr<RsvgHandle, RsvgHandle_deleter> rsvg(rsvg_handle_new_from_file(resolve_file_path(filename).c_str(), nullptr));
 
@@ -76,10 +77,10 @@ shared_cairo_surface_t load_svg(const std::string& filename,
     return load_svg(rsvg.get(), size, id);
 }
 
-shared_cairo_surface_t load_svg(const unsigned char* data,
-                                size_t len,
-                                const SizeF& size,
-                                const std::string& id)
+Surface load_svg(const unsigned char* data,
+                 size_t len,
+                 const SizeF& size,
+                 const std::string& id)
 {
     std::unique_ptr<RsvgHandle, RsvgHandle_deleter> rsvg(rsvg_handle_new_from_data(data, len, nullptr));
 

@@ -139,8 +139,7 @@ EGT_API Surface load_image_from_memory(const unsigned char* data,
 #ifdef HAVE_LIBRSVG
     else if (mimetype == MIME_SVGXML || mimetype == MIME_SVG)
     {
-        auto surface = load_svg(data, len);
-        image = copy_cairo_surface(surface.get());
+        image = load_svg(data, len);
     }
 #endif
     else
@@ -204,8 +203,7 @@ Surface load_image_from_filesystem(const std::string& path)
 #ifdef HAVE_LIBRSVG
     else if (mimetype == MIME_SVGXML || mimetype == MIME_SVG)
     {
-        auto surface = load_svg(path);
-        image = copy_cairo_surface(surface.get());
+        image = load_svg(path);
     }
 #endif
     else
