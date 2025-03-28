@@ -333,7 +333,7 @@ static inline void setc(cairo_surface_t* image, const Point& point, const Color&
 void Painter::color_at(cairo_surface_t* image, const Point& point, const Color& color) noexcept
 {
     const auto size = surface_to_size(image);
-    if (!Rect(Point(), size - Size(1, 1)).intersect(point))
+    if (!Rect(Point(), size).intersect(point))
         return;
 
     cairo_surface_flush(image);
@@ -356,7 +356,7 @@ Color Painter::color_at(const Point& point) noexcept
 Color Painter::color_at(cairo_surface_t* image, const Point& point) noexcept
 {
     const auto size = surface_to_size(image);
-    if (!Rect(Point(), size - Size(1, 1)).intersect(point))
+    if (!Rect(Point(), size).intersect(point))
         return {};
 
     cairo_surface_flush(image);
@@ -369,7 +369,7 @@ static inline bool check(const Size& size, cairo_format_t format,
                          size_t stride, const Point& point,
                          const Color& target_color, const Color& color) noexcept
 {
-    if (!Rect(Point(), size - Size(1, 1)).intersect(point))
+    if (!Rect(Point(), size).intersect(point))
         return false;
 
     switch (format)
@@ -410,7 +410,7 @@ void Painter::flood(cairo_surface_t* image,
                     const Point& point, const Color& color)
 {
     auto size = surface_to_size(image);
-    if (!Rect(Point(), size - Size(1, 1)).intersect(point))
+    if (!Rect(Point(), size).intersect(point))
         return;
 
     cairo_surface_flush(image);

@@ -834,11 +834,24 @@ public:
     /**
      * Returns true if the specified point is inside the rectangle.
      * @param point The point to test.
+     *
+     * @note This considers the [`left`, `right`) half-open interval for the `x`
+     *       coordinate and the [`top`, `bottom`) half-open interval for the `y`
+     *       coordinate in order to get a consistent implementation for both
+     *       Rect and RectF.
+     *
+     *       Indeed, if the point and rectangle represent pixels, let's take a
+     *       rectangle at x=0 with its width=10 for instance, then we expect the
+     *       pixels of the rectangle first row to have their `x` coordinates in
+     *       the range {0..9}, hence 10-pixel wide, while the next pixel at x=10,
+     *       the 11th pixel of the row, is outside the rectangle.
+     *       That is to say, `right` = `left` + `width` is *outside* the
+     *       rectangle.
      */
     EGT_NODISCARD constexpr bool intersect(const PointType<Dim, DimCompat>& point) const noexcept
     {
-        return (point.x() <= right() && point.x() >= left() &&
-                point.y() <= bottom() && point.y() >= top());
+        return (point.x() < right() && point.x() >= left() &&
+                point.y() < bottom() && point.y() >= top());
     }
 
     /**
