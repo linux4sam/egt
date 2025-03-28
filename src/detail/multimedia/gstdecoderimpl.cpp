@@ -421,7 +421,7 @@ bool GstDecoderImpl::create_pipeline(const std::string& pipeline_desc)
     }
 
     if (m_src)
-    { 
+    {
         if (m_src->has_audio())
         {
             // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
