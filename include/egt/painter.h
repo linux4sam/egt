@@ -28,6 +28,7 @@ inline namespace v1
 {
 
 class Image;
+class Surface;
 class Widget;
 
 /**
@@ -335,6 +336,11 @@ public:
      * Set the source pattern from a shared_cairo_surface_t.
      */
     Painter& source(const shared_cairo_surface_t& surface, const PointF& point = {});
+
+    /**
+     * Set the source pattern from a Surface.
+     */
+    Painter& source(const Surface& surface, const PointF& point = {});
 
     /**
      * Set the source pattern from an Image.

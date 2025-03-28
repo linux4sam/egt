@@ -7,6 +7,7 @@
 #include "detail/painter.h"
 #include "egt/image.h"
 #include "egt/painter.h"
+#include "egt/surface.h"
 #include <cairo.h>
 #include <deque>
 #include <sstream>
@@ -144,6 +145,12 @@ Painter& Painter::source(cairo_surface_t* surface, const PointF& point)
 Painter& Painter::source(const shared_cairo_surface_t& surface, const PointF& point)
 {
     return source(surface.get(), point);
+}
+
+Painter& Painter::source(const Surface& surface, const PointF& point)
+{
+    cairo_set_source_surface(m_cr.get(), surface.impl(), point.x(), point.y());
+    return *this;
 }
 
 Painter& Painter::source(const Image& image, const PointF& point)
