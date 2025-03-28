@@ -12,6 +12,7 @@
  */
 
 #include <egt/detail/math.h>
+#include <egt/geometry.h>
 #include <egt/serialize.h>
 #include <egt/types.h>
 #include <iosfwd>
@@ -169,6 +170,21 @@ public:
      * Set the slant of the font.
      */
     void slant(Font::Slant s) { m_slant = s; }
+
+    /**
+     * Get the size of a rectangle containing the text, based on a default
+     * context.
+     *
+     * Internally, calls 'Painter::text_size()' on a default Painter instance,
+     * which has no transformation like rotation or symmetry.
+     *
+     * If you want to transform the font, then you should call
+     * 'Painter::text_size()' instead, on the relevant Painter instance.
+     *
+     * @param[in] text The UTF8 encoded text.
+     * @return the minimum size of a rectangle containing the text.
+     */
+    EGT_NODISCARD egt::Size text_size(const std::string& text) const;
 
     /**
      * Generates a FontConfig scaled font instance.

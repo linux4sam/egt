@@ -8,8 +8,8 @@
 #endif
 
 #include "detail/egtlog.h"
+#include "detail/painter.h"
 #include "egt/app.h"
-#include "egt/canvas.h"
 #include "egt/detail/enum.h"
 #include "egt/font.h"
 #include "egt/respath.h"
@@ -279,6 +279,11 @@ Font::Font(Font::Slant slant)
       m_slant(slant)
 {}
 
+Size Font::text_size(const std::string& text) const
+{
+    return detail::dummy_painter().set(*this).text_size(text);
+}
+
 Font::Size Font::default_font_size()
 {
     auto ssize = egt::Application::instance().screen()->size();
@@ -365,8 +370,7 @@ struct FontCache : private detail::NonCopyable<FontCache>
 
         EGTLOG_TRACE("creating scaled font {}", font);
 
-        Canvas canvas(Size(100, 100));
-        auto cr = canvas.context();
+        auto cr = detail::dummy_painter().context().get();
 
         shared_cairo_scaled_font_t scaled_font;
 
@@ -377,13 +381,13 @@ struct FontCache : private detail::NonCopyable<FontCache>
         {
         case detail::SchemeType::filesystem:
         {
-            scaled_font = create_ft_scaled_font(cr.get(), path.c_str(), font);
+            scaled_font = create_ft_scaled_font(cr, path.c_str(), font);
             break;
         }
         case detail::SchemeType::unknown:
 #ifdef HAVE_FONTCONFIG
         {
-            scaled_font = create_scaled_font(cr.get(), font);
+            scaled_font = create_scaled_font(cr, font);
             break;
         }
 #endif
@@ -405,8 +409,7 @@ cairo_scaled_font_t* Font::scaled_font() const
 {
     if (m_data && m_len && !m_scaled_font)
     {
-        Canvas canvas(egt::Size(100, 100));
-        auto cr = canvas.context().get();
+        auto cr = detail::dummy_painter().context().get();
         m_scaled_font = create_ft_scaled_font(cr, m_data, m_len, *this);
     }
 

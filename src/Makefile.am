@@ -66,6 +66,7 @@ detail/input/inputkeyboard.cpp \
 detail/input/inputkeyboard.h \
 detail/layout.cpp \
 detail/mousegesture.cpp \
+detail/painter.h \
 detail/priorityqueue.h \
 detail/screen/composerscreen.cpp \
 detail/screen/flipthread.h \

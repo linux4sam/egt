@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #include "detail/cairoabstraction.h"
+#include "detail/painter.h"
 #include "egt/image.h"
 #include "egt/painter.h"
 #include <cairo.h>
@@ -15,6 +16,21 @@ namespace egt
 {
 inline namespace v1
 {
+namespace detail
+{
+
+Painter& dummy_painter()
+{
+    static uint32_t data;
+    static const unique_cairo_surface_t target(cairo_image_surface_create_for_data(reinterpret_cast<unsigned char*>(&data),
+                                                                                   CAIRO_FORMAT_ARGB32,
+                                                                                   1, 1, sizeof(data)));
+    static Painter painter(shared_cairo_t(cairo_create(target.get()), cairo_destroy));
+
+    return painter;
+}
+
+}
 
 Painter::Painter(shared_cairo_t cr) noexcept
     : m_cr(std::move(cr))

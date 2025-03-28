@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/painter.h"
 #include "detail/utf8text.h"
-#include "egt/canvas.h"
 #include "egt/painter.h"
 #include "egt/serialize.h"
 #include "egt/textwidget.h"
@@ -60,8 +60,8 @@ size_t TextWidget::len() const
 
 Font TextWidget::scale_font(const Size& target, const std::string& text, const Font& font)
 {
-    Canvas canvas(Size(10, 10));
-    Painter painter(canvas.context());
+    auto& painter = detail::dummy_painter();
+    auto cr = painter.context().get();
 
     auto nfont = font;
     while (true)
@@ -69,7 +69,7 @@ Font TextWidget::scale_font(const Size& target, const std::string& text, const F
         painter.set(nfont);
 
         cairo_text_extents_t textext;
-        cairo_text_extents(painter.context().get(), text.c_str(), &textext);
+        cairo_text_extents(cr, text.c_str(), &textext);
 
         if (textext.width - textext.x_bearing < target.width() &&
             textext.height - textext.y_bearing < target.height())
@@ -131,8 +131,7 @@ Size TextWidget::text_size(const std::string& text) const
     if (i != size_cache.end())
         return i->second;
 
-    Canvas canvas(Size(100, 100));
-    Painter painter(canvas.context());
+    auto& painter = detail::dummy_painter();
     painter.set(this->font());
 
     auto size = painter.text_size(text);

@@ -12,7 +12,6 @@
  */
 
 #include <egt/app.h>
-#include <egt/canvas.h>
 #include <egt/detail/alignment.h>
 #include <egt/detail/enum.h>
 #include <egt/detail/math.h>
@@ -339,13 +338,10 @@ protected:
             if (slider_flags().is_set(SliderFlag::show_label))
             {
                 std::string text;
-                Canvas canvas(Size(100, 100));
-                Painter painter(canvas.context());
-
-                auto label_rect = label_box(painter, prev_value, text);
+                auto label_rect = label_box(prev_value, text);
                 this->damage(label_rect);
 
-                label_rect = label_box(painter, this->m_value, text);
+                label_rect = label_box(this->m_value, text);
                 this->damage(label_rect);
             }
 
@@ -374,7 +370,7 @@ protected:
     EGT_NODISCARD Rect handle_box(T value) const;
 
     /// Get the label box and text for the specified value.
-    EGT_NODISCARD Rect label_box(Painter& painter, T value, std::string& text) const
+    EGT_NODISCARD Rect label_box(T value, std::string& text) const
     {
         const auto b = this->content_area();
         auto handle_rect = handle_box(value);
@@ -386,10 +382,7 @@ protected:
 
         text = format_label(value);
 
-        painter.set(this->color(Palette::ColorId::label_text));
-        painter.set(this->font());
-
-        const auto text_size = painter.text_size(text);
+        const auto text_size = this->font().text_size(text);
         auto target = detail::align_algorithm(text_size,
                                               handle_rect,
                                               AlignFlag::center,
@@ -421,8 +414,9 @@ protected:
     void draw_label(Painter& painter, T value)
     {
         std::string text;
-        const auto target = label_box(painter, value, text);
+        const auto target = label_box(value, text);
         painter.draw(target.point());
+        painter.set(this->color(Palette::ColorId::label_text));
         painter.draw(text);
     }
 
