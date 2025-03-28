@@ -204,17 +204,6 @@ Painter& Painter::source(const Color& color)
     return *this;
 }
 
-Painter& Painter::source(cairo_surface_t* surface, const PointF& point)
-{
-    cairo_set_source_surface(m_cr.get(), surface, point.x(), point.y());
-    return *this;
-}
-
-Painter& Painter::source(const shared_cairo_surface_t& surface, const PointF& point)
-{
-    return source(surface.get(), point);
-}
-
 Painter& Painter::source(const Surface& surface, const PointF& point)
 {
     cairo_set_source_surface(m_cr.get(), surface.impl(), point.x(), point.y());
@@ -235,26 +224,6 @@ Painter& Painter::mask(const Surface& surface, const PointF& point)
 Painter& Painter::mask(const Image& image, const Point& point)
 {
     return mask(*image.surface(), point);
-}
-
-Painter& Painter::draw(cairo_surface_t* surface, const PointF& point, const RectF& rect)
-{
-    source(surface, point);
-    if (rect.empty())
-    {
-        paint();
-    }
-    else
-    {
-        draw(rect);
-        fill();
-    }
-    return *this;
-}
-
-Painter& Painter::draw(const shared_cairo_surface_t& surface, const PointF& point, const RectF& rect)
-{
-    return draw(surface.get(), point, rect);
 }
 
 Painter& Painter::draw(const Surface& surface, const PointF& point, const RectF& rect)

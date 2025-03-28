@@ -409,16 +409,6 @@ public:
     Painter& source(const Color& color);
 
     /**
-     * Set the source pattern from a cairo_surface_t.
-     */
-    Painter& source(cairo_surface_t* surface, const PointF& point = {});
-
-    /**
-     * Set the source pattern from a shared_cairo_surface_t.
-     */
-    Painter& source(const shared_cairo_surface_t& surface, const PointF& point = {});
-
-    /**
      * Set the source pattern from a Surface.
      */
     Painter& source(const Surface& surface, const PointF& point = {});
@@ -434,20 +424,6 @@ public:
     Painter& mask(const Surface& surface, const PointF& point = {});
 
     Painter& mask(const Image& image, const Point& point = {});
-
-    /**
-     * @param[in] surface The surface source to draw.
-     * @param[in] point The position of the surface origin.
-     * @param[in] rect The rectangle to draw, if any, the whole surface otherwise.
-     */
-    Painter& draw(cairo_surface_t* surface, const PointF& point, const RectF& rect = {});
-
-    /**
-     * @param[in] surface The surface source to draw.
-     * @param[in] point The position of the surface origin.
-     * @param[in] rect The rectangle to draw, if any, the whole surface otherwise.
-     */
-    Painter& draw(const shared_cairo_surface_t& surface, const PointF& point, const RectF& rect = {});
 
     /**
      * @param[in] surface The surface source to draw.
