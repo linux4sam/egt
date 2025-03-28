@@ -435,14 +435,6 @@ AM_CONDITIONAL([HAVE_CAIRO], [test "x${have_cairo}" = xyes])
 if test "x${have_cairo}" = xyes; then
   LIBEGT_EXTRA_CXXFLAGS="${cairo_CFLAGS} ${LIBEGT_EXTRA_CXXFLAGS}"
   LIBEGT_EXTRA_LDFLAGS="${cairo_LIBS} ${LIBEGT_EXTRA_LDFLAGS}"
-  AC_SEARCH_LIBS([cairo_gfx2d_surface_create], [cairo], [have_cairo_gfx2d=yes], [have_cairo_gfx2d=no])
-  AC_CHECK_HEADER([cairo/cairo-gfx2d.h],
-    [],
-    [have_cairo_gfx2d=no
-  ])
-  if test "x${have_cairo_gfx2d}" = xyes; then
-    AC_DEFINE(HAVE_CAIRO_GFX2D, 1, [Have cairo gfx2d support])
-  fi
 fi
 
 AC_CHECK_DECL([CAIRO_HAS_FT_FONT], [], [

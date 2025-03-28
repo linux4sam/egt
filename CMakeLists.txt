@@ -67,8 +67,6 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(CAIRO REQUIRED cairo>=1.14.6)
 set(AX_PACKAGE_REQUIRES "cairo >= 1.14.6")
 
-CHECK_INCLUDE_FILE(cairo/cairo-gfx2d.h HAVE_CAIRO_GFX2D)
-
 check_symbol_exists(CAIRO_HAS_FT_FONT "cairo/cairo-features.h" HAVE_FREETYPE)
 if(HAVE_FREETYPE)
     set(LIBEGT_PRIVATE_LDFLAGS "-lfreetype ${LIBEGT_PRIVATE_LDFLAGS}")

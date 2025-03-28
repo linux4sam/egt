@@ -6,9 +6,6 @@
 /* Have alsa support */
 #cmakedefine HAVE_ALSA @HAVE_ALSA@
 
-/* Have cairo gfx2d support */
-#cmakedefine HAVE_CAIRO_GFX2D @HAVE_CAIRO_GFX2D@
-
 /* Have __cxa_demangle */
 #cmakedefine HAVE_CXA_DEMANGLE @HAVE_CXA_DEMANGLE@
 

@@ -116,8 +116,6 @@ protected:
     static std::vector<planeid> m_used;
     /// Internal thread pool for flipping.
     std::unique_ptr<FlipThread> m_pool;
-    /// Enable GFX2D
-    bool m_gfx2d {false};
 
     friend class detail::KMSOverlay;
 };

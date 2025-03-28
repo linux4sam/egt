@@ -147,13 +147,6 @@ EGT_DEBUG=1 EGT_KMS_BUFFERS=1 ./egt_space
     all backends.
   </dd>
 
-  <dt>EGT_USE_GFX2D</dt>
-  <dd>
-    A non-empty value enables the use of the GFX2D GPU. Set this option only if
-    the device has a 2D GPU. If cairo doesn't have the libm2d support, this
-    option has no effect.
-  </dd>
-
   <dt>EGT_WIREFRAME_ENABLE</dt>
   <dd>
     A non-empty value enables drawing of damage rectangles to the display.  This
