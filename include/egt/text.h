@@ -721,6 +721,7 @@ protected:
      */
     cairo_t* m_cr{nullptr};
 
+    cairo_font_extents_t m_fe;
     TextRects m_rects;
     Rect m_cursor_rect;
 

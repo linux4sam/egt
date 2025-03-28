@@ -81,8 +81,7 @@ TextRect TextRect::split(size_t pos, cairo_t* cr) noexcept
 void TextBox::tokenize(TextRects& rects)
 {
     cairo_t* cr = context();
-    cairo_font_extents_t fe;
-    cairo_font_extents(cr, &fe);
+    const auto& fe = m_fe;
 
     // tokenize based on words or code points
     static const std::string delimiters = " \t\n\r";
@@ -652,13 +651,9 @@ void TextBox::draw_text(Painter& painter, const Rect& rect)
     Painter::AutoSaveRestore sr(painter);
     painter.draw(clip);
     painter.clip();
-
-    auto cr = painter.context().get();
-
     painter.set(font());
-    cairo_font_extents_t fe;
-    cairo_font_extents(cr, &fe);
 
+    const auto& fe = m_fe;
     for (const auto& r : m_rects)
     {
         if (r.text() != "\n")
@@ -695,7 +690,9 @@ void TextBox::draw_text(Painter& painter, const Rect& rect)
 
 void TextBox::prepare_text(TextRects& rects)
 {
-    cairo_set_scaled_font(context(), font().scaled_font());
+    auto* cr = context();
+    cairo_set_scaled_font(cr, font().scaled_font());
+    cairo_font_extents(cr, &m_fe);
 
     rects.clear();
 
@@ -713,8 +710,7 @@ void TextBox::get_cursor_rect()
     cairo_t* cr = context();
     const Rect boundaries = text_boundaries();
     cairo_set_scaled_font(cr, font().scaled_font());
-    cairo_font_extents_t fe;
-    cairo_font_extents(cr, &fe);
+    const auto& fe = m_fe;
 
     Point p(boundaries.point() + Point(-CURSOR_X_MARGIN, 0));
     Size s(CURSOR_RECT_WIDTH, fe.height);
