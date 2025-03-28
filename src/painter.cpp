@@ -182,7 +182,7 @@ Painter& Painter::draw(const Image& image)
     cairo_get_current_point(m_cr.get(), &x, &y);
 
     cairo_translate(m_cr.get(), x, y);
-    cairo_set_source_surface(m_cr.get(), image.surface().get(), 0, 0);
+    source(image);
 
     /// @todo no paint here
     paint();
@@ -224,7 +224,7 @@ Painter& Painter::source(const Surface& surface, const PointF& point)
 
 Painter& Painter::source(const Image& image, const PointF& point)
 {
-    return source(image.surface(), point);
+    return source(*image.surface(), point);
 }
 
 Painter& Painter::mask(const Surface& surface, const PointF& point)
@@ -235,9 +235,7 @@ Painter& Painter::mask(const Surface& surface, const PointF& point)
 
 Painter& Painter::mask(const Image& image, const Point& point)
 {
-    cairo_mask_surface(m_cr.get(), image.surface().get(), point.x(), point.y());
-
-    return *this;
+    return mask(*image.surface(), point);
 }
 
 Painter& Painter::draw(cairo_surface_t* surface, const PointF& point, const RectF& rect)
@@ -280,7 +278,7 @@ Painter& Painter::draw(const Surface& surface, const PointF& point, const RectF&
 
 Painter& Painter::draw(const Image& image, const PointF& point, const RectF& rect)
 {
-    return draw(image.surface(), point, rect);
+    return draw(*image.surface(), point, rect);
 }
 
 Painter& Painter::draw(const std::string& str, const TextDrawFlags& flags)

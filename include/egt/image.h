@@ -11,7 +11,6 @@
  * @brief Working with images.
  */
 
-#include <cairo.h>
 #include <egt/detail/meta.h>
 #include <egt/geometry.h>
 #include <egt/painter.h>
@@ -147,14 +146,7 @@ public:
     /**
      * Get the absolute size of the image.
      */
-    EGT_NODISCARD Size size() const
-    {
-        if (empty())
-            return {};
-
-        return {cairo_image_surface_get_width(surface().get()),
-                cairo_image_surface_get_height(surface().get())};
-    }
+    EGT_NODISCARD Size size() const;
 
     EGT_NODISCARD DefaultDim width() const
     {
@@ -169,15 +161,12 @@ public:
     /**
      * Returns true if no internal surface is set.
      */
-    EGT_NODISCARD bool empty() const
-    {
-        return !surface();
-    }
+    EGT_NODISCARD bool empty() const;
 
     /**
      * Get a reference to the internal image surface.
      */
-    EGT_NODISCARD const shared_cairo_surface_t& surface() const
+    EGT_NODISCARD const std::shared_ptr<Surface>& surface() const
     {
         return m_surface;
     }
@@ -246,10 +235,7 @@ protected:
     float m_vscale{1.0};
 
     /// Shared surface pointer.
-    shared_cairo_surface_t m_surface;
-
-    /// Shared EGT surface.
-    std::shared_ptr<Surface> m_surf;
+    std::shared_ptr<Surface> m_surface;
 
     /// Original image size.
     Size m_orig_size;

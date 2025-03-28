@@ -3,7 +3,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "detail/cairoabstraction.h"
 #include "egt/detail/alignment.h"
 #include "egt/detail/image.h"
 #include "egt/detail/imagecache.h"
@@ -27,31 +26,27 @@ Image::Image(const std::string& uri,
 }
 
 Image::Image(std::shared_ptr<Surface> surface)
-    : m_surf(std::move(surface))
+    : m_surface(std::move(surface))
 {
     handle_surface_changed();
 }
 
 Image::Image(Surface&& surface)
-    : m_surf(std::make_shared<Surface>(std::move(surface)))
+    : m_surface(std::make_shared<Surface>(std::move(surface)))
 {
     handle_surface_changed();
 }
 
 Image::Image(const unsigned char* data, size_t len)
-    : m_surf(std::make_shared<Surface>(detail::load_image_from_memory(data, len)))
+    : m_surface(std::make_shared<Surface>(detail::load_image_from_memory(data, len)))
 {
     handle_surface_changed();
 }
 
 void Image::handle_surface_changed()
 {
-    m_surface = shared_cairo_surface_t(m_surf->impl().get(), [](cairo_surface_t *) {});
-
-    assert(cairo_surface_status(m_surface.get()) == CAIRO_STATUS_SUCCESS);
-
-    m_orig_size = Size(std::ceil(cairo_image_surface_get_width(m_surface.get()) / m_hscale),
-                       std::ceil(cairo_image_surface_get_height(m_surface.get()) / m_vscale));
+    m_orig_size = Size(std::ceil(static_cast<float>(m_surface->width()) / m_hscale),
+                       std::ceil(static_cast<float>(m_surface->height()) / m_vscale));
 }
 
 void Image::load(const std::string& uri, float hscale, float vscale, bool approximate)
@@ -65,12 +60,11 @@ void Image::load(const std::string& uri, float hscale, float vscale, bool approx
     {
         if (!uri.empty())
         {
-            m_surf = detail::image_cache().get(uri, hscale, vscale, approximate);
+            m_surface = detail::image_cache().get(uri, hscale, vscale, approximate);
             handle_surface_changed();
         }
         else
         {
-            m_surf.reset();
             m_surface.reset();
             m_orig_size = Size();
         }
@@ -80,6 +74,19 @@ void Image::load(const std::string& uri, float hscale, float vscale, bool approx
 void Image::scale(float hscale, float vscale, bool approximate)
 {
     load(m_uri, hscale, vscale, approximate);
+}
+
+bool Image::empty() const
+{
+    return !m_surface || m_surface->empty();
+}
+
+Size Image::size() const
+{
+    if (empty())
+        return {};
+
+    return m_surface->size();
 }
 
 Rect Image::align(const Rect& bounding, const AlignFlags& align)
