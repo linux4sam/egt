@@ -871,6 +871,171 @@ void GPUPainter::free_source(GPUPainter::GPUPainterSource* src)
     m_free_list = src;
 }
 
+bool GPUPainter::mask(const Surface& surface, const Point& point, const Rect& rect)
+{
+    /* user_rect is in user coordinates. */
+    Rect user_rect(point, surface.size());
+    if (!rect.empty())
+        user_rect = Rect::intersection(user_rect, rect);
+    if (user_rect.empty())
+        return true;
+
+    if (!m_painter.target().impl().is_gpu_capable())
+    {
+        EGTLOG_TRACE("target {} is not GPU capable.", (void*)&m_painter.target());
+        return false;
+    }
+    auto& target = m_painter.target().impl().gpu_surface();
+
+    if (!surface.impl().is_gpu_capable())
+    {
+        EGTLOG_TRACE("source surface is not GPU capable.");
+        return false;
+    }
+    auto& mask = surface.impl().gpu_surface();
+
+    double red, green, blue, alpha;
+    GPUPainterSource* src = nullptr;
+
+    cairo_t* cr = m_painter.context();
+    cairo_pattern_t* pattern = cairo_get_source(cr);
+    switch (cairo_pattern_get_type(pattern))
+    {
+    default:
+        EGTLOG_TRACE("unsupported source type.");
+        return false;
+
+    case CAIRO_PATTERN_TYPE_SOLID:
+        if (cairo_pattern_get_rgba(pattern, &red, &green, &blue, &alpha) != CAIRO_STATUS_SUCCESS)
+        {
+            EGTLOG_TRACE("cannot extract RGBA components of source solid pattern.");
+            return false;
+        }
+        break;
+
+    case CAIRO_PATTERN_TYPE_SURFACE:
+        src = (GPUPainterSource*)cairo_pattern_get_user_data(pattern, &m_key);
+        if (!src)
+        {
+            EGTLOG_TRACE("source surface is not GPU capable.");
+            return false;
+        }
+        break;
+    }
+
+    Point offset;
+    if (!get_transformation(offset))
+        return false;
+
+    if (src)
+    {
+        auto& source = *src->surface;
+
+        /*
+         * Clip the user rectangle with the source rectangle (both in user
+         * coordinates).
+         */
+        Rect source_rect(src->origin - offset, source.owner().size());
+        user_rect = Rect::intersection(user_rect, source_rect);
+        if (user_rect.empty())
+            return true;
+    }
+
+    auto clip = get_clip_region();
+    if (!clip)
+        return false;
+
+    m_rects.clear();
+    if (!fill_rectangle(*clip, user_rect))
+        return false;
+
+    if (m_rects.empty())
+    {
+        EGTLOG_TRACE("no rectangle to draw.");
+        return true;
+    }
+
+    auto rects = prepare_m2d_rectangles(offset);
+    if (!rects)
+        return false;
+
+    auto* tmp = target.tmp_buffer();
+    if (!tmp)
+        return false;
+
+    if (src)
+    {
+        auto& source = *src->surface;
+
+        EGTLOG_TRACE("paint GPU object {} source with GPU object {} mask into GPU object {} destination.",
+                     source.id(), mask.id(), target.id());
+
+        source.sync_for_gpu();
+
+        m2d_set_source(M2D_SRC, source,
+                       static_cast<dim_t>(src->origin.x()),
+                       static_cast<dim_t>(src->origin.y()));
+    }
+    else
+    {
+        EGTLOG_TRACE("paint color ({},{},{},{}) with GPU object {} mask into GPU object {} destination.",
+                     (uint8_t)(red * 255.),
+                     (uint8_t)(green * 255.),
+                     (uint8_t)(blue * 255.),
+                     (uint8_t)(alpha * 255.),
+                     mask.id(), target.id());
+
+        m2d_source_color(red * 255., green * 255., blue * 255., alpha * 255.);
+        m2d_source_enable(M2D_SRC, false);
+        m2d_source_enable(M2D_DST, false);
+        m2d_blend_enable(false);
+        m2d_set_target(tmp);
+        m2d_draw_rectangles(rects.get(), m_rects.size());
+
+        m2d_set_source(M2D_SRC, tmp, 0, 0);
+    }
+
+    mask.sync_for_gpu();
+    target.sync_for_gpu();
+
+    m2d_source_enable(M2D_SRC, true);
+    m2d_source_enable(M2D_DST, true);
+    m2d_blend_enable(true);
+
+    const Point mask_origin = offset + point;
+    m2d_set_source(M2D_DST, mask,
+                   static_cast<dim_t>(mask_origin.x()),
+                   static_cast<dim_t>(mask_origin.y()));
+    m2d_set_target(tmp);
+
+    /*
+     * Keep the source color but multiply the source alpha with the
+     * destination alpha:
+     * Cr =  1 * Cs + 0 * Cd
+     * Ar = Ad * As + 0 * Ad
+     */
+    m2d_blend_factors(M2D_BLEND_ONE, M2D_BLEND_ZERO,
+                      M2D_BLEND_DST_ALPHA, M2D_BLEND_ZERO);
+
+    m2d_draw_rectangles(rects.get(), m_rects.size());
+
+    m2d_set_source(M2D_SRC, tmp, 0, 0);
+    m2d_set_source(M2D_DST, target, 0, 0);
+    m2d_set_target(target);
+
+    /*
+     * Reset classical blend parameters:
+     * Cr = As * Cs + (1 - As) * Cd
+     * Ar =  1 * As + (1 - As) * Ad
+     */
+    m2d_blend_factors(M2D_BLEND_SRC_ALPHA, M2D_BLEND_ONE_MINUS_SRC_ALPHA,
+                      M2D_BLEND_ONE, M2D_BLEND_ONE_MINUS_SRC_ALPHA);
+
+    m2d_draw_rectangles(rects.get(), m_rects.size());
+
+    return true;
+}
+
 bool GPUPainter::draw(const Surface& surface, const Point& point, const Rect& rect)
 {
     /* user_rect is in user coordinates. */

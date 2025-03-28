@@ -229,6 +229,9 @@ Painter& Painter::source(const Image& image, const PointF& point)
 Painter& Painter::mask(const Surface& surface, const PointF& point)
 {
 #ifdef HAVE_LIBM2D
+    if (gpu_enabled() && gpu_painter().mask(surface, point, {}))
+        return *this;
+
     gpu_painter().sync_for_cpu();
 #endif
     cairo_mask_surface(*m_cr, surface.impl(), point.x(), point.y());

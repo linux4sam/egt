@@ -96,6 +96,7 @@ public:
 
     bool fill() { return draw(Operator::fill); }
     bool paint() { return draw(Operator::paint); }
+    bool mask(const Surface& surface, const Point& point, const Rect& rect);
     bool draw(const Surface& surface, const Point& point, const Rect& rect);
     bool draw(const Color& color, const Rect& rect);
 
