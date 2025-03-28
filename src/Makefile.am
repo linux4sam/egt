@@ -51,6 +51,7 @@ detail/asioallocator.h \
 detail/alignment.cpp \
 detail/base64.cpp \
 detail/base64.h \
+detail/cairoabstraction.h \
 detail/dump.h \
 detail/egtlog.cpp \
 detail/egtlog.h \

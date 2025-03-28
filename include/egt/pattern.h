@@ -11,7 +11,6 @@
  * @brief Working with patterns.
  */
 
-#include <cairo.h>
 #include <cassert>
 #include <egt/color.h>
 #include <egt/detail/meta.h>
@@ -23,6 +22,11 @@ namespace egt
 {
 inline namespace v1
 {
+
+namespace detail
+{
+class InternalPattern;
+}
 
 /*
  * gcc < 7.2 with c++14 support contains a bug dealing with constexpr on some
@@ -198,12 +202,12 @@ public:
     EGT_NODISCARD const StepArray& steps() const;
 
     /// Get internal pattern representation.
-    EGT_NODISCARD cairo_pattern_t* pattern() const
+    EGT_NODISCARD const detail::InternalPattern& pattern() const
     {
         if (!m_pattern)
             create_pattern();
         assert(m_pattern.get());
-        return m_pattern.get();
+        return *m_pattern;
     }
 
 protected:
@@ -229,7 +233,7 @@ protected:
     PatternImpl* m_impl{nullptr};
 
     /// Internal pattern representation.
-    mutable shared_cairo_pattern_t m_pattern;
+    mutable std::shared_ptr<detail::InternalPattern> m_pattern;
 };
 
 static_assert(detail::rule_of_5<Pattern>(), "must fulfill rule of 5");

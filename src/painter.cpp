@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/cairoabstraction.h"
 #include "egt/image.h"
 #include "egt/painter.h"
 #include <cairo.h>

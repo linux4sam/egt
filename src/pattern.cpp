@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/cairoabstraction.h"
 #include "egt/pattern.h"
 
 namespace egt
@@ -259,16 +260,15 @@ void Pattern::create_pattern() const
     case Pattern::Type::linear:
     case Pattern::Type::linear_vertical:
     {
-        m_pattern =
-            shared_cairo_pattern_t(cairo_pattern_create_linear(starting().x(),
-                                   starting().y(),
-                                   ending().x(),
-                                   ending().y()),
-                                   cairo_pattern_destroy);
+        m_pattern = std::make_shared<detail::InternalPattern>(
+                        cairo_pattern_create_linear(starting().x(),
+                                starting().y(),
+                                ending().x(),
+                                ending().y()));
 
         for (const auto& step : steps())
         {
-            cairo_pattern_add_color_stop_rgba(m_pattern.get(),
+            cairo_pattern_add_color_stop_rgba(*m_pattern,
                                               step.first,
                                               step.second.redf(),
                                               step.second.greenf(),
@@ -279,17 +279,16 @@ void Pattern::create_pattern() const
     }
     case Pattern::Type::radial:
     {
-        m_pattern =
-            shared_cairo_pattern_t(cairo_pattern_create_radial(starting().x(),
-                                   starting().y(),
-                                   starting_radius(),
-                                   ending().x(),
-                                   ending().y(),
-                                   ending_radius()),
-                                   cairo_pattern_destroy);
+        m_pattern = std::make_shared<detail::InternalPattern>(
+                        cairo_pattern_create_radial(starting().x(),
+                                starting().y(),
+                                starting_radius(),
+                                ending().x(),
+                                ending().y(),
+                                ending_radius()));
         for (const auto& step : steps())
         {
-            cairo_pattern_add_color_stop_rgba(m_pattern.get(),
+            cairo_pattern_add_color_stop_rgba(*m_pattern,
                                               step.first,
                                               step.second.redf(),
                                               step.second.greenf(),
@@ -300,12 +299,11 @@ void Pattern::create_pattern() const
     }
     case Pattern::Type::solid:
     {
-        m_pattern =
-            shared_cairo_pattern_t(cairo_pattern_create_rgba(solid().redf(),
-                                   solid().greenf(),
-                                   solid().bluef(),
-                                   solid().alphaf()),
-                                   cairo_pattern_destroy);
+        m_pattern = std::make_shared<detail::InternalPattern>(
+                        cairo_pattern_create_rgba(solid().redf(),
+                                solid().greenf(),
+                                solid().bluef(),
+                                solid().alphaf()));
         break;
     }
     }
