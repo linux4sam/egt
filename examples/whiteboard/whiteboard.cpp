@@ -143,7 +143,7 @@ public:
           m_penpicker(egt::Palette::blue),
           m_fillpicker(egt::Palette::red),
           m_widthpicker(2),
-          m_canvas(screen()->size(), egt::PixelFormat::argb8888)
+          m_surface(screen()->size(), egt::PixelFormat::argb8888)
     {
         // don't draw background, we'll do it in draw()
         fill_flags().clear();
@@ -216,7 +216,7 @@ public:
 
     void clear()
     {
-        egt::Painter painter(m_canvas.context());
+        egt::Painter painter(m_surface);
         painter.alpha_blending(false);
         painter.set(egt::Palette::transparent);
         painter.paint();
@@ -231,7 +231,7 @@ public:
         case egt::EventId::pointer_click:
         {
             const auto mouse = display_to_local(event.pointer().point);
-            egt::Painter painter(m_canvas.context());
+            egt::Painter painter(m_surface);
             painter.antialias(egt::Painter::AntiAlias::none);
             painter.flood(mouse, m_fillpicker.selected_color());
             damage();
@@ -250,7 +250,7 @@ public:
                 const auto width = m_widthpicker.width();
 
                 egt::Line line(m_last, mouse);
-                egt::Painter painter(m_canvas.context());
+                egt::Painter painter(m_surface);
                 painter.antialias(egt::Painter::AntiAlias::none);
                 painter.line_width(width);
                 painter.line_cap(egt::Painter::LineCap::round);
@@ -280,7 +280,7 @@ public:
         painter.draw(rect);
         painter.fill();
 
-        painter.draw(m_canvas.surface(), {}, rect);
+        painter.draw(m_surface, {}, rect);
 
         egt::TopWindow::draw(painter, rect);
     }
@@ -299,7 +299,7 @@ protected:
     ColorPickerWindow m_penpicker;
     ColorPickerWindow m_fillpicker;
     WidthPickerWindow m_widthpicker;
-    egt::Canvas m_canvas;
+    egt::Surface m_surface;
 };
 
 static int run(int argc, char** argv)
