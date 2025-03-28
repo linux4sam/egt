@@ -5,6 +5,140 @@
 Here, you can find the API changes from the version 1.0. In addition, some hints
 are provided to help you update your code.
 
+@section v1_11 1.11
+
+@subsection v1_11_application Application
+
+@li The egt::v1::Application::gpu_enabled() getter tells whether the GPU, if any, is enabled. Also, the egt::v1::Application::enable_gpu() setter enables or disables at runtime the GPU. Finally, the EGT_GPU_DISABLED environment variable disables the GPU at the application startup: if not defined, the GPU, if any, is enabled by default.
+
+@subsection v1_11_arctype ArcType
+
+@li A new constructor now allows implicit conversions between egt::v1::ArcType template instances with different 'Dim' template parameters; for instance between ArcType<DefaultDim> and ArcType<float>.
+
+@subsection v1_11_canvas Canvas
+
+@li The egt::v1::Canvas class has been removed and should be replaced with a egt::v1::Surface and/or a egt::v1::Painter created from this egt::v1::Surface.
+@code{.unparsed}
+- egt::Canvas canvas(...);
+- egt::Painter painter(canvas.context());
++ egt::Surface target(...);
++ egt::Painter painter(target);
+@endcode
+
+@subsection v1_11_circletype CircleType
+
+@li A new constructor now allows implicit conversions between egt::v1::CircleType template instances with different 'Dim' template parameters; for instance between CircleType<DefaultDim> and CircleType<float>.
+
+@subsection v1_11_ellipsetype EllipseType
+
+@li A new constructor now allows implicit conversions between egt::v1::EllipseType template instances with different 'Dim' template parameters; for instance between EllipseType<DefaultDim> and EllipseType<float>.
+
+@subsection v1_11_font Font
+
+@li The new egt::v1::Font::text_size() method is a helper method: it internally calls egt::v1::Painter::text_size() on a default Painter instance, which has no transformation like rotation or symmetry. If you want to transform the font, then you should call egt::v1::Painter::text_size() instead, on the relevant Painter instance.
+
+@li The egt::v1::Font::scaled_font() method now returns a 'const detail::InternalFont&' rather than a 'cairo_scaled_font_t*' previously: detail::InternalFont is an opaque class to hide the internal implementation.
+
+@li The new egt::v1::Font::extents() methods return either a egt::v1::Font::FontExtents or egt::v1::Font::TextExtents, which abstract the 'cairo_font_extents_t' and 'cairo_text_extents_t' types. These new extents() methods internally call the new egt::v1::Painter::extents() methods on a default Painter instance, which has no transformation like rotation or symmetry. If you want to transform the font, then you should call egt::v1::Painter::extents() instead, on the relevant Painter instance.
+
+@subsection v1_11_image Image
+
+@li The egt::v1::Image::Image(shared_cairo_surface_t) constructor has been replaced with the new egt::v1::Image::Image(std::shared_ptr<Surface>) constructor.
+
+@li The egt::v1::Image::Image(cairo_surface_t*) constructor has been removed in the process of abstracting cairo.
+
+@li New egt::v1::Image::Image(Surface&&) and egt::v1::Image::Image(Surface&&, const std::string&) constructors have been added and called from 'egt::v1::SvgImage::operator Image()' and egt::v1::SvgImage::render().
+
+@li The egt::v1::Image::surface() method now returns a 'const std::shared_ptr<Surface>&' reference rather than a copy of a 'shared_cairo_surface_t'.
+
+@li The egt::v1::Image::pattern(), egt::v1::Image::crop() and egt::v1::Image::copy() methods have been removed.
+
+@subsection v1_11_painter Painter
+
+@li The new egt::v1::Painter::Painter(Surface&) constructor replaces the former egt::v1::Painter::Painter(shared_cairo_t) constructor.
+
+@li New egt::v1::Painter::target() getters have been added to retrieve the egt::v1::Surface used to construct a egt::v1::Painter.
+
+@li The egt::v1::Painter::context() method now returns a 'const detail::InternalContext&' rather than a 'shared_cairo_t' previously: detail::InternalContext is an opaque class to hide the internal implementation.
+
+@li New methods were added in the process of abstracting cairo and must called from EGT applications as replacement of the egt::v1::Painter::context() method followed by functions of the cairo API.
+@code{.unparsed}
+  egt::Painter painter = ...;
+  egt::Image image = ...;
+  float angle = ...;
+  egt::Point center = ...;
+  egt::Point image_orig = ...;
+- auto cr = painter.context().get();
+
+- cairo_save(cr);
+- cairo_translate(cr, center.x(), center.y());
+- cairo_rotate(cr, angle);
+- cairo_set_source_surface(cr, image.surface().get(), image_orig.x(), image_orig.y());
+- cairo_paint(cr);
+- cairo_restore(cr);
++ Painter::AutoSaveRestore sr(painter);
++
++ painter.translate(center);
++ painter.rotate(angle);
++ painter.source(image, image_orig);
++ painter.paint();
+@endcode
+    * egt::v1::Painter::alpha_blending() getter and setter to abstract the cairo_set_operator() function with either CAIRO_OPERATOR_OVER or CAIRO_OPERATOR_SOURCE.
+    * egt::v1::Painter::antialias() getter and setter to abstract the cairo_get_antialias() and cairo_set_antialias() functions.
+    * egt::v1::Painter::arc() method to abstract the cairo_arc() function.
+    * egt::v1::Painter::extents() methods to abstract the cairo_font_extents() and cairo_text_extents() functions.
+    * egt::v1::Painter::fill_preserve() method to abstract the cairo_fill_preserve() function.
+    * egt::v1::Painter::line_cap() getter and setter to abstract the cairo_get_line_cap() and cairo_set_line_cap() functions.
+    * egt::v1::Painter::line_to() method to abstract the cairo_line_to() function.
+    * egt::v1::Painter::move_to() method to abstract the cairo_line_to() function.
+    * egt::v1::Painter::rectangle() method to abstract the cairo_rectangle() function.
+    * egt::v1::Painter::rotate() method to abstract the cairo_rotate() function.
+    * egt::v1::Painter::scale() method to abstract the cairo_scale() function.
+    * egt::v1::Painter::set_dash() method to abstract the cairo_set_dash() function.
+    * egt::v1::Painter::show_text() methods to abstract the cairo_show_text() functions.
+    * egt::v1::Painter::source() methods to abstract the cairo_set_source(), cairo_set_source_rgba() and cairo_set_source_surface() functions.
+    * egt::v1::Painter::translate() method to abstract the cairo_translate() function.
+
+@li Some egt::v1::Painter::draw() overloads have been created or updated to draw egt::v1::Image, egt::v1::Surface and egt::v1::Pattern instances more efficiently.
+
+@li New egt::v1::Painter::low_fidelity() and egt::v1::Painter::high_fidelity() methods duplicate what the egt::v1::Screen::{low,high}_fidelity() methods do making the feature available for any egt::v1::Painter instance.
+
+@subsection v1_11_pattern Pattern
+
+@li The egt::v1::Pattern::pattern() method now returns a 'const detail::InternalPattern&' rather than a 'cairo_pattern_t*' previously: detail::InternalPattern is an opaque class to hide the internal implementation.
+
+@subsection v1_11_resourcemanager ResourceManager
+
+@li The egt::v1::detail::read_resource_stream() function has been removed.
+
+@subsection v1_11_screen Screen
+
+@li The 'shared_cairo_t egt::v1::Screen::context()' method has been removed and replaced with the new 'Painter& egt::v1::Screen::painter()' method in the process of abstracting cairo.
+
+@subsection v1_11_slider Slider
+
+@li The new egt::v1::SliderBase::SliderFlag::hide_line flag, when set, allows to skip drawing the slider line.
+
+@li The new egt::v1::Slider::label_offset() setter and getter control how much the text label is shifted from the handle position, perpendicularly to the slider line where the handle moves on.
+
+@li The new egt::v1::Slider::handle_margin() setter and getter control the stroke of the handle; when negative, the handle can cross the widget box (but still without being drawn outside this box).
+
+@li The new egt::v1::Slider::handle_offset() setter and getter control how much the handle is shifted from the middle of the slider box.
+
+@subsection v1_11_sprite Sprite
+
+@li The egt::v1::Sprite::surface() method has been removed.
+
+@subsection v1_11_surface Surface
+
+@li The new egt::v1::Surface class has been introduced to abstract the 'cairo_surface_t' type.
+
+@subsection v1_11_widget Widget
+
+@li The egt::v1::Widget::paint() method is no longer virtual, hence all overrides have been removed.
+
+@li The egt::v1::Widget::paint_to_file() method is no longer virtual, hence all overrides have been removed.
+
 @section v1_10 1.10
 
 @subsection cameraWindow CameraWindow
