@@ -95,6 +95,7 @@ public:
 
     bool fill() { return draw(Operator::fill); }
     bool paint() { return draw(Operator::paint); }
+    bool draw(const Surface& surface, const Point& point, const Rect& rect);
 
     void sync_for_cpu(bool skip_source = false);
 
@@ -162,6 +163,8 @@ protected:
     bool fill(const cairo_rectangle_list_t& clip_rectangles);
     bool paint(const cairo_rectangle_list_t& clip_rectangles,
                const Point& offset, GPUPainterSource* src);
+    bool fill_rectangle(const cairo_rectangle_list_t& clip_rectangles,
+                        const Rect& rect);
 
     static constexpr size_t m_rectangle_array_size = 256u;
     static m2d_rectangle m_rectangle_array[m_rectangle_array_size];

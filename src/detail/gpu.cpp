@@ -756,6 +756,32 @@ bool GPUPainter::paint(const cairo_rectangle_list_t& clip_rectangles,
     return true;
 }
 
+bool GPUPainter::fill_rectangle(const cairo_rectangle_list_t& clip_rectangles,
+                                const Rect& rect)
+{
+    if (rect.empty())
+        return true;
+
+    if (!clip_rectangles.num_rectangles)
+    {
+        m_rects.emplace_back(rect);
+    }
+    else
+    {
+        for (int i = 0; i < clip_rectangles.num_rectangles; ++i)
+        {
+            const auto& c = clip_rectangles.rectangles[i];
+            const Rect clip(c.x, c.y, c.width, c.height);
+            auto clipped_rect = Rect::intersection(rect, clip);
+
+            if (!clipped_rect.empty())
+                m_rects.emplace_back(clipped_rect);
+        }
+    }
+
+    return true;
+}
+
 void GPUPainter::sync_for_cpu(bool skip_source)
 {
     if (m_painter.target().impl().is_gpu_capable())
@@ -842,6 +868,76 @@ void GPUPainter::free_source(GPUPainter::GPUPainterSource* src)
 
     src->next = m_free_list;
     m_free_list = src;
+}
+
+bool GPUPainter::draw(const Surface& surface, const Point& point, const Rect& rect)
+{
+    /* user_rect is in user coordinates. */
+    Rect user_rect(point, surface.size());
+    if (!rect.empty())
+        user_rect = Rect::intersection(user_rect, rect);
+    if (user_rect.empty())
+        return true;
+
+    if (!m_painter.target().impl().is_gpu_capable())
+    {
+        EGTLOG_TRACE("target {} is not GPU capable.", (void*)&m_painter.target());
+        return false;
+    }
+    auto& target = m_painter.target().impl().gpu_surface();
+
+    if (!surface.impl().is_gpu_capable())
+    {
+        EGTLOG_TRACE("source surface is not GPU capable.");
+        return false;
+    }
+    auto& source = surface.impl().gpu_surface();
+
+    Point offset;
+    if (!get_transformation(offset))
+        return false;
+
+    auto clip = get_clip_region();
+    if (!clip)
+        return false;
+
+    m_rects.clear();
+    if (!fill_rectangle(*clip, user_rect))
+        return false;
+
+    if (m_rects.empty())
+    {
+        EGTLOG_TRACE("no rectangle to draw.");
+        return true;
+    }
+
+    auto rects = prepare_m2d_rectangles(offset);
+    if (!rects)
+        return false;
+
+    source.sync_for_gpu();
+    target.sync_for_gpu();
+
+    const auto blend = m_painter.alpha_blending();
+    EGTLOG_TRACE("{} GPU object {} source at {} into GPU object {} destination ({}).",
+                 blend ? "blend" : "copy",
+                 source.id(), point, target.id(), user_rect);
+
+    m2d_blend_enable(blend);
+    m2d_source_enable(M2D_SRC, true);
+    m2d_source_enable(M2D_DST, blend);
+
+    const Point source_origin = offset + point;
+    m2d_set_source(M2D_SRC, source,
+                   static_cast<dim_t>(source_origin.x()),
+                   static_cast<dim_t>(source_origin.y()));
+    if (blend)
+        m2d_set_source(M2D_DST, target, 0, 0);
+
+    m2d_set_target(target);
+    m2d_draw_rectangles(rects.get(), m_rects.size());
+
+    return true;
 }
 
 m2d_rectangle GPUPainter::m_rectangle_array[m_rectangle_array_size];

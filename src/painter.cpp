@@ -245,6 +245,11 @@ Painter& Painter::draw(const Surface& surface, const PointF& point, const RectF&
     if (surface.empty())
         return *this;
 
+#ifdef HAVE_LIBM2D
+    if (gpu_enabled() && gpu_painter().draw(surface, point, rect))
+        return *this;
+#endif
+
     source(surface, point);
     if (rect.empty())
     {
