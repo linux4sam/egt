@@ -816,52 +816,58 @@ void SliderType<T>::draw_line(Painter& painter, const Rect& handle_rect)
 
     const auto b = this->content_area();
     const auto center = handle_rect.center();
-    const auto xp = center.x();
-    const auto yp = center.y();
-
-    Point a1;
-    Point a2;
-    Point b1;
-    Point b2;
+    Point p1, p2;
+    Size s1, s2, s;
 
     if (m_orient == Orientation::horizontal)
     {
-        a1 = Point(b.x() + m_handle_margin, yp);
-        a2 = Point(handle_rect.x(), yp);
-        b1 = Point(handle_rect.x(), yp);
-        b2 = Point(b.x() + b.width() - m_handle_margin, yp);
+        p1.x(b.x() + m_handle_margin);
+        s1.width(center.x() - p1.x());
+        s1.height(handle_rect.height() / 5);
+        p1.y(center.y() - s1.height() / 2);
 
-        painter.line_width(handle_rect.height() / 5.0);
+        p2.x(center.x());
+        s2.width(b.x() + b.width() - m_handle_margin - p2.x());
+        s2.height(s1.height());
+        p2.y(p1.y());
+
+        s.width(s1.width() + s2.width());
+        s.height(s1.height());
     }
     else
     {
-        a1 = Point(xp, b.y() + b.height() - m_handle_margin);
-        a2 = Point(xp, handle_rect.y());
-        b1 = Point(xp, handle_rect.y());
-        b2 = Point(xp, b.y() + m_handle_margin);
+        p1.y(b.y() + m_handle_margin);
+        s1.height(center.y() - p1.y());
+        s1.width(handle_rect.width() / 5);
+        p1.x(center.x() - s1.width() / 2);
 
-        painter.line_width(handle_rect.width() / 5.0);
+        p2.y(center.y());
+        s2.height(b.y() + b.height() - m_handle_margin - p2.y());
+        s2.width(s1.width());
+        p2.x(p1.x());
+
+        s.height(s1.height() + s2.height());
+        s.width(s1.width());
     }
-
-    if (slider_flags().is_set(SliderFlag::inverted))
-        std::swap(a1, b2);
 
     if (slider_flags().is_set(SliderFlag::consistent_line))
     {
-        painter.set(this->color(Palette::ColorId::button_fg,
-                                Palette::GroupId::disabled));
-        painter.draw(a1, b2);
-        painter.stroke();
+        painter.draw(this->color(Palette::ColorId::button_fg,
+                                 Palette::GroupId::disabled),
+                     Rect(p1, s));
     }
     else
     {
-        painter.set(this->color(Palette::ColorId::button_fg));
-        painter.draw(a1, a2);
-        painter.stroke();
-        painter.set(this->color(Palette::ColorId::button_fg,
-                                Palette::GroupId::disabled));
-        painter.draw(b1, b2);
-        painter.stroke();
+        auto c1 = this->color(Palette::ColorId::button_fg);
+        auto c2 = this->color(Palette::ColorId::button_fg,
+                              Palette::GroupId::disabled);
+
+        if (!!slider_flags().is_set(SliderFlag::inverted) ^
+            (m_orient == Orientation::vertical))
+            std::swap(c1, c2);
+
+        painter.draw(c1, Rect(p1, s1));
+        painter.draw(c2, Rect(p2, s2));
     }
 }
 
