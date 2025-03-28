@@ -19,6 +19,7 @@
 #include "egt/painter.h"
 #include "egt/respath.h"
 #include "egt/serialize.h"
+#include "egt/surface.h"
 #include "egt/timer.h"
 #include "egt/utils.h"
 #include "egt/version.h"
@@ -393,21 +394,14 @@ void Application::quit(int exit_value)
 
 void Application::paint_to_file(const std::string& filename)
 {
-#if CAIRO_HAS_PNG_FUNCTIONS == 1
     auto name = filename;
     if (name.empty())
     {
         name = "screen.png";
     }
 
-    auto surface = shared_cairo_surface_t(
-                       cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
-                               screen()->size().width(), screen()->size().height()),
-                       cairo_surface_destroy);
-
-    auto cr = shared_cairo_t(cairo_create(surface.get()), cairo_destroy);
-
-    Painter painter(cr);
+    Surface surface(screen()->size());
+    Painter painter(surface);
 
     for (auto& w : windows())
     {
@@ -419,11 +413,7 @@ void Application::paint_to_file(const std::string& filename)
             w->paint(painter);
     }
 
-    cairo_surface_write_to_png(surface.get(), name.c_str());
-#else
-    detail::ignoreparam(filename);
-    detail::error("png support not available");
-#endif
+    surface.write_to_png(name);
 }
 
 // NOLINTNEXTLINE(readability-convert-member-functions-to-static)
