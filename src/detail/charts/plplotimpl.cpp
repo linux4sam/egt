@@ -391,17 +391,13 @@ void PlPlotImpl::plplot_label(const shared_cairo_t& cr, const Rect& b, const Fon
 {
     if (axis() >= 0)
     {
+        cairo_save(cr.get());
+
         // set font
         cairo_set_scaled_font(cr.get(), font.scaled_font());
 
         // set text color
         cairo_set_source_rgb(cr.get(), color.redf(), color.greenf(), color.bluef());
-
-        // reverse mirroring the font
-        cairo_matrix_t font_reflection_matrix;
-        cairo_get_font_matrix(cr.get(), &font_reflection_matrix);
-        font_reflection_matrix.yy = font_reflection_matrix.yy * -1;
-        cairo_set_font_matrix(cr.get(), &font_reflection_matrix);
 
         cairo_text_extents_t te;
         double x = 0.0;
@@ -411,6 +407,7 @@ void PlPlotImpl::plplot_label(const shared_cairo_t& cr, const Rect& b, const Fon
         {
             cairo_text_extents(cr.get(), m_xlabel.c_str(), &te);
             x = offset - (te.x_bearing + (te.width * 0.5));
+            y = b.height();
 
             cairo_move_to(cr.get(), x, y);
             cairo_rotate(cr.get(), 0);
@@ -421,7 +418,7 @@ void PlPlotImpl::plplot_label(const shared_cairo_t& cr, const Rect& b, const Fon
         {
             cairo_text_extents(cr.get(), m_title.c_str(), &te);
             x = offset - (te.x_bearing + (te.width * 0.5));
-            y = b.height() - (font.size());
+            y = font.size();
 
             cairo_move_to(cr.get(), x, y);
             cairo_rotate(cr.get(), 0);
@@ -432,12 +429,14 @@ void PlPlotImpl::plplot_label(const shared_cairo_t& cr, const Rect& b, const Fon
         {
             cairo_text_extents(cr.get(), m_ylabel.c_str(), &te);
             x = font.size();
-            y = (b.height() * 0.5) - (te.x_bearing + (te.width * 0.5));
+            y = (b.height() * 0.5) + (te.x_bearing + (te.width * 0.5));
 
             cairo_move_to(cr.get(), x, y);
-            cairo_rotate(cr.get(), detail::pi<float>() * 0.5f);
+            cairo_rotate(cr.get(), detail::pi<float>() * -0.5f);
             cairo_show_text(cr.get(), m_ylabel.c_str());
         }
+
+        cairo_restore(cr.get());
     }
 }
 
@@ -513,6 +512,8 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
 
     painter.translate(b.point());
 
+    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).first());
+
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
     m_plstream->adv(0);
@@ -544,9 +545,6 @@ void PlPlotLineChart::draw(Painter& painter, const Rect& rect)
         // plot
         m_plstream->line(m_xdata.size(), m_xdata.data(), m_ydata.data());
     }
-
-    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).first());
-
 }
 
 PlPlotPointChart::PlPlotPointChart(PointChart& iface)
@@ -574,6 +572,8 @@ void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
 
     painter.translate(b.point());
 
+    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).first());
+
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
     m_plstream->adv(0);
@@ -597,8 +597,6 @@ void PlPlotPointChart::draw(Painter& painter, const Rect& rect)
         // draw points
         m_plstream->poin(m_xdata.size(), m_xdata.data(), m_ydata.data(), m_pointtype);
     }
-
-    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).first());
 }
 
 PlPlotBarChart::PlPlotBarChart(BarChart& iface)
@@ -645,6 +643,8 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
     auto cr = painter.context();
 
     painter.translate(b.point());
+
+    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).first());
 
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
@@ -699,8 +699,6 @@ void PlPlotBarChart::draw(Painter& painter, const Rect& rect)
             }
         }
     }
-
-    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).first());
 }
 
 PlPlotHBarChart::PlPlotHBarChart(HorizontalBarChart& iface)
@@ -749,6 +747,8 @@ void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
     auto cr = painter.context();
 
     painter.translate(b.point());
+
+    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).first());
 
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
@@ -801,8 +801,6 @@ void PlPlotHBarChart::draw(Painter& painter, const Rect& rect)
         }
         ++i;
     }
-
-    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).first());
 }
 
 PlPlotPieChart::PlPlotPieChart(PieChart& iface)
@@ -829,6 +827,8 @@ void PlPlotPieChart::draw(Painter& painter, const Rect& rect)
     auto cr = painter.context();
 
     painter.translate(b.point());
+
+    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).first());
 
     m_plstream->cmd(PLESC_DEVINIT, cr.get());
 
@@ -890,9 +890,6 @@ void PlPlotPieChart::draw(Painter& painter, const Rect& rect)
             theta0 = theta - 1;
         }
     }
-
-    plplot_label(cr, b, m_interface.font(), m_interface.color(Palette::ColorId::label_text).first());
-
 }
 
 } // end of namespace detail
