@@ -183,12 +183,7 @@ Painter& Painter::draw(const Image& image)
     double y;
     cairo_get_current_point(*m_cr, &x, &y);
 
-    source(image, Point(x, y));
-
-    /// @todo no paint here
-    paint();
-
-    return *this;
+    return draw(image, Point(x, y));
 }
 
 Painter& Painter::source(const Pattern& pattern)
