@@ -121,7 +121,6 @@ void ScrolledView::draw(Painter& painter, const Rect& rect)
     // change origin to paint children and sliders
 
     Painter::AutoSaveRestore sr(painter);
-    auto cr = painter.context();
 
     // Origin about to change
     painter.translate(point());
