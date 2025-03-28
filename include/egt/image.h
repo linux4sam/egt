@@ -185,7 +185,7 @@ public:
     /**
      * Get a reference to the internal image surface.
      */
-    EGT_NODISCARD shared_cairo_surface_t surface() const
+    EGT_NODISCARD const shared_cairo_surface_t& surface() const
     {
         if (m_surface_local.get())
             return m_surface_local;
