@@ -219,7 +219,7 @@ void Application::setup_search_paths(const std::vector<std::string>& extra_paths
 }
 
 // NOLINTNEXTLINE(readability-convert-member-functions-to-static)
-void Application::setup_backend(bool primary, const std::string& name)
+void Application::setup_backend(bool primary, [[maybe_unused]] const std::string& name)
 {
     detail::ignoreparam(primary);
     std::string backend;
