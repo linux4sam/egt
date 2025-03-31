@@ -83,7 +83,7 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "^arm.*")
     target_sources(egt PRIVATE detail/memset32.S)
 endif()
 
-set_target_properties(egt PROPERTIES VERSION 9.0.0 SOVERSION 9)
+set_target_properties(egt PROPERTIES VERSION 10.0.0 SOVERSION 10)
 
 target_sources(egt PUBLIC FILE_SET HEADERS
     BASE_DIRS ${CMAKE_SOURCE_DIR}/include ${CMAKE_BINARY_DIR}/include
