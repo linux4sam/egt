@@ -984,7 +984,11 @@ void Widget::layout()
 
             subordinate->layout();
 
-            auto r = detail::align_algorithm(subordinate->box(),
+            const auto orig = subordinate->align().is_set(AlignFlag::keep_ratio) ?
+                              subordinate->m_user_requested_box :
+                              subordinate->box();
+
+            auto r = detail::align_algorithm(orig,
                                              bounding,
                                              subordinate->align(),
                                              0,

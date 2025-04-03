@@ -28,6 +28,7 @@ constexpr HVBitField AlignFlag::center;
 constexpr ExpandBitField AlignFlag::expand_horizontal;
 constexpr ExpandBitField AlignFlag::expand_vertical;
 constexpr ExpandBitField AlignFlag::expand;
+constexpr ExpandBitField AlignFlag::keep_ratio;
 
 template<>
 const std::pair<HorizontalBitField, char const*> detail::EnumStrings<HorizontalBitField>::data[] =
@@ -51,6 +52,7 @@ const std::pair<ExpandBitField, char const*> detail::EnumStrings<ExpandBitField>
     {AlignFlag::expand_horizontal, "expand_horizontal"},
     {AlignFlag::expand_vertical, "expand_vertical"},
     {AlignFlag::expand, "expand"},
+    {AlignFlag::keep_ratio, "keep_ratio"},
 };
 
 template<>
@@ -72,6 +74,7 @@ const std::pair<AlignFlag, char const*> detail::EnumStrings<AlignFlag>::data[] =
     {AlignFlag::expand_horizontal, "expand_horizontal"},
     {AlignFlag::expand_vertical, "expand_vertical"},
     {AlignFlag::expand, "expand"},
+    {AlignFlag::keep_ratio, "keep_ratio"},
 };
 
 EGT_API
@@ -104,6 +107,9 @@ std::list<AlignFlag> get(const BitFields<AlignFlag>& fields)
         result.push_back(AlignFlag::expand_horizontal);
     else if (fields.is_set(AlignFlag::expand_vertical))
         result.push_back(AlignFlag::expand_vertical);
+
+    if (fields.is_set(AlignFlag::keep_ratio))
+        result.push_back(AlignFlag::keep_ratio);
 
     return result;
 }

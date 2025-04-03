@@ -32,6 +32,10 @@ Rect align_algorithm_force(const Rect& orig, const Rect& bounding,
             p.y(bounding.y());
     }
 
+    auto padded_bounding = bounding;
+    padded_bounding -= Point(padding, padding);
+    padded_bounding -= Size(2 * padding, 2 * padding);
+
     if (xratio)
     {
         p.x(bounding.x() + padding +
@@ -62,7 +66,40 @@ Rect align_algorithm_force(const Rect& orig, const Rect& bounding,
         p.y(bounding.y() + (bounding.height() / 2) - (orig.size().height() / 2));
     }
 
-    if (horizontal_ratio)
+    bool already_computed = false;
+
+    if (align.is_set(AlignFlag::keep_ratio) && !orig.empty() && !padded_bounding.empty())
+    {
+        if (padded_bounding.width() * orig.height() < padded_bounding.height() * orig.width())
+        {
+            p.x(padded_bounding.x());
+            s.width(padded_bounding.width());
+            s.height(std::ceil(static_cast<float>(padded_bounding.width() * orig.height()) / static_cast<float>(orig.width())));
+
+            if (align.is_set(AlignFlag::top))
+                p.y(padded_bounding.y());
+            else if (align.is_set(AlignFlag::bottom))
+                p.y(padded_bounding.y() + padded_bounding.height() - s.height());
+            else if (align.is_set(AlignFlag::center_vertical))
+                p.y(padded_bounding.y() + (padded_bounding.height() - s.height()) / 2);
+        }
+        else
+        {
+            p.y(padded_bounding.y());
+            s.height(padded_bounding.height());
+            s.width(std::ceil(static_cast<float>(padded_bounding.height() * orig.width()) / static_cast<float>(orig.height())));
+
+            if (align.is_set(AlignFlag::left))
+                p.x(padded_bounding.x());
+            else if (align.is_set(AlignFlag::right))
+                p.x(padded_bounding.x() + padded_bounding.width() - s.width());
+            else if (align.is_set(AlignFlag::center_horizontal))
+                p.x(padded_bounding.x() + (padded_bounding.width() - s.width()) / 2);
+        }
+
+        already_computed = true;
+    }
+    else if (horizontal_ratio)
     {
         s.width(static_cast<float>(bounding.width() - padding * 2) *
                 (static_cast<float>(horizontal_ratio) / 100.0f));
@@ -73,7 +110,11 @@ Rect align_algorithm_force(const Rect& orig, const Rect& bounding,
         p.x(bounding.x() + padding);
     }
 
-    if (vertical_ratio)
+    if (already_computed)
+    {
+        // Already computed above.
+    }
+    else if (vertical_ratio)
     {
         s.height(static_cast<float>(bounding.height() - padding * 2) *
                  (static_cast<float>(vertical_ratio) / 100.0f));
