@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#include "detail/egtlog.h"
 #include "egt/detail/alignment.h"
 #include "egt/detail/image.h"
 #include "egt/detail/imagecache.h"
@@ -58,12 +59,28 @@ void Image::load(const std::string& uri, float hscale, float vscale, bool approx
     do_update |= detail::change_if_diff<>(m_vscale, vscale);
     if (do_update)
     {
-        if (!uri.empty())
+        bool do_reset = uri.empty();
+
+        if (!do_reset)
         {
-            m_surface = detail::image_cache().get(uri, hscale, vscale, approximate);
-            handle_surface_changed();
+            try
+            {
+                m_surface = detail::image_cache().get(uri, hscale, vscale, approximate);
+                handle_surface_changed();
+            }
+            catch (const std::exception& e)
+            {
+                EGTLOG_ERROR("{}", e.what());
+                do_reset = true;
+            }
+            catch (...)
+            {
+                EGTLOG_ERROR("unknown exception caught when calling ImageCache::get()");
+                do_reset = true;
+            }
         }
-        else
+
+        if (do_reset)
         {
             m_surface.reset();
             m_orig_size = Size();
