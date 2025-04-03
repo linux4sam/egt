@@ -166,9 +166,9 @@ if(LIBPLANES_FOUND)
     endif()
 endif()
 
-pkg_check_modules(LIBM2D libm2d>=1.0.0)
+pkg_check_modules(LIBM2D libm2d>=2.0.0)
 if(LIBM2D_FOUND)
-    set(AX_PACKAGE_REQUIRES_PRIVATE "${AX_PACKAGE_REQUIRES_PRIVATE} libm2d >= 1.0.0")
+    set(AX_PACKAGE_REQUIRES_PRIVATE "${AX_PACKAGE_REQUIRES_PRIVATE} libm2d >= 2.0.0")
 endif()
 
 option(WITH_PLPLOT "enable/disable plplot" ON)

@@ -429,7 +429,7 @@ if test "x${have_libplanes}" = xyes; then
    LIBEGT_EXTRA_LDFLAGS="${libplanes_LIBS} ${libdrm_LDFLAGS} ${LIBEGT_EXTRA_LDFLAGS}"
 fi
 
-AX_PKG_CHECK_MODULES2(libm2d, [], [libm2d >= 1.0.0], [have_libm2d=yes], [have_libm2d=no])
+AX_PKG_CHECK_MODULES2(libm2d, [], [libm2d >= 2.0.0], [have_libm2d=yes], [have_libm2d=no])
 AM_CONDITIONAL([HAVE_LIBM2D], [test "x${have_libm2d}" = xyes])
 if test "x${have_libm2d}" = xyes; then
     AC_DEFINE(HAVE_LIBM2D, 1, [Have libm2d support])
