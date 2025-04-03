@@ -125,7 +125,7 @@ public:
      */
     void resize(const Size& size)
     {
-        if (this->size() != size)
+        if (!m_orig_size.empty() && this->size() != size)
         {
             float hs = static_cast<float>(size.width()) / static_cast<float>(m_orig_size.width());
             float vs = static_cast<float>(size.height()) / static_cast<float>(m_orig_size.height());
