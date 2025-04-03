@@ -36,6 +36,7 @@
 #include <egt/list.h>
 #include <egt/notebook.h>
 #include <egt/palette.h>
+#include <egt/picture.h>
 #include <egt/popup.h>
 #include <egt/progressbar.h>
 #include <egt/radial.h>

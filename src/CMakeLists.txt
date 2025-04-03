@@ -46,6 +46,7 @@ add_library(egt SHARED
     painter.cpp
     palette.cpp
     pattern.cpp
+    picture.cpp
     progressbar.cpp
     radial.cpp
     radiobox.cpp
@@ -141,6 +142,7 @@ target_sources(egt PUBLIC FILE_SET HEADERS
     ${CMAKE_SOURCE_DIR}/include/egt/painter.h
     ${CMAKE_SOURCE_DIR}/include/egt/palette.h
     ${CMAKE_SOURCE_DIR}/include/egt/pattern.h
+    ${CMAKE_SOURCE_DIR}/include/egt/picture.h
     ${CMAKE_SOURCE_DIR}/include/egt/popup.h
     ${CMAKE_SOURCE_DIR}/include/egt/progressbar.h
     ${CMAKE_SOURCE_DIR}/include/egt/radial.h

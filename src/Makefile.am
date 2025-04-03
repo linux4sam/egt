@@ -105,6 +105,7 @@ object.cpp \
 painter.cpp \
 palette.cpp \
 pattern.cpp \
+picture.cpp \
 progressbar.cpp \
 radial.cpp \
 radiobox.cpp \
@@ -217,6 +218,7 @@ $(top_builddir)/include/egt/version.h \
 ../include/egt/painter.h \
 ../include/egt/palette.h \
 ../include/egt/pattern.h \
+../include/egt/picture.h \
 ../include/egt/popup.h \
 ../include/egt/progressbar.h \
 ../include/egt/radial.h \

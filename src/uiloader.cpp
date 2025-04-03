@@ -216,6 +216,7 @@ static const std::pair<std::string, CreateFunction> allocators[] =
     {"egt::v1::Notebook", create_widget<Notebook>},
     {"egt::v1::NotebookTab", create_widget<NotebookTab>},
     //{"egt::v1::PopupVirtualKeyboard", create_widget<PopupVirtualKeyboard>},
+    {"egt::v1::Picture", create_widget<Picture>},
     {"egt::v1::ProgressBar", create_widget<ProgressBar>},
     {"egt::v1::ProgressBarF", create_widget<ProgressBarF>},
     {"egt::v1::RadioBox", create_widget<RadioBox>},
