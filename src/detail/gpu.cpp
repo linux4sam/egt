@@ -761,20 +761,19 @@ bool GPUPainter::paint(const cairo_rectangle_list_t& clip_rectangles,
 bool GPUPainter::fill_rectangle(const cairo_rectangle_list_t& clip_rectangles,
                                 const Rect& rect)
 {
-    if (rect.empty())
-        return true;
-
     if (!clip_rectangles.num_rectangles)
     {
-        m_rects.emplace_back(rect);
+        if (!rect.empty())
+            m_rects.emplace_back(rect);
     }
     else
     {
         for (int i = 0; i < clip_rectangles.num_rectangles; ++i)
         {
             const auto& c = clip_rectangles.rectangles[i];
-            const Rect clip(c.x, c.y, c.width, c.height);
-            auto clipped_rect = Rect::intersection(rect, clip);
+            Rect clipped_rect(c.x, c.y, c.width, c.height);
+            if (!rect.empty())
+                clipped_rect = Rect::intersection(rect, clipped_rect);
 
             if (!clipped_rect.empty())
                 m_rects.emplace_back(clipped_rect);
@@ -1109,9 +1108,6 @@ bool GPUPainter::draw(const Surface& surface, const Point& point, const Rect& re
 
 bool GPUPainter::draw(const Color& color, const Rect& rect)
 {
-    if (rect.empty())
-        return true;
-
     if (!m_painter.target().impl().is_gpu_capable())
     {
         EGTLOG_TRACE("target {} is not GPU capable.", (void*)&m_painter.target());
