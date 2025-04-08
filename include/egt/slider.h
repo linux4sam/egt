@@ -69,6 +69,13 @@ struct SliderBase
 
     /// Slider flags.
     using SliderFlags = Flags<SliderBase::SliderFlag>;
+
+    enum class SliderLineTransition
+    {
+        to_end,
+        to_begin,
+        to_center,
+    };
 };
 
 /**
@@ -337,6 +344,22 @@ public:
         }
     }
 
+    /**
+     * Get the line transition.
+     */
+    EGT_NODISCARD SliderLineTransition line_transition() const { return m_line_transition; }
+
+    /**
+     * Set the line transition.
+     *
+     * @param[in] transition The line transition.
+     */
+    void line_transition(SliderLineTransition transition)
+    {
+        if (detail::change_if_diff<>(m_line_transition, transition))
+            this->damage();
+    }
+
     /// Get the current slider flags.
     EGT_NODISCARD const SliderFlags& slider_flags() const { return m_slider_flags; }
 
@@ -535,6 +558,9 @@ protected:
 
     /// Slider flags.
     SliderFlags m_slider_flags{};
+
+    /// Line transition.
+    SliderLineTransition m_line_transition{SliderLineTransition::to_end};
 
     /// When dragging, the offset at the drag start.
     int m_start_offset{0};
@@ -885,6 +911,7 @@ void SliderType<T>::draw_line(Painter& painter, const Rect& handle_rect)
     if (slider_flags().is_set(SliderFlag::hide_line))
         return;
 
+    const auto inverted = !!slider_flags().is_set(SliderFlag::inverted);
     const auto b = this->content_area();
     const auto center = handle_rect.center();
     Point p1, p2;
@@ -892,12 +919,26 @@ void SliderType<T>::draw_line(Painter& painter, const Rect& handle_rect)
 
     if (m_orient == Orientation::horizontal)
     {
+        const auto w = handle_rect.width() / 2;
+        auto transition_x = center.x();
+        switch (line_transition())
+        {
+        case SliderLineTransition::to_end:
+            transition_x += inverted ? -w : w;
+            break;
+        case SliderLineTransition::to_begin:
+            transition_x -= inverted ? -w : w;
+            break;
+        default:
+            break;
+        }
+
         p1.x(b.x() + m_handle_margin);
-        s1.width(center.x() - p1.x());
+        s1.width(transition_x - p1.x());
         s1.height(handle_rect.height() / 5);
         p1.y(center.y() - s1.height() / 2);
 
-        p2.x(center.x());
+        p2.x(transition_x);
         s2.width(b.x() + b.width() - m_handle_margin - p2.x());
         s2.height(s1.height());
         p2.y(p1.y());
@@ -907,12 +948,26 @@ void SliderType<T>::draw_line(Painter& painter, const Rect& handle_rect)
     }
     else
     {
+        const auto h = handle_rect.height() / 2;
+        auto transition_y = center.y();
+        switch (line_transition())
+        {
+        case SliderLineTransition::to_end:
+            transition_y -= inverted ? -h : h;
+            break;
+        case SliderLineTransition::to_begin:
+            transition_y += inverted ? -h : h;
+            break;
+        default:
+            break;
+        }
+
         p1.y(b.y() + m_handle_margin);
-        s1.height(center.y() - p1.y());
+        s1.height(transition_y - p1.y());
         s1.width(handle_rect.width() / 5);
         p1.x(center.x() - s1.width() / 2);
 
-        p2.y(center.y());
+        p2.y(transition_y);
         s2.height(b.y() + b.height() - m_handle_margin - p2.y());
         s2.width(s1.width());
         p2.x(p1.x());
@@ -933,8 +988,7 @@ void SliderType<T>::draw_line(Painter& painter, const Rect& handle_rect)
         auto c2 = this->color(Palette::ColorId::button_fg,
                               Palette::GroupId::disabled);
 
-        if (!!slider_flags().is_set(SliderFlag::inverted) ^
-            (m_orient == Orientation::vertical))
+        if (inverted ^ (m_orient == Orientation::vertical))
             std::swap(c1, c2);
 
         const Rect r1(p1, s1);
@@ -961,6 +1015,7 @@ void SliderType<T>::serialize(Serializer& serializer) const
     ValueRangeWidget<T>::serialize(serializer);
 
     serializer.add_property("sliderflags", m_slider_flags.to_string());
+    serializer.add_property("line_transition", detail::enum_to_string(line_transition()));
     serializer.add_property("orient", detail::enum_to_string(orient()));
     serializer.add_property("label_offset", label_offset());
     serializer.add_property("handle_offset", handle_offset());
@@ -976,6 +1031,11 @@ void SliderType<T>::deserialize(Serializer::Properties& props)
         if (std::get<0>(p) == "sliderflags")
         {
             m_slider_flags.from_string(std::get<1>(p));
+            return true;
+        }
+        else if (std::get<0>(p) == "line_transition")
+        {
+            line_transition(detail::enum_from_string<SliderLineTransition>(std::get<1>(p)));
             return true;
         }
         else if (std::get<0>(p) == "orient")
@@ -1033,6 +1093,9 @@ void SliderType<T>::reset_handle_image(Palette::GroupId group)
 /// Enum string conversion map
 template<>
 EGT_API const std::pair<SliderBase::SliderFlag, char const*> detail::EnumStrings<SliderBase::SliderFlag>::data[8];
+
+template<>
+EGT_API const std::pair<SliderBase::SliderLineTransition, char const*> detail::EnumStrings<SliderBase::SliderLineTransition>::data[3];
 
 }
 }

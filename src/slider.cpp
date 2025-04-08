@@ -37,5 +37,13 @@ const std::pair<SliderBase::SliderFlag, char const*> detail::EnumStrings<SliderB
     {SliderBase::SliderFlag::hide_line, "hide_line"},
 };
 
+template<>
+const std::pair<SliderBase::SliderLineTransition, char const*> detail::EnumStrings<SliderBase::SliderLineTransition>::data[] =
+{
+    {SliderBase::SliderLineTransition::to_end, "to_end"},
+    {SliderBase::SliderLineTransition::to_begin, "to_begin"},
+    {SliderBase::SliderLineTransition::to_center, "to_center"},
+};
+
 }
 }
