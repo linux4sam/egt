@@ -937,8 +937,13 @@ void SliderType<T>::draw_line(Painter& painter, const Rect& handle_rect)
             (m_orient == Orientation::vertical))
             std::swap(c1, c2);
 
-        painter.draw(c1, Rect(p1, s1));
-        painter.draw(c2, Rect(p2, s2));
+        const Rect r1(p1, s1);
+        if (!r1.empty())
+            painter.draw(c1, r1);
+
+        const Rect r2(p2, s2);
+        if (!r2.empty())
+            painter.draw(c2, r2);
     }
 }
 
