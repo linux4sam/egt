@@ -211,6 +211,8 @@ public:
 
     void reset_uri() { uri({}); }
 
+    Image crop(const Rect& rect) const;
+
     /**
     * Serialize to the specified serializer.
     */

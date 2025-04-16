@@ -8,6 +8,7 @@
 #include "egt/detail/image.h"
 #include "egt/detail/imagecache.h"
 #include "egt/image.h"
+#include "egt/painter.h"
 #include "egt/serialize.h"
 
 namespace egt
@@ -162,6 +163,31 @@ Rect Image::align(const Rect& bounding, const AlignFlags& align)
     }
 
     return target;
+}
+
+Image Image::crop(const Rect& rect) const
+{
+    if (empty())
+        return Image();
+
+    const auto r = Rect::intersection(rect, Rect(m_surface->size()));
+    if (r.empty())
+        return Image();
+
+    Surface target(r.size(), m_surface->format());
+    {
+        Painter painter(target);
+        painter.source(*this, -r.point());
+        painter.rectangle(RectF(r.size()));
+        painter.fill();
+        /*
+         * Make sure 'painter' is destroyed before moving the 'target' surface
+         * into the output Image because Painter::~Painter() calls
+         * 'm_surface.flush();', hence still requires a valid Surface instance.
+         */
+    }
+
+    return Image(std::move(target));
 }
 
 void Image::serialize(const std::string& name, Serializer& serializer) const
