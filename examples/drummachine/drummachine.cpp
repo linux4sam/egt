@@ -9,6 +9,41 @@
 #include <memory>
 #include <string>
 
+static int fatal_error(const std::string& err)
+{
+    std::cerr << err << std::endl;
+
+    auto& app = egt::Application::instance();
+
+    auto msg = std::make_shared<egt::Label>(err);
+    msg->border(2);
+    msg->fill_flags(egt::Theme::FillFlag::solid);
+    msg->color(egt::Palette::ColorId::border, egt::Palette::red);
+    msg->color(egt::Palette::ColorId::label_bg, egt::Palette::white);
+    msg->resize(egt::Application::instance().screen()->size() * 0.75);
+
+    egt::Timer err_timer(std::chrono::milliseconds(3000));
+    err_timer.on_timeout([&app]()
+    {
+        app.quit(-1);
+    });
+    err_timer.start();
+
+    auto win = app.main_window();
+    /*
+     * A main window has been already set when this function is called.
+     * This is why we don't deal with the case there is no main window.
+     * Sanity check just done to prevent a crash.
+     */
+    if (win)
+    {
+        win->add(egt::center(msg));
+        win->show();
+    }
+
+    return app.run();
+}
+
 int main(int argc, char** argv)
 {
     egt::Application app(argc, argv);
@@ -67,8 +102,7 @@ int main(int argc, char** argv)
         }
         catch (const std::system_error& e)
         {
-            std::cerr << e.what() << std::endl;
-            return -1;
+            return fatal_error(e.what());
         }
         catch (const std::runtime_error& e)
         {
@@ -127,8 +161,7 @@ int main(int argc, char** argv)
     const auto sound_devices = egt::SoundEffect::sound_device_list();
     if (sound_devices.empty())
     {
-        std::cerr << "No sound device found" << std::endl;
-        return -1;
+        return fatal_error("No sound device found");
     }
 
     egt::ImageButton speaker(egt::Image("file:speaker.png"), sound_devices[0].card_name());
