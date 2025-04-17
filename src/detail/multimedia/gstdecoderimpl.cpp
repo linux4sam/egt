@@ -677,7 +677,7 @@ GstDecoderImpl::get_video_device_caps(const std::string& dev_name)
                     gst_structure_get_int(s, "width", &width);
                     gst_structure_get_int(s, "height", &height);
                     const auto str = gst_structure_get_string(s, "format");
-                    const auto caps_format = str ? str : "";
+                    [[maybe_unused]] const auto caps_format = str ? str : "";
                     resolutions.emplace_back(std::make_tuple(width, height));
                     EGTLOG_DEBUG("GstDecoderImpl::get_camera_device_caps: "
                                  "{}, format=(string){}, width=(int){}, height=(int){}",

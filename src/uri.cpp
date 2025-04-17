@@ -64,8 +64,8 @@ void Uri::parse(const std::string& uri)
     {
 #ifndef NDEBUG
         // cppcheck-suppress unreadVariable
-        int counter = 0;
-        for (const auto& res : match)
+        [[maybe_unused]] int counter = 0;
+        for ([[maybe_unused]] const auto& res : match)
         {
             EGTLOG_TRACE("{}: {}", counter++, res);
         }
