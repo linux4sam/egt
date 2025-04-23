@@ -76,14 +76,21 @@ int main(int argc, char** argv)
     errlabel.text_align(egt::AlignFlag::center_horizontal | egt::AlignFlag::top);
     win.add(errlabel);
 
+    egt::Window overlay_window(win.size(), egt::PixelFormat::argb8888);
+    overlay_window.color(egt::Palette::ColorId::bg, egt::Palette::transparent);
+    if (!overlay_window.plane_window())
+        overlay_window.fill_flags(egt::Theme::FillFlag::blend);
+    win.add(overlay_window);
+
     auto message_dialog = std::make_shared<egt::Dialog>(win.size() * 0.75);
+    message_dialog->color(egt::Palette::ColorId::bg, egt::Palette::white);
     message_dialog->title("egt_camera");
     std::string dialog_text("");
     auto dtext = std::make_shared<egt::TextBox>(dialog_text);
     message_dialog->widget(expand(dtext));
     message_dialog->button(egt::Dialog::ButtonId::button1, "Cancel");
     message_dialog->button(egt::Dialog::ButtonId::button2, "OK");
-    win.add(message_dialog);
+    overlay_window.add(message_dialog);
 
     message_dialog->on_button2_click([&player]()
     {
@@ -166,16 +173,9 @@ int main(int argc, char** argv)
         }
     });
 
-    egt::Window ctrlwindow(egt::Size(win.width(), 72), egt::PixelFormat::argb8888);
-    ctrlwindow.align(egt::AlignFlag::bottom | egt::AlignFlag::center_horizontal);
-    ctrlwindow.color(egt::Palette::ColorId::bg, egt::Palette::transparent);
-    if (!ctrlwindow.plane_window())
-        ctrlwindow.fill_flags(egt::Theme::FillFlag::blend);
-    win.add(ctrlwindow);
-
     egt::HorizontalBoxSizer hpos;
-    hpos.align(egt::AlignFlag::center);
-    ctrlwindow.add(hpos);
+    hpos.align(egt::AlignFlag::bottom | egt::AlignFlag::center_horizontal);
+    overlay_window.add(hpos);
 
     auto logo = std::make_shared<egt::ImageLabel>(egt::Image("icon:mgs_logo_icon.png;32"));
     logo->margin(10);
@@ -222,7 +222,7 @@ int main(int argc, char** argv)
     win.show();
     win.layout();
     player.show();
-    ctrlwindow.show();
+    overlay_window.show();
 
     return app.run();
 }
