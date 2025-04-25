@@ -444,6 +444,11 @@ void Screen::init(const detail::FrameBufferInfo* info, uint32_t count, const Siz
 
     m_painter = std::make_unique<Painter>(m_surface);
 
+    /* Reset the composition buffer. */
+    Painter::AutoSaveRestore sr(*m_painter);
+    m_painter->alpha_blending(false);
+    m_painter->draw(Palette::transparent, RectF(size));
+
     m_format = format;
 }
 
