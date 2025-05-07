@@ -22,6 +22,10 @@ is enabled).
 - Introduce the SoundEffect class to asynchronously play sound in a fast and
 lightweight way compare to the AudioPlayer. For more details, check the audio
 page of the EGT documentation and the API documentation.
+- The new ListBoxMulti widget provides support for multi-selection.
+- The new Picture widget is a helper widget. To display an image, Picture can
+be used as a replacement of ImageLabel, it avoids to take care of not showing
+the label.
 ### Changed
 - Image::surface() now returns a const reference rather than a copy.
 - Widget::paint_to_file() is no longer virtual, hence no longer overridden.
@@ -53,7 +57,8 @@ all.
 - The Sprite::surface() method has been removed as it was not used at all.
 - The detail::read_resource_stream() function has been removed as it was not
 used at all.
-- The Image::crop() method has been removed as it was not used at all.
+- The Image::crop() float variant method has been removed as it doesn't make
+much sense as it deals with pixels.
 - The Image::copy() method has been removed as it is no longer used internally
 and also because the Image class provides a copy constructor and a copy
 assignment operator, hence Image instances can still be copied anyway.
