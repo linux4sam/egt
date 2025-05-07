@@ -41,6 +41,10 @@ are provided to help you update your code.
 
 @li The new egt::v1::Font::extents() methods return either a egt::v1::Font::FontExtents or egt::v1::Font::TextExtents, which abstract the 'cairo_font_extents_t' and 'cairo_text_extents_t' types. These new extents() methods internally call the new egt::v1::Painter::extents() methods on a default Painter instance, which has no transformation like rotation or symmetry. If you want to transform the font, then you should call egt::v1::Painter::extents() instead, on the relevant Painter instance.
 
+@subsection v1_11_frame Frame
+
+@li Add the egt::v1::Frame::add_at() and egt::v1::Frame::remove_at() methods to add or remove a child widget at a specific position.
+
 @subsection v1_11_image Image
 
 @li The egt::v1::Image::Image(shared_cairo_surface_t) constructor has been replaced with the new egt::v1::Image::Image(std::shared_ptr<Surface>) constructor.
@@ -51,7 +55,19 @@ are provided to help you update your code.
 
 @li The egt::v1::Image::surface() method now returns a 'const std::shared_ptr<Surface>&' reference rather than a copy of a 'shared_cairo_surface_t'.
 
-@li The egt::v1::Image::pattern(), egt::v1::Image::crop() and egt::v1::Image::copy() methods have been removed.
+@li The egt::v1::Image::pattern(), egt::v1::Image::crop() float variant and egt::v1::Image::copy() methods have been removed.
+
+@subsection v1_11_listboxbase ListBoxBase
+
+@li Introduce the egt::v1::ListBoxBase class that is the equivalent of egt::v1::ListBox with the selected(size_t index) method as a pure virtual method.
+
+@li New egt::v1::ListBoxBase::add_item_at() and egt::v1::ListBoxBase::remove_item_at() methods to add or remove an item according to the position specified.
+
+@li New egt::v1::ListBoxBase::scroll_offset() method to scroll an offset value either horizontally, or vertically.
+
+@subsection v1_11_listboxmulti ListBoxMulti
+
+@li Introduce the egt::v1::ListBoxMulti widgets that inherits from egt::v1::ListBoxBase and provides new methods to deal with multi-selection.
 
 @subsection v1_11_painter Painter
 
@@ -106,6 +122,10 @@ are provided to help you update your code.
 @subsection v1_11_pattern Pattern
 
 @li The egt::v1::Pattern::pattern() method now returns a 'const detail::InternalPattern&' rather than a 'cairo_pattern_t*' previously: detail::InternalPattern is an opaque class to hide the internal implementation.
+
+@subsection v1_11_picture Picture
+
+@li Introduce the Picture class that is a helper class to display images. It can replace an ImageLabel widget with the show_label property disabled.
 
 @subsection v1_11_resourcemanager ResourceManager
 
