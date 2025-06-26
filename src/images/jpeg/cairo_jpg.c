@@ -137,6 +137,7 @@ cairo_status_t cairo_image_surface_write_to_jpeg_mem(cairo_surface_t *sfc, unsig
    struct jpeg_error_mgr jerr;
    JSAMPROW row_pointer[1];
    cairo_surface_t *other = NULL;
+   unsigned long outsize = (unsigned long)*len;
 
    // check valid input format (must be IMAGE_SURFACE && (ARGB32 || RGB24))
    if (cairo_surface_get_type(sfc) != CAIRO_SURFACE_TYPE_IMAGE ||
@@ -173,7 +174,8 @@ cairo_status_t cairo_image_surface_write_to_jpeg_mem(cairo_surface_t *sfc, unsig
    jpeg_create_compress(&cinfo);
 
    // set compression parameters
-   jpeg_mem_dest(&cinfo, data, (size_t*)len);
+   jpeg_mem_dest(&cinfo, data, &outsize);
+   *len = (size_t)outsize;
    cinfo.image_width = cairo_image_surface_get_width(sfc);
    cinfo.image_height = cairo_image_surface_get_height(sfc);
 #ifdef LIBJPEG_TURBO_VERSION
