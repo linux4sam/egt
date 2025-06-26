@@ -22,7 +22,6 @@ set(CMAKE_VERBOSE_MAKEFILE True)
 set(CMAKE_CXX_STANDARD 17)
 
 add_compile_options(-fvisibility=hidden)
-add_compile_options(-fvisibility-inlines-hidden)
 add_compile_options(-Wall -Wextra)
 add_compile_options(-pedantic)
 add_compile_options(-Wfloat-equal)
@@ -34,8 +33,11 @@ add_compile_options(-Wpacked)
 add_compile_options(-Wno-variadic-macros)
 add_compile_options(-Wstrict-aliasing)
 add_compile_options(-Winit-self)
-add_compile_options(-Woverloaded-virtual)
 add_compile_options(-Wno-psabi)
+
+list(APPEND CXX_COMPILE_OPTIONS -fvisibility-inlines-hidden)
+list(APPEND CXX_COMPILE_OPTIONS -Woverloaded-virtual)
+add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:${CXX_COMPILE_OPTIONS}>")
 
 add_compile_definitions($<$<CONFIG:Release>:NDEBUG>)
 
