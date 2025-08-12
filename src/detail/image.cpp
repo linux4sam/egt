@@ -88,8 +88,25 @@ static Surface copy_cairo_surface(cairo_surface_t* surface)
 
     Surface image(size, format);
     image.sync_for_cpu();
-    memcpy(image.data(), cairo_image_surface_get_data(surface),
-           size.height() * cairo_image_surface_get_stride(surface));
+
+    const uint8_t* src = cairo_image_surface_get_data(surface);
+    uint8_t* dst = static_cast<uint8_t*>(image.data());
+    DefaultDim src_stride = cairo_image_surface_get_stride(surface);
+    DefaultDim dst_stride = image.stride();
+    if (src_stride == dst_stride)
+    {
+        memcpy(dst, src, dst_stride * size.height());
+    }
+    else
+    {
+        auto stride = std::min(src_stride, dst_stride);
+        for (DefaultDim h = 0; h < size.height(); ++h)
+        {
+            memcpy(dst, src, stride);
+            src += src_stride;
+            dst += dst_stride;
+        }
+    }
 
     return image;
 }
