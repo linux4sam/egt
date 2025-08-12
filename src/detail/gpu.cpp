@@ -311,6 +311,7 @@ bool GPUPainter::draw(Operator op)
             m2d_source_enable(M2D_DST, false);
             m2d_draw_rectangles(rects.get(), m_rects.size());
 
+            m2d_source_color(255, 255, 255, 255);
             m2d_set_source(M2D_SRC, tmp, 0, 0);
             has_source = true;
         }
@@ -333,6 +334,8 @@ bool GPUPainter::draw(Operator op)
     if (blend)
         m2d_set_source(M2D_DST, target, 0, 0);
     m2d_draw_rectangles(rects.get(), m_rects.size());
+
+    m2d_source_color(255, 255, 255, 255);
 
     return true;
 }
@@ -992,6 +995,7 @@ bool GPUPainter::mask(const Surface& surface, const Point& point, const Rect& re
         m2d_set_target(tmp);
         m2d_draw_rectangles(rects.get(), m_rects.size());
 
+        m2d_source_color(255, 255, 255, 255);
         m2d_set_source(M2D_SRC, tmp, 0, 0);
     }
 
@@ -1162,6 +1166,8 @@ bool GPUPainter::draw(const Color& color, const Rect& rect)
         m2d_set_target(target);
 
     m2d_draw_rectangles(rects.get(), m_rects.size());
+
+    m2d_source_color(255, 255, 255, 255);
 
     if (blend)
     {
