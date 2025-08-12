@@ -22,26 +22,27 @@ int main(int argc, char** argv)
     btn2->disable();
     grid0->add(egt::expand(btn2));
 
-    grid0->add(expand(std::make_shared<egt::ImageButton>(egt::Image("icon:calculator.png"), "Calculator")));
+    auto image = egt::Image("icon:calculator.png");
+    grid0->add(expand(std::make_shared<egt::ImageButton>(image, "Calculator")));
 
-    auto imagebutton1 = std::make_shared<egt::ImageButton>(egt::Image("icon:calculator.png"), "Calculator");
+    auto imagebutton1 = std::make_shared<egt::ImageButton>(image, "Calculator");
     grid0->add(expand(imagebutton1));
     imagebutton1->text_align(egt::AlignFlag::center_vertical | egt::AlignFlag::left);
 
-    auto imagebutton2 = std::make_shared<egt::ImageButton>(egt::Image("icon:calculator.png"), "Calculator");
+    auto imagebutton2 = std::make_shared<egt::ImageButton>(image, "Calculator");
     grid0->add(expand(imagebutton2));
     imagebutton2->text_align(egt::AlignFlag::center_vertical | egt::AlignFlag::right);
 
-    auto imagebutton3 = std::make_shared<egt::ImageButton>(egt::Image("icon:calculator.png"), "Calculator");
+    auto imagebutton3 = std::make_shared<egt::ImageButton>(image, "Calculator");
     grid0->add(expand(imagebutton3));
     imagebutton3->text_align(egt::AlignFlag::center_horizontal | egt::AlignFlag::top);
 
-    auto imagebutton4 = std::make_shared<egt::ImageButton>(egt::Image("icon:calculator.png"), "Calculator");
+    auto imagebutton4 = std::make_shared<egt::ImageButton>(image, "Calculator");
     grid0->add(expand(imagebutton4));
     imagebutton4->text_align(egt::AlignFlag::center_horizontal | egt::AlignFlag::bottom);
     imagebutton4->image_align(egt::AlignFlag::right);
 
-    auto imagebutton5 = std::make_shared<egt::ImageButton>(egt::Image("icon:calculator.png"));
+    auto imagebutton5 = std::make_shared<egt::ImageButton>(image);
     grid0->add(expand(imagebutton5));
 
     auto button6 = std::make_shared<egt::Button>("Multiline\nButton Text");

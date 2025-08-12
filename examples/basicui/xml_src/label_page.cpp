@@ -40,27 +40,28 @@ int main(int argc, char** argv)
     imagelabel0->image_align(egt::AlignFlag::top);
     imagelabel0->text_align(egt::AlignFlag::center);
 
-    auto imagelabel1 = std::make_shared<egt::ImageLabel>(egt::Image("icon:camera.png"), "Camera");
+    auto image = egt::Image("icon:camera.png");
+    auto imagelabel1 = std::make_shared<egt::ImageLabel>(image, "Camera");
     grid0->add(expand(imagelabel1));
     imagelabel1->text_align(egt::AlignFlag::center);
 
-    auto imagelabel2 = std::make_shared<egt::ImageLabel>(egt::Image("icon:camera.png"), "Camera");
+    auto imagelabel2 = std::make_shared<egt::ImageLabel>(image, "Camera");
     grid0->add(expand(imagelabel2));
     imagelabel2->text_align(egt::AlignFlag::center_vertical | egt::AlignFlag::right);
     imagelabel2->image_align(egt::AlignFlag::right);
 
-    auto imagelabel3 = std::make_shared<egt::ImageLabel>(egt::Image("icon:camera.png"), "Camera");
+    auto imagelabel3 = std::make_shared<egt::ImageLabel>(image, "Camera");
     grid0->add(expand(imagelabel3));
     imagelabel3->text_align(egt::AlignFlag::center_horizontal | egt::AlignFlag::top);
     imagelabel3->image_align(egt::AlignFlag::bottom);
 
-    auto imagelabel4 = std::make_shared<egt::ImageLabel>(egt::Image("icon:camera.png"), "Camera");
+    auto imagelabel4 = std::make_shared<egt::ImageLabel>(image, "Camera");
     imagelabel4->fill_flags(egt::Theme::FillFlag::blend);
     imagelabel4->border(1);
     grid0->add(egt::expand(imagelabel4));
     imagelabel4->text_align(egt::AlignFlag::center_horizontal | egt::AlignFlag::bottom);
 
-    auto imagelabel5 = std::make_shared<egt::ImageLabel>(egt::Image("icon:camera.png"));
+    auto imagelabel5 = std::make_shared<egt::ImageLabel>(image);
     imagelabel5->fill_flags(egt::Theme::FillFlag::blend);
     imagelabel5->border(1);
     grid0->add(egt::expand(imagelabel5));
