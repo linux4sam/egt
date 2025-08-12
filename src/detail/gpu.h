@@ -44,7 +44,7 @@ class GPUSurface
 public:
 
     GPUSurface(Surface* surface, int prime_fd);
-    GPUSurface(Surface* surface, void** data);
+    GPUSurface(Surface* surface, void** data, DefaultDim* stride);
 
     GPUSurface(const GPUSurface&) = delete;
     GPUSurface(GPUSurface&& rhs) noexcept = default;

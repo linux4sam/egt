@@ -170,9 +170,9 @@ endif()
 
 option(WITH_LIBM2D "enable/disable libm2d" ON)
 if(WITH_LIBM2D)
-    pkg_check_modules(LIBM2D libm2d>=2.0.0)
+    pkg_check_modules(LIBM2D libm2d>=2.1.0)
     if(LIBM2D_FOUND)
-        set(AX_PACKAGE_REQUIRES_PRIVATE "${AX_PACKAGE_REQUIRES_PRIVATE} libm2d >= 2.0.0")
+        set(AX_PACKAGE_REQUIRES_PRIVATE "${AX_PACKAGE_REQUIRES_PRIVATE} libm2d >= 2.1.0")
     endif()
 endif()
 

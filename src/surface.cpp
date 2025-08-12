@@ -41,7 +41,7 @@ Surface::Surface(const Size& size, PixelFormat format)
 #ifdef HAVE_LIBM2D
     try
     {
-        detail::GPUSurface gpu_surface(this, &m_data);
+        detail::GPUSurface gpu_surface(this, &m_data, &m_stride);
         m_impl = std::make_unique<detail::InternalSurface>(cairo_surface(*this),
                  std::move(gpu_surface));
     }
