@@ -45,26 +45,27 @@ struct ButtonPage : public egt::NotebookTab
         btn2->disable();
         grid0->add(egt::expand(btn2));
 
-        grid0->add(expand(std::make_shared<egt::ImageButton>(egt::Image("icon:calculator.png"), "Calculator")));
+        auto image = egt::Image("icon:calculator.png");
+        grid0->add(expand(std::make_shared<egt::ImageButton>(image, "Calculator")));
 
-        auto imagebutton1 = std::make_shared<egt::ImageButton>(egt::Image("icon:calculator.png"), "Calculator");
+        auto imagebutton1 = std::make_shared<egt::ImageButton>(image, "Calculator");
         grid0->add(expand(imagebutton1));
         imagebutton1->text_align(egt::AlignFlag::center_vertical | egt::AlignFlag::left);
 
-        auto imagebutton2 = std::make_shared<egt::ImageButton>(egt::Image("icon:calculator.png"), "Calculator");
+        auto imagebutton2 = std::make_shared<egt::ImageButton>(image, "Calculator");
         grid0->add(expand(imagebutton2));
         imagebutton2->text_align(egt::AlignFlag::center_vertical | egt::AlignFlag::right);
 
-        auto imagebutton3 = std::make_shared<egt::ImageButton>(egt::Image("icon:calculator.png"), "Calculator");
+        auto imagebutton3 = std::make_shared<egt::ImageButton>(image, "Calculator");
         grid0->add(expand(imagebutton3));
         imagebutton3->text_align(egt::AlignFlag::center_horizontal | egt::AlignFlag::top);
 
-        auto imagebutton4 = std::make_shared<egt::ImageButton>(egt::Image("icon:calculator.png"), "Calculator");
+        auto imagebutton4 = std::make_shared<egt::ImageButton>(image, "Calculator");
         grid0->add(expand(imagebutton4));
         imagebutton4->text_align(egt::AlignFlag::center_horizontal | egt::AlignFlag::bottom);
         imagebutton4->image_align(egt::AlignFlag::right);
 
-        auto imagebutton5 = std::make_shared<egt::ImageButton>(egt::Image("icon:calculator.png"));
+        auto imagebutton5 = std::make_shared<egt::ImageButton>(image);
         grid0->add(expand(imagebutton5));
 
         auto button6 = std::make_shared<egt::Button>("Multiline\nButton Text");
@@ -169,27 +170,28 @@ struct LabelPage : public egt::NotebookTab
         imagelabel0->image_align(egt::AlignFlag::top);
         imagelabel0->text_align(egt::AlignFlag::center);
 
-        auto imagelabel1 = std::make_shared<egt::ImageLabel>(egt::Image("icon:camera.png"), "Camera");
+        auto image = egt::Image("icon:camera.png");
+        auto imagelabel1 = std::make_shared<egt::ImageLabel>(image, "Camera");
         grid0->add(expand(imagelabel1));
         imagelabel1->text_align(egt::AlignFlag::center);
 
-        auto imagelabel2 = std::make_shared<egt::ImageLabel>(egt::Image("icon:camera.png"), "Camera");
+        auto imagelabel2 = std::make_shared<egt::ImageLabel>(image, "Camera");
         grid0->add(expand(imagelabel2));
         imagelabel2->text_align(egt::AlignFlag::center_vertical | egt::AlignFlag::right);
         imagelabel2->image_align(egt::AlignFlag::right);
 
-        auto imagelabel3 = std::make_shared<egt::ImageLabel>(egt::Image("icon:camera.png"), "Camera");
+        auto imagelabel3 = std::make_shared<egt::ImageLabel>(image, "Camera");
         grid0->add(expand(imagelabel3));
         imagelabel3->text_align(egt::AlignFlag::center_horizontal | egt::AlignFlag::top);
         imagelabel3->image_align(egt::AlignFlag::bottom);
 
-        auto imagelabel4 = std::make_shared<egt::ImageLabel>(egt::Image("icon:camera.png"), "Camera");
+        auto imagelabel4 = std::make_shared<egt::ImageLabel>(image, "Camera");
         imagelabel4->fill_flags(egt::Theme::FillFlag::blend);
         imagelabel4->border(1);
         grid0->add(egt::expand(imagelabel4));
         imagelabel4->text_align(egt::AlignFlag::center_horizontal | egt::AlignFlag::bottom);
 
-        auto imagelabel5 = std::make_shared<egt::ImageLabel>(egt::Image("icon:camera.png"));
+        auto imagelabel5 = std::make_shared<egt::ImageLabel>(image);
         imagelabel5->fill_flags(egt::Theme::FillFlag::blend);
         imagelabel5->border(1);
         grid0->add(egt::expand(imagelabel5));
@@ -529,8 +531,9 @@ struct ListPage : public egt::NotebookTab
         hsizer1->add(list0);
 
         auto list1 = std::make_shared<egt::ListBox>(egt::Rect(0, 0, 0, 300));
+        auto image = egt::Image("icon:ok.png");
         for (auto x = 0; x < 5; x++)
-            list1->add_item(std::make_shared<egt::StringItem>("item " + std::to_string(x), egt::Image("icon:ok.png")));
+            list1->add_item(std::make_shared<egt::StringItem>("item " + std::to_string(x), image));
         list1->width(content_size.width() / 3);
         list1->margin(5);
         hsizer1->add(list1);
