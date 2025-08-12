@@ -47,10 +47,11 @@ public:
      *
      * @param uri Resource path. @see @ref resources
      * @param scale Scale of the image, with 1.0 being 100%.
+     * @param is_cached Tell whether the image will be stored in the image cache.
      */
     // cppcheck-suppress noExplicitConstructor
     // NOLINTNEXTLINE(hicpp-explicit-conversions, google-explicit-constructor)
-    Image(const std::string& uri = {}, float scale = 1.0);
+    Image(const std::string& uri = {}, float scale = 1.0, bool is_cached = false);
 
     /**
      * Construct a raster image from a URI with an optional scale.
@@ -58,8 +59,9 @@ public:
      * @param uri Resource path. @see @ref resources
      * @param hscale Horizontal scale of the image, with 1.0 being 100%.
      * @param vscale Vertical scale of the image, with 1.0 being 100%.
+     * @param is_cached Tell whether the image will be stored in the image cache.
      */
-    Image(const std::string& uri, float hscale, float vscale);
+    Image(const std::string& uri, float hscale, float vscale, bool is_cached = false);
 
     /**
      * Construct a raster image from memory.
@@ -76,8 +78,9 @@ public:
      * @param hscale Horizontal scale of the image, with 1.0 being 100%.
      * @param vscale Vertical scale of the image, with 1.0 being 100%.
      * @param approx Approximate the scale to increase image cache hit efficiency.
+     * @param is_cached Tell whether the image will be stored in the image cache.
      */
-    void load(const std::string& uri, float hscale = 1.0, float vscale = 1.0, bool approx = false);
+    void load(const std::string& uri, float hscale = 1.0, float vscale = 1.0, bool approx = false, bool is_cached = false);
 
     /**
      * @param surface A pre-existing surface.
@@ -105,17 +108,18 @@ public:
      * @param vscale Vertical scale of the image, with 1.0 being 100%.
      * @param approximate Approximate the scale to increase image cache
      *            hit efficiency.
+     * @param is_cached Tell whether the image will be stored in the image cache.
      */
-    void scale(float hscale, float vscale, bool approximate = false);
+    void scale(float hscale, float vscale, bool approximate = false, bool is_cached = false);
 
     /**
      * Scale the image.
      *
      * @see scale()
      */
-    inline void scale(float scale, bool approximate = false)
+    inline void scale(float scale, bool approximate = false, bool is_cached = false)
     {
-        this->scale(scale, scale, approximate);
+        this->scale(scale, scale, approximate, is_cached);
     }
 
     /**
@@ -123,13 +127,13 @@ public:
      *
      * @param size The new size of the image.
      */
-    void resize(const Size& size)
+    void resize(const Size& size, bool is_cached = false)
     {
         if (!m_orig_size.empty() && this->size() != size)
         {
             float hs = static_cast<float>(size.width()) / static_cast<float>(m_orig_size.width());
             float vs = static_cast<float>(size.height()) / static_cast<float>(m_orig_size.height());
-            scale(hs, vs);
+            scale(hs, vs, false, is_cached);
         }
     }
 
@@ -207,7 +211,7 @@ public:
         return m_uri;
     }
 
-    void uri(const std::string& uri) { load(uri, m_hscale, m_vscale); }
+    void uri(const std::string& uri, bool is_cached = false) { load(uri, m_hscale, m_vscale, false, is_cached); }
 
     void reset_uri() { uri({}); }
 

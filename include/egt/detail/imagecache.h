@@ -39,7 +39,8 @@ public:
      */
     std::shared_ptr<Surface> get(const std::string& uri,
                                  float hscale = 1.0, float vscale = 1.0,
-                                 bool approximate = true);
+                                 bool approximate = true,
+                                 bool is_cached = false);
 
     /**
      * Clear the image cache.

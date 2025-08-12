@@ -16,15 +16,16 @@ namespace egt
 inline namespace v1
 {
 
-Image::Image(const std::string& uri, float scale)
-    : Image(uri, scale, scale)
+Image::Image(const std::string& uri, float scale, bool is_cached)
+    : Image(uri, scale, scale, is_cached)
 {
 }
 
 Image::Image(const std::string& uri,
-             float hscale, float vscale)
+             float hscale, float vscale,
+             bool is_cached)
 {
-    load(uri, hscale, vscale);
+    load(uri, hscale, vscale, is_cached);
 }
 
 Image::Image(std::shared_ptr<Surface> surface)
@@ -51,7 +52,7 @@ void Image::handle_surface_changed()
                        std::ceil(static_cast<float>(m_surface->height()) / m_vscale));
 }
 
-void Image::load(const std::string& uri, float hscale, float vscale, bool approximate)
+void Image::load(const std::string& uri, float hscale, float vscale, bool approximate, bool is_cached)
 {
     bool do_update = false;
 
@@ -66,7 +67,7 @@ void Image::load(const std::string& uri, float hscale, float vscale, bool approx
         {
             try
             {
-                m_surface = detail::image_cache().get(uri, hscale, vscale, approximate);
+                m_surface = detail::image_cache().get(uri, hscale, vscale, approximate, is_cached);
                 handle_surface_changed();
             }
             catch (const std::exception& e)
@@ -89,9 +90,9 @@ void Image::load(const std::string& uri, float hscale, float vscale, bool approx
     }
 }
 
-void Image::scale(float hscale, float vscale, bool approximate)
+void Image::scale(float hscale, float vscale, bool approximate, bool is_cached)
 {
-    load(m_uri, hscale, vscale, approximate);
+    load(m_uri, hscale, vscale, approximate, is_cached);
 }
 
 bool Image::empty() const

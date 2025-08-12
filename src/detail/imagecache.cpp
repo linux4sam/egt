@@ -27,7 +27,7 @@ namespace detail
 {
 
 std::shared_ptr<Surface> ImageCache::get(const std::string& uri,
-        float hscale, float vscale, bool approximate)
+        float hscale, float vscale, bool approximate, bool is_cached)
 {
     if (approximate)
     {
@@ -44,9 +44,12 @@ std::shared_ptr<Surface> ImageCache::get(const std::string& uri,
 
     const auto nameid = id(uri, hscale, vscale);
 
-    auto i = m_cache.find(nameid);
-    if (i != m_cache.end())
-        return i->second;
+    if (egt_unlikely(is_cached))
+    {
+        auto i = m_cache.find(nameid);
+        if (i != m_cache.end())
+            return i->second;
+    }
 
     EGTLOG_DEBUG("image cache miss {} hscale:{} vscale:{}", uri, hscale, vscale);
 
@@ -77,7 +80,8 @@ std::shared_ptr<Surface> ImageCache::get(const std::string& uri,
         throw std::runtime_error(fmt::format("unable to load image: {}", uri));
     }
 
-    m_cache.emplace(nameid, image);
+    if (egt_unlikely(is_cached))
+        m_cache.emplace(nameid, image);
 
     return image;
 }
