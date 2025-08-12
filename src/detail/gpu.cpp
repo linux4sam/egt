@@ -300,23 +300,6 @@ bool GPUPainter::draw(Operator op)
     }
     else
     {
-        if (blend)
-        {
-            auto* tmp = target.tmp_buffer();
-            if (!tmp)
-                return false;
-
-            m2d_set_target(tmp);
-            m2d_blend_enable(false);
-            m2d_source_enable(M2D_SRC, false);
-            m2d_source_enable(M2D_DST, false);
-            m2d_draw_rectangles(rects.get(), m_rects.size());
-
-            m2d_source_color(255, 255, 255, 255);
-            m2d_set_source(M2D_SRC, tmp, 0, 0);
-            has_source = true;
-        }
-
         EGTLOG_TRACE("{} GPU object {} destination with color ({},{},{},{}).",
                      blend ? "blend" : "fill",
                      target.id(),
@@ -967,6 +950,7 @@ bool GPUPainter::mask(const Surface& surface, const Point& point, const Rect& re
     if (!tmp)
         return false;
 
+    bool has_source = false;
     if (src)
     {
         auto& source = *src->surface;
@@ -979,6 +963,7 @@ bool GPUPainter::mask(const Surface& surface, const Point& point, const Rect& re
         m2d_set_source(M2D_SRC, source,
                        static_cast<dim_t>(src->origin.x()),
                        static_cast<dim_t>(src->origin.y()));
+        has_source = true;
     }
     else
     {
@@ -990,20 +975,12 @@ bool GPUPainter::mask(const Surface& surface, const Point& point, const Rect& re
                      mask.id(), target.id());
 
         m2d_source_color(red * 255., green * 255., blue * 255., alpha * 255.);
-        m2d_source_enable(M2D_SRC, false);
-        m2d_source_enable(M2D_DST, false);
-        m2d_blend_enable(false);
-        m2d_set_target(tmp);
-        m2d_draw_rectangles(rects.get(), m_rects.size());
-
-        m2d_source_color(255, 255, 255, 255);
-        m2d_set_source(M2D_SRC, tmp, 0, 0);
     }
 
     mask.sync_for_gpu();
     target.sync_for_gpu();
 
-    m2d_source_enable(M2D_SRC, true);
+    m2d_source_enable(M2D_SRC, has_source);
     m2d_source_enable(M2D_DST, true);
     m2d_blend_enable(true);
 
@@ -1024,6 +1001,8 @@ bool GPUPainter::mask(const Surface& surface, const Point& point, const Rect& re
 
     m2d_draw_rectangles(rects.get(), m_rects.size());
 
+    m2d_source_color(255, 255, 255, 255);
+    m2d_source_enable(M2D_SRC, true);
     m2d_set_source(M2D_SRC, tmp, 0, 0);
     m2d_set_source(M2D_DST, target, 0, 0);
     m2d_set_target(target);
@@ -1120,14 +1099,7 @@ bool GPUPainter::draw(const Color& color, const Rect& rect)
     }
     auto& target = m_painter.target().impl().gpu_surface();
 
-    m2d_buffer* tmp = nullptr;
     const auto blend = (color.alpha() != 255u && m_painter.alpha_blending());
-    if (blend)
-    {
-        tmp = target.tmp_buffer();
-        if (!tmp)
-            return false;
-    }
 
     Point offset;
     if (!get_transformation(offset))
@@ -1159,29 +1131,12 @@ bool GPUPainter::draw(const Color& color, const Rect& rect)
     m2d_source_color(color.red(), color.green(), color.blue(), color.alpha());
     m2d_source_enable(M2D_SRC, false);
     m2d_source_enable(M2D_DST, false);
-    m2d_blend_enable(false);
-
-    if (blend)
-        m2d_set_target(tmp);
-    else
-        m2d_set_target(target);
+    m2d_blend_enable(blend);
+    m2d_set_target(target);
 
     m2d_draw_rectangles(rects.get(), m_rects.size());
 
     m2d_source_color(255, 255, 255, 255);
-
-    if (blend)
-    {
-        m2d_blend_enable(true);
-        m2d_source_enable(M2D_SRC, true);
-        m2d_source_enable(M2D_DST, true);
-
-        m2d_set_source(M2D_SRC, tmp, 0, 0);
-        m2d_set_source(M2D_DST, target, 0, 0);
-        m2d_set_target(target);
-
-        m2d_draw_rectangles(rects.get(), m_rects.size());
-    }
 
     return true;
 }
