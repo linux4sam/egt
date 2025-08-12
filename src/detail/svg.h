@@ -31,6 +31,19 @@ Surface load_svg(const std::string& filename,
 /**
  * Load an SVG file into a surface.
  *
+ * @param[in] filename The path of the SVG file.
+ * @param[in] hscale The horizontal scale factor.
+ * @param[in] vscale The vertical scale factor.
+ * @param[in] id Optional object id to load from within the SVG file.
+ */
+Surface load_svg(const std::string& filename,
+                 float hscale,
+                 float vscale,
+                 const std::string& id = {});
+
+/**
+ * Load an SVG file into a surface.
+ *
  * @param[in] data Pointer to the in-memory data.
  * @param[in] len Size of the data.
  * @param[in] size Optional size of the surface to create and rasterize to.
@@ -39,6 +52,21 @@ Surface load_svg(const std::string& filename,
 Surface load_svg(const unsigned char* data,
                  size_t len,
                  const SizeF& size = {},
+                 const std::string& id = {});
+
+/**
+ * Load an SVG file into a surface.
+ *
+ * @param[in] data Pointer to the in-memory data.
+ * @param[in] len Size of the data.
+ * @param[in] hscale The horizontal scale factor.
+ * @param[in] vscale The vertical scale factor.
+ * @param[in] id Optional object id to load from within the SVG file.
+ */
+Surface load_svg(const unsigned char* data,
+                 size_t len,
+                 float hscale,
+                 float vscale,
                  const std::string& id = {});
 
 }

@@ -77,6 +77,23 @@ Surface load_svg(const std::string& filename,
     return load_svg(rsvg.get(), size, id);
 }
 
+Surface load_svg(const std::string& filename,
+                 float hscale,
+                 float vscale,
+                 const std::string& id)
+{
+    std::unique_ptr<RsvgHandle, RsvgHandle_deleter> rsvg(rsvg_handle_new_from_file(resolve_file_path(filename).c_str(), nullptr));
+
+    if (!rsvg)
+        throw std::runtime_error("unable to load svg file: " + filename);
+
+    RsvgDimensionData dim;
+    rsvg_handle_get_dimensions(rsvg.get(), &dim);
+    SizeF size(hscale * dim.width, vscale * dim.height);
+
+    return load_svg(rsvg.get(), size, id);
+}
+
 Surface load_svg(const unsigned char* data,
                  size_t len,
                  const SizeF& size,
@@ -89,6 +106,26 @@ Surface load_svg(const unsigned char* data,
 
     return load_svg(rsvg.get(), size, id);
 }
+
+Surface load_svg(const unsigned char* data,
+                 size_t len,
+                 float hscale,
+                 float vscale,
+                 const std::string& id)
+
+{
+    std::unique_ptr<RsvgHandle, RsvgHandle_deleter> rsvg(rsvg_handle_new_from_data(data, len, nullptr));
+
+    if (!rsvg)
+        throw std::runtime_error("unable to load svg file from memory");
+
+    RsvgDimensionData dim;
+    rsvg_handle_get_dimensions(rsvg.get(), &dim);
+    SizeF size(hscale * dim.width, vscale * dim.height);
+
+    return load_svg(rsvg.get(), size, id);
+}
+
 }
 }
 }
