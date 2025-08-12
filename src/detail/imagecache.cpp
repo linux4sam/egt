@@ -35,6 +35,13 @@ std::shared_ptr<Surface> ImageCache::get(const std::string& uri,
         vscale = ImageCache::round(vscale, 0.01);
     }
 
+    if (egt_unlikely(detail::float_equal(hscale, 0.0f) ||
+                     detail::float_equal(vscale, 0.0f) ||
+                     hscale < 0 ||
+                     vscale < 0))
+        throw std::runtime_error(fmt::format("invalid scale factors for image {}: hscale={}, vscale={}",
+                                             uri, hscale, vscale));
+
     const auto nameid = id(uri, hscale, vscale);
 
     auto i = m_cache.find(nameid);
@@ -44,47 +51,25 @@ std::shared_ptr<Surface> ImageCache::get(const std::string& uri,
     EGTLOG_DEBUG("image cache miss {} hscale:{} vscale:{}", uri, hscale, vscale);
 
     std::shared_ptr<Surface> image;
+    std::string path;
+    auto type = detail::resolve_path(uri, path);
 
-    if (detail::float_equal(hscale, 1.0f) &&
-        detail::float_equal(vscale, 1.0f))
+    switch (type)
     {
-        std::string path;
-        auto type = detail::resolve_path(uri, path);
+    case detail::SchemeType::resource:
+        image = std::make_shared<Surface>(detail::load_image_from_resource(path, hscale, vscale));
+        break;
 
-        switch (type)
-        {
-        case detail::SchemeType::resource:
-        {
-            image = std::make_shared<Surface>(detail::load_image_from_resource(path));
-            break;
-        }
-        case detail::SchemeType::filesystem:
-        {
-            image = std::make_shared<Surface>(detail::load_image_from_filesystem(path));
-            break;
-        }
-        case detail::SchemeType::network:
-        {
-            image = std::make_shared<Surface>(detail::load_image_from_network(path));
-            break;
-        }
-        default:
-        {
-            throw std::runtime_error("unsupported uri: " + uri);
-        }
-        }
-    }
-    else
-    {
-        auto back = get(uri, 1.0);
+    case detail::SchemeType::filesystem:
+        image = std::make_shared<Surface>(detail::load_image_from_filesystem(path, hscale, vscale));
+        break;
 
-        DefaultDim width = std::round(hscale * back->width());
-        DefaultDim height = std::round(vscale * back->height());
+    case detail::SchemeType::network:
+        image = std::make_shared<Surface>(detail::load_image_from_network(path, hscale, vscale));
+        break;
 
-        detail::code_timer(false, "scale: ", [&]()
-        {
-            image = std::make_shared<Surface>(resize(*back, Size(width, height)));
-        });
+    default:
+        throw std::runtime_error("unsupported uri: " + uri);
     }
 
     if (!image)

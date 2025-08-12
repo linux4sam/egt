@@ -40,6 +40,10 @@ extern "C" {
 #include "detail/svg.h"
 #endif
 
+#ifdef HAVE_SIMD
+#include "Simd/SimdLib.hpp"
+#endif
+
 namespace egt
 {
 inline namespace v1
@@ -80,11 +84,25 @@ static constexpr auto MIME_ZIP = "application/zip";
 static constexpr auto MIME_GZIP = "application/gzip";
 static constexpr auto MIME_ERAW = "image/eraw";
 
-static Surface copy_cairo_surface(cairo_surface_t* surface)
+static Surface scale_cairo_surface(cairo_surface_t* surface, float hscale, float vscale)
 {
-    Size size(cairo_image_surface_get_width(surface),
-              cairo_image_surface_get_height(surface));
+    Size src_size(cairo_image_surface_get_width(surface),
+                  cairo_image_surface_get_height(surface));
+    Size size = src_size;
     auto format = detail::egt_format(cairo_image_surface_get_format(surface));
+
+    bool scaled = false;
+    if (egt_unlikely(!detail::float_equal(hscale, 1.0f)))
+    {
+        size.width(std::ceil(hscale * size.width()));
+        scaled = true;
+    }
+
+    if (egt_unlikely(!detail::float_equal(vscale, 1.0f)))
+    {
+        size.height(std::ceil(vscale * size.height()));
+        scaled = true;
+    }
 
     Surface image(size, format);
     image.sync_for_cpu();
@@ -93,7 +111,38 @@ static Surface copy_cairo_surface(cairo_surface_t* surface)
     uint8_t* dst = static_cast<uint8_t*>(image.data());
     DefaultDim src_stride = cairo_image_surface_get_stride(surface);
     DefaultDim dst_stride = image.stride();
-    if (src_stride == dst_stride)
+
+    if (egt_unlikely(scaled))
+    {
+#ifdef HAVE_SIMD
+        SimdResizeBilinear(src, src_size.width(), src_size.height(), src_stride,
+                           dst, size.width(), size.height(), dst_stride,
+                           4);
+
+        image.mark_dirty();
+#else
+        unique_cairo_t cr(cairo_create(image.impl()));
+
+        /* Scale *before* setting the source surface */
+        cairo_scale(cr.get(),
+                    static_cast<double>(size.width()) / src_size.width(), /* more accurate than `hscale` */
+                    static_cast<double>(size.height()) / src_size.height()); /* more accurate than `vscale` */
+
+        cairo_set_source_surface(cr.get(), surface, 0, 0);
+
+        /* To avoid getting the edge pixels blended with 0 alpha, which would
+         * occur with the default EXTEND_NONE.
+         */
+        cairo_pattern_set_extend(cairo_get_source(cr.get()), CAIRO_EXTEND_REFLECT);
+
+        /* Replace the destination with the source instead of overlaying */
+        cairo_set_operator(cr.get(), CAIRO_OPERATOR_SOURCE);
+
+        /* Do the actual drawing */
+        cairo_paint(cr.get());
+#endif
+    }
+    else if (src_stride == dst_stride)
     {
         memcpy(dst, src, dst_stride * size.height());
     }
@@ -113,7 +162,8 @@ static Surface copy_cairo_surface(cairo_surface_t* surface)
 
 EGT_API Surface load_image_from_memory(const unsigned char* data,
                                        size_t len,
-                                       const std::string& name)
+                                       const std::string& name,
+                                       float hscale, float vscale)
 {
     if (!data || !len)
         return {};
@@ -131,7 +181,7 @@ EGT_API Surface load_image_from_memory(const unsigned char* data,
         StreamObject stream = {data, len, 0};
         unique_cairo_surface_t surface(
             cairo_image_surface_create_from_bmp_stream(read_stream, &stream));
-        image = copy_cairo_surface(surface.get());
+        image = scale_cairo_surface(surface.get(), hscale, vscale);
     }
     else if (mimetype == MIME_ERAW)
     {
@@ -143,7 +193,7 @@ EGT_API Surface load_image_from_memory(const unsigned char* data,
         StreamObject stream = {data, len, 0};
         unique_cairo_surface_t surface(
             cairo_image_surface_create_from_jpeg_stream(read_stream, &stream));
-        image = copy_cairo_surface(surface.get());
+        image = scale_cairo_surface(surface.get(), hscale, vscale);
     }
 #endif
 #if CAIRO_HAS_PNG_FUNCTIONS == 1
@@ -152,13 +202,13 @@ EGT_API Surface load_image_from_memory(const unsigned char* data,
         StreamObject stream = {data, len, 0};
         unique_cairo_surface_t surface(
             cairo_image_surface_create_from_png_stream(read_stream, &stream));
-        image = copy_cairo_surface(surface.get());
+        image = scale_cairo_surface(surface.get(), hscale, vscale);
     }
 #endif
 #ifdef HAVE_LIBRSVG
     else if (mimetype == MIME_SVGXML || mimetype == MIME_SVG)
     {
-        image = load_svg(data, len);
+        image = load_svg(data, len, hscale, vscale);
     }
 #endif
     else
@@ -169,7 +219,8 @@ EGT_API Surface load_image_from_memory(const unsigned char* data,
     return image;
 }
 
-Surface load_image_from_resource(const std::string& name)
+Surface load_image_from_resource(const std::string& name,
+                                 float hscale, float vscale)
 {
     if (!ResourceManager::instance().exists(name.c_str()))
         throw std::runtime_error("resource not found: " + name);
@@ -178,10 +229,12 @@ Surface load_image_from_resource(const std::string& name)
 
     return load_image_from_memory(ResourceManager::instance().data(name.c_str()),
                                   ResourceManager::instance().size(name.c_str()),
-                                  name);
+                                  name,
+                                  hscale, vscale);
 }
 
-Surface load_image_from_filesystem(const std::string& path)
+Surface load_image_from_filesystem(const std::string& path,
+                                   float hscale, float vscale)
 {
     if (!detail::exists(path))
         throw std::runtime_error("file not found: " + path);
@@ -197,7 +250,7 @@ Surface load_image_from_filesystem(const std::string& path)
     {
         unique_cairo_surface_t surface(
             cairo_image_surface_create_from_bmp(path.c_str()));
-        image = copy_cairo_surface(surface.get());
+        image = scale_cairo_surface(surface.get(), hscale, vscale);
     }
     else if (mimetype == MIME_ERAW)
     {
@@ -208,7 +261,7 @@ Surface load_image_from_filesystem(const std::string& path)
     {
         unique_cairo_surface_t surface(
             cairo_image_surface_create_from_jpeg(path.c_str()));
-        image = copy_cairo_surface(surface.get());
+        image = scale_cairo_surface(surface.get(), hscale, vscale);
     }
 #endif
 #if CAIRO_HAS_PNG_FUNCTIONS == 1
@@ -216,13 +269,13 @@ Surface load_image_from_filesystem(const std::string& path)
     {
         unique_cairo_surface_t surface(
             cairo_image_surface_create_from_png(path.c_str()));
-        image = copy_cairo_surface(surface.get());
+        image = scale_cairo_surface(surface.get(), hscale, vscale);
     }
 #endif
 #ifdef HAVE_LIBRSVG
     else if (mimetype == MIME_SVGXML || mimetype == MIME_SVG)
     {
-        image = load_svg(path);
+        image = load_svg(path, hscale, vscale);
     }
 #endif
     else
@@ -233,7 +286,8 @@ Surface load_image_from_filesystem(const std::string& path)
     return image;
 }
 
-EGT_API Surface load_image_from_network(const std::string& url)
+EGT_API Surface load_image_from_network(const std::string& url,
+                                        float hscale, float vscale)
 {
     Surface image;
 
@@ -243,7 +297,8 @@ EGT_API Surface load_image_from_network(const std::string& url)
     if (!buffer.empty())
         image = load_image_from_memory(reinterpret_cast<const unsigned char*>(buffer.data()),
                                        buffer.size(),
-                                       url);
+                                       url,
+                                       hscale, vscale);
 #else
     detail::ignoreparam(url);
     detail::warn("network support not available");

@@ -27,23 +27,27 @@ namespace detail
  */
 EGT_API Surface load_image_from_memory(const unsigned char* data,
                                        size_t len,
-                                       const std::string& name = {});
+                                       const std::string& name = {},
+                                       float hscale = 1.0, float vscale = 1.0);
 
 /**
  * Load an image from ResourceManager.
  * @see ResourceManager
  */
-EGT_API Surface load_image_from_resource(const std::string& name);
+EGT_API Surface load_image_from_resource(const std::string& name,
+        float hscale = 1.0, float vscale = 1.0);
 
 /**
  * Load an image from the filesystem.
  */
-EGT_API Surface load_image_from_filesystem(const std::string& path);
+EGT_API Surface load_image_from_filesystem(const std::string& path,
+        float hscale = 1.0, float vscale = 1.0);
 
 /**
  * Load an image from the network.
  */
-EGT_API Surface load_image_from_network(const std::string& url);
+EGT_API Surface load_image_from_network(const std::string& url,
+                                        float hscale = 1.0, float vscale = 1.0);
 
 /**
   * Return the mime type string for a file.
