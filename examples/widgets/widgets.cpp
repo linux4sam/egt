@@ -250,7 +250,7 @@ struct TextPage : public egt::NotebookTab
 
         auto text7 = std::make_shared<egt::TextBox>(
                          u8"The Ensemble Graphics Toolkit (EGT) is a free and open-source C++ GUI widget "
-                         " toolkit for Microchip AT91/SAMA5 microprocessors.  It is used to develop"
+                         " toolkit for microprocessors.  It is used to develop"
                          " graphical applications for Linux.  EGT provides modern and complete GUI"
                          " functionality, look-and-feel, and performance.\n\nThis multi-line TextBox fully"
                          " supports UTF-8 encoding.  See: \u2190\u2191\u2192\u2193",

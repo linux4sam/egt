@@ -4,8 +4,8 @@
 [![Release](https://img.shields.io/github/v/tag/linux4sam/egt?style=plastic)]()
 
 The Microchip Graphics Suite Linux, formely known as The Ensemble Graphics
-Toolkit (EGT), is a free and open-source C++ GUI widget toolkit for Microchip
-AT91/SAMA5 microprocessors.  It is used to develop graphical embedded Linux
+Toolkit (EGT), is a free and open-source C++ GUI widget toolkit for
+microprocessors.  It is used to develop graphical embedded Linux
 applications.  EGT provides modern and complete GUI functionality,
 look-and-feel, and performance.
 
