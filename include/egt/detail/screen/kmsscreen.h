@@ -98,6 +98,8 @@ public:
 
     EGT_NODISCARD bool have_planes() const override { return true; }
 
+    void flush() override;
+
 protected:
     /// Allocate an overlay plane.
     plane_data* overlay_plane_create(const Size& size,

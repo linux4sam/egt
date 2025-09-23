@@ -149,6 +149,12 @@ void KMSScreen::schedule_flip()
     }
 }
 
+void KMSScreen::flush()
+{
+    if (m_device)
+        kms_device_flush(m_device, 0);
+}
+
 uint32_t KMSScreen::index()
 {
     return m_index;
