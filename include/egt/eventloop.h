@@ -58,6 +58,8 @@ public:
      */
     void draw();
 
+    void flush();
+
     /**
      * Run the event loop.
      *

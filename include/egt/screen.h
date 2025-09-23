@@ -163,6 +163,8 @@ public:
      */
     EGT_NODISCARD virtual bool is_composer() const { return false; }
 
+    virtual void flush() {}
+
     virtual ~Screen() noexcept = default;
 
 protected:

@@ -113,6 +113,11 @@ void EventLoop::draw()
     });
 }
 
+void EventLoop::flush()
+{
+    Application::instance().screen()->flush();
+}
+
 int EventLoop::poll()
 {
     int ret = 0;
@@ -152,6 +157,7 @@ int EventLoop::run()
 
     // initial draw
     draw();
+    flush();
 
     m_do_quit = false;
     m_impl->m_io.restart();
@@ -162,6 +168,7 @@ int EventLoop::run()
         {
             // draw anything that's changed
             draw();
+            flush();
 
             if (show_fps_enabled())
             {
