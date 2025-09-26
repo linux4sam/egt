@@ -8,7 +8,6 @@
 #endif
 
 #include "detail/egtlog.h"
-#include "detail/screen/flipthread.h"
 #include "detail/screen/framebuffer.h"
 #include "egt/detail/screen/kmsscreen.h"
 #include "egt/eventloop.h"
@@ -20,6 +19,7 @@
 #include <drm_fourcc.h>
 #include <filesystem>
 #include <fstream>
+#include <mutex>
 #include <planes/fb.h>
 #include <planes/kms.h>
 #include <planes/plane.h>
@@ -40,27 +40,6 @@ void plane_t_deleter::operator()(plane_data* plane)
     plane_fb_unmap(plane);
     plane_free(plane);
 }
-
-struct FlipJob
-{
-    constexpr explicit FlipJob(struct plane_data* plane,
-                               uint32_t index,
-                               bool async = false) noexcept
-        : m_plane(plane), m_index(index), m_async(async)
-    {}
-
-    void operator()()
-    {
-        if (m_async)
-            plane_flip_async(m_plane, m_index);
-        else
-            plane_flip(m_plane, m_index);
-    }
-
-    plane_data* m_plane {nullptr};
-    uint32_t m_index{};
-    bool m_async{false};
-};
 
 static KMSScreen* the_kms = nullptr;
 
@@ -111,8 +90,6 @@ KMSScreen::KMSScreen(bool allocate_primary_plane,
         init(info.data(), info.size(),
              Size(plane_width(m_plane.get()), plane_height(m_plane.get())),
              format);
-
-        m_pool = std::make_unique<FlipThread>(m_plane->buffer_count - 1);
     }
     else
     {
@@ -142,7 +119,7 @@ void KMSScreen::schedule_flip()
 {
     if (m_plane->buffer_count > 1)
     {
-        m_pool->enqueue(FlipJob(m_plane.get(), m_index, m_async));
+        plane_flip(m_plane.get(), m_index);
 
         if (++m_index >= m_plane->buffer_count)
             m_index = 0;
@@ -321,7 +298,6 @@ void KMSScreen::deallocate_overlay(plane_data* plane)
 
 void KMSScreen::close()
 {
-    m_pool.reset();
     m_plane.reset();
 
     if (m_device)

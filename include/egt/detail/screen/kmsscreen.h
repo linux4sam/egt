@@ -30,7 +30,6 @@ namespace detail
 {
 struct planeid;
 class KMSOverlay;
-struct FlipThread;
 
 /**
  * Screen in an KMS dumb buffer.
@@ -116,8 +115,6 @@ protected:
     uint32_t m_index{0};
     /// Global array used to keep track of allocated planes
     static std::vector<planeid> m_used;
-    /// Internal thread pool for flipping.
-    std::unique_ptr<FlipThread> m_pool;
 
     friend class detail::KMSOverlay;
 };

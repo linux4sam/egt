@@ -7,7 +7,6 @@
 #include "config.h"
 #endif
 
-#include "detail/screen/flipthread.h"
 #include "detail/screen/framebuffer.h"
 #include "egt/detail/screen/kmsoverlay.h"
 #include "egt/detail/screen/kmsscreen.h"
@@ -21,25 +20,6 @@ inline namespace v1
 {
 namespace detail
 {
-
-struct FlipJob
-{
-    constexpr explicit FlipJob(plane_data* plane, uint32_t index, bool async = false) noexcept
-        : m_plane(plane), m_index(index), m_async(async)
-    {}
-
-    void operator()()
-    {
-        if (m_async)
-            plane_flip_async(m_plane, m_index);
-        else
-            plane_flip(m_plane, m_index);
-    }
-
-    plane_data* m_plane {nullptr};
-    uint32_t m_index{};
-    bool m_async{false};
-};
 
 KMSOverlay::KMSOverlay(const Size& size, PixelFormat format, WindowHint hint)
     : m_plane(KMSScreen::instance()->allocate_overlay(size, format, hint))
@@ -56,8 +36,6 @@ KMSOverlay::KMSOverlay(const Size& size, PixelFormat format, WindowHint hint)
     init(info.data(), info.size(),
          Size(plane_width(m_plane.get()), plane_height(m_plane.get())),
          detail::egt_format(plane_format(m_plane.get())));
-
-    m_pool = std::make_unique<FlipThread>(m_plane->buffer_count - 1);
 }
 
 void KMSOverlay::resize(const Size& size)
@@ -103,7 +81,7 @@ void KMSOverlay::schedule_flip()
 {
     if (m_plane->buffer_count > 1)
     {
-        m_pool->enqueue(FlipJob(m_plane.get(), m_index, m_async));
+        plane_flip(m_plane.get(), m_index);
 
         if (++m_index >= m_plane->buffer_count)
             m_index = 0;

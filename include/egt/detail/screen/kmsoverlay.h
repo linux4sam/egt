@@ -26,8 +26,6 @@ inline namespace v1
 {
 namespace detail
 {
-struct FlipThread;
-
 /**
  * Screen in a KMS dumb buffer inside of an overlay plane.
  *
@@ -111,8 +109,6 @@ protected:
     unique_plane_t m_plane;
     /// Current flip index.
     uint32_t m_index{0};
-    /// Internal thread pool for flipping.
-    std::unique_ptr<FlipThread> m_pool;
 };
 
 }
