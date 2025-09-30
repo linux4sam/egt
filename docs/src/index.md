@@ -34,9 +34,8 @@ an awesome idea, you can get a copy of the sources from GitHub and start right
 away. See the CONTRIBUTING.md file for more information on coding style and
 contribution guidelines.
 
-- Project Homepage — https://ensemble.graphics/
+- Project Homepage and sources — https://github.com/linux4sam/egt/
 - Documentation — https://linux4sam.github.io/egt-docs/
-- GitHub — https://github.com/linux4sam/egt/
 
 @section index_license License
 
