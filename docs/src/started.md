@@ -6,8 +6,8 @@ There are various ways to get started with EGT depending on your requirements.
 If you are building EGT on a PC, you can start by just fetching the source of
 the EGT project.  If you are developing for and deploying to a target board,
 the easiest way to work with EGT is part of a
-[buildroot](https://www.linux4sam.org/bin/view/Linux4SAM/BuildRoot)
-or [Yocto Project](https://www.linux4sam.org/bin/view/Linux4SAM/YoctoProject)
+[buildroot](https://developerhelp.microchip.com/xwiki/bin/view/applications/linux4sam/build-systems/BuildRoot/)
+or [Yocto Project](https://developerhelp.microchip.com/xwiki/bin/view/applications/linux4sam/build-systems/YoctoProject/)
 SDK which already includes a cross compiler and all of the necessary
 dependencies and tools.
 
@@ -193,10 +193,10 @@ resources) are installed in path_to_install_folder.
 @section started_yocto Cross Compiling With Yocto
 
 EGT is included as a package as part of the
-[meta-atmel](https://github.com/linux4sam/meta-atmel) Yocto layer project. To
+[meta-mchp](https://github.com/linux4microchip/meta-mchp/) Yocto layer project. To
 build a complete SDK and target filesystem for a board, follow the
 instructions found in that project's
-[README](https://www.linux4sam.org/bin/view/Linux4SAM/PokyBuild#How_to_build_Poky_for_AT91).
+[Build page](https://developerhelp.microchip.com/xwiki/bin/view/Development/applications/linux4sam/faq/oebuild/).
 
 Run the SDK script to install it. Then:
 

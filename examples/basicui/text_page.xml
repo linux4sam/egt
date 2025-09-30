@@ -173,7 +173,7 @@
 						<property name="border">2</property>
 						<property name="border_radius">4</property>
 						<property name="fillflags">blend</property>
-						<property name="text">The Ensemble Graphics Toolkit (EGT) is a free and open-source C++ GUI widget  toolkit for Microchip AT91/SAMA5 microprocessors.  It is used to develop graphical applications for Linux.  EGT provides modern and complete GUI functionality, look-and-feel, and performance.
+						<property name="text">The Ensemble Graphics Toolkit (EGT) is a free and open-source C++ GUI widget toolkit for microprocessors.  It is used to develop graphical applications for Linux.  EGT provides modern and complete GUI functionality, look-and-feel, and performance.
 
 This multi-line TextBox fully supports UTF-8 encoding.  See: ←↑→↓</property>
 						<property name="text_align">expand</property>

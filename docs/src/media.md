@@ -127,7 +127,7 @@ device drivers and API for supporting realtime video capture on Linux systems.
 It supports many USB webcams, TV tuners, and related devices, standardizing
 their output, so programmers can easily add video support to their applications.
 
-Video4Linux2 provides access to the [Image Sensor Controller](https://www.linux4sam.org/bin/view/Linux4SAM/UsingISC) (ISC) and [Image Sensor Interface](https://www.linux4sam.org/bin/view/Linux4SAM/UsingIsi6) (ISI) peripherals available on some Microchip processors.
+Video4Linux2 provides access to the [Image Sensor Controller](https://developerhelp.microchip.com/xwiki/bin/view/applications/linux4sam/faq/isc/) (ISC) and [Image Sensor Interface](https://developerhelp.microchip.com/xwiki/bin/view/applications/linux4sam/faq/isi-6/) (ISI) peripherals available on some Microchip processors.
 
 @imageSize{v4l2.png,width:300px;}
 @image html v4l2.png "Video4Linux2 API"

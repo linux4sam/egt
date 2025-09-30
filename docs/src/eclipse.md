@@ -14,7 +14,11 @@ The typical usage model of our EGT integration with Eclipse would be:
 
 2. Once Buildroot compilation is done. The output/image folder contains all
    the files to boot Linux on the target board. To create an sdcard image
-   to boot Linux on the sam9x60EK board, refer to [create sdcard image](http://www.at91.com/linux4sam/bin/view/Linux4SAM/DemoSD).
+   to boot Linux on the board, refer to
+   [Burn Images to SD Card](https://developerhelp.microchip.com/xwiki/bin/view/applications/linux4sam/components/softwaretools/#HBurnimagestoSDcardswithEtcher)
+   or
+   [SD Card boot notice](https://developerhelp.microchip.com/xwiki/bin/view/applications/linux4sam/faq/sd-card-boot-notice/)
+   pages.
 
 3. Start Eclipse to develop, execute or debug your own custom EGT
    applications/libraries that will rely on the EGT library built and installed

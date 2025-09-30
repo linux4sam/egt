@@ -12,7 +12,8 @@ deployed on the target.
 
 At the moment, the MGC is only available for Linux machines.
 
-Download the MGC at https://files.linux4sam.org/pub/egt/mgc-egt/
+Download the MGC from the page:
+https://developerhelp.microchip.com/xwiki/bin/view/software-tools/mgs/linux-ug/
 
 Download the mgc-egt-x86_64.AppImage file.
 
