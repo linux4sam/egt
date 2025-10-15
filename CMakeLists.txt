@@ -41,6 +41,8 @@ add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:${CXX_COMPILE_OPTIONS}>")
 
 add_compile_definitions($<$<CONFIG:Release>:NDEBUG>)
 
+option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+
 CHECK_INCLUDE_FILE_CXX(cxxabi.h HAVE_CXXABI_H)
 CHECK_INCLUDE_FILE(glob.h HAVE_GLOB_H)
 CHECK_INCLUDE_FILE(linux/input.h HAVE_LINUX_INPUT_H)

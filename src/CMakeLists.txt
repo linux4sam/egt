@@ -1,4 +1,4 @@
-add_library(egt SHARED
+add_library(egt
     animation.cpp
     app.cpp
     button.cpp
