@@ -5,6 +5,21 @@
 Here, you can find the API changes from the version 1.0. In addition, some hints
 are provided to help you update your code.
 
+@section v1_12 1.12
+
+@subsection v1_12_image Image
+
+@li egt::v1::detail::load_image_from_memory(), egt::v1::detail::load_image_from_filesystem(), and egt::v1::detail::load_image_from_network() functions now accept two additional parameters: hscale and vscale. Use them to scale the image on load. Default value is 1.0.
+@li Add an is_cached parameter to Image constructors, egt::v1::Image::load(), egt::v1::Image::scale(), egt::v1::Image::resize(), and egt::v1::Image::uri() methods to cache or not the image. Default value is false.
+
+@subsection v1_12_screen Screen
+
+@li Added a new virtual egt::v1::Screen::flush() method. This is invoked by the egt::v1::EventLoop::flush() method.
+
+@subsection v1_12_eventloop EventLoop
+
+@li Added egt::v1::EventLoop::flush(). This calls the egt::v1::Screen::flush() method on the application's screen after egt::v1::EventLoop::draw(), allowing to separate rendering from the display update.
+
 @section v1_11 1.11
 
 @subsection v1_11_application Application
