@@ -3,6 +3,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+### Added
+- Switch to libplanes 2.x with support for the DRM Atomic API, which can
+improve performance when multiple planes are updated simultaneously.
+- Introduce an is_cached parameter accross several Image constructors/methods
+(default: false) to reduce memory usage.
+- New CMake option WITH_LIBM2D to enable/disable libm2d support.
+- Add Screen::flush(); the event loop now calls this after draw(). This is
+especially useful for the DRM/KMS backend to collect all the updates from draw(),
+and push them to the display in flush().
+### Changed
+- ImageCache can now load images at the target scale factors directly, avoiding
+storage of both unscaled and scaled versions.
+### Removed
+- Drop the autotools support in favor of CMake.
+- Remove pre-blending pass code for GPU paths now handled by libm2d 2.1.0.
+### Fixed
+- Miscellaneous issues affecting 2D acceleration.
+
 ## [1.11] - 2025-05-07
 ### Added
 - The new Surface class has been introduced to abstract 'cairo_surface_t'.
