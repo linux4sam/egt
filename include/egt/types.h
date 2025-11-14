@@ -13,6 +13,7 @@
 
 #include <egt/detail/enum.h>
 #include <egt/detail/meta.h>
+#include <cstdint>
 #include <iosfwd>
 #include <memory>
 
