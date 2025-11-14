@@ -8,6 +8,7 @@
 #include <egt/ui>
 #include <exception>
 #include <iomanip>
+#include <iostream>
 #include <memory>
 #include <sstream>
 

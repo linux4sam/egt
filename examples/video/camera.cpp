@@ -7,6 +7,7 @@
 #include <cxxopts.hpp>
 #include <egt/detail/string.h>
 #include <egt/ui>
+#include <iostream>
 #include <sstream>
 #include <string>
 

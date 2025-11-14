@@ -5,6 +5,7 @@
  */
 #include <cxxopts.hpp>
 #include <egt/ui>
+#include <iostream>
 #include <memory>
 #include <random>
 #include <sstream>
