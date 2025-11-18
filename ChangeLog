@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.12.1] - 2025-11-18
+### Changed
+- Bump cxxopts to 3.x to fix compilation issues.
+### Fixed
+- Fix compilation issues with GCC 15.
+
 ## [1.12] - 2025-11-12
 ### Added
 - Switch to libplanes 2.x with support for the DRM Atomic API, which can
