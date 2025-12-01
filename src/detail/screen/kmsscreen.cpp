@@ -85,7 +85,7 @@ KMSScreen::KMSScreen(bool allocate_primary_plane,
         std::vector<detail::FrameBufferInfo> info;
         info.reserve(num_infos);
         for (uint32_t fd = 0; fd < num_infos; ++fd)
-            info.emplace_back(m_plane->bufs[fd], m_plane->prime_fds[fd]);
+            info.emplace_back(m_plane->bufs[fd], m_plane->prime_fds[fd], m_plane->fbs[fd]->pitch);
 
         init(info.data(), info.size(),
              Size(plane_width(m_plane.get()), plane_height(m_plane.get())),

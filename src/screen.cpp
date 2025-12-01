@@ -426,7 +426,7 @@ void Screen::init(const detail::FrameBufferInfo* info, uint32_t count, const Siz
     if (count == 1 && no_composition_buffer())
     {
         detail::FrameBuffer fb(info[0].data(), info[0].prime_fd(), size, format,
-                               Surface::stride(format, size.width()));
+                               info[0].stride());
         m_surface = Surface(fb);
     }
     else
@@ -434,7 +434,7 @@ void Screen::init(const detail::FrameBufferInfo* info, uint32_t count, const Siz
         for (uint32_t x = 0; x < count; x++)
         {
             detail::FrameBuffer fb(info[x].data(), info[x].prime_fd(), size, format,
-                                   Surface::stride(format, size.width()));
+                                   info[x].stride());
             m_buffers.emplace_back(Surface(fb));
             m_buffers.back().damage.emplace_back(Point(), size);
         }

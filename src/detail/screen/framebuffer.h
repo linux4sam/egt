@@ -19,17 +19,20 @@ namespace detail
 class FrameBufferInfo
 {
 public:
-    FrameBufferInfo(void* data, int prime_fd)
+    FrameBufferInfo(void* data, int prime_fd, unsigned stride)
         : m_data(data),
-          m_prime_fd(prime_fd)
+          m_prime_fd(prime_fd),
+          m_stride(stride)
     {}
 
     EGT_NODISCARD void* data() const { return m_data; }
     EGT_NODISCARD int prime_fd() const { return m_prime_fd; }
+    EGT_NODISCARD unsigned stride() const { return m_stride; }
 
 private:
     void* m_data;
     int m_prime_fd;
+    unsigned m_stride;
 };
 
 class FrameBuffer
