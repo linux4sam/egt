@@ -77,7 +77,7 @@ std::string GstAppSink::description()
         fmt::format("caps=video/x-raw,width={},height={},format={}",
                     size.width(), size.height(), detail::gstreamer_format(m_format));
 
-    return fmt::format("videoconvert ! videoscale ! capsfilter name=vcaps {} ! appsink name=appsink", video_caps_filter);
+    return fmt::format("videoconvert ! videoscale ! capsfilter name=vcaps {} ! appsink name=appsink sync=true", video_caps_filter);
 }
 
 void GstAppSink::draw(Painter& painter, const Rect& rect)
@@ -229,7 +229,7 @@ bool GstAppSink::post_initialize()
     }
 
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
-    g_object_set(G_OBJECT(appsink), "emit-signals", TRUE, "sync", TRUE, nullptr);
+    g_object_set(G_OBJECT(appsink), "emit-signals", TRUE, nullptr);
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
     g_signal_connect(appsink, "new-sample", G_CALLBACK(on_new_buffer), this);
 
