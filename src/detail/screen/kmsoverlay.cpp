@@ -22,8 +22,12 @@ namespace detail
 {
 
 KMSOverlay::KMSOverlay(const Size& size, PixelFormat format, WindowHint hint)
-    : m_plane(KMSScreen::instance()->allocate_overlay(size, format, hint))
+    : m_plane(KMSScreen::instance()->allocate_overlay(size, format, hint)),
+      m_main_screen(KMSScreen::instance())
 {
+    if (!m_main_screen)
+        throw std::runtime_error("failed to get main screen pointer");
+
     if (!m_plane)
         throw std::runtime_error("failed to allocate plane");
 
@@ -82,6 +86,7 @@ void KMSOverlay::schedule_flip()
     if (m_plane->buffer_count > 1)
     {
         plane_flip(m_plane.get(), m_index);
+        m_main_screen->need_flush(true);
 
         if (++m_index >= m_plane->buffer_count)
             m_index = 0;

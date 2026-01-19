@@ -109,6 +109,8 @@ protected:
     unique_plane_t m_plane;
     /// Current flip index.
     uint32_t m_index{0};
+    /// Pointer to the main screen for flush notification.
+    Screen* m_main_screen;
 };
 
 }

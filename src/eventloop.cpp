@@ -115,7 +115,12 @@ void EventLoop::draw()
 
 void EventLoop::flush()
 {
-    Application::instance().screen()->flush();
+    auto screen = Application::instance().screen();
+    if (screen->need_flush())
+    {
+        screen->flush();
+        screen->need_flush(false);
+    }
 }
 
 int EventLoop::poll()

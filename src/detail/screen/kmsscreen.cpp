@@ -120,6 +120,7 @@ void KMSScreen::schedule_flip()
     if (m_plane->buffer_count > 1)
     {
         plane_flip(m_plane.get(), m_index);
+        need_flush(true);
 
         if (++m_index >= m_plane->buffer_count)
             m_index = 0;

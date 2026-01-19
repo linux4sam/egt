@@ -165,6 +165,18 @@ public:
 
     virtual void flush() {}
 
+    /**
+     * Set the need_flush flag.
+     * @param value True if a flush is needed after plane_flip.
+     */
+    void need_flush(bool value) { m_need_flush = value; }
+
+    /**
+     * Check if a flush is needed.
+     * @return True if flush() should be called.
+     */
+    EGT_NODISCARD bool need_flush() const { return m_need_flush; }
+
     virtual ~Screen() noexcept = default;
 
 protected:
@@ -232,6 +244,9 @@ protected:
 
     /// Format of the screen.
     PixelFormat m_format{};
+
+    /// Flag indicating that a flush is needed after a plane_flip.
+    bool m_need_flush{false};
 };
 
 }
