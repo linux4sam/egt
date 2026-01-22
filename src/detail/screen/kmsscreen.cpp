@@ -130,7 +130,11 @@ void KMSScreen::schedule_flip()
 void KMSScreen::flush()
 {
     if (m_device)
-        kms_device_flush(m_device, 0);
+    {
+        if (!m_async && kms_device_is_busy(m_device))
+            return;
+        kms_device_flush(m_device, m_async ? 0 : LIBPLANES_FLUSH_SYNC);
+    }
 }
 
 uint32_t KMSScreen::index()

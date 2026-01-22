@@ -163,9 +163,9 @@ if(WITH_READLINE)
     endif()
 endif()
 
-pkg_check_modules(LIBPLANES libplanes>=2.0.0)
+pkg_check_modules(LIBPLANES libplanes>=2.1.0)
 if(LIBPLANES_FOUND)
-    set(AX_PACKAGE_REQUIRES_PRIVATE "${AX_PACKAGE_REQUIRES_PRIVATE} libplanes >= 2.0.0")
+    set(AX_PACKAGE_REQUIRES_PRIVATE "${AX_PACKAGE_REQUIRES_PRIVATE} libplanes >= 2.1.0")
 
     pkg_check_modules(LIBDRM REQUIRED libdrm>=2.4.0)
     if(LIBDRM_FOUND)
