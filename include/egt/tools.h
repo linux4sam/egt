@@ -6,8 +6,11 @@
 #ifndef EGT_TOOLS_H
 #define EGT_TOOLS_H
 
+#include <atomic>
 #include <chrono>
 #include <cstdint>
+#include <memory>
+#include <thread>
 #include <egt/detail/meta.h>
 
 /**
@@ -122,6 +125,139 @@ protected:
 
     /// Is m_fps valid and ready?
     bool m_ready{false};
+};
+
+/**
+ * Performance monitor that collects and displays various performance metrics.
+ *
+ * This class runs in a separate thread to avoid interfering with the EventLoop.
+ * It periodically collects metrics (FPS, CPU usage, etc.) and logs them.
+ *
+ * Metric tracking is controlled via the API:
+ * - enable_fps_tracking(): Enable FPS collection
+ * - enable_cpu_tracking(): Enable CPU usage collection
+ *
+ * Log display is controlled via environment variables:
+ * - EGT_SHOW_FPS: Display FPS in logs
+ * - EGT_SHOW_CPU: Display CPU usage in logs
+ */
+class EGT_API PerfMonitor
+{
+public:
+
+    /**
+     * Default constructor.
+     */
+    PerfMonitor();
+
+    /**
+     * Destructor.
+     *
+     * Automatically stops monitoring if running.
+     */
+    ~PerfMonitor();
+
+    /**
+     * Set the update interval for collecting metrics.
+     *
+     * @param interval Update interval (default: 1 second)
+     */
+    void set_update_interval(std::chrono::milliseconds interval);
+
+    /**
+     * Start monitoring.
+     *
+     * Starts a background thread that collects and logs statistics.
+     */
+    void start();
+
+    /**
+     * Stop monitoring.
+     *
+     * Stops the background thread and waits for it to finish.
+     */
+    void stop();
+
+    /**
+     * Check if monitoring is currently active.
+     */
+    EGT_NODISCARD bool running() const;
+
+    /**
+     * Enable or disable FPS tracking.
+     *
+     * When enabled, notify_frame() calls will be recorded for FPS calculation.
+     * @param enable true to enable, false to disable
+     */
+    void enable_fps_tracking(bool enable = true);
+
+    /**
+     * Enable or disable CPU usage tracking.
+     *
+     * @param enable true to enable, false to disable
+     */
+    void enable_cpu_tracking(bool enable = true);
+
+    /**
+     * Check if FPS tracking is enabled.
+     */
+    EGT_NODISCARD bool fps_tracking_enabled() const;
+
+    /**
+     * Check if CPU tracking is enabled.
+     */
+    EGT_NODISCARD bool cpu_tracking_enabled() const;
+
+    /**
+     * Notify that a frame has been rendered.
+     *
+     * Must be called from the main thread after each rendered frame
+     * to track FPS.
+     */
+    void notify_frame();
+
+private:
+
+    /**
+     * Main monitoring loop running in the background thread.
+     */
+    void monitor_loop();
+
+    /**
+     * Check if FPS display is enabled via environment variable.
+     */
+    static bool show_fps_enabled();
+
+    /**
+     * Check if CPU usage display is enabled via environment variable.
+     */
+    static bool show_cpu_enabled();
+
+    /// FPS monitor
+    FramesPerSecond m_fps_monitor;
+
+    /// CPU usage monitor
+    CPUMonitorUsage m_cpu_monitor;
+
+    /// Background thread
+    std::unique_ptr<std::thread> m_thread;
+
+    /// Flag to control the monitoring loop
+    std::atomic<bool> m_running{false};
+
+    /// Flag to signal thread to stop
+    std::atomic<bool> m_stop_requested{false};
+
+    /// Update interval
+    std::chrono::milliseconds m_update_interval{1000};
+
+    /// Tracking enable flags
+    std::atomic<bool> m_track_fps{false};
+    std::atomic<bool> m_track_cpu{false};
+
+    /// Forward declaration for PIMPL
+    struct Impl;
+    std::unique_ptr<Impl> m_impl;
 };
 
 }
