@@ -156,6 +156,15 @@ class EGT_API PerfMonitor
 public:
 
     /**
+     * Policy for handling edge samples when computing averages.
+     */
+    enum class EdgePolicy
+    {
+        IncludeAll,    ///< Use all samples in the average
+        DiscardEdges   ///< Discard first and last samples to avoid outliers
+    };
+
+    /**
      * Default constructor.
      */
     PerfMonitor();
@@ -292,6 +301,41 @@ public:
      */
     bool add_temperature_sensor(const std::string& sysfs_path,
                                 const std::string& description);
+
+    /**
+     * Start accumulating metrics for averaging.
+     *
+     * While accumulating, all measured values (FPS, CPU, power, temperature)
+     * are stored for later averaging via log_averages().
+     */
+    void start_accumulate();
+
+    /**
+     * Stop accumulating metrics.
+     *
+     * Stops the accumulation but keeps the accumulated data for
+     * log_averages() to use.
+     */
+    void stop_accumulate();
+
+    /**
+     * Log the average of all accumulated metrics.
+     *
+     * Computes and logs the mean value of each metric collected since
+     * start_accumulate() was called. Clears the accumulated data after
+     * logging.
+     *
+     * @param policy EdgePolicy::IncludeAll uses all samples,
+     *               EdgePolicy::DiscardEdges skips first and last samples
+     *               to avoid startup/shutdown outliers (requires at least
+     *               3 samples per metric).
+     */
+    void log_averages(EdgePolicy policy = EdgePolicy::IncludeAll);
+
+    /**
+     * Check if currently accumulating metrics.
+     */
+    EGT_NODISCARD bool accumulating() const;
 
 private:
 

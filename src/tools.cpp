@@ -14,6 +14,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <mutex>
 #include <numeric>
 #include <optional>
 #include <vector>
@@ -104,10 +105,85 @@ struct PerfMonitor::Impl
     };
 
     std::vector<TemperatureSensor> temperature_sensors;
+
+    /// Accumulated metrics for averaging
+    struct AccumulatedMetrics
+    {
+        // Pre-allocate with reserve to reduce reallocations
+        static constexpr size_t INITIAL_CAPACITY = 600; // 10 minutes at 1 sample/sec
+
+        std::vector<float> fps_samples;
+        std::vector<double> cpu_samples;
+        std::vector<std::vector<double>> power_samples;
+        std::vector<std::vector<double>> temp_samples;
+
+        void clear()
+        {
+            fps_samples.clear();
+            cpu_samples.clear();
+            for (auto& v : power_samples)
+                v.clear();
+            for (auto& v : temp_samples)
+                v.clear();
+        }
+
+        void reserve_capacity()
+        {
+            fps_samples.reserve(INITIAL_CAPACITY);
+            cpu_samples.reserve(INITIAL_CAPACITY);
+            for (auto& v : power_samples)
+                v.reserve(INITIAL_CAPACITY);
+            for (auto& v : temp_samples)
+                v.reserve(INITIAL_CAPACITY);
+        }
+    };
+
+    AccumulatedMetrics accumulated;
+    std::atomic<bool> accumulating{false};
+    std::mutex accumulated_mutex;
 };
 
 namespace
 {
+
+/// Result of computing an average over a set of samples.
+struct AverageResult
+{
+    double value;   ///< Computed average value
+    size_t count;   ///< Number of samples used in computation
+};
+
+/**
+ * Compute average of samples with optional edge trimming.
+ *
+ * @tparam T Numeric type of samples
+ * @param samples Vector of samples to average
+ * @param policy Edge handling policy
+ * @return AverageResult if successful, nullopt if insufficient samples
+ */
+template<typename T>
+std::optional<AverageResult> compute_average(const std::vector<T>& samples,
+                                             PerfMonitor::EdgePolicy policy)
+{
+    if (samples.empty())
+        return std::nullopt;
+
+    auto begin = samples.begin();
+    auto end = samples.end();
+
+    if (policy == PerfMonitor::EdgePolicy::DiscardEdges)
+    {
+        if (samples.size() < 3)
+            return std::nullopt;
+        ++begin;
+        --end;
+    }
+
+    const size_t count = static_cast<size_t>(std::distance(begin, end));
+    const double sum = std::accumulate(begin, end, 0.0);
+
+    return AverageResult{sum / static_cast<double>(count), count};
+}
 
 #ifdef HAVE_LIBIIO
 /**
@@ -393,8 +469,92 @@ bool PerfMonitor::add_temperature_sensor(const std::string& sysfs_path,
     return true;
 }
 
+void PerfMonitor::start_accumulate()
+{
+    if (!m_impl)
+        return;
+
+    std::lock_guard<std::mutex> lock(m_impl->accumulated_mutex);
+    m_impl->accumulated.clear();
+
+#ifdef HAVE_LIBIIO
+    m_impl->accumulated.power_samples.resize(m_impl->power_channels.size());
+#endif
+
+    m_impl->accumulated.temp_samples.resize(m_impl->temperature_sensors.size());
+
+    m_impl->accumulated.reserve_capacity();
+
+    m_impl->accumulating = true;
+}
+
+void PerfMonitor::stop_accumulate()
+{
+    if (m_impl)
+        m_impl->accumulating = false;
+}
+
+bool PerfMonitor::accumulating() const
+{
+    return m_impl && m_impl->accumulating;
+}
+
+void PerfMonitor::log_averages(EdgePolicy policy)
+{
+    if (!m_impl)
+        return;
+
+    std::lock_guard<std::mutex> lock(m_impl->accumulated_mutex);
+
+    std::cout << "=== Performance Averages ===" << std::endl;
+
+    if (auto avg = compute_average(m_impl->accumulated.fps_samples, policy))
+    {
+        std::cout << "  FPS: " << std::fixed << std::setprecision(0) << avg->value
+                  << " (avg over " << avg->count << " samples)" << std::endl;
+    }
+
+    if (auto avg = compute_average(m_impl->accumulated.cpu_samples, policy))
+    {
+        std::cout << "  CPU: " << std::fixed << std::setprecision(0) << avg->value << "%"
+                  << " (avg over " << avg->count << " samples)" << std::endl;
+    }
+
+#ifdef HAVE_LIBIIO
+    for (size_t i = 0; i < m_impl->power_channels.size() && i < m_impl->accumulated.power_samples.size(); ++i)
+    {
+        if (auto avg = compute_average(m_impl->accumulated.power_samples[i], policy))
+        {
+            std::cout << "  " << m_impl->power_channels[i].description << ": "
+                      << std::fixed << std::setprecision(4) << avg->value << " W"
+                      << " (avg over " << avg->count << " samples)" << std::endl;
+        }
+    }
+#endif
+
+    for (size_t i = 0; i < m_impl->temperature_sensors.size() && i < m_impl->accumulated.temp_samples.size(); ++i)
+    {
+        if (auto avg = compute_average(m_impl->accumulated.temp_samples[i], policy))
+        {
+            std::cout << "  " << m_impl->temperature_sensors[i].description << ": "
+                      << std::fixed << std::setprecision(1) << avg->value << "°C"
+                      << " (avg over " << avg->count << " samples)" << std::endl;
+        }
+    }
+
+    m_impl->accumulated.clear();
+}
+
 void PerfMonitor::monitor_loop()
 {
+    struct IterationMetrics
+    {
+        std::optional<float> fps;
+        std::optional<double> cpu;
+        std::vector<std::optional<double>> power;
+        std::vector<std::optional<double>> temp;
+    };
+
     while (!m_stop_requested)
     {
         // Schedule next update based on the desired interval
@@ -409,9 +569,13 @@ void PerfMonitor::monitor_loop()
         if (show_any)
             std::cout << "PerfMonitor:";
 
+        // Collect metrics first to lock only once at the end.
+        IterationMetrics metrics;
+
         if (fps_tracking_enabled())
         {
             const float fps = m_fps_monitor.fps();
+            metrics.fps = fps;
             if (show_fps)
                 std::cout << " FPS: " << std::fixed << std::setprecision(0) << std::round(fps);
         }
@@ -420,6 +584,7 @@ void PerfMonitor::monitor_loop()
         {
             m_cpu_monitor.update();
             const double cpu = m_cpu_monitor.usage();
+            metrics.cpu = cpu;
             if (show_cpu)
                 std::cout << " CPU: " << std::fixed << std::setprecision(0) << cpu << "%";
         }
@@ -427,8 +592,10 @@ void PerfMonitor::monitor_loop()
 #ifdef HAVE_LIBIIO
         if (power_tracking_enabled() && m_impl && !m_impl->power_channels.empty())
         {
-            for (auto& power_ch : m_impl->power_channels)
+            metrics.power.resize(m_impl->power_channels.size());
+            for (size_t i = 0; i < m_impl->power_channels.size(); ++i)
             {
+                auto& power_ch = m_impl->power_channels[i];
                 try
                 {
                     std::optional<double> watts_opt;
@@ -464,6 +631,8 @@ void PerfMonitor::monitor_loop()
                             detail::warn("Failed to read voltage/current from channel '{}'", power_ch.description);
                         }
                     }
+
+                    metrics.power[i] = watts_opt;
                 }
                 catch (const iiopp::error& e)
                 {
@@ -475,8 +644,10 @@ void PerfMonitor::monitor_loop()
 
         if (temperature_tracking_enabled() && m_impl && !m_impl->temperature_sensors.empty())
         {
-            for (auto& sensor : m_impl->temperature_sensors)
+            metrics.temp.resize(m_impl->temperature_sensors.size());
+            for (size_t i = 0; i < m_impl->temperature_sensors.size(); ++i)
             {
+                auto& sensor = m_impl->temperature_sensors[i];
                 if (sensor.file.is_open())
                 {
                     sensor.file.seekg(0);
@@ -484,6 +655,7 @@ void PerfMonitor::monitor_loop()
                     if (sensor.file >> millidegrees)
                     {
                         const double degrees = millidegrees / 1000.0;
+                        metrics.temp[i] = degrees;
                         if (show_temp)
                             std::cout << " " << sensor.description << ": "
                                       << std::fixed << std::setprecision(1) << degrees << "°C";
@@ -503,6 +675,29 @@ void PerfMonitor::monitor_loop()
 
         if (show_any)
             std::cout << std::endl;
+
+        if (m_impl && m_impl->accumulating)
+        {
+            std::lock_guard<std::mutex> lock(m_impl->accumulated_mutex);
+
+            if (metrics.fps)
+                m_impl->accumulated.fps_samples.push_back(*metrics.fps);
+
+            if (metrics.cpu)
+                m_impl->accumulated.cpu_samples.push_back(*metrics.cpu);
+
+            for (size_t i = 0; i < metrics.power.size() && i < m_impl->accumulated.power_samples.size(); ++i)
+            {
+                if (metrics.power[i])
+                    m_impl->accumulated.power_samples[i].push_back(*metrics.power[i]);
+            }
+
+            for (size_t i = 0; i < metrics.temp.size() && i < m_impl->accumulated.temp_samples.size(); ++i)
+            {
+                if (metrics.temp[i])
+                    m_impl->accumulated.temp_samples[i].push_back(*metrics.temp[i]);
+            }
+        }
 
         // Compute remaining time until the next update and sleep at the end of the loop
         const auto after_work = std::chrono::steady_clock::now();
