@@ -498,6 +498,16 @@ if(ALSA_FOUND AND SNDFILE_FOUND)
     target_sources(egt PUBLIC FILE_SET HEADERS FILES ${CMAKE_SOURCE_DIR}/include/egt/sound_effect.h)
 endif()
 
+if(LIBIIO_FOUND)
+    set(HAVE_LIBIIO 1)
+
+    target_include_directories(egt PRIVATE ${LIBIIO_INCLUDE_DIRS})
+    target_compile_options(egt PRIVATE ${LIBIIO_CFLAGS_OTHER})
+    target_link_directories(egt PRIVATE ${LIBIIO_LIBRARY_DIRS})
+    target_link_libraries(egt PRIVATE ${LIBIIO_LIBRARIES})
+    target_link_options(egt PRIVATE ${LIBIIO_LDFLAGS_OTHER})
+endif()
+
 if(HAVE_FREETYPE)
     target_include_directories(egt PRIVATE ${FREETYPE2_INCLUDE_DIRS})
     target_compile_options(egt PRIVATE ${FREETYPE2_CFLAGS_OTHER})

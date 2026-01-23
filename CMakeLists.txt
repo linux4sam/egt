@@ -245,6 +245,14 @@ if(WITH_SNDFILE)
     endif()
 endif()
 
+option(WITH_LIBIIO "enable/disable libiio" ON)
+if(WITH_LIBIIO)
+    pkg_check_modules(LIBIIO libiio)
+    if(LIBIIO_FOUND)
+        set(AX_PACKAGE_REQUIRES_PRIVATE "${AX_PACKAGE_REQUIRES_PRIVATE} libiio")
+    endif()
+endif()
+
 option(VIRTUALKEYBOARD "include support for virtualkeyboard [default=ON]" ON)
 
 option(ENABLE_ICONS "install icons [default=ON]" ON)

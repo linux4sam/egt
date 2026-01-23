@@ -3,14 +3,23 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "egt/tools.h"
+#include "detail/egtlog.h"
 #include <cmath>
 #include <cstdlib>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <numeric>
+#include <optional>
 #include <vector>
+#ifdef HAVE_LIBIIO
+#include <iiopp.h>
+#endif
 
 namespace egt
 {
@@ -59,8 +68,65 @@ void CPUMonitorUsage::update()
 
 struct PerfMonitor::Impl
 {
-    // Empty for now, reserved for future extensions
+#ifdef HAVE_LIBIIO
+    struct PowerChannel
+    {
+        enum class Type
+        {
+            Direct,      // Direct power reading from a single channel
+            Calculated   // Calculated from voltage and current channels
+        };
+
+        Type type;
+        std::string description;
+        iiopp::Device iio_device;                          // IIO device (stored directly, move-only)
+        iiopp::Channel iio_channel;                        // For Direct: power channel. For Calculated: voltage channel
+        std::optional<iiopp::Channel> iio_channel2;        // For Calculated: current channel. Empty for Direct
+        std::string raw_attr_name;                         // Raw attribute name to read (same for both channels in Calculated mode)
+    };
+
+    std::vector<PowerChannel> power_channels;
+    std::shared_ptr<iiopp::Context> iio_context;  // Shared IIO context for all channels
+#endif
 };
+
+namespace
+{
+
+#ifdef HAVE_LIBIIO
+/**
+ * Read and compute value from IIO channel using formula: (raw + offset) * scale / 1000
+ * @param channel IIO channel to read from
+ * @param raw_attr_name Name of the raw attribute to read (e.g., "raw", "mean_raw")
+ * @return Computed value in units, or std::nullopt if reading fails
+ */
+std::optional<double> read_channel_value(iiopp::Channel& channel,
+                                         const std::string& raw_attr_name)
+{
+    try
+    {
+        const auto raw_attr = channel.attr(raw_attr_name);
+        if (!raw_attr)
+            return std::nullopt;
+
+        const auto scale_attr = channel.attr("scale");
+        const auto offset_attr = channel.attr("offset");
+
+        const double raw_value = raw_attr->read_double();
+        const double scale = scale_attr ? scale_attr->read_double() : 1.0;
+        const double offset = offset_attr ? offset_attr->read_double() : 0.0;
+
+        // Convert value from milli-units to units
+        return (raw_value + offset) * scale / 1000.0;
+    }
+    catch (const iiopp::error&)
+    {
+        return std::nullopt;
+    }
+}
+#endif
+
+} // anonymous namespace
 
 bool PerfMonitor::show_fps_enabled()
 {
@@ -71,6 +137,12 @@ bool PerfMonitor::show_fps_enabled()
 bool PerfMonitor::show_cpu_enabled()
 {
     static const bool value = (getenv("EGT_SHOW_CPU") != nullptr);
+    return value;
+}
+
+bool PerfMonitor::show_power_enabled()
+{
+    static const bool value = (getenv("EGT_SHOW_POWER") != nullptr);
     return value;
 }
 
@@ -129,6 +201,11 @@ void PerfMonitor::enable_cpu_tracking(bool enable)
     m_track_cpu = enable;
 }
 
+void PerfMonitor::enable_power_tracking(bool enable)
+{
+    m_track_power = enable;
+}
+
 bool PerfMonitor::fps_tracking_enabled() const
 {
     return m_track_fps;
@@ -139,10 +216,131 @@ bool PerfMonitor::cpu_tracking_enabled() const
     return m_track_cpu;
 }
 
+bool PerfMonitor::power_tracking_enabled() const
+{
+    return m_track_power;
+}
+
 void PerfMonitor::notify_frame()
 {
     if (fps_tracking_enabled())
         m_fps_monitor.end_frame();
+}
+
+#ifdef HAVE_LIBIIO
+std::optional<iiopp::Device> PerfMonitor::ensure_iio_device(const std::string& device_name)
+{
+    if (!m_impl)
+        return std::nullopt;
+
+    try
+    {
+        if (!m_impl->iio_context)
+            m_impl->iio_context = iiopp::create_local_context();
+
+        iiopp::Device dev = m_impl->iio_context->find_device(device_name);
+        if (!dev)
+        {
+            detail::warn("IIO device '{}' not found", device_name);
+            return std::nullopt;
+        }
+
+        return dev;
+    }
+    catch (const iiopp::error& e)
+    {
+        detail::warn("Failed to access IIO device '{}': {}", device_name, e.what());
+        return std::nullopt;
+    }
+}
+#endif
+
+bool PerfMonitor::add_power_channel([[maybe_unused]] const std::string& device,
+                                    [[maybe_unused]] const std::string& channel,
+                                    [[maybe_unused]] const std::string& description,
+                                    [[maybe_unused]] const std::string& raw_attr_name)
+{
+#ifdef HAVE_LIBIIO
+    auto dev_opt = ensure_iio_device(device);
+    if (!dev_opt)
+        return false;
+
+    try
+    {
+        iiopp::Device dev = std::move(*dev_opt);
+        iiopp::Channel ch = dev.find_channel(channel, false);
+        if (!ch)
+        {
+            detail::warn("IIO channel '{}' not found in device '{}'", channel, device);
+            return false;
+        }
+
+        m_impl->power_channels.push_back({
+            Impl::PowerChannel::Type::Direct,
+            description,
+            std::move(dev),
+            std::move(ch),
+            std::nullopt,
+            raw_attr_name
+        });
+        return true;
+    }
+    catch (const iiopp::error& e)
+    {
+        detail::warn("Failed to add power channel '{}' from device '{}': {}", channel, device, e.what());
+        return false;
+    }
+#else
+    return false;
+#endif
+}
+
+bool PerfMonitor::add_power_channel([[maybe_unused]] const std::string& device,
+                                    [[maybe_unused]] const std::string& voltage_channel,
+                                    [[maybe_unused]] const std::string& current_channel,
+                                    [[maybe_unused]] const std::string& description,
+                                    [[maybe_unused]] const std::string& raw_attr_name)
+{
+#ifdef HAVE_LIBIIO
+    auto dev_opt = ensure_iio_device(device);
+    if (!dev_opt)
+        return false;
+
+    try
+    {
+        iiopp::Device dev = std::move(*dev_opt);
+        iiopp::Channel voltage_ch = dev.find_channel(voltage_channel, false);
+        if (!voltage_ch)
+        {
+            detail::warn("IIO voltage channel '{}' not found in device '{}'", voltage_channel, device);
+            return false;
+        }
+
+        iiopp::Channel current_ch = dev.find_channel(current_channel, false);
+        if (!current_ch)
+        {
+            detail::warn("IIO current channel '{}' not found in device '{}'", current_channel, device);
+            return false;
+        }
+
+        m_impl->power_channels.push_back({
+            Impl::PowerChannel::Type::Calculated,
+            description,
+            std::move(dev),
+            std::move(voltage_ch),
+            std::move(current_ch),
+            raw_attr_name
+        });
+        return true;
+    }
+    catch (const iiopp::error& e)
+    {
+        detail::warn("Failed to add power channel '{}'/'{}' from device '{}': {}", voltage_channel, current_channel, device, e.what());
+        return false;
+    }
+#else
+    return false;
+#endif
 }
 
 void PerfMonitor::monitor_loop()
@@ -154,8 +352,9 @@ void PerfMonitor::monitor_loop()
 
         const bool show_fps = show_fps_enabled();
         const bool show_cpu = show_cpu_enabled();
+        const bool show_power = show_power_enabled();
 
-        const bool show_any = show_fps || show_cpu;
+        const bool show_any = show_fps || show_cpu || show_power;
         if (show_any)
             std::cout << "PerfMonitor:";
 
@@ -173,6 +372,55 @@ void PerfMonitor::monitor_loop()
             if (show_cpu)
                 std::cout << " CPU: " << std::fixed << std::setprecision(0) << cpu << "%";
         }
+
+#ifdef HAVE_LIBIIO
+        if (power_tracking_enabled() && m_impl && !m_impl->power_channels.empty())
+        {
+            for (auto& power_ch : m_impl->power_channels)
+            {
+                try
+                {
+                    std::optional<double> watts_opt;
+
+                    if (power_ch.type == Impl::PowerChannel::Type::Direct)
+                    {
+                        watts_opt = read_channel_value(power_ch.iio_channel, power_ch.raw_attr_name);
+                        if (watts_opt)
+                        {
+                            if (show_power)
+                                std::cout << " " << power_ch.description << ": "
+                                          << std::fixed << std::setprecision(4) << *watts_opt << "W";
+                        }
+                        else
+                        {
+                            detail::warn("Failed to read power from channel '{}'", power_ch.description);
+                        }
+                    }
+                    else if (power_ch.type == Impl::PowerChannel::Type::Calculated && power_ch.iio_channel2)
+                    {
+                        const auto voltage_v_opt = read_channel_value(power_ch.iio_channel, power_ch.raw_attr_name);
+                        const auto current_a_opt = read_channel_value(*power_ch.iio_channel2, power_ch.raw_attr_name);
+
+                        if (voltage_v_opt && current_a_opt)
+                        {
+                            watts_opt = (*voltage_v_opt) * (*current_a_opt);
+                            if (show_power)
+                                std::cout << " " << power_ch.description << ": "
+                                          << std::fixed << std::setprecision(4) << *watts_opt << "W";
+                        }
+                        else
+                        {
+                            detail::warn("Failed to read voltage/current from channel '{}'", power_ch.description);
+                        }
+                    }
+                }
+                catch (const iiopp::error& e)
+                {
+                    detail::warn("Error reading power channel '{}': {}", power_ch.description, e.what());
+                }
+            }
+        }
+#endif
 
         if (show_any)
             std::cout << std::endl;

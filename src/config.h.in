@@ -36,6 +36,9 @@
 /* Have libinput support */
 #cmakedefine HAVE_LIBINPUT @HAVE_LIBINPUT@
 
+/* Have libiio support */
+#cmakedefine HAVE_LIBIIO @HAVE_LIBIIO@
+
 /* Have libintl support */
 #cmakedefine HAVE_LIBINTL @HAVE_LIBINTL@
 

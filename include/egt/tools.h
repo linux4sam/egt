@@ -10,8 +10,18 @@
 #include <chrono>
 #include <cstdint>
 #include <memory>
+#include <optional>
+#include <string>
 #include <thread>
 #include <egt/detail/meta.h>
+
+#ifdef HAVE_LIBIIO
+// Forward declaration for iiopp types
+namespace iiopp
+{
+class Device;
+}
+#endif
 
 /**
  * @file
@@ -199,6 +209,13 @@ public:
     void enable_cpu_tracking(bool enable = true);
 
     /**
+     * Enable or disable power tracking.
+     *
+     * @param enable true to enable, false to disable
+     */
+    void enable_power_tracking(bool enable = true);
+
+    /**
      * Check if FPS tracking is enabled.
      */
     EGT_NODISCARD bool fps_tracking_enabled() const;
@@ -209,12 +226,47 @@ public:
     EGT_NODISCARD bool cpu_tracking_enabled() const;
 
     /**
+     * Check if power tracking is enabled.
+     */
+    EGT_NODISCARD bool power_tracking_enabled() const;
+
+    /**
      * Notify that a frame has been rendered.
      *
      * Must be called from the main thread after each rendered frame
      * to track FPS.
      */
     void notify_frame();
+
+    /**
+     * Add a power channel to monitor (direct power reading).
+     *
+     * @param device IIO device name (e.g., "pac1934")
+     * @param channel IIO channel name that provides direct power reading (e.g., "power1")
+     * @param description Human-readable description for logging
+     * @param raw_attr_name Name of the raw attribute to read (default: "raw")
+     * @return true if channel was successfully added, false otherwise
+     */
+    bool add_power_channel(const std::string& device,
+                           const std::string& channel,
+                           const std::string& description,
+                           const std::string& raw_attr_name = "raw");
+
+    /**
+     * Add a power channel to monitor (calculated from voltage and current).
+     *
+     * @param device IIO device name (e.g., "pac1934")
+     * @param voltage_channel IIO channel name for voltage reading
+     * @param current_channel IIO channel name for current reading
+     * @param description Human-readable description for logging
+     * @param raw_attr_name Name of the raw attribute to read for both channels (default: "raw")
+     * @return true if channel was successfully added, false otherwise
+     */
+    bool add_power_channel(const std::string& device,
+                           const std::string& voltage_channel,
+                           const std::string& current_channel,
+                           const std::string& description,
+                           const std::string& raw_attr_name = "raw");
 
 private:
 
@@ -232,6 +284,19 @@ private:
      * Check if CPU usage display is enabled via environment variable.
      */
     static bool show_cpu_enabled();
+
+    /**
+     * Check if power consumption display is enabled via environment variable.
+     */
+    static bool show_power_enabled();
+
+#ifdef HAVE_LIBIIO
+    /**
+     * Ensure IIO context is initialized and find device.
+     * @return Device if found, empty optional otherwise
+     */
+    std::optional<iiopp::Device> ensure_iio_device(const std::string& device_name);
+#endif
 
     /// FPS monitor
     FramesPerSecond m_fps_monitor;
@@ -254,6 +319,7 @@ private:
     /// Tracking enable flags
     std::atomic<bool> m_track_fps{false};
     std::atomic<bool> m_track_cpu{false};
+    std::atomic<bool> m_track_power{false};
 
     /// Forward declaration for PIMPL
     struct Impl;
