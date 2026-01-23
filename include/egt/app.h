@@ -11,6 +11,7 @@
 #include <egt/detail/meta.h>
 #include <egt/eventloop.h>
 #include <egt/object.h>
+#include <egt/tools.h>
 #include <iosfwd>
 #include <memory>
 #include <ostream>
@@ -112,6 +113,11 @@ public:
      * Get a reference to the application event loop instance.
      */
     EventLoop& event() { return m_event; }
+
+    /**
+     * Get a reference to the performance monitor instance.
+     */
+    experimental::PerfMonitor& perf_monitor() const { return *m_perf_monitor; }
 
     /**
      * Get a pointer to the Screen instance.
@@ -268,6 +274,9 @@ private:
 
     /// The global state of the GPU.
     bool m_gpu_enabled{true};
+
+    /// Performance monitor instance (mutable to allow modification even when Application is const)
+    mutable std::unique_ptr<experimental::PerfMonitor> m_perf_monitor;
 
     friend class Window;
     friend class Timer;

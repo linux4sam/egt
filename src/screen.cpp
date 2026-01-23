@@ -9,6 +9,7 @@
 
 #include "detail/dump.h"
 #include "detail/screen/framebuffer.h"
+#include "egt/app.h"
 #include "egt/color.h"
 #include "egt/palette.h"
 #include "egt/screen.h"
@@ -476,6 +477,15 @@ size_t Screen::brightness() const
 void Screen::brightness(size_t brightness)
 {
     detail::ignoreparam(brightness);
+}
+
+void Screen::flush()
+{
+    if (!m_perf_monitor && Application::check_instance())
+        m_perf_monitor = &Application::instance().perf_monitor();
+
+    if (m_perf_monitor)
+        m_perf_monitor->notify_frame();
 }
 
 }

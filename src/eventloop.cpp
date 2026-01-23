@@ -143,23 +143,8 @@ int EventLoop::step()
     return ret;
 }
 
-static inline bool show_fps_enabled()
-{
-    static int value = 0;
-    if (value == 0)
-    {
-        if (std::getenv("EGT_SHOW_FPS"))
-            value += 1;
-        else
-            value -= 1;
-    }
-    return value == 1;
-}
-
 int EventLoop::run()
 {
-    experimental::FramesPerSecond fps;
-
     // initial draw
     draw();
     flush();
@@ -174,14 +159,6 @@ int EventLoop::run()
             // draw anything that's changed
             draw();
             flush();
-
-            if (show_fps_enabled())
-            {
-                fps.end_frame();
-
-                if (fps.ready())
-                    fmt::print("fps: {}\n", std::round(fps.fps()));
-            }
         }
     }
 

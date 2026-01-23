@@ -24,6 +24,12 @@ namespace egt
 {
 inline namespace v1
 {
+
+namespace experimental
+{
+class PerfMonitor;
+}
+
 namespace detail
 {
 class FrameBufferInfo;
@@ -163,7 +169,7 @@ public:
      */
     EGT_NODISCARD virtual bool is_composer() const { return false; }
 
-    virtual void flush() {}
+    virtual void flush();
 
     /**
      * Set the need_flush flag.
@@ -247,6 +253,9 @@ protected:
 
     /// Flag indicating that a flush is needed after a plane_flip.
     bool m_need_flush{false};
+
+    /// Pointer to the performance monitor for frame notifications.
+    experimental::PerfMonitor* m_perf_monitor{nullptr};
 };
 
 }

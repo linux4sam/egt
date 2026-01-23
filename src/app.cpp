@@ -92,7 +92,8 @@ Application::Application(int argc, char** argv,
     : m_event(*this),
       m_argc(argc),
       m_argv(argv),
-      m_signals(event().io(), SIGUSR1, SIGUSR2)
+      m_signals(event().io(), SIGUSR1, SIGUSR2),
+      m_perf_monitor(std::make_unique<experimental::PerfMonitor>())
 {
     setup_logging();
 
