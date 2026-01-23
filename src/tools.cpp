@@ -88,6 +88,22 @@ struct PerfMonitor::Impl
     std::vector<PowerChannel> power_channels;
     std::shared_ptr<iiopp::Context> iio_context;  // Shared IIO context for all channels
 #endif
+
+    /// Temperature sensor entry
+    struct TemperatureSensor
+    {
+        std::string sysfs_path;   // Path to sysfs temperature file
+        std::string description;  // Human-readable description
+        std::ifstream file;       // Persistent file handle
+
+        // Move-only due to ifstream
+        TemperatureSensor(const std::string& path, const std::string& desc)
+            : sysfs_path(path), description(desc), file(path) {}
+        TemperatureSensor(TemperatureSensor&&) = default;
+        TemperatureSensor& operator=(TemperatureSensor&&) = default;
+    };
+
+    std::vector<TemperatureSensor> temperature_sensors;
 };
 
 namespace
@@ -143,6 +159,12 @@ bool PerfMonitor::show_cpu_enabled()
 bool PerfMonitor::show_power_enabled()
 {
     static const bool value = (getenv("EGT_SHOW_POWER") != nullptr);
+    return value;
+}
+
+bool PerfMonitor::show_temp_enabled()
+{
+    static const bool value = (getenv("EGT_SHOW_TEMP") != nullptr);
     return value;
 }
 
@@ -206,6 +228,11 @@ void PerfMonitor::enable_power_tracking(bool enable)
     m_track_power = enable;
 }
 
+void PerfMonitor::enable_temperature_tracking(bool enable)
+{
+    m_track_temp = enable;
+}
+
 bool PerfMonitor::fps_tracking_enabled() const
 {
     return m_track_fps;
@@ -219,6 +246,11 @@ bool PerfMonitor::cpu_tracking_enabled() const
 bool PerfMonitor::power_tracking_enabled() const
 {
     return m_track_power;
+}
+
+bool PerfMonitor::temperature_tracking_enabled() const
+{
+    return m_track_temp;
 }
 
 void PerfMonitor::notify_frame()
@@ -343,6 +375,24 @@ bool PerfMonitor::add_power_channel([[maybe_unused]] const std::string& device,
 #endif
 }
 
+bool PerfMonitor::add_temperature_sensor(const std::string& sysfs_path,
+                                         const std::string& description)
+{
+    if (!m_impl)
+        return false;
+
+    m_impl->temperature_sensors.emplace_back(sysfs_path, description);
+
+    if (!m_impl->temperature_sensors.back().file.is_open())
+    {
+        detail::warn("Temperature sensor file '{}' cannot be opened", sysfs_path);
+        m_impl->temperature_sensors.pop_back();
+        return false;
+    }
+
+    return true;
+}
+
 void PerfMonitor::monitor_loop()
 {
     while (!m_stop_requested)
@@ -353,8 +403,9 @@ void PerfMonitor::monitor_loop()
         const bool show_fps = show_fps_enabled();
         const bool show_cpu = show_cpu_enabled();
         const bool show_power = show_power_enabled();
+        const bool show_temp = show_temp_enabled();
 
-        const bool show_any = show_fps || show_cpu || show_power;
+        const bool show_any = show_fps || show_cpu || show_power || show_temp;
         if (show_any)
             std::cout << "PerfMonitor:";
 
@@ -421,6 +472,34 @@ void PerfMonitor::monitor_loop()
             }
         }
 #endif
+
+        if (temperature_tracking_enabled() && m_impl && !m_impl->temperature_sensors.empty())
+        {
+            for (auto& sensor : m_impl->temperature_sensors)
+            {
+                if (sensor.file.is_open())
+                {
+                    sensor.file.seekg(0);
+                    long millidegrees = 0;
+                    if (sensor.file >> millidegrees)
+                    {
+                        const double degrees = millidegrees / 1000.0;
+                        if (show_temp)
+                            std::cout << " " << sensor.description << ": "
+                                      << std::fixed << std::setprecision(1) << degrees << "°C";
+                    }
+                    else
+                    {
+                        detail::warn("Failed to read temperature from '{}'", sensor.sysfs_path);
+                    }
+                    sensor.file.clear(); // Clear EOF flag for next read
+                }
+                else
+                {
+                    detail::warn("Cannot open temperature sensor file '{}'", sensor.sysfs_path);
+                }
+            }
+        }
 
         if (show_any)
             std::cout << std::endl;

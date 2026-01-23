@@ -216,6 +216,13 @@ public:
     void enable_power_tracking(bool enable = true);
 
     /**
+     * Enable or disable temperature tracking.
+     *
+     * @param enable true to enable, false to disable
+     */
+    void enable_temperature_tracking(bool enable = true);
+
+    /**
      * Check if FPS tracking is enabled.
      */
     EGT_NODISCARD bool fps_tracking_enabled() const;
@@ -229,6 +236,11 @@ public:
      * Check if power tracking is enabled.
      */
     EGT_NODISCARD bool power_tracking_enabled() const;
+
+    /**
+     * Check if temperature tracking is enabled.
+     */
+    EGT_NODISCARD bool temperature_tracking_enabled() const;
 
     /**
      * Notify that a frame has been rendered.
@@ -268,6 +280,19 @@ public:
                            const std::string& description,
                            const std::string& raw_attr_name = "raw");
 
+    /**
+     * Register a temperature sensor to monitor.
+     *
+     * The sysfs file is expected to contain a temperature value in
+     * millidegrees Celsius (e.g., /sys/class/thermal/thermal_zone0/temp).
+     *
+     * @param sysfs_path Path to the sysfs file containing the temperature
+     * @param description Human-readable description for logging
+     * @return true if sensor was successfully added, false otherwise
+     */
+    bool add_temperature_sensor(const std::string& sysfs_path,
+                                const std::string& description);
+
 private:
 
     /**
@@ -289,6 +314,11 @@ private:
      * Check if power consumption display is enabled via environment variable.
      */
     static bool show_power_enabled();
+
+    /**
+     * Check if temperature display is enabled via environment variable.
+     */
+    static bool show_temp_enabled();
 
 #ifdef HAVE_LIBIIO
     /**
@@ -320,6 +350,7 @@ private:
     std::atomic<bool> m_track_fps{false};
     std::atomic<bool> m_track_cpu{false};
     std::atomic<bool> m_track_power{false};
+    std::atomic<bool> m_track_temp{false};
 
     /// Forward declaration for PIMPL
     struct Impl;
