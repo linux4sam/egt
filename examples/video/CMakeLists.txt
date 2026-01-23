@@ -22,6 +22,9 @@ target_compile_definitions(egt_capture PRIVATE EXAMPLEDATA="${CMAKE_INSTALL_FULL
 target_link_libraries(egt_capture PRIVATE egt)
 add_dependencies(egt_capture generate_rc_cpp)
 
-install(TARGETS egt_video egt_camera egt_capture RUNTIME)
+add_executable(egt_video_perf video_perf.cpp)
+target_link_libraries(egt_video_perf PRIVATE egt)
+
+install(TARGETS egt_video egt_camera egt_capture egt_video_perf RUNTIME)
 install(FILES video.xml background.jpg video.png camera.png
         DESTINATION ${CMAKE_INSTALL_DATADIR}/egt/examples/video)
