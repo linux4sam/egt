@@ -8,22 +8,24 @@
  * @brief Minimal video player with performance monitoring.
  *
  * This example demonstrates video playback with PerfMonitor integration
- * for FPS, CPU, power consumption and temperature monitoring.
+ * for FPS, CPU, CPU frequency, power consumption and temperature monitoring.
  *
  * Board selection:
  *   --board <name>  - Select board configuration (default: sama7d65_curiosity)
  *
  * Tracking options (all enabled by default):
- *   --no-fps    - Disable FPS tracking
- *   --no-cpu    - Disable CPU tracking
- *   --no-power  - Disable power tracking
- *   --no-temp   - Disable temperature tracking
+ *   --no-fps       - Disable FPS tracking
+ *   --no-cpu       - Disable CPU tracking
+ *   --no-cpu-freq  - Disable CPU frequency tracking
+ *   --no-power     - Disable power tracking
+ *   --no-temp      - Disable temperature tracking
  *
  * Use environment variables to control log output:
- *   EGT_SHOW_FPS=1    - Display frames per second
- *   EGT_SHOW_CPU=1    - Display CPU usage
- *   EGT_SHOW_POWER=1  - Display power consumption (requires IIO)
- *   EGT_SHOW_TEMP=1   - Display temperature
+ *   EGT_SHOW_FPS=1       - Display frames per second
+ *   EGT_SHOW_CPU=1       - Display CPU usage
+ *   EGT_SHOW_CPU_FREQ=1  - Display CPU frequency
+ *   EGT_SHOW_POWER=1     - Display power consumption (requires IIO)
+ *   EGT_SHOW_TEMP=1      - Display temperature
  */
 #include <cxxopts.hpp>
 #include <egt/ui>
@@ -76,6 +78,7 @@ int main(int argc, char** argv)
     ("pipeline", "Custom GStreamer pipeline", cxxopts::value<std::string>())
     ("no-fps", "Disable FPS tracking")
     ("no-cpu", "Disable CPU tracking")
+    ("no-cpu-freq", "Disable CPU frequency tracking")
     ("no-power", "Disable power tracking")
     ("no-temp", "Disable temperature tracking")
     ("board", "Board name for power/temp configuration", cxxopts::value<std::string>()->default_value("sama7d65_curiosity"), "[sama7d65_curiosity]");
@@ -100,13 +103,14 @@ int main(int argc, char** argv)
     // Enable tracking based on command-line options (enabled by default)
     app.perf_monitor().enable_fps_tracking(!args.count("no-fps"));
     app.perf_monitor().enable_cpu_tracking(!args.count("no-cpu"));
+    app.perf_monitor().enable_cpu_freq_tracking(!args.count("no-cpu-freq"));
 
     // Configure board-specific power and temperature monitoring
     const auto board = args["board"].as<std::string>();
     if (!configure_board(app.perf_monitor(), board))
     {
         std::cerr << "Failed to configure board: " << board << std::endl;
-        std::cerr << "Only FPS and CPU are tracked" << std::endl;
+        std::cerr << "Only FPS, CPU and CPU frequency are tracked" << std::endl;
     }
     else
     {
