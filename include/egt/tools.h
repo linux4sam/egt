@@ -146,10 +146,12 @@ protected:
  * Metric tracking is controlled via the API:
  * - enable_fps_tracking(): Enable FPS collection
  * - enable_cpu_tracking(): Enable CPU usage collection
+ * - enable_cpu_freq_tracking(): Enable CPU frequency collection
  *
  * Log display is controlled via environment variables:
  * - EGT_SHOW_FPS: Display FPS in logs
  * - EGT_SHOW_CPU: Display CPU usage in logs
+ * - EGT_SHOW_CPU_FREQ: Display CPU frequency in logs
  */
 class EGT_API PerfMonitor
 {
@@ -232,6 +234,17 @@ public:
     void enable_temperature_tracking(bool enable = true);
 
     /**
+     * Enable or disable CPU frequency tracking.
+     *
+     * Reads the current CPU frequency from sysfs
+     * (/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq).
+     * Assumes a single-core system.
+     *
+     * @param enable true to enable, false to disable
+     */
+    void enable_cpu_freq_tracking(bool enable = true);
+
+    /**
      * Check if FPS tracking is enabled.
      */
     EGT_NODISCARD bool fps_tracking_enabled() const;
@@ -250,6 +263,11 @@ public:
      * Check if temperature tracking is enabled.
      */
     EGT_NODISCARD bool temperature_tracking_enabled() const;
+
+    /**
+     * Check if CPU frequency tracking is enabled.
+     */
+    EGT_NODISCARD bool cpu_freq_tracking_enabled() const;
 
     /**
      * Notify that a frame has been rendered.
@@ -364,6 +382,11 @@ private:
      */
     static bool show_temp_enabled();
 
+    /**
+     * Check if CPU frequency display is enabled via environment variable.
+     */
+    static bool show_cpu_freq_enabled();
+
 #ifdef HAVE_LIBIIO
     /**
      * Ensure IIO context is initialized and find device.
@@ -395,6 +418,7 @@ private:
     std::atomic<bool> m_track_cpu{false};
     std::atomic<bool> m_track_power{false};
     std::atomic<bool> m_track_temp{false};
+    std::atomic<bool> m_track_cpu_freq{false};
 
     /// Forward declaration for PIMPL
     struct Impl;

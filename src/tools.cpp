@@ -106,6 +106,9 @@ struct PerfMonitor::Impl
 
     std::vector<TemperatureSensor> temperature_sensors;
 
+    /// CPU frequency sysfs file (single-core assumption)
+    std::ifstream cpu_freq_file;
+
     /// Accumulated metrics for averaging
     struct AccumulatedMetrics
     {
@@ -116,6 +119,7 @@ struct PerfMonitor::Impl
         std::vector<double> cpu_samples;
         std::vector<std::vector<double>> power_samples;
         std::vector<std::vector<double>> temp_samples;
+        std::vector<double> cpu_freq_samples;
 
         void clear()
         {
@@ -125,6 +129,7 @@ struct PerfMonitor::Impl
                 v.clear();
             for (auto& v : temp_samples)
                 v.clear();
+            cpu_freq_samples.clear();
         }
 
         void reserve_capacity()
@@ -135,6 +140,7 @@ struct PerfMonitor::Impl
                 v.reserve(INITIAL_CAPACITY);
             for (auto& v : temp_samples)
                 v.reserve(INITIAL_CAPACITY);
+            cpu_freq_samples.reserve(INITIAL_CAPACITY);
         }
     };
 
@@ -244,6 +250,12 @@ bool PerfMonitor::show_temp_enabled()
     return value;
 }
 
+bool PerfMonitor::show_cpu_freq_enabled()
+{
+    static const bool value = (getenv("EGT_SHOW_CPU_FREQ") != nullptr);
+    return value;
+}
+
 PerfMonitor::PerfMonitor()
     : m_impl(std::make_unique<Impl>())
 {
@@ -309,6 +321,22 @@ void PerfMonitor::enable_temperature_tracking(bool enable)
     m_track_temp = enable;
 }
 
+void PerfMonitor::enable_cpu_freq_tracking(bool enable)
+{
+    if (enable && m_impl && !m_impl->cpu_freq_file.is_open())
+    {
+        static constexpr const char* path =
+            "/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq";
+        m_impl->cpu_freq_file.open(path);
+        if (!m_impl->cpu_freq_file.is_open())
+        {
+            detail::warn("CPU frequency file '{}' cannot be opened", path);
+            return;
+        }
+    }
+    m_track_cpu_freq = enable;
+}
+
 bool PerfMonitor::fps_tracking_enabled() const
 {
     return m_track_fps;
@@ -327,6 +355,11 @@ bool PerfMonitor::power_tracking_enabled() const
 bool PerfMonitor::temperature_tracking_enabled() const
 {
     return m_track_temp;
+}
+
+bool PerfMonitor::cpu_freq_tracking_enabled() const
+{
+    return m_track_cpu_freq;
 }
 
 void PerfMonitor::notify_frame()
@@ -542,6 +575,12 @@ void PerfMonitor::log_averages(EdgePolicy policy)
         }
     }
 
+    if (auto avg = compute_average(m_impl->accumulated.cpu_freq_samples, policy))
+    {
+        std::cout << "  CPU Freq: " << std::fixed << std::setprecision(0) << avg->value << " MHz"
+                  << " (avg over " << avg->count << " samples)" << std::endl;
+    }
+
     m_impl->accumulated.clear();
 }
 
@@ -553,6 +592,7 @@ void PerfMonitor::monitor_loop()
         std::optional<double> cpu;
         std::vector<std::optional<double>> power;
         std::vector<std::optional<double>> temp;
+        std::optional<double> cpu_freq;
     };
 
     while (!m_stop_requested)
@@ -564,8 +604,9 @@ void PerfMonitor::monitor_loop()
         const bool show_cpu = show_cpu_enabled();
         const bool show_power = show_power_enabled();
         const bool show_temp = show_temp_enabled();
+        const bool show_cpu_freq = show_cpu_freq_enabled();
 
-        const bool show_any = show_fps || show_cpu || show_power || show_temp;
+        const bool show_any = show_fps || show_cpu || show_power || show_temp || show_cpu_freq;
         if (show_any)
             std::cout << "PerfMonitor:";
 
@@ -673,6 +714,25 @@ void PerfMonitor::monitor_loop()
             }
         }
 
+        if (cpu_freq_tracking_enabled() && m_impl && m_impl->cpu_freq_file.is_open())
+        {
+            m_impl->cpu_freq_file.seekg(0);
+            long khz = 0;
+            if (m_impl->cpu_freq_file >> khz)
+            {
+                const double mhz = khz / 1000.0;
+                metrics.cpu_freq = mhz;
+                if (show_cpu_freq)
+                    std::cout << " CPU Freq: " << std::fixed << std::setprecision(0)
+                              << mhz << " MHz";
+            }
+            else
+            {
+                detail::warn("Failed to read CPU frequency");
+            }
+            m_impl->cpu_freq_file.clear(); // Clear EOF flag for next read
+        }
+
         if (show_any)
             std::cout << std::endl;
 
@@ -697,6 +757,9 @@ void PerfMonitor::monitor_loop()
                 if (metrics.temp[i])
                     m_impl->accumulated.temp_samples[i].push_back(*metrics.temp[i]);
             }
+
+            if (metrics.cpu_freq)
+                m_impl->accumulated.cpu_freq_samples.push_back(*metrics.cpu_freq);
         }
 
         // Compute remaining time until the next update and sleep at the end of the loop
