@@ -549,7 +549,7 @@ void PerfMonitor::log_averages(EdgePolicy policy)
 
     if (auto avg = compute_average(m_impl->accumulated.cpu_samples, policy))
     {
-        std::cout << "  CPU: " << std::fixed << std::setprecision(0) << avg->value << "%"
+        std::cout << "  CPU: " << std::fixed << std::setprecision(0) << avg->value << " %"
                   << " (avg over " << avg->count << " samples)" << std::endl;
     }
 
@@ -570,7 +570,7 @@ void PerfMonitor::log_averages(EdgePolicy policy)
         if (auto avg = compute_average(m_impl->accumulated.temp_samples[i], policy))
         {
             std::cout << "  " << m_impl->temperature_sensors[i].description << ": "
-                      << std::fixed << std::setprecision(1) << avg->value << "°C"
+                      << std::fixed << std::setprecision(1) << avg->value << " °C"
                       << " (avg over " << avg->count << " samples)" << std::endl;
         }
     }
